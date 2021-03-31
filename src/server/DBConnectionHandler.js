@@ -9,7 +9,7 @@ const { MongoClient, MongoCallback } = require("mongodb");
  * Class handling database connections
  * @example
  *  // Connect to database:
- *  let databaseHandler = new DatabaseHandler();
+ *  let databaseHandler = new DBConnectionHandler();
  *  let client = await databaseHandler.connectAsync();
  *  let database = client.db("testDB");
  *  let collection = database.collection("test");
@@ -33,7 +33,7 @@ const { MongoClient, MongoCallback } = require("mongodb");
  *  let result = await collection.findOne(filter);
  *  ...
  */
-class DatabaseHandler
+class DBConnectionHandler
 {
     #url;
     #isConnected;
@@ -134,7 +134,7 @@ async function testDatabaseAsync()
     var _databaseHandler;
     try
     {
-        _databaseHandler = new DatabaseHandler();
+        _databaseHandler = new DBConnectionHandler();
         var client = await _databaseHandler.connectAsync();
 
         console.log("Database Connected");
@@ -156,7 +156,7 @@ async function testDatabaseAsync()
     }
     catch(err)
     {
-        console.log(err.message);
+        console.error(err);
     }
     finally
     {
@@ -166,3 +166,8 @@ async function testDatabaseAsync()
 }
 
 testDatabaseAsync();
+
+module.exports = 
+{
+    DBConnectionHandler
+}
