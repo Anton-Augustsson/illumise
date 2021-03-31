@@ -1,12 +1,12 @@
 # Client
 
 ### Dependencies
-###### Nodejs version 12 or greater
+##### Nodejs version 12 or greater
 https://nodejs.org/en/download/
-###### Expo
+##### Expo
 ```npm install -g expo-cli```
 
-###### Hopefully only for linux users
+##### Hopefully only for linux users
 If you are using **vscode** you need to change number of files that is allowed to be monitored by the filesystem.   
 
 To change it on Debian based flavour
