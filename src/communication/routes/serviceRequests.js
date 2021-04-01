@@ -29,8 +29,7 @@ router.get('/provider/selectRequest', async (req, res) => {
  * @param {json} data - A object of the request. Needs to match the structure of database request
  */
 router.post('/requester/newRequest', async (req, res) => {
-  console.log(req.body.userID);
-  console.log(req.params);
+  console.log(req.body);
   return res.send('Received a POST HTTP method newRequest');
 });
 

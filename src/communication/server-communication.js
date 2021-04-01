@@ -1,5 +1,6 @@
 /** Initialize Communication */
-var app = require('express')();
+const express = require('express');
+const app = express();
 
 /** Initialize WebSocket */
 /** https://www.tutorialspoint.com/socket.io/socket.io_hello_world.htm */
@@ -38,11 +39,14 @@ io.on('connection', function(socket) {
 });
 
 /** Initialize Rest API  */
-//app.use(express.json());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+
 const serviceRequests = require('./routes/serviceRequests');
 app.use('/serviceRequests', serviceRequests);
 
 /** Listen on port */
+//http.listen(300, function() {}
 http.listen(3000, function() {
    console.log('listening on *:3000');
 });
