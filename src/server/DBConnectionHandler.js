@@ -1,12 +1,13 @@
 /**
- * This file contains the DatabaseHandler class and related types
+ * This file contains the DBConnectionHandler class and related types
  */
 
 // fetch related classes
-const { MongoClient, MongoCallback } = require("mongodb");
+const { MongoClient } = require("mongodb");
 
 /**
- * Class handling database connections
+ * Represents a database connection handler
+ * @class
  * @example
  *  // Connect to database:
  *  let databaseHandler = new DBConnectionHandler();
@@ -40,16 +41,13 @@ class DBConnectionHandler
     #client;
 
     /**
-     * Creates a new mongoDB database handler
+     * Creates a new DBConnectionHandler
      * @constructor
-     * @param {string} database The name of the database to connect to
-     * @param {string} host The ip-address or host name of the host
-     * @param {string} port The port used by the database
      * @param {string} url The mongoDB connection url
      */
-    constructor(host = "localhost", port = "27017", url = undefined)
+    constructor(url)
     {
-        this.#url = url === undefined ? `mongodb://${host}:${port}` : url;
+        this.#url = url;
         this.#isConnected = false;
         this.#client = null;
     }
@@ -74,31 +72,6 @@ class DBConnectionHandler
 
     /**
      * Establishes a database connection
-     * @param {MongoCallback<MongoClient>} callback Function called when result 
-     * is ready
-     */
-    connect(callback)
-    {
-        if (!this.#isConnected)
-        {
-            //Somehow this is valid
-            var thisObject = this;
-            MongoClient.connect(this.#url, function(error, result)
-            {
-                if (!error)
-                {
-                    thisObject.#client = result;    //?
-                    thisObject.#isConnected = true; //?
-                }
-
-                callback(error, thisObject.#client);
-            });
-            
-        }
-    }
-
-    /**
-     * Establishes a database connection
      * @async
      * @returns {Promise<MongoClient>} The database client
      */
@@ -106,8 +79,18 @@ class DBConnectionHandler
     {
         if (!this.#isConnected)
         {
-            this.#client = await MongoClient.connect(this.#url);
-            this.#isConnected = true;
+            try
+            {
+                this.#client = await MongoClient.connect(this.#url);
+                this.#isConnected = true;
+            }
+            catch (error)
+            {
+                this.#client = null;
+                this.#isConnected = false;
+                console.error(error);
+                return null;
+            }
         }
         return this.#client;
     }
@@ -142,10 +125,11 @@ async function testDatabaseAsync()
         var database = client.db("testDB");
         var collection = database.collection("test");
 
-        var item = {
+        var item = 
+        {
             "name"  : "itemA",
             "value" : 1
-        }
+        };
         
         let dropResult = await collection.deleteMany({"name": "itemA"});
         console.log(dropResult.result);
@@ -165,9 +149,7 @@ async function testDatabaseAsync()
     }
 }
 
-testDatabaseAsync();
-
-module.exports = 
+module.exports =
 {
     DBConnectionHandler
 }
