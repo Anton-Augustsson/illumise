@@ -36,14 +36,17 @@ const { MongoClient } = require("mongodb");
  */
 class DBConnectionHandler
 {
+    /** @type {String} @private*/
     #url;
+    /** @type {Boolean} @private*/
     #isConnected;
+    /** @type {MongoClient} @private*/
     #client;
 
     /**
      * Creates a new DBConnectionHandler
      * @constructor
-     * @param {string} url The mongoDB connection url
+     * @param {String} url The mongoDB connection url
      */
     constructor(url)
     {
@@ -54,7 +57,7 @@ class DBConnectionHandler
 
     /**
      * Checks if the database is currently connected
-     * @returns {boolean} If currently connected
+     * @returns {Boolean} If currently connected
      */
     get isConnected()
     {

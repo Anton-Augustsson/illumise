@@ -3,8 +3,7 @@
  * related users and their accounts.
  */
 
-const { ObjectID } = require("bson");
-const { Db } = require("mongodb");
+const { Db, ObjectID } = require("mongodb");
 
 /**
  * Represents the public database interface related to accounts
@@ -12,6 +11,7 @@ const { Db } = require("mongodb");
  */
 class DBAccountsInterface
 {
+    /** @type {Db} @private */
     #database;
 
     /**
@@ -27,28 +27,24 @@ class DBAccountsInterface
     /**
      * Adds a new user account if no other account uses its email
      * @async
-     * @param {string} firstName 
-     * @param {string} lastName 
-     * @param {string} email 
-     * @param {string} password 
-     * @returns {Promise<ObjectID>} The id of the created account or null if the
-     * account was not created
+     * @param {String} firstName The fist name of the user
+     * @param {String} lastName The last name of the user
+     * @param {String} email The email of the user
+     * @param {String} password The password of the user
+     * @returns {Promise<ObjectID|null>} The id of the created account or null 
      */
     async add(firstName, lastName, email, password)
     {
         let collection = this.#database.collection("Users");
-        let filter = 
-        {
-            email: email
-        };
+        let filter = { email: email };
         let user = 
         {
             firstName: firstName,
             lastName: lastName,
             email: email,
-            encryptedPassword: password,
+            password: password,
             dateCreated: Date.now(),
-            ratings: 
+            ratings:
             {
                 customer: 
                 {
@@ -64,24 +60,71 @@ class DBAccountsInterface
             requestIDs: {},
             providingIDs: {}
         };
-        let result = await collection.updateOne(filter, {$setOnInsert: user}, {upsert: true});
-        return result.upsertedId !== null ? result.upsertedId._id : null;
+        let update = { $setOnInsert: user };
+        let options = { upsert: true };
+        let result = await collection.updateOne(filter, update, options);
+        return result.upsertedId !== undefined ? result.upsertedId._id : null;
+    }
+
+    /**
+     * Updates properties of a user
+     * @param {String} userID The id of the user to update
+     * @param {String} firstName The new first name
+     * @param {String} lastName The new last name
+     * @param {String} email The new email
+     * @param {String} password The new password
+     * @returns {Promise<Boolean>} If the operation was successful
+     */
+    async update(userID, firstName = undefined, lastName = undefined, 
+                 email = undefined, password = undefined)
+    {
+        let collection = this.#database.collection("Users");
+        let filter = { _id: ObjectID(userID) };
+
+        let newValues = {$set: {}};
+        if (firstName !== undefined) newValues.$set.firstName = firstName;
+        if (lastName  !== undefined) newValues.$set.lastName  = lastName;
+        if (email     !== undefined) newValues.$set.email     = email;
+        if (password  !== undefined) newValues.$set.password  = password;
+
+        try
+        {
+            let result = await collection.updateOne(filter, newValues);
+            return result.result.ok == 1;
+        }
+        catch (error)
+        {
+            console.error(error);
+            return false;
+        }
     }
 
     /**
      * Removes a user account
      * @async
-     * @param {string} userID 
-     * @returns 
+     * @param {String} userID The id of the user to remove
+     * @returns {Promise<Boolean>} If the operation was successful
      */
     async remove(userID)
     {
+        // What to do with references to the user elsewhere in the database?
+
         let collection = this.#database.collection("Users");
-        let filter = ObjectID(userID);
-        return await collection.deleteOne(filter);
+        let filter = { _id: ObjectID(userID) };
+
+        try
+        {
+            let result = await collection.deleteOne(filter);
+            return result.result.ok == 1;
+        }
+        catch (error)
+        {
+            console.error(error);
+            return false;
+        }
     }
 }
- 
+
 module.exports =
 {
     DBAccountsInterface

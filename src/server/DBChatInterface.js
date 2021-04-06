@@ -3,13 +3,11 @@
  * to chats and messages.
  */
 
-const 
-{ 
-    Db, 
-} = require("mongodb");
+const { Db, ObjectID } = require("mongodb");
 
 class DBChatInterface
 {
+    /** @type {Db} @private */
     #database;
 
     /**
@@ -22,10 +20,23 @@ class DBChatInterface
         this.#database = database;
     }
 
-    // TODO: Implement
+    async add()
+    {
+
+    }
+
+    async get()
+    {
+        
+    }
+
+    async remove()
+    {
+
+    }
 }
 
-module.exports
+module.exports =
 {
     DBChatInterface
 }

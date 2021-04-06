@@ -3,14 +3,7 @@
  * related to requests.
  */
 
-const { ObjectID } = require("bson");
-const 
-{ 
-    Db, 
-    InsertOneWriteOpResult,
-    FindAndModifyWriteOpResultObject,
-    DeleteWriteOpResultObject
-} = require("mongodb");
+const { Db, ObjectID } = require("mongodb");
 
 /**
  * Represents the public database interface related to requests
@@ -18,6 +11,7 @@ const
  */
 class DBRequestsInterface
 {
+    /** @type {Db} @private */
     #database;
 
     /**
@@ -33,18 +27,18 @@ class DBRequestsInterface
     /**
      * Create a new service request
      * @async
-     * @param {string} userID The id of the user
-     * @param {string} header The header of the request
-     * @param {string} body The body of the request
-     * @param {number} cost TODO
-     * @returns {Promise<InsertOneWriteOpResult<*>>}
+     * @param {String} userID The id of the user
+     * @param {String} header The header of the request
+     * @param {String} body The body of the request
+     * @param {Number} cost TODO
+     * @returns {Promise<ObjectID|null>} The id of the created request or null
      */
     async add(userID, header, body, cost = undefined)
     {
         let collection = this.#database.collection("Requests");
         let request = 
         {
-            dateCreated: Date.getDate(),
+            dateCreated: Date.now(),
             dateCompleted: undefined,
             geoLocation: undefined,
             header: header,
@@ -52,28 +46,69 @@ class DBRequestsInterface
             cost: cost,
             isFulfilled: false,
             creatorID: userID,
-            takerID: undefined
+            providerID: undefined
         };
-        return await collection.insertOne(request);
+        try
+        {
+            let result = await collection.insertOne(request);
+            return result.insertedId;
+        }
+        catch (error)
+        {
+            console.error(error);
+            return null;
+        }
     }
  
     /**
-     * Gets a number of requests from a user
+     * Gets requests created by a user
      * @async
-     * @param {string} userID The id of the user
-     * @param {number} num The number of requests to fetch
-     * @returns {Promise<[*]>} The requests BSON objects in a list
+     * @param {String} userID The id of the user
+     * @param {Number} num The number of requests to get, if not set all will be returned
+     * @returns {Promise<[*]>|null} The requests BSON objects in a list or null
      */
-    async getNum(userID, num)
+    async getUserRequests(userID, num = undefined)
     {
-        return new Promise(() =>
+        //TODO: Wrap return values in custom class
+        let collection = this.#database.collection("Requests");
+        let filter = { creatorID: userID };
+        try
         {
-            let collection = this.#database.collection(Requests);
-            let result = collection.find({userID: userID});
-            let array = result.toArray();
-            array.length = num;
+            let result = collection.find(filter);
+            let array  = await result.toArray();
+            if (num !== undefined) array.length = num;
             return array;
-        });
+        }
+        catch (error)
+        {
+            console.error(error);
+            return null;
+        }
+    }
+
+    /**
+     * Gets requests that the user is set as a provider for
+     * @param {String} userID The id of the user
+     * @param {Number} num The number of requests to get, if not set all will be returned
+     * @returns {Promise<[*]>|null} The requests BSON objects in a list or null
+     */
+    async getUserProviding(userID, num = undefined)
+    {
+        //TODO: Wrap return values in custom class
+        let collection = this.#database.collection("Requests");
+        let filter = { providerID: userID };
+        try
+        {
+            let result = collection.find(filter);
+            let array  = await result.toArray();
+            if (num !== undefined) array.length = num;
+            return array;
+        }
+        catch (error)
+        {
+            console.error(error);
+            return null;
+        }
     }
     
     async getNumNearby(geoLocation, num)
@@ -84,50 +119,80 @@ class DBRequestsInterface
     /**
      * Marks a requests as fulfilled and sets the completed time
      * @async
-     * @param {string} requestID The id of the request
-     * @returns {Promise<FindAndModifyWriteOpResultObject<*>>}
+     * @param {String} requestID The id of the request
+     * @returns {Promise<Boolean>} If the operation was successful
      */
     async setCompleted(requestID)
     {
         let collection = this.#database.collection("Requests");
-        let filter = ObjectID(requestID);
+        let filter = { _id: ObjectID(requestID) };
         let update = 
         {
-            dateCompleted: Date.now(),
-            isFulFilled: true
+            $set: 
+            {
+                dateCompleted: Date.now(),
+                isFulFilled: true
+            }
         };
-        return await collection.findOneAndUpdate(filter, update);
+        
+        try
+        {
+            let result = await collection.updateOne(filter, update);
+            return result.result.ok == 1;
+        }
+        catch (error)
+        {
+            console.error(error);
+            return false;
+        }
     }
 
     /**
      * Sets the provider of a request
      * @async
-     * @param {string} requestID 
-     * @param {string} providerID 
-     * @returns {Promise<FindAndModifyWriteOpResultObject<*>>}
+     * @param {String} requestID The id of the request to modify
+     * @param {String} providerID The id of the provider
+     * @returns {Promise<Boolean>} If the operation was successful
      */
     async setProvider(requestID, providerID)
     {
         let collection = this.#database.collection("Requests");
-        let filter = ObjectID(requestID);
-        let update = 
+        let filter = { _id: ObjectID(requestID) };
+        let update = { $set: {providerID: providerID} };
+
+        try
         {
-            takerID: providerID
-        };
-        return await collection.findOneAndUpdate(filter, update);
+            let result = await collection.updateOne(filter, update);
+            return result.result.ok == 1;
+        }
+        catch (error)
+        {
+            console.error(error);
+            return false;
+        }
     }
 
     /**
      * Removes a request
      * @async
-     * @param {string} requestID The if of the request
-     * @returns {Promise<DeleteWriteOpResultObject>}
+     * @param {String} requestID The if of the request
+     * @returns {Promise<Boolean>} If the operation was successful
      */
     async remove(requestID)
     {
         let collection = this.#database.collection("Requests");
-        let filter = ObjectID(requestID);
-        return await collection.deleteOne(filter);
+        let filter = { _id: ObjectID(requestID) };
+
+        try
+        {
+            let result = await collection.deleteOne(filter);
+            return result.result.ok == 1;
+        }
+        catch (error)
+        {
+            console.error(error);
+            return false;
+        }
     }
 }
 
