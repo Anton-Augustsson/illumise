@@ -45,6 +45,13 @@ app.use(express.urlencoded({ extended: true })); // for parsing application/x-ww
 const serviceRequests = require('./routes/serviceRequests');
 app.use('/serviceRequests', serviceRequests);
 
+const chat = require('./routes/chat');
+app.use('/chat', chat);
+
+const account = require('./routes/account');
+app.use('/account', account);
+
+
 /** Listen on port */
 //http.listen(300, function() {}
 http.listen(3000, function() {
