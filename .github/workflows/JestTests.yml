@@ -17,9 +17,10 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 12  
-      - name: Install dependencies
-      - run: npm install jest
-      - run: npm install mongodb
+      - name: Install Jest
+        run: npm install jest
+      - name: Install MongoDB
+        run: npm install mongodb
       
       - name: Server Tests
       - run: npm test
