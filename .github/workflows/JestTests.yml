@@ -23,5 +23,5 @@ jobs:
         run: npm install mongodb
       
       - name: Server Tests
-      - run: npm test
+        run: npm test
         working-directory: src/server/
