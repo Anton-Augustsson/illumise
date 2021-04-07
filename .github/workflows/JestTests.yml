@@ -27,6 +27,6 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Run Jest
-      - uses: stefanoeb/jest-action@1.0.3
-      - with:
-          jestArgs: src/server/tests/dbInterface.test.js
+      - uses: willcaul/jest-github-action@v1
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
