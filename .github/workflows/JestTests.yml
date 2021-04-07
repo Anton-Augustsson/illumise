@@ -16,12 +16,16 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
-          node-version: 12  
+          node-version: 12
+          
       - name: Install Jest
         run: npm install jest
+        working-directory: ./src/server/
+        
       - name: Install MongoDB
         run: npm install mongodb
+        working-directory: ./src/server/
       
       - name: Server Tests
         run: npm test
-        working-directory: src/server/
+        working-directory: ./src/server/
