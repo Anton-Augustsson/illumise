@@ -1,3 +1,6 @@
 .gitignore
 .vscode
-./src/server/node_modules
+node_modules
+jest
+jest.cmd
+jest.ps1
