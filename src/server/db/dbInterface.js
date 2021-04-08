@@ -71,20 +71,15 @@ const dbName = "testDB";
         "_id": { "$oid" },
         requestID,
         dateCreated,
-        messageCollections: // 2 st
+        messageCollection:
         {
-            ...
-        }
-    }
-
-    MessageCollection
-    {
-        "_id": { "$oid" },
-        userID,
-        messages: 
-        {
-            time,
-            message
+            userID: 
+            [
+                {
+                    time,
+                    message
+                }
+            ]
         }
     }
 */
