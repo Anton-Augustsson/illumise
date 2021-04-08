@@ -1,17 +1,16 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, Button, TouchableHighlight, Image} from 'react-native';
+import { Text, View, TextInput, Button, Image} from 'react-native';
 import styles from "./styles"
 import ms from '../mainStyles/ms';
-import CustomButton from "../customButton"
+import CustomButton from "../customComponents/customButton"
 import * as Google from 'expo-auth-session/providers/google';
-  
 
 const LoginScreen = ({navigation}) => {
     //webclient secret key
     //i7HPvxf7F1MohxIdHcZaZmI0
     const [request, response, promptAsync] = Google.useAuthRequest({
-        expoClientId: '798387138999-jfpq5oc79qol6puinlfo3uckk5dlf6fa.apps.googleusercontent.com',
+        expoClientId: '798387138999-f1872j6fqbi2dlcl6mg0rvuscface4ed.apps.googleusercontent.com',
         iosClientId: 'GOOGLE_GUID.apps.googleusercontent.com',
         androidClientId: 'GOOGLE_GUID.apps.googleusercontent.com',
         webClientId: '798387138999-jfpq5oc79qol6puinlfo3uckk5dlf6fa.apps.googleusercontent.com'
@@ -74,13 +73,13 @@ const LoginScreen = ({navigation}) => {
             </View>
 
             <View style={ms.logoContainer}>
-                <TouchableHighlight onPress={()=>{
-                    navigation.navigate("Home");
-                }}>
-                    <View style={ms.greenButton}>
-                        <Text>Guten tag</Text>
-                    </View>
-                </TouchableHighlight>           
+                <CustomButton 
+                style={ms.greenButton}
+                title="OOO GRÖN"
+                onPress={() => {
+                    navigation.navigate("HomeScreen")
+                }}
+                />
             </View>
             
         </View>  

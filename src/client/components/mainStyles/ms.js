@@ -51,18 +51,19 @@ const ms = StyleSheet.create({
         height: 50,
     },
     greenButton: {
+        justifyContent:"center",
+        alignItems:"center",
         backgroundColor: greenSamarit,
         borderRadius: 15,
-        width: 300,
-        height: 50,
+        width:300,
+        height:50,
     },
     logoContainer: {
-        flex: 1,
         justifyContent: "center",
         alignItems: "center",
     },
     logoContainerZ: {
-        flex: 1,
+        flex: 3,
         alignItems: "center",
     },
     logoLarge: { // Start up logo
@@ -77,7 +78,7 @@ const ms = StyleSheet.create({
     logoSmall: { //For small logos in navigation bar
         width: 20,
         height: 20,
-    },
+    }
 });
 
 // EXPORTS 
