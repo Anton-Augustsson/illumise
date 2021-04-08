@@ -119,6 +119,7 @@ class DBInterface
     constructor(host = "localhost", port = "27017", url = undefined)
     {
         url = url === undefined ? `mongodb://${host}:${port}` : url;
+        console.log("Connecting To: " + url);
         this.#connection = new DBConnectionHandler(url);
     }
 

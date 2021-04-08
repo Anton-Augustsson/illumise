@@ -3,7 +3,8 @@ const { DBInterface } = require("../db/dbInterface");
 
 describe("Testing dbInterface", () =>
 {
-    let db = new DBInterface();
+    let url = "mongodb+srv://admin:123@cluster0.j0bss.mongodb.net/main?retryWrites=true&w=majority";
+    let db = new DBInterface(undefined, undefined, url);
     let connected;
 
     beforeAll(async () =>
