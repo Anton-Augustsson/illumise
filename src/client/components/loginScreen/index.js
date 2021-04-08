@@ -66,7 +66,7 @@ const LoginScreen = ({navigation}) => {
                 <Button 
                     title = "banan"
                     onPress={() => {
-                        navigation.navigate("Home")
+                        navigation.navigate("Home1")
                     }}>
                 </Button>
 
@@ -77,7 +77,7 @@ const LoginScreen = ({navigation}) => {
                 style={ms.greenButton}
                 title="OOO GRÖN"
                 onPress={() => {
-                    navigation.navigate("HomeScreen")
+                    navigation.navigate("Default")
                 }}
                 />
             </View>

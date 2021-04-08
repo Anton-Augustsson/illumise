@@ -6,24 +6,22 @@ const borderTopBackground = "black"
 const mms = StyleSheet.create({
     menuContainer: {
         height:75,
-        justifyContent:"space-between",
         flexDirection:"row",
-        alignItems:"flex-end",
+        justifyContent:"space-evenly",
         borderTopWidth: 2,
         borderStyle: "solid",
         borderTopColor: borderTopBackground, 
+        backgroundColor: menuBackground,
     },
     menuItemContainer: {
         justifyContent:"center",
         alignItems:"center",
-        width:"25%",
         height:"100%",
-        backgroundColor: menuBackground,
     },
     menuIconSize: {
         alignSelf:"center",
-        width:50,
-        height:50,
+        width:65,
+        height:65,
     }
 });
 

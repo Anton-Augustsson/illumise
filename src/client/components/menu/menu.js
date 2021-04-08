@@ -1,25 +1,41 @@
 import React from 'react';
-import { Text, View, Image} from 'react-native';
+import { View, Image, TouchableHighlight } from 'react-native';
 import mms from "./menuStyle";
 
 const MenuItem = (props) => {
     return (
         <View style={mms.menuItemContainer}>
-            <Image
-                style={mms.menuIconSize}
-                source={props.source}
-            />
+            <TouchableHighlight onPress={props.onPress}>
+                <Image
+                    style={mms.menuIconSize}
+                    source={props.source}
+                />
+            </TouchableHighlight>
         </View>
     );
 }
 
-const Menu = () => {
+const Menu = (props) => {
+
     return (
         <View style={mms.menuContainer}>
-            <MenuItem source={require("../../assets/samarit_logo2.png")}/>
-            <MenuItem source={require("../../assets/samarit_logo2.png")}/>
-            <MenuItem source={require("../../assets/samarit_logo2.png")}/>
-            <MenuItem source={require("../../assets/samarit_logo2.png")}/>
+            <MenuItem 
+                onPress={() => props.navigation.navigate("Home")}
+                source={require("../../assets/samarit_logo2.png")}
+            />
+            <MenuItem 
+                onPress={() => props.navigation.navigate("Orders")}
+                source={require("../../assets/samarit_logo2.png")}
+            />
+            <MenuItem 
+                onPress={() => props.navigation.navigate("Notification")}
+                source={require("../../assets/samarit_logo2.png")}
+            />
+            <MenuItem 
+                //TODO change to burgar menu
+                onPress={() => props.navigation.navigate("Home")}
+                source={require("../../assets/samarit_logo2.png")}
+            />
         </View>
     );
 }
