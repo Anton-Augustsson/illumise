@@ -42,8 +42,8 @@ io.on('connection', function(socket) {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
-const serviceRequests = require('./routes/serviceRequests');
-app.use('/serviceRequests', serviceRequests);
+const request = require('./routes/request');
+app.use('/request', request);
 
 const chat = require('./routes/chat');
 app.use('/chat', chat);
