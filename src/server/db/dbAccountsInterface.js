@@ -100,6 +100,39 @@ class DBAccountsInterface
     }
 
     /**
+     * 
+     * @param {String} email 
+     * @param {String} password
+     * @returns {String|null} The id of the user
+     */
+    async get(email, password)
+    {
+        let collection = this.#database.collection("Users");
+        let filter = 
+        {
+            email: email,
+            password: password
+        }
+
+        let options = 
+        {
+            // What we want to return
+            projection: { _id: true }
+        }
+
+        try
+        {
+            let result = await collection.findOne(filter, options);
+            return result._id;
+        }
+        catch (error)
+        {
+            console.error(error);
+            return null;
+        }
+    }
+
+    /**
      * Removes a user account
      * @async
      * @param {String} userID The id of the user to remove
