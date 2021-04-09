@@ -1,10 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { Text, View, TextInput, Button, Image} from 'react-native';
+import { Text, View, TextInput, Button, Image, ImageBackground} from 'react-native';
 import styles from "./styles"
 import ms from '../mainStyles/ms';
-import CustomButton from "../customComponents/customButton"
+import CustomButton from "../customComponents/customButton";
+import GoogleButton from "../customComponents/googleButton";
 import * as Google from 'expo-auth-session/providers/google';
+import { TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
 
 const LoginScreen = ({navigation}) => {
     //webclient secret key
@@ -61,6 +63,14 @@ const LoginScreen = ({navigation}) => {
                     onPress={() => {
                         promptAsync();
                     }}
+                />
+                
+                <GoogleButton
+                    onPress={() =>{
+                        promptAsync();
+                    }}
+                    disabled={!request}
+                    style={ms.button}
                 />
 
                 <Button 
