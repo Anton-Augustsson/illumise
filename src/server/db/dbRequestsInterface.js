@@ -3,7 +3,7 @@
  * related to requests.
  */
 
-const { Db, ObjectID } = require("mongodb");
+const { Db, Collection, ObjectID } = require("mongodb");
 
 /**
  * Represents the public database interface related to requests
@@ -14,6 +14,9 @@ class DBRequestsInterface
     /** @type {Db} @private */
     #database;
 
+    /** @type {Collection} @private */
+    #collection;
+
     /**
      * Creates a new DBRequestInterface
      * @constructor
@@ -22,6 +25,7 @@ class DBRequestsInterface
     constructor(database)
     {
         this.#database = database;
+        this.#collection = this.#database.collection("Requests");
     }
 
     /**
@@ -33,14 +37,13 @@ class DBRequestsInterface
      * @param {Number} cost TODO
      * @returns {Promise<ObjectID|null>} The id of the created request or null
      */
-    async add(userID, header, body, cost = undefined)
+    async add(userID, header, body, geoLocation = undefined, cost = undefined)
     {
-        let collection = this.#database.collection("Requests");
         let request = 
         {
             dateCreated: Date.now(),
             dateCompleted: undefined,
-            geoLocation: undefined,
+            geoLocation: geoLocation,
             header: header,
             body: body,
             cost: cost,
@@ -50,7 +53,7 @@ class DBRequestsInterface
         };
         try
         {
-            let result = await collection.insertOne(request);
+            let result = await this.#collection.insertOne(request);
             return result.insertedId;
         }
         catch (error)
@@ -70,11 +73,10 @@ class DBRequestsInterface
     async getUserRequests(userID, num = undefined)
     {
         //TODO: Wrap return values in custom class
-        let collection = this.#database.collection("Requests");
         let filter = { creatorID: userID };
         try
         {
-            let result = collection.find(filter);
+            let result = this.#collection.find(filter);
             let array  = await result.toArray();
             if (num !== undefined) array.length = num;
             return array;
@@ -95,7 +97,6 @@ class DBRequestsInterface
     async getUserProviding(userID, num = undefined)
     {
         //TODO: Wrap return values in custom class
-        let collection = this.#database.collection("Requests");
         let filter = { providerID: userID };
         try
         {
@@ -111,11 +112,40 @@ class DBRequestsInterface
         }
     }
     
-    async getNearby(geoLocation, distance, num)
+    async getNearby(location, distance, num)
     {
         
     }
  
+    /**
+     * Get nearby requests
+     * @async
+     * @param {string} geoLocation geoJSON-object https://docs.mongodb.com/manual/reference/geojson/ //TODO: how to typedef this?
+     * @param {number} maxDistance the maximum distance in meters to search from geoLocation
+     * @param {number} maxRequests the amount > 0 of nearby requests to retrieve
+     * @returns an array of size maxRequests, with empty slots if the size is larger than the amount of nearby requests
+     */
+     async getNearby(geoLocation, maxDistance, num = undefined)
+     {
+         await this.#collection.ensureIndex( { "geoLocation": "2dsphere"} );
+
+         let result = await this.#collection.find ({
+            geoLocation: {
+                $near: {
+                  $geometry: geoLocation,
+                  $maxDistance: maxDistance + 10, //10 meter margin
+                  $minDistance: 0
+                }
+              }
+           }).toArray();
+
+        //TODO: maybe there is a find function that takes a number argument in mongodb instead?
+        //TODO: max num?
+        if (num != undefined && num > 0) result.length = num; //resize
+        return result;
+     }
+
+
     /**
      * Marks a requests as fulfilled and sets the completed time
      * @async
@@ -124,7 +154,6 @@ class DBRequestsInterface
      */
     async setCompleted(requestID)
     {
-        let collection = this.#database.collection("Requests");
         let filter = { _id: ObjectID(requestID) };
         let update = 
         {
@@ -137,7 +166,7 @@ class DBRequestsInterface
         
         try
         {
-            let result = await collection.updateOne(filter, update);
+            let result = await this.#collection.updateOne(filter, update);
             return result.result.ok == 1;
         }
         catch (error)
@@ -156,13 +185,12 @@ class DBRequestsInterface
      */
     async setProvider(requestID, providerID)
     {
-        let collection = this.#database.collection("Requests");
         let filter = { _id: ObjectID(requestID) };
         let update = { $set: {providerID: providerID} };
 
         try
         {
-            let result = await collection.updateOne(filter, update);
+            let result = await this.#collection.updateOne(filter, update);
             return result.result.ok == 1;
         }
         catch (error)
@@ -180,12 +208,11 @@ class DBRequestsInterface
      */
     async remove(requestID)
     {
-        let collection = this.#database.collection("Requests");
         let filter = { _id: ObjectID(requestID) };
 
         try
         {
-            let result = await collection.deleteOne(filter);
+            let result = await this.#collection.deleteOne(filter);
             return result.result.ok == 1 && result.result.n == 1;
         }
         catch (error)

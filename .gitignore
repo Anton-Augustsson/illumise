@@ -4,3 +4,5 @@ node_modules
 jest
 jest.cmd
 jest.ps1
+.expo
+src/server/package-lock.json
