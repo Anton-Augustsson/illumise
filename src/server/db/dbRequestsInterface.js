@@ -5,6 +5,8 @@
 
 const { Db, ObjectID } = require("mongodb");
 
+const requestCollectionName = "Requests";
+
 /**
  * Represents the public database interface related to requests
  * @class
@@ -35,7 +37,7 @@ class DBRequestsInterface
      */
     async add(userID, header, body, cost = undefined)
     {
-        let collection = this.#database.collection("Requests");
+        let collection = this.#database.collection(requestCollectionName);
         let request = 
         {
             dateCreated: Date.now(),
@@ -80,8 +82,7 @@ class DBRequestsInterface
      */
     async getUserRequests(userID, num = undefined)
     {
-        //TODO: Wrap return values in custom class
-        let collection = this.#database.collection("Requests");
+        let collection = this.#database.collection(requestCollectionName);
         let filter = { creatorID: userID };
         try
         {
@@ -105,8 +106,7 @@ class DBRequestsInterface
      */
     async getUserProviding(userID, num = undefined)
     {
-        //TODO: Wrap return values in custom class
-        let collection = this.#database.collection("Requests");
+        let collection = this.#database.collection(requestCollectionName);
         let filter = { providerID: userID };
         try
         {
@@ -141,7 +141,7 @@ class DBRequestsInterface
      */
     async setCompleted(requestID)
     {
-        let collection = this.#database.collection("Requests");
+        let collection = this.#database.collection(requestCollectionName);
         let filter = { _id: ObjectID(requestID) };
         let update = 
         {
@@ -173,7 +173,7 @@ class DBRequestsInterface
      */
     async setProvider(requestID, providerID)
     {
-        let collection = this.#database.collection("Requests");
+        let collection = this.#database.collection(requestCollectionName);
         let filter = { _id: ObjectID(requestID) };
         let update = { $set: {providerID: providerID} };
 
@@ -197,7 +197,7 @@ class DBRequestsInterface
      */
     async remove(requestID)
     {
-        let collection = this.#database.collection("Requests");
+        let collection = this.#database.collection(requestCollectionName);
         let filter = { _id: ObjectID(requestID) };
 
         try

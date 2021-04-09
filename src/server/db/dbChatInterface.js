@@ -5,11 +5,10 @@
 
 const { Db, ObjectID } = require("mongodb");
 
-const chatCollectionName    = "Chat";
+const chatCollectionName = "Chat";
 
 /**
- * @typedef MessageCollection
- * @property {[ChatMessage]} [userID]
+ * @typedef {Object.<string, [ChatMessage]>} MessageCollection
  */
 
 /**
@@ -39,6 +38,7 @@ class DBChatInterface
 
     /**
      * Adds a new chat if no equivalent chat exists
+     * @async
      * @param {String} requestID The id of the related request
      * @param {[String]} userIDs A list containing the ids of all related users 
      * @returns {Promise<ObjectID|null>} The id of the chat or null
@@ -50,7 +50,7 @@ class DBChatInterface
         let messageCollection = {};
         for (let i = 0; i < userIDs.length; i++)
         {
-            messageCollection[userIDs[i].toString()] = new Array();
+            messageCollection[userIDs[i]] = [];
         }
 
         // TODO: Handle different ordering of ids (sort first?)
@@ -75,13 +75,14 @@ class DBChatInterface
         }
         catch (error)
         {
-            console.log(error);
+            console.error(error);
             return null;
         }
     }
 
     /**
      * Adds a message to a chat
+     * @async
      * @param {String} chatID The id of the chat
      * @param {String} userID The user id of the sender
      * @param {String} message The message sent
@@ -95,13 +96,10 @@ class DBChatInterface
         {
             $push: 
             {
-                messageCollection:
+                [`messageCollection.${userID}`]:
                 {
-                    [userID]: 
-                    {
-                        time: Date.now(),
-                        message: message
-                    }
+                    time: Date.now(),
+                    message: message
                 }
             }
         }
@@ -113,13 +111,14 @@ class DBChatInterface
         }
         catch (error)
         {
-            console.log(error);
+            console.error(error);
             return false;
         }
     }
 
     /**
      * Gets all messages in a given chat
+     * @async
      * @param {String} chatID The if of the chat
      * @returns {Promise<MessageCollection>} The message collection
      */
@@ -131,7 +130,7 @@ class DBChatInterface
         try
         {
             let result = await collection.findOne(filter);
-            return result.messageCollection;
+            return result == null ? null : result.messageCollection;
         }
         catch (error)
         {
@@ -142,6 +141,7 @@ class DBChatInterface
 
     /**
      * Removes a chat
+     * @async
      * @param {String} chatID The id of the chat to remove
      * @returns {Promise<Boolean>} If the operation was successful
      */

@@ -4,7 +4,7 @@ const { DBInterface } = require("../db/dbInterface");
 describe("Testing dbInterface", () =>
 {
     let url = "mongodb+srv://admin:123@cluster0.j0bss.mongodb.net/main?retryWrites=true&w=majority";
-    let db = new DBInterface(undefined, undefined, url);
+    let db = new DBInterface(undefined, undefined, url, true);
     let connected;
 
     beforeAll(async () =>
@@ -89,28 +89,28 @@ describe("Testing dbInterface", () =>
 
     it("Get User Providing", async () => 
     {
-        let userID1    = await db.accounts.add("A7", "A7", "A7@mail.test", "*");
-        let userID2    = await db.accounts.add("A8", "A8", "A8@mail.test", "*");
-        let requestID1 = await db.requests.add(userID1, "T5", "this is a test");
-        let requestID2 = await db.requests.add(userID1, "T6", "this is a test");
+        let user1ID    = await db.accounts.add("A7", "A7", "A7@mail.test", "*");
+        let user2ID    = await db.accounts.add("A8", "A8", "A8@mail.test", "*");
+        let request1ID = await db.requests.add(user1ID, "T5", "this is a test");
+        let request2ID = await db.requests.add(user1ID, "T6", "this is a test");
 
-        let result1    = await db.requests.setProvider(requestID1, userID2);
-        let result2    = await db.requests.setProvider(requestID2, userID2);
+        let result1    = await db.requests.setProvider(request1ID, user2ID);
+        let result2    = await db.requests.setProvider(request2ID, user2ID);
         expect(result1).toBe(true);
         expect(result2).toBe(true);
 
-        let providing = await db.requests.getUserProviding(userID1);
+        let providing = await db.requests.getUserProviding(user1ID);
         expect(providing.length).toBe(0);
-        providing = await db.requests.getUserProviding(userID2);
+        providing = await db.requests.getUserProviding(user2ID);
         expect(providing.length).toBe(2);
         if (providing.length == 2)
         {
-            expect(providing[0]._id).toStrictEqual(requestID1);
-            expect(providing[1]._id).toStrictEqual(requestID2);
+            expect(providing[0]._id).toStrictEqual(request1ID);
+            expect(providing[1]._id).toStrictEqual(request2ID);
         }
 
         // Test with larger size
-        providing = await db.requests.getUserProviding(userID2, 5);
+        providing = await db.requests.getUserProviding(user2ID, 5);
         expect(providing.length).toBe(5);
     });
 
@@ -120,6 +120,37 @@ describe("Testing dbInterface", () =>
         let requestID = await db.requests.add(userID, "T7", "this is a test");
         let result    = await db.requests.setCompleted(requestID);
         expect(result).toBe(true);
+    });
+
+    it("Create & Remove Chat", async () => 
+    {
+        // Add
+        let user1ID   = await db.accounts.add("A10", "A10", "A10@mail", "*");
+        let user2ID   = await db.accounts.add("A11", "A11", "A11@mail", "*");
+        let requestID = await db.requests.add(user1ID, "T8", "this is a test");
+        let chatID    = await db.chat.add(requestID, [user1ID, user2ID]);
+        expect(chatID).not.toBe(null);
+        // Remove
+        let result    = await db.chat.remove(chatID);
+        expect(result).toBe(true);
+    });
+
+    it("Add & Get Messages", async () => 
+    {
+        // Add
+        let user1ID   = await db.accounts.add("A12", "A12", "A12@mail", "*");
+        let user2ID   = await db.accounts.add("A13", "A13", "A13@mail", "*");
+        let requestID = await db.requests.add(user1ID, "T9", "this is a test");
+        let chatID    = await db.chat.add(requestID, [user1ID, user2ID]);
+        
+        let message   = "msg1";
+        let result    = await db.chat.addMessage(chatID, user1ID, message);
+        expect(result).toBe(true);
+
+        let messages  = await db.chat.getMessages(chatID);
+        expect(messages[user1ID].length).toBe(1);
+        expect(messages[user2ID].length).toBe(0);
+        expect(messages[user1ID][0].message).toBe(message);
     });
 
     afterAll(async () => 
