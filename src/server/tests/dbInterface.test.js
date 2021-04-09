@@ -147,7 +147,6 @@ describe("Testing dbInterface", () =>
 
        /* TEST 3
             Get within 1200m, no maxRequests set
-            360m entry should not be returned due to maxRequests
         */
         maxDistance = 1200;
         maxRequests = undefined;
