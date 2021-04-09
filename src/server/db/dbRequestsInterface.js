@@ -112,11 +112,6 @@ class DBRequestsInterface
         }
     }
     
-    async getNearby(location, distance, num)
-    {
-        
-    }
- 
     /**
      * Get nearby requests
      * @async
