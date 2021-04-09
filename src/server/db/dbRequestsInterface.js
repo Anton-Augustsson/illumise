@@ -111,7 +111,7 @@ class DBRequestsInterface
         }
     }
     
-    async getNumNearby(geoLocation, num)
+    async getNearby(geoLocation, distance, num)
     {
         
     }
