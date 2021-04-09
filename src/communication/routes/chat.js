@@ -7,7 +7,7 @@ const Joi = require('joi');
  * @param {json} body - The resived request from the client
  * @param {json} schema - The json object to compare body with
  */
-function valid(body, schema)
+function valid(body, schema, res)
 {
   const result = schema.validate(body);
 
@@ -17,6 +17,22 @@ function valid(body, schema)
     return false;
   }
 
+  return true;
+}
+
+/**
+ * Helping function to send error responce
+ * @param {array} params - Array
+ */
+function validParams(params, res)
+{
+  for (let p in params)
+  {
+    if(params[p] == undefined){
+      res.status(400).send(p + " is undefined");
+      return false;
+    }
+  }
   return true;
 }
 
@@ -32,7 +48,7 @@ router.put('/sendMessage', (req, res) =>
     chatID: Joi.string()
   });
 
-  if(valid(req.body, schema))
+  if(valid(req.body, schema, res))
   {
     return res.send('Received a PUT HTTP method');
   }
@@ -45,14 +61,13 @@ router.put('/sendMessage', (req, res) =>
  */
 router.get('/getAllMessages', (req, res) =>
 {
-  const schema = Joi.object({
-    userID: Joi.string(),
-    chatID: Joi.string()
-  });
+  const params = {
+    userID: req.param('userID'),
+    chatID: req.param('chatID')
+  };
 
-  if(valid(req.body, schema))
-  {
-    return res.send('Received a GET HTTP method');
+  if(validParams(params, res)){
+    return res.send('Received a GET Get all messages HTTP method');
   }
 });
 
@@ -60,13 +75,13 @@ router.get('/getAllMessages', (req, res) =>
  * setup a new chat for a new service provider
  * @param {string} requestID - The id of the request that is the chat should be created for
  */
-router.put('/newChat', (req, res) => //FIXME: curl fail
+router.put('/newChat', (req, res) =>
 {
   const schema = Joi.object({
     userID: Joi.string()
   });
 
-  if(valid(req.body, schema))
+  if(valid(req.body, schema, res))
   {
     return res.send('Received a PUT HTTP method');
   }
@@ -82,7 +97,7 @@ router.delete('/removeChat', (req, res) =>
     userID: Joi.string(),
   });
 
-  if(valid(req.body, schema))
+  if(valid(req.body, schema, res))
   {
     return res.send('Received a GET /removeChat HTTP method');
   }

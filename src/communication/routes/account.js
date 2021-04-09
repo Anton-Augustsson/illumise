@@ -7,7 +7,7 @@ const Joi = require('joi');
  * @param {json} body - The resived request from the client
  * @param {json} schema - The json object to compare body with
  */
-function valid(body, schema)
+function valid(body, schema, res)
 {
   const result = schema.validate(body);
 
@@ -21,16 +21,32 @@ function valid(body, schema)
 }
 
 /**
+ * Helping function to send error responce
+ * @param {array} params - Array
+ */
+function validParams(params, res)
+{
+  for (let p in params)
+  {
+    if(params[p] == undefined){
+      res.status(400).send(p + " is undefined");
+      return false;
+    }
+  }
+  return true;
+}
+
+/**
  * create new account
  * @param {json} credentials - A object of the users credentials.
  */
 router.put('/createAccount', (req, res) =>
 {
   const schema = Joi.object({
-    credentials: Joi.any(),
+    credentials: Joi.any()
   });
 
-  if(valid(req.body, schema))
+  if(valid(req.body, schema, res))
   {
     return res.send('Received a PUT HTTP method');
   }
@@ -40,13 +56,13 @@ router.put('/createAccount', (req, res) =>
  * remove specified account
  * @param {string} userID - The user id of the account that should be deleted
  */
-router.delete('/removeAccount', (req, res) => //FIXME: cant curl
+router.delete('/removeAccount', (req, res) =>
 {
   const schema = Joi.object({
-    userID: Joi.string(),
+    userID: Joi.string()
   });
 
-  if(valid(req.body, schema))
+  if(valid(req.body, schema, res))
   {
     return res.send('Received a DELETE /removeAcount HTTP method');
   }
@@ -57,13 +73,14 @@ router.delete('/removeAccount', (req, res) => //FIXME: cant curl
  * @param {string} userID - The user id of the account that should be changed
  * @param {json} credentials - A object of the users credentials.
  */
-router.post('/changeCredentials', (req, res) => //FIXME: cant curl
+router.post('/changeCredentials', (req, res) =>
 {
   const schema = Joi.object({
     userID: Joi.string(),
+    credentials: Joi.any()
   });
 
-  if(valid(req.body, schema))
+  if(valid(req.body, schema, res))
   {
     return res.send('Received a PUT HTTP method');
   }
