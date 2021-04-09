@@ -11,7 +11,7 @@ const DefaultScreen = () => {
 
     //https://reactnavigation.org/docs/bottom-tab-navigator
     return (
-        <Tab.Navigator tabBar={props=><Menu {...props}/>}>
+        <Tab.Navigator initialRouteName="Home" tabBar={props=><Menu {...props}/>}>
             <Tab.Screen 
             name="Home" 
             component={HomeScreen}

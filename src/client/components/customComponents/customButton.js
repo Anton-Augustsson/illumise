@@ -4,10 +4,8 @@ import {View, Text, TouchableHighlight} from 'react-native';
   
 const CustomButton = (props) => {
     return (
-        <TouchableHighlight onPress={props.onPress}>
-            <View style={props.style}>
-                <Text>{props.title}</Text>
-            </View>
+        <TouchableHighlight style={props.style} onPress={props.onPress}>
+            <Text>{props.title}</Text>
         </TouchableHighlight>
     );
 }

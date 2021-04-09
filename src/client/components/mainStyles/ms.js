@@ -8,27 +8,22 @@ const ms = StyleSheet.create({
     h1: {
         fontSize:30,
         fontWeight: "bold",
-        color: "white",
     },
     h2: {
         fontSize:25,
         fontWeight: "bold",
-        color: "white",
     }, 
     h3: {
         fontSize:20,
         fontWeight: "bold",
-        color: "white",
     },
     h4: {
         fontSize:15,
         fontWeight: "bold",
-        color: "white",
     },
     h5: {
         fontSize:10,
         fontWeight: "bold",
-        color: "white",
     },
     h6: {
         fontSize:5,

@@ -16,13 +16,11 @@ const mms = StyleSheet.create({
     menuItemContainer: {
         justifyContent:"center",
         alignItems:"center",
-        height:"100%",
     },
     menuIconSize: {
-        alignSelf:"center",
         width:65,
         height:65,
-    }
+    },
 });
 
 export default mms;
