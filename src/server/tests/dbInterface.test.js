@@ -62,30 +62,62 @@ describe("Testing dbInterface", () =>
 
     it("Get User Requests", async () => 
     {
-        let userID    = await db.accounts.add("A5", "A5", "A5@mail.test", "*");
-        let requestID = await db.requests.add(userID, "T3", "this is a test");
-        await db.requests.add(userID, "T4", "this is a test");
-
-        let requests = await db.requests.getUserRequests(userID);
+        let userID1    = await db.accounts.add("A5", "A5", "A5@mail.test", "*");
+        let userID2    = await db.accounts.add("A6", "A6", "A6@mail.test", "*");
+        let requestID1 = await db.requests.add(userID1, "T3", "this is a test");
+        let requestID2 = await db.requests.add(userID1, "T4", "this is a test");
+        
+        let requests = await db.requests.getUserRequests(userID2);
+        expect(requests.length).toBe(0);
+        requests = await db.requests.getUserRequests(userID1);
         expect(requests.length).toBe(2);
-        if (requests.length > 0)
+        if (requests.length == 2)
         {
-            expect(requests[0]["_id"]).toStrictEqual(requestID);
+            expect(requests[0]._id).toStrictEqual(requestID1);
+            expect(requests[1]._id).toStrictEqual(requestID2);
         }
 
         // Test with given size
-        requests = await db.requests.getUserRequests(userID, 1);
+        requests = await db.requests.getUserRequests(userID1, 1);
+        
         expect(requests.length).toBe(1);
 
         // Test with larger size
-        requests = await db.requests.getUserRequests(userID, 5);
+        requests  = await db.requests.getUserRequests(userID1, 5);
         expect(requests.length).toBe(5);
+    });
+
+    it("Get User Providing", async () => 
+    {
+        let userID1    = await db.accounts.add("A7", "A7", "A7@mail.test", "*");
+        let userID2    = await db.accounts.add("A8", "A8", "A8@mail.test", "*");
+        let requestID1 = await db.requests.add(userID1, "T5", "this is a test");
+        let requestID2 = await db.requests.add(userID1, "T6", "this is a test");
+
+        let result1    = await db.requests.setProvider(requestID1, userID2);
+        let result2    = await db.requests.setProvider(requestID2, userID2);
+        expect(result1).toBe(true);
+        expect(result2).toBe(true);
+
+        let providing = await db.requests.getUserProviding(userID1);
+        expect(providing.length).toBe(0);
+        providing = await db.requests.getUserProviding(userID2);
+        expect(providing.length).toBe(2);
+        if (providing.length == 2)
+        {
+            expect(providing[0]._id).toStrictEqual(requestID1);
+            expect(providing[1]._id).toStrictEqual(requestID2);
+        }
+
+        // Test with larger size
+        providing = await db.requests.getUserProviding(userID2, 5);
+        expect(providing.length).toBe(5);
     });
 
     it("Set Request Completed", async () => 
     {
-        let userID    = await db.accounts.add("A6", "A6", "A6@mail.test", "*");
-        let requestID = await db.requests.add(userID, "T4", "this is a test");
+        let userID    = await db.accounts.add("A9", "A9", "A9@mail.test", "*");
+        let requestID = await db.requests.add(userID, "T7", "this is a test");
         let result    = await db.requests.setCompleted(requestID);
         expect(result).toBe(true);
     });

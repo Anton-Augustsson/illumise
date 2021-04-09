@@ -59,13 +59,24 @@ class DBRequestsInterface
             return null;
         }
     }
- 
+    
+    /**
+     * @typedef User
+     * @property {ObjectID} _id
+     * @property {string} firstName
+     * @property {string} lastName
+     * @property {string} email
+     * @property {string} password
+     * @property {string} phone
+     * @property {number} dateCreated
+     */
+
     /**
      * Gets requests created by a user
      * @async
      * @param {String} userID The id of the user
      * @param {Number} num The number of requests to get, if not set all will be returned
-     * @returns {Promise<[*]>|null} The requests BSON objects in a list or null
+     * @returns {Promise<[User]|null>} The requests BSON objects in a list or null
      */
     async getUserRequests(userID, num = undefined)
     {
@@ -90,7 +101,7 @@ class DBRequestsInterface
      * Gets requests that the user is set as a provider for
      * @param {String} userID The id of the user
      * @param {Number} num The number of requests to get, if not set all will be returned
-     * @returns {Promise<[*]>|null} The requests BSON objects in a list or null
+     * @returns {Promise<[User]|null>} The requests BSON objects in a list or null
      */
     async getUserProviding(userID, num = undefined)
     {
@@ -110,8 +121,14 @@ class DBRequestsInterface
             return null;
         }
     }
-    
-    async getNearby(geoLocation, distance, num)
+
+    /**
+     * 
+     * @param {*} geoLocation 
+     * @param {*} distance 
+     * @param {*} num 
+     */
+    async getNearby(geoLocation, distance, num = undefined)
     {
         
     }
