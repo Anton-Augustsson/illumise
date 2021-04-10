@@ -61,7 +61,7 @@ const ms = StyleSheet.create({
     button:{
         width:300,
         height:50,
-        //borderRadius:10,
+        borderRadius:10,
     },
     logoContainer: {
         justifyContent: "center",

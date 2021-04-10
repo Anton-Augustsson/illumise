@@ -2,7 +2,7 @@ import 'react-native-gesture-handler';
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import UserScreen from './components/userScreen';
+import HomeScreen from './components/userScreen/home/home';
 import LoginScreen from './components/loginScreen';
 import DefaultScreen from './components/defaultScreen';
 
@@ -22,7 +22,7 @@ const App = () => {
 
             <Stack.Screen 
             name="Home1" 
-            component={UserScreen}
+            component={HomeScreen}
             />
 
             <Stack.Screen 

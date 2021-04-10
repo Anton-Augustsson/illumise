@@ -3,8 +3,8 @@ import React from 'react';
 import { Text, View, TextInput, Button, Image, ImageBackground} from 'react-native';
 import styles from "./styles"
 import ms from '../mainStyles/ms';
-import CustomButton from "../customComponents/customButton";
 import GoogleButton from "../customComponents/googleButton";
+import FacebookButton from "../customComponents/facebookButton";
 import * as Google from 'expo-auth-session/providers/google';
 import { TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
 
@@ -20,7 +20,7 @@ const LoginScreen = ({navigation}) => {
 
     React.useEffect(() => {
     if (response?.type === 'success') {
-            navigation.navigate("Home", {token: response.authentication})
+            navigation.navigate("Home1", {token: response.authentication})
         }
     }, [response])
 
@@ -48,23 +48,8 @@ const LoginScreen = ({navigation}) => {
             </View>
 
             <View style={ms.loginContainerZ}>
-                <Text style={ms.h2}>Logga in: </Text>
-                <Text style={ms.h3}>Logga in: </Text>
-                <Text style={ms.h4}>Logga in: </Text>
-                <TextInput style={ms.textInput} placeholder="Användarnamn"/>
-                <TextInput style={ms.textInput} placeholder="Lösenord"/>
                 <StatusBar style="auto" />
 
-                <Button
-                    style = {ms.greenButton}
-                    title = "Logga in"
-                    accessibilityLabel="Learn more about this purple button"
-                    disabled={!request}
-                    onPress={() => {
-                        promptAsync();
-                    }}
-                />
-                
                 <GoogleButton
                     onPress={() =>{
                         promptAsync();
@@ -73,23 +58,10 @@ const LoginScreen = ({navigation}) => {
                     style={ms.button}
                 />
 
-                <Button 
-                    title = "banan"
-                    onPress={() => {
-                        navigation.navigate("Home1")
-                    }}>
-                </Button>
-
-            </View>
-
-            <View style={ms.logoContainer}>
-                <CustomButton 
-                style={ms.greenButton}
-                title="OOO GRÖN"
-                onPress={() => {
-                    navigation.navigate("Default")
-                }}
+                <FacebookButton
+                    style={ms.button}
                 />
+                
             </View>
             
         </View>  
