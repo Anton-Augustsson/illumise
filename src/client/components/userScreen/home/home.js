@@ -4,10 +4,12 @@ import ms from "../../mainStyles/ms"
 import hs from "./homeStyle"
 
 const HomeScreen = ({navigation, route}) => {
+
+    //USE route.params.token.access_token to get accesstoken
     return (
         <Text style={
             ms.logoContainer
-        }>SHALOM {route.params.token.accessToken}</Text>
+        }>SHALOM </Text>
     );
 }
 

@@ -7,6 +7,7 @@ import GoogleButton from "../customComponents/googleButton";
 import FacebookButton from "../customComponents/facebookButton";
 import * as Google from 'expo-auth-session/providers/google';
 import { TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
+import * as Facebook from 'expo-auth-session/providers/facebook';
 
 const LoginScreen = ({navigation}) => {
     //webclient secret key
@@ -18,12 +19,24 @@ const LoginScreen = ({navigation}) => {
         webClientId: '798387138999-jfpq5oc79qol6puinlfo3uckk5dlf6fa.apps.googleusercontent.com'
     });
 
+
     React.useEffect(() => {
     if (response?.type === 'success') {
-            navigation.navigate("Home1", {token: response.authentication})
+            navigation.navigate("Home1", {token: response.params})
         }
     }, [response])
 
+
+    const [requestFB, responseFB, promptAsyncFB] = Facebook.useAuthRequest({
+        clientId: '284019753226391'
+        //responseType: ResponseType.Code, 
+    });
+
+    React.useEffect(() => {
+        if (responseFB?.type === 'success') {
+            navigation.navigate("Home1", {token: responseFB.params});
+        }
+    }, [responseFB]);
     //View flex:1
     //View flex:2 
     //View flex:3 tre gånger större  än 1
@@ -59,6 +72,10 @@ const LoginScreen = ({navigation}) => {
                 />
 
                 <FacebookButton
+                    onPress={() =>{
+                        promptAsyncFB();
+                    }}
+                    disabled={!requestFB}
                     style={ms.button}
                 />
                 
