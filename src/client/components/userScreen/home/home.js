@@ -5,11 +5,19 @@ import hs from "./homeStyle"
 
 const HomeScreen = ({navigation, route}) => {
 
-    //USE route.params.token.access_token to get accesstoken
-    return (
-        <Text style={
-            ms.logoContainer
-        }>SHALOM </Text>
+    return (        
+        <View style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+        }}>
+            <Text  style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                fontSize: ms.h3.fontSize,
+                fontWeight: ms.h3.fontWeight,
+            }}>Welcome {route.params.user.name}</Text>
+        </View>
     );
 }
 

@@ -8,6 +8,19 @@ import FacebookButton from "../customComponents/facebookButton";
 import * as Google from 'expo-auth-session/providers/google';
 import * as Facebook from 'expo-auth-session/providers/facebook';
 
+const veryfyUser = async (navigation, token, type) => {
+    //Skriver ut användarens data i konsolen
+    var userInfo;
+    if (type === 'facebook'){ 
+        userInfo = await fetch('https://graph.facebook.com/v2.5/me?fields=email,name,friends&access_token=' +token);
+    }else if(type === 'google'){
+        userInfo = await fetch('https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' +token);
+    }
+    const body = await userInfo.json();
+    console.log(body);
+    navigation.navigate("Home1", {type: type, user: body});
+}
+
 const LoginScreen = ({navigation}) => {
     //webclient secret key
     //i7HPvxf7F1MohxIdHcZaZmI0
@@ -21,7 +34,7 @@ const LoginScreen = ({navigation}) => {
 
     React.useEffect(() => {
     if (response?.type === 'success') {
-            navigation.navigate("Home1", {token: response.params})
+        veryfyUser(navigation, response.authentication.accessToken, 'google'); 
         }
     }, [response])
 
@@ -31,9 +44,11 @@ const LoginScreen = ({navigation}) => {
         //responseType: ResponseType.Code, 
     });
 
-    React.useEffect(() => {
+    React.useEffect( () => {
         if (responseFB?.type === 'success') {
-            navigation.navigate("Home1", {token: responseFB.params});
+            //console.log(JSON.stringify(Facebook.discovery));
+            //console.log(responseFB.authentication);
+            veryfyUser(navigation, responseFB.authentication.accessToken, 'facebook');
         }
     }, [responseFB]);
     //View flex:1
