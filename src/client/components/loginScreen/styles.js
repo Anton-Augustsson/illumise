@@ -7,6 +7,7 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
         justifyContent: 'center',
         padding: 40,
+        alignItems: 'center',
     },
     loginTitle: {
 

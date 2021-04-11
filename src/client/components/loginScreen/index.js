@@ -1,12 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { Text, View, TextInput, Button, Image, ImageBackground} from 'react-native';
+import { Text, View, Image} from 'react-native';
 import styles from "./styles"
 import ms from '../mainStyles/ms';
 import GoogleButton from "../customComponents/googleButton";
 import FacebookButton from "../customComponents/facebookButton";
 import * as Google from 'expo-auth-session/providers/google';
-import { TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
 import * as Facebook from 'expo-auth-session/providers/facebook';
 
 const LoginScreen = ({navigation}) => {
@@ -60,15 +59,12 @@ const LoginScreen = ({navigation}) => {
                 <Text style={ms.h1}>SAMARIT</Text>
             </View>
 
-            <View style={ms.loginContainerZ}>
-                <StatusBar style="auto" />
 
                 <GoogleButton
                     onPress={() =>{
                         promptAsync();
                     }}
                     disabled={!request}
-                    style={ms.button}
                 />
 
                 <FacebookButton
@@ -76,10 +72,9 @@ const LoginScreen = ({navigation}) => {
                         promptAsyncFB();
                     }}
                     disabled={!requestFB}
-                    style={ms.button}
                 />
                 
-            </View>
+            
             
         </View>  
     );
