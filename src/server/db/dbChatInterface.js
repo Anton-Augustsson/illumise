@@ -26,6 +26,8 @@ class DBChatInterface
     /** @type {Db} @private */
     #database;
 
+    ///TODO: add private collection field
+
     /**
      * Creates a new DBChatInterface
      * @constructor
@@ -168,6 +170,30 @@ class DBChatInterface
             }
 
             return result.messageCollection;
+        }
+        catch (error)
+        {
+            console.error(error);
+            return null;
+        }
+    }
+    
+    /**
+     * Get all chat messages from a specific user
+     * @param {String} chatID the chat to get messages from
+     * @param {String} userID the user whos messages to find
+     * @returns {Promise<[ChatMessage]|null>} The message collection
+     */
+    async getMessagesFrom(chatID, userID)
+    {
+        let collection = this.#database.collection(chatCollectionName);
+        let filter = { _id: ObjectID(chatID)};
+
+        try
+        {
+            let result = await collection.findOne(filter); //TODO: get only the element matching userID in the query somehow
+
+            return result === null ? null : result.messageCollection[userID];
         }
         catch (error)
         {

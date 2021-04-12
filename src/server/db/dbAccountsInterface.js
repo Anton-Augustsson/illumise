@@ -6,6 +6,8 @@
 const { Db, ObjectID } = require("mongodb");
 const accountCollectionName = "Users";
 
+
+
 /**
  * @typedef User
  * @property {ObjectID} _id
@@ -25,6 +27,8 @@ class DBAccountsInterface
 {
     /** @type {Db} @private */
     #database;
+
+    ///TODO: add private collection field
 
     /**
      * Creates a new DBAccountsInterface
