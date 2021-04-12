@@ -48,15 +48,14 @@ const dbName = "Main";
         providerCollection
     }
 
-    CustomerCollections / ProviderCollection
+    RequesterCollection / ProviderCollection
     {
-        "_id": { "$oid" },
         averageRating, //(0 - 5)
         numRatings,
         ratings:
-        {
+        [
             ...
-        }
+        ]
     }
 
     Rating
@@ -64,6 +63,7 @@ const dbName = "Main";
         value, //(0 - 5)
         message,
         dateCreated,
+        creatorID,
         requestID
     }
 
