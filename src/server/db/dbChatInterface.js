@@ -140,6 +140,43 @@ class DBChatInterface
     }
 
     /**
+     * Gets messages in a given chat after some specific time
+     * @async
+     * @param {String} chatID The id of the chat
+     * @param {number} time The number of milliseconds elapsed since January 1, 1970 00:00:00 UTC (get from Date.now)
+     * @returns {Promise<MessageCollection|null>} 
+     */
+    async getMessagesAfter(chatID, time)
+    {
+        let collection = this.#database.collection(chatCollectionName);
+        let filter = { _id: ObjectID(chatID) };
+
+        try
+        {
+            // TODO: Do this with a db query
+
+            let result = await collection.findOne(filter);
+            if (result == null) return null;
+
+            let values  = Object.values(result.messageCollection);
+            for (let a = 0; a < values.length; a++)
+            {
+                for (let b = 0; b < values[a].length; b++)
+                {
+                    if (values[a][b].time < time) values[a].splice(b, 1);
+                }
+            }
+
+            return result.messageCollection;
+        }
+        catch (error)
+        {
+            console.error(error);
+            return null;
+        }
+    }
+
+    /**
      * Removes a chat
      * @async
      * @param {String} chatID The id of the chat to remove

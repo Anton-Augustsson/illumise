@@ -74,7 +74,7 @@ const dbName = "Main";
         dateCreated,
         messageCollection:
         {
-            userID: 
+            userID:
             [
                 {
                     time,
@@ -121,6 +121,7 @@ class DBInterface
         console.log("Connecting To: " + url);
         this.#connection = new DBConnectionHandler(url);
         this.#isTesting  = isTesting;
+        
     }
 
     /**
@@ -183,12 +184,14 @@ class DBInterface
 
     /**
      * Clears the database
+     * @async
+     * @returns {Promise<void>}
      */
     async clear()
     {
         if (this.#database !== null)
         {
-            return await this.#database.dropDatabase();
+            await this.#database.dropDatabase();
         }
     }
 }

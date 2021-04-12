@@ -8,6 +8,19 @@ const { Db, ObjectID } = require("mongodb");
 const requestCollectionName = "Requests";
 
 /**
+ * @typedef Request
+ * @property {number} dateCreated
+ * @property {number} dateCompleted
+ * @property {GeoLocation} geoLocation
+ * @property {String} header
+ * @property {String} body
+ * @property {Number} const
+ * @property {Boolean} isFulFilled
+ * @property {String} creatorID
+ * @property {String} providerID
+ */
+
+/**
  * Represents the public database interface related to requests
  * @class
  */
@@ -61,24 +74,13 @@ class DBRequestsInterface
             return null;
         }
     }
-    
-    /**
-     * @typedef User
-     * @property {ObjectID} _id
-     * @property {string} firstName
-     * @property {string} lastName
-     * @property {string} email
-     * @property {string} password
-     * @property {string} phone
-     * @property {number} dateCreated
-     */
 
     /**
      * Gets requests created by a user
      * @async
      * @param {String} userID The id of the user
      * @param {Number} num The number of requests to get, if not set all will be returned
-     * @returns {Promise<[User]|null>} The requests BSON objects in a list or null
+     * @returns {Promise<[Request]|null>} The requests BSON objects in a list or null
      */
     async getUserRequests(userID, num = undefined)
     {
@@ -102,7 +104,7 @@ class DBRequestsInterface
      * Gets requests that the user is set as a provider for
      * @param {String} userID The id of the user
      * @param {Number} num The number of requests to get, if not set all will be returned
-     * @returns {Promise<[User]|null>} The requests BSON objects in a list or null
+     * @returns {Promise<[Request]|null>} The requests BSON objects in a list or null
      */
     async getUserProviding(userID, num = undefined)
     {

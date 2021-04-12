@@ -7,6 +7,17 @@ const { Db, ObjectID } = require("mongodb");
 const accountCollectionName = "Users";
 
 /**
+ * @typedef User
+ * @property {ObjectID} _id
+ * @property {string} firstName
+ * @property {string} lastName
+ * @property {string} email
+ * @property {string} password
+ * @property {string} phone
+ * @property {number} dateCreated
+ */
+
+/**
  * Represents the public database interface related to accounts
  * @class
  */

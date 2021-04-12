@@ -153,6 +153,27 @@ describe("Testing dbInterface", () =>
         expect(messages[user1ID][0].message).toBe(message);
     });
 
+    it("Get messages After", async () => 
+    {
+        let user1ID   = await db.accounts.add("A14", "A14", "A14@mail", "*");
+        let user2ID   = await db.accounts.add("A15", "A15", "A15@mail", "*");
+        let requestID = await db.requests.add(user1ID, "T10", "this is a test");
+        let chatID    = await db.chat.add(requestID, [user1ID, user2ID]);
+        
+        let time1 = Date.now();
+        let message = "msg2";
+        await db.chat.addMessage(chatID, user1ID, message);
+        
+        let result1 = await db.chat.getMessagesAfter(chatID, time1);
+        expect(result1[user1ID].length).toBe(1);
+        expect(result1[user2ID].length).toBe(0);
+        expect(result1[user1ID][0].message).toBe(message);
+
+        let result2 = await db.chat.getMessagesAfter(chatID, Date.now());
+        console.log(result2);
+        expect(result2[user1ID].length).toBe(0);
+    });
+
     afterAll(async () => 
     {
         await db.close();
