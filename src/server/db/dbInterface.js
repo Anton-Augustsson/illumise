@@ -36,7 +36,7 @@ const dbName = "Main";
         lastName,
         email,
         password,
-        phone,  //TODO
+        phone,
         dateCreated
     }
 

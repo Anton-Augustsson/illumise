@@ -76,7 +76,7 @@ class DBConnectionHandler
     /**
      * Establishes a database connection
      * @async
-     * @returns {Promise<MongoClient>} The database client
+     * @returns {Promise<MongoClient>|null} The database client or null
      */
     async connectAsync()
     {
