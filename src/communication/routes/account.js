@@ -1,3 +1,6 @@
+
+//const { DBInterface } = require("../db/dbInterface");
+const db = require("../server-communication");
 const express = require('express');
 const router = express.Router();
 const Joi = require('joi');
@@ -40,7 +43,7 @@ function validParams(params, res)
  * create new account
  * @param {json} credentials - A object of the users credentials.
  */
-router.put('/createAccount', (req, res) =>
+router.put('/createAccount', async (req, res) =>
 {
   const schema = Joi.object({
     credentials: Joi.any()
@@ -48,6 +51,7 @@ router.put('/createAccount', (req, res) =>
 
   if(valid(req.body, schema, res))
   {
+    let user1ID = await db.accounts.add("Test1", "Test1", "some mail", "*");
     return res.send('Received a PUT HTTP method');
   }
 });
