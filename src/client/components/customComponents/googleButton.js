@@ -6,7 +6,7 @@ import ms from '../mainStyles/ms';
 const GoogleButton = (props) => {
     return (
         <TouchableOpacity 
-            style={{flexDirection:"row",alignItems:'center',justifyContent:'left', margin:2, backgroundColor:'#FFFFFF',
+            style={{flexDirection:"row",alignItems:'center',justifyContent:'center', margin:2, backgroundColor:'#FFFFFF',
             width: ms.button.width,
             height: ms.button.height,
             borderRadius: ms.button.borderRadius,
@@ -29,7 +29,6 @@ const GoogleButton = (props) => {
                         width: 48,
                         height: 48,
                         
-                        marginLeft: 10,
                         marginRight: 15,
                     }}/>
                 <Text style={{

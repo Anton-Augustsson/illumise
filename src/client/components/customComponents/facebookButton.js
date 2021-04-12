@@ -7,7 +7,7 @@ import ms from "../mainStyles/ms";
 const FacebookButton = (props) => {
     return (
         <TouchableOpacity 
-            style={{flexDirection:"row",alignItems:'center',justifyContent:'left',backgroundColor: '#4267b2', margin:2, borderRadius:ms.button.borderRadius, width: ms.button.width, height:ms.button.height,}}
+            style={{flexDirection:"row",alignItems:'center',justifyContent:'center',backgroundColor: '#4267b2', margin:2, borderRadius:ms.button.borderRadius, width: ms.button.width, height:ms.button.height,}}
                 onPress={props.onPress}
                 disabled={props.disabled}
                 title={props.title}>
