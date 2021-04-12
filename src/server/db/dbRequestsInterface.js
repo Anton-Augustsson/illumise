@@ -102,10 +102,9 @@ class DBRequestsInterface
         try
         {
             let filter = { creatorID: userID };
-            let result = this.#collection.find(filter);
-            let array  = await result.toArray();
-            if (num !== undefined) array.length = num >= 0 ? num : 0;
-            return array;
+            let result = await this.#collection.find(filter).toArray();
+            if (num !== undefined) result.length = num >= 0 ? num : 0;
+            return result;
         }
         catch (error)
         {
@@ -126,7 +125,7 @@ class DBRequestsInterface
         try
         {
             let filter = { providerID: userID };
-            let result = this.#collection.find(filter).toArray();
+            let result = await this.#collection.find(filter).toArray();
             if (num !== undefined) result.length = num >= 0 ? num : 0;
             return result;
         }
