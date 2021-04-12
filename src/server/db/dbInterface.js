@@ -121,7 +121,6 @@ class DBInterface
         console.log("Connecting To: " + url);
         this.#connection = new DBConnectionHandler(url);
         this.#isTesting  = isTesting;
-        
     }
 
     /**

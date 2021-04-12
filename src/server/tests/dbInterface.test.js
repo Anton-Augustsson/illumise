@@ -280,8 +280,6 @@ describe("Testing dbInterface", () =>
         checkResultGetNearby(result, requests, maxRequests, shouldFind, shouldNotFind);
     });
 
-
-
     afterAll(async () => 
     {
         await db.close();
