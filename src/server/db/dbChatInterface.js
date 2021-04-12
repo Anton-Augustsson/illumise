@@ -26,6 +26,8 @@ class DBChatInterface
     /** @type {Db} @private */
     #database;
 
+    ///TODO: add private collection field
+
     /**
      * Creates a new DBChatInterface
      * @constructor
