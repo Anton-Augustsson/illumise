@@ -3,7 +3,6 @@
  * related to requests.
  */
 
-
 /**
  * 
  * @typedef GeoLocation
@@ -47,7 +46,7 @@ class DBRequestsInterface
 
     /** @type {Collection} @private */
     #collection;
-
+    
     /**
      * Creates a new DBRequestInterface
      * @constructor
@@ -142,7 +141,6 @@ class DBRequestsInterface
             return null;
         }
     }
-    
 
     /**
      * Get nearby requests
@@ -179,7 +177,6 @@ class DBRequestsInterface
             return null;
         }
      }
-
 
     /**
      * Marks a requests as fulfilled and sets the completed time

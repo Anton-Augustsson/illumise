@@ -4,7 +4,6 @@
  */
 
 const { Db, ObjectID } = require("mongodb");
-
 const chatCollectionName = "Chat";
 
 /**
