@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import React from 'react';
-import {Platform, StatusBar, View, StyleSheet} from "react-native";
+import {Platform, StatusBar, View, StyleSheet, Text} from "react-native";
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from './components/loginScreen';
@@ -10,12 +10,12 @@ const Stack = createStackNavigator();
 
 const App = () => {
     return(
-        <View>
-            <View style={styles.statusbar}></View>
+        <>
+            <View style={{backgroundColor:'green', width:1000, height:50}}></View>
             <NavigationContainer>
                 <Stack.Navigator 
                     screenOptions={{
-                    headerShown: false
+                    headerShown:false
                     }}
 
                     initialRouteName="Login"
@@ -33,7 +33,7 @@ const App = () => {
 
                 </Stack.Navigator>
             </NavigationContainer>
-        </View>
+        </>
     );
 }
 
