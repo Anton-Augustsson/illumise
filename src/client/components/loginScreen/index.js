@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { Text, View, Image} from 'react-native';
+import { Text, View, Image, Button} from 'react-native';
 import styles from "./styles"
 import ms from '../mainStyles/ms';
 import GoogleButton from "../customComponents/googleButton";
@@ -75,21 +75,21 @@ const LoginScreen = ({navigation}) => {
             </View>
 
 
-                <GoogleButton
-                    onPress={() =>{
-                        promptAsync();
-                    }}
-                    disabled={!request}
-                />
+            <GoogleButton
+                onPress={() =>{
+                    promptAsync();
+                }}
+                disabled={!request}
+            />
 
-                <FacebookButton
-                    onPress={() =>{
-                        promptAsyncFB();
-                    }}
-                    disabled={!requestFB}
-                />
-                
-            
+            <FacebookButton
+                onPress={() =>{
+                    promptAsyncFB();
+                }}
+                disabled={!requestFB}
+            />
+
+            <Button title="Pass Login" onPress={() => navigation.navigate("Default")}></Button>
             
         </View>  
     );

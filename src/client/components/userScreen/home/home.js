@@ -16,63 +16,71 @@ const DATA = [
         title: "First Item",
         img1:require("../../../assets/samarit_logo2.png"),
         img2:require("../../../assets/samarit_logo2.png"),
-        navigation: "FoodRequest",
+        des1: "FoodRequest",
+        des2: "FoodRequest",
     },
     {
         id: "2",
         title: "Second Item",
         img1:require("../../../assets/samarit_logo2.png"),
         img2:require("../../../assets/samarit_logo2.png"),
-        navigation: "home",
+        des1: "FoodRequest",
+        des2: "FoodRequest",
     },
     {
         id: "3",
         title: "Third Item",
         img1:require("../../../assets/samarit_logo2.png"),
         img2:require("../../../assets/samarit_logo2.png"),
-        navigation: "home",
+        des1: "FoodRequest",
+        des2: "FoodRequest",
     },
     {
         id: "4",
         title: "Third Item",
         img1:require("../../../assets/samarit_logo2.png"),
         img2:require("../../../assets/samarit_logo2.png"),
-        navigation: "home",
+        des1: "FoodRequest",
+        des2: "FoodRequest",
     },
     {
         id: "5",
         title: "Third Item",
         img1:require("../../../assets/samarit_logo2.png"),
         img2:require("../../../assets/samarit_logo2.png"),
-        navigation: "home",
+        des1: "FoodRequest",
+        des2: "FoodRequest",
     },
     {
         id: "6",
         title: "Third Item",
         img1:require("../../../assets/samarit_logo2.png"),
         img2:require("../../../assets/samarit_logo2.png"),
-        navigation: "home",
+        des1: "FoodRequest",
+        des2: "FoodRequest",
     },
     {
         id: "7",
         title: "Third Item",
         img1:require("../../../assets/samarit_logo2.png"),
         img2:require("../../../assets/samarit_logo2.png"),
-        navigation: "home",
+        des1: "FoodRequest",
+        des2: "FoodRequest",
     },
     {
         id: "8",
         title: "Third Item",
         img1:require("../../../assets/samarit_logo2.png"),
         img2:require("../../../assets/samarit_logo2.png"),
-        navigation: "home",
+        des1: "FoodRequest",
+        des2: "FoodRequest",
     },
 ];
 
 const InnerItem = (props)  => {
     return(
         <TouchableOpacity onPress={()=> {
-            props.nav.navigate(props.navigation);
+            props.nav.navigate(props.des);
         }} 
         style={hs.innerItemContainer}
         >
@@ -85,23 +93,26 @@ const InnerItem = (props)  => {
     );
 }
 
-const Item = ({item}) => (
+const Item = ({item, nav}) => (
     <View style={hs.itemContainer}> 
         <InnerItem
             source={item.img1}
-            navigation={item.navigation1}
+            des={item.des1}
+            nav={nav}
         />
         <InnerItem
             source={item.img2}
-            navigation={item.navigation2}
+            des={item.des2}
+            nav={nav}
         />
     </View>
 );
 
-const renderItem = ({item}) => { 
+const renderItem = ({item}, navigation) => { 
     return (
         <Item
             item={item}
+            nav={navigation}
         />
     );
 };
@@ -115,16 +126,14 @@ const TopWelcome = () => {
 }
 
 const HomeScreen = ({navigation}) => {
-    console.log(navigation);
 
     return (
         <View>
             <TopWelcome/>
             <FlatList
                 data={DATA}
-                renderItem={renderItem}
+                renderItem={(item) => renderItem(item, navigation)}
                 keyExtractor={(item) => item.id}
-                extraData={navigation}
             />
         </View>
     );
