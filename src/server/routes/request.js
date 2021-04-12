@@ -1,3 +1,5 @@
+
+const db = require("../server");
 const express = require('express');
 const router = express.Router();
 const Joi = require('joi');
@@ -26,12 +28,29 @@ function validParams(params, res)
 {
   for (let p in params)
   {
-    if(params[p] == undefined){
+    if(params[p] == undefined)
+    {
       res.status(400).send(p + " is undefined");
       return false;
     }
   }
   return true;
+}
+
+//	.add(userID, header, body, cost = undefined)
+function validData(data, res){
+  let d = data;
+
+  let validHeader = d.header != undefined;
+  let validBody = d.body != undefined;
+  let validCost = d.cost != undefined;
+
+  if(validHeader && validBody && validCost){
+    return true;
+  }
+
+  res.status(404).send("invalid data, should be: header, body, cost ");
+  return false;
 }
 
 /**
@@ -44,8 +63,9 @@ router.put('/completeRequest', async (req, res) =>
     requestID: Joi.string(),
   });
 
-  if(valid(req.body, schema, res)){
-    // TODO: call server interface
+  if(valid(req.body, schema, res))
+  {
+    let response = await db.requests.setCompleted(req.body.requestID);
     return res.send('Received a PUT HTTP method');
   }
 });
@@ -61,7 +81,8 @@ router.get('/provider/getNearRequests', async (req, res) =>
   };
 
   if(validParams(params, res)){
-    // TODO: call server interface
+    let distance = 40;
+    let response = await db.requests.getNearby(params.geoLocation, distance, undefined);
     return res.send('Received a GET HTTP method');
   }
 });
@@ -71,15 +92,16 @@ router.get('/provider/getNearRequests', async (req, res) =>
  * @param {string} providorID - The id of the provider with select a request to performed
  * @param {string} requestID - The id of the request to be selected
  */
-router.get('/provider/set', async (req, res) =>
+router.get('/provider/set', async (req, res) => // TODO: Not get method
 {
   const params = {
     providorID: req.param('providorID'),
     requestID: req.param('requestID')
   };
 
-  if(validParams(params, res)){
-    // TODO: call server interface
+  if(validParams(params, res))
+  {
+    //let response = await db.requests.getNearby(params.geoLocation, distance, undefined);
     return res.send('Received a GET HTTP method');
   }
 });
@@ -97,7 +119,7 @@ router.get('/provider/getUserProviding', async (req, res) =>
   };
 
   if(validParams(params, res)){
-    // TODO: call server interface
+    let response = await db.requests.getUserProviding(params.providorID, params.num);
     return res.send('Received a GET HTTP method');
   }
 });
@@ -114,8 +136,10 @@ router.post('/requester/newRequest', async (req, res) =>
     data: Joi.any()
   });
 
-  if(valid(req.body, schema, res)){
-    // TODO: call server interface
+  let data = req.body.data;
+
+  if(valid(req.body, schema, res) && validData(data, res)){
+    let response = await db.requests.add(req.body.requestID, data.header, data.body, data.cost);
     return res.send('Received a POST HTTP method newRequest');
   }
 });
@@ -125,15 +149,16 @@ router.post('/requester/newRequest', async (req, res) =>
  * @param {string} requestID - The user id of the users requests
  * @param {int} num - The number of how many requests to return starting from most reasont
  */
-router.get('/requester/getMyRequest', async (req, res) =>
+router.get('/requester/getMyRequest', async (req, res) => // TODO: change getMyRequest to getUserRequest
 {
   const params = {
     requestID: req.param('requestID'),
     num: req.param('num')
   };
 
-  if(validParams(params, res)){
-    // TODO: call server interface
+  if(validParams(params, res))
+  {
+    let response = await db.requests.getUserRequests(params.requestID, params.num);
     return res.send('Received a GET HTTP method');
   }
 });
@@ -149,7 +174,7 @@ router.delete('/requester/removeRequest', async (req, res) =>
   });
 
   if(valid(req.body, schema, res)){
-    // TODO: call server interface
+    let response = await db.requests.remove(req.body.requestID);
     return res.send('Received a GET /requester/removeRequest HTTP method');
   }
 });
@@ -170,7 +195,7 @@ router.put('/requester/reviewProvider', async (req, res) =>
   });
 
   if(valid(req.body, schema)){
-    // TODO: call server interface
+    //let response = await db.requests.remove(req.body.requestID); TODO
     return res.send('Received a PUT HTTP method');
   }
 });
@@ -188,7 +213,7 @@ router.put('/requester/acceptProvider', async (req, res) =>
   });
 
   if(valid(req.body, schema, res)){
-    // TODO: call server interface
+    let response = await db.requests.setProvider(req.body.requestID, req.body.providorID);
     return res.send('Received a PUT HTTP method');
   }
 });

@@ -65,10 +65,10 @@ router.put('/createAccount', async (req, res) =>
     credentials: Joi.any()
   });
 
-  //TODO: validate credentials?
-  if(valid(req.body, schema, res) && validCredentials(req.body.credentials, res))
+  let c = req.body.credentials;
+
+  if(valid(req.body, schema, res) && validCredentials(c, res))
   {
-    let c = req.body.credentials;
     let response = await db.accounts.add(c.firstName, c.lastName, c.email, c.token);
     return res.send('Received a PUT HTTP method');
   }
@@ -87,7 +87,7 @@ router.delete('/removeAccount', async (req, res) =>
   if(valid(req.body, schema, res))
   {
     console.log(req.body.userID);
-    //let response = await db.accounts.remove(req.body.userID); // FXME: craches server
+    let response = await db.accounts.remove(req.body.userID);
     return res.send('Received a DELETE /removeAcount HTTP method');
   }
 });
@@ -104,9 +104,10 @@ router.post('/changeCredentials', async (req, res) =>
     credentials: Joi.any()
   });
 
-  if(valid(req.body, schema, res), validCredentials(req.body.credentials, res))
+  let c = req.body.credentials;
+
+  if(valid(req.body, schema, res), validCredentials(c, res))
   {
-    let c = req.body.credentials;
     let response = await db.accounts.update(req.body.userID, c.firstName, c.lastName, c.email, c.token);
     return res.send('Received a PUT HTTP method');
   }
