@@ -9,7 +9,8 @@ const { DBRequestsInterface } = require("./dbRequestsInterface");
 const { DBAccountsInterface } = require("./dbAccountsInterface");
 const { DBChatInterface }     = require("./dbChatInterface");
 
-const dbName = "testDB";
+const testDBName = "testDB";
+const dbName = "Main";
 
 /*
     Database structure:
@@ -71,20 +72,15 @@ const dbName = "testDB";
         "_id": { "$oid" },
         requestID,
         dateCreated,
-        messageCollections: // 2 st
+        messageCollection:
         {
-            ...
-        }
-    }
-
-    MessageCollection
-    {
-        "_id": { "$oid" },
-        userID,
-        messages: 
-        {
-            time,
-            message
+            userID:
+            [
+                {
+                    time,
+                    message
+                }
+            ]
         }
     }
 */
@@ -108,6 +104,8 @@ class DBInterface
     #accounts;
     /** @type {DBChatInterface} @private */
     #chat;
+    /** @type {boolean} @private */
+    #isTesting;
 
     /**
      * Creates a DBInterface
@@ -115,12 +113,14 @@ class DBInterface
      * @param {String} host The ip-address or host name of the host
      * @param {String} port The port used by the database
      * @param {String} url The mongoDB connection url
+     * @param {Boolean} isTesting If this will be used for testing
      */
-    constructor(host = "localhost", port = "27017", url = undefined)
+    constructor(host = "localhost", port = "27017", url = undefined, isTesting = false)
     {
         url = url === undefined ? `mongodb://${host}:${port}` : url;
         console.log("Connecting To: " + url);
         this.#connection = new DBConnectionHandler(url);
+        this.#isTesting  = isTesting;
     }
 
     /**
@@ -159,7 +159,7 @@ class DBInterface
         let client = await this.#connection.connectAsync()
         if (client !== null)
         {
-            this.#database = client.db(dbName);
+            this.#database = client.db(this.#isTesting ? testDBName : dbName);
             this.#requests = new DBRequestsInterface(this.#database);
             this.#accounts = new DBAccountsInterface(this.#database);
             this.#chat     = new DBChatInterface(this.#database);
@@ -183,12 +183,14 @@ class DBInterface
 
     /**
      * Clears the database
+     * @async
+     * @returns {Promise<void>}
      */
     async clear()
     {
         if (this.#database !== null)
         {
-            return await this.#database.dropDatabase();
+            await this.#database.dropDatabase();
         }
     }
 }
