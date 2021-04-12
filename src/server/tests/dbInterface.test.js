@@ -177,9 +177,9 @@ describe("Testing dbInterface", () =>
     it("Get user messages from specific chat - getMessagesFrom()", async () => 
     {
         // Add
-        let user1ID   = await db.accounts.add("A14", "A14", "A14@mail", "*");
-        let user2ID   = await db.accounts.add("A15", "A15", "A15@mail", "*");
-        let requestID = await db.requests.add(user1ID, "T10", "this is a test");
+        let user1ID   = await db.accounts.add("A16", "A16", "A16@mail", "*");
+        let user2ID   = await db.accounts.add("A17", "A17", "A17@mail", "*");
+        let requestID = await db.requests.add(user1ID, "T11", "this is a test");
         let chatID    = await db.chat.add(requestID, [user1ID, user2ID]);
         
         // Add messages to the chat

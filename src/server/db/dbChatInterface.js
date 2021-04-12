@@ -181,7 +181,7 @@ class DBChatInterface
     /**
      * Get all chat messages from a specific user
      * @param {String} chatID the chat to get messages from
-     * @param {String} userID the user whos messages to find
+     * @param {String} userID the user messages to find
      * @returns {Promise<[ChatMessage]|null>} The message collection
      */
     async getMessagesFrom(chatID, userID)
