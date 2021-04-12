@@ -3,6 +3,22 @@
  * related to requests.
  */
 
+
+/**
+ * 
+ * @typedef GeoLocation
+ * @property {String} type
+ * @property {[Coordinate]} coordinates 
+ */
+
+/**
+ * 
+ * @typedef Coordinate
+ * @property {[Number]} coordinates longitude, latiude 
+ * //TODO: make it always two numbers [longitude, latitude]
+ */
+
+
 const { Db, Collection, ObjectID } = require("mongodb");
 
 /**
@@ -112,32 +128,41 @@ class DBRequestsInterface
         }
     }
     
+
     /**
      * Get nearby requests
      * @async
-     * @param {string} geoLocation geoJSON-object https://docs.mongodb.com/manual/reference/geojson/ //TODO: how to typedef this?
+     * @param {String} geoLocation geoJSON-object https://docs.mongodb.com/manual/reference/geojson/ //TODO: how to typedef this?
      * @param {number} maxDistance the maximum distance in meters to search from geoLocation
      * @param {number} maxRequests the amount > 0 of nearby requests to retrieve
-     * @returns an array of size maxRequests, with empty slots if the size is larger than the amount of nearby requests
+     * @returns {Promise<[]>} an array of size maxRequests, with empty slots if the size is larger than the amount of nearby requests
      */
      async getNearby(geoLocation, maxDistance, num = undefined)
      {
-         await this.#collection.ensureIndex( { "geoLocation": "2dsphere"} );
-
-         let result = await this.#collection.find ({
-            geoLocation: {
-                $near: {
-                  $geometry: geoLocation,
-                  $maxDistance: maxDistance + 10, //10 meter margin
-                  $minDistance: 0
-                }
-              }
-           }).toArray();
-
-        //TODO: maybe there is a find function that takes a number argument in mongodb instead?
-        //TODO: max num?
-        if (num != undefined && num > 0) result.length = num; //resize
-        return result;
+         try 
+         {
+             await this.#collection.ensureIndex( { "geoLocation": "2dsphere"} );
+    
+             let result = await this.#collection.find ({
+                geoLocation: {
+                    $near: {
+                      $geometry: geoLocation,
+                      $maxDistance: maxDistance + 10, //10 meter margin
+                      $minDistance: 0
+                    }
+                  }
+               }).toArray();
+               
+            //TODO: maybe there is a find function that takes a number argument in mongodb instead?
+            //TODO: max num?
+            if (num != undefined && num > 0) result.length = num; //resize
+            return result;
+         }
+         catch (error)
+        {
+            console.log(error);
+            return null;
+        }
      }
 
 

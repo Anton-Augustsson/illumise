@@ -172,7 +172,6 @@ describe("Testing dbInterface", () =>
 
     afterAll(async () => 
     {
-        db.clear();
         await db.close();
     });
 });
@@ -186,8 +185,8 @@ describe("Testing dbInterface", () =>
  * @param result the db-query result
  * @param requests array of the requests you are working with in the test
  * @param {number} maxRequests the maxRequests arg used in the db-query
- * @param {[string]} shouldFind array of the body field of the requests that the query should have found
- * @param {[string]} shouldNotFind array of the body field of the requests that the query should not have found
+ * @param {[String]} shouldFind array of the body field of the requests that the query should have found
+ * @param {[String]} shouldNotFind array of the body field of the requests that the query should not have found
  */
 function checkResultGetNearby(result, requests, maxRequests, shouldFind, shouldNotFind) 
 {
