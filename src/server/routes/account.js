@@ -39,6 +39,22 @@ function validParams(params, res)
   return true;
 }
 
+function validCredentials(credentials, res){
+  let c = credentials;
+
+  let validFirstName = c.firstName != undefined;
+  let validLastName = c.lastName != undefined;
+  let validEmail = c.email != undefined;
+  let validToken = c.token != undefined;
+
+  if(validFirstName && validLastName && validEmail && validToken){
+    return true;
+  }
+
+  res.status(404).send("invalid credentials, should be: firtsName, lastName, email, token ");
+  return false;
+}
+
 /**
  * create new account
  * @param {json} credentials - A object of the users credentials.
@@ -49,9 +65,11 @@ router.put('/createAccount', async (req, res) =>
     credentials: Joi.any()
   });
 
-  if(valid(req.body, schema, res))
+  //TODO: validate credentials?
+  if(valid(req.body, schema, res) && validCredentials(req.body.credentials, res))
   {
-    let user1ID = await db.accounts.add("Test1", "Test1", "some mail", "*");
+    let c = req.body.credentials;
+    let response = await db.accounts.add(c.firstName, c.lastName, c.email, c.token);
     return res.send('Received a PUT HTTP method');
   }
 });
@@ -60,7 +78,7 @@ router.put('/createAccount', async (req, res) =>
  * remove specified account
  * @param {string} userID - The user id of the account that should be deleted
  */
-router.delete('/removeAccount', (req, res) =>
+router.delete('/removeAccount', async (req, res) =>
 {
   const schema = Joi.object({
     userID: Joi.string()
@@ -68,6 +86,8 @@ router.delete('/removeAccount', (req, res) =>
 
   if(valid(req.body, schema, res))
   {
+    console.log(req.body.userID);
+    //let response = await db.accounts.remove(req.body.userID); // FXME: craches server
     return res.send('Received a DELETE /removeAcount HTTP method');
   }
 });
@@ -77,15 +97,17 @@ router.delete('/removeAccount', (req, res) =>
  * @param {string} userID - The user id of the account that should be changed
  * @param {json} credentials - A object of the users credentials.
  */
-router.post('/changeCredentials', (req, res) =>
+router.post('/changeCredentials', async (req, res) =>
 {
   const schema = Joi.object({
     userID: Joi.string(),
     credentials: Joi.any()
   });
 
-  if(valid(req.body, schema, res))
+  if(valid(req.body, schema, res), validCredentials(req.body.credentials, res))
   {
+    let c = req.body.credentials;
+    let response = await db.accounts.update(req.body.userID, c.firstName, c.lastName, c.email, c.token);
     return res.send('Received a PUT HTTP method');
   }
 });
