@@ -1,3 +1,5 @@
+
+const db = require("../server");
 const express = require('express');
 const router = express.Router();
 const Joi = require('joi');
@@ -41,15 +43,18 @@ function validParams(params, res)
  * @param {string} userID - The id of the user that sends a message
  * @param {string} chatID - The id of the chat witch is between the provider and requester
  */
-router.put('/sendMessage', (req, res) =>
+router.put('/sendMessage', async (req, res) => // post?
 {
   const schema = Joi.object({
     userID: Joi.string(),
     chatID: Joi.string()
   });
 
-  if(valid(req.body, schema, res))
+  let b = req.body;
+
+  if(valid(b, schema, res))
   {
+    let response = await db.chat.add(b.userID, b.chatID);
     return res.send('Received a PUT HTTP method');
   }
 });
@@ -59,14 +64,16 @@ router.put('/sendMessage', (req, res) =>
  * @param {string} userID - The id of the user that sends a message
  * @param {string} chatID - The id of the chat witch is between the provider and requester
  */
-router.get('/getAllMessages', (req, res) =>
+router.get('/getAllMessages', async (req, res) =>
 {
   const params = {
-    userID: req.param('userID'),
+    userID: req.param('userID'), //TODO: dont need userID upto client to determen who is who
     chatID: req.param('chatID')
   };
 
-  if(validParams(params, res)){
+  if(validParams(params, res))
+  {
+    let response = await db.chat.get(params.chatID);
     return res.send('Received a GET Get all messages HTTP method');
   }
 });
@@ -75,14 +82,17 @@ router.get('/getAllMessages', (req, res) =>
  * setup a new chat for a new service provider
  * @param {string} requestID - The id of the request that is the chat should be created for
  */
-router.put('/newChat', (req, res) =>
+router.put('/newChat', async (req, res) => // POST?
 {
   const schema = Joi.object({
-    userID: Joi.string()
+    requestID: Joi.string() // TODO userID do you need it?
   });
 
-  if(valid(req.body, schema, res))
+  let b = req.body;
+
+  if(valid(b, schema, res))
   {
+    //let response = await db.chat.add(b.requestID); TODO
     return res.send('Received a PUT HTTP method');
   }
 });
@@ -91,14 +101,17 @@ router.put('/newChat', (req, res) =>
  * remove chat if no longer interested in chat
  * @param {string} chatID - The id of the chat witch is between the provider and requester
  */
-router.delete('/removeChat', (req, res) =>
+router.delete('/removeChat', async (req, res) =>
 {
   const schema = Joi.object({
-    userID: Joi.string(),
+    chatID: Joi.string(),
   });
+
+  let b = req.body;
 
   if(valid(req.body, schema, res))
   {
+    let response = await db.chat.remove(b.chatID);
     return res.send('Received a GET /removeChat HTTP method');
   }
 });
