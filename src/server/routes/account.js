@@ -1,6 +1,6 @@
 
 //const { DBInterface } = require("../db/dbInterface");
-const db = require("../server-communication");
+const db = require("../server");
 const express = require('express');
 const router = express.Router();
 const Joi = require('joi');

@@ -1,6 +1,6 @@
 /** Initialize Communication */
 
-const { DBInterface } = require("../server/db/dbInterface");
+const { DBInterface } = require("./db/dbInterface");
 const express = require('express');
 const app = express();
 
