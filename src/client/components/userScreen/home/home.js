@@ -16,54 +16,66 @@ const DATA = [
         title: "First Item",
         img1:require("../../../assets/samarit_logo2.png"),
         img2:require("../../../assets/samarit_logo2.png"),
+        navigation: "FoodRequest",
     },
     {
         id: "2",
         title: "Second Item",
         img1:require("../../../assets/samarit_logo2.png"),
         img2:require("../../../assets/samarit_logo2.png"),
+        navigation: "home",
     },
     {
         id: "3",
         title: "Third Item",
         img1:require("../../../assets/samarit_logo2.png"),
         img2:require("../../../assets/samarit_logo2.png"),
+        navigation: "home",
     },
     {
         id: "4",
         title: "Third Item",
         img1:require("../../../assets/samarit_logo2.png"),
         img2:require("../../../assets/samarit_logo2.png"),
+        navigation: "home",
     },
     {
         id: "5",
         title: "Third Item",
         img1:require("../../../assets/samarit_logo2.png"),
         img2:require("../../../assets/samarit_logo2.png"),
+        navigation: "home",
     },
     {
         id: "6",
         title: "Third Item",
         img1:require("../../../assets/samarit_logo2.png"),
         img2:require("../../../assets/samarit_logo2.png"),
+        navigation: "home",
     },
     {
         id: "7",
         title: "Third Item",
         img1:require("../../../assets/samarit_logo2.png"),
         img2:require("../../../assets/samarit_logo2.png"),
+        navigation: "home",
     },
     {
         id: "8",
         title: "Third Item",
         img1:require("../../../assets/samarit_logo2.png"),
         img2:require("../../../assets/samarit_logo2.png"),
+        navigation: "home",
     },
 ];
 
 const InnerItem = (props)  => {
     return(
-        <TouchableOpacity onPress={props.onPress} style={hs.innerItemContainer}>
+        <TouchableOpacity onPress={()=> {
+            props.nav.navigate(props.navigation);
+        }} 
+        style={hs.innerItemContainer}
+        >
             <Image
                 resizeMode={'cover'}
                 style={hs.iconSize}
@@ -73,27 +85,23 @@ const InnerItem = (props)  => {
     );
 }
 
-const Item = ({ item, onPress}) => (
+const Item = ({item}) => (
     <View style={hs.itemContainer}> 
         <InnerItem
             source={item.img1}
-            onPress={onPress}
+            navigation={item.navigation1}
         />
         <InnerItem
             source={item.img2}
-            onPress={onPress}
+            navigation={item.navigation2}
         />
     </View>
 );
 
-const renderItem = ({ item }) => { 
-    const backgroundColor = item.id //=== selectedId ? "#6e3b6e" : "#f9c2ff";
-
+const renderItem = ({item}) => { 
     return (
         <Item
             item={item}
-            //onPress={() => setSelectedId(item.id)}
-            //backgroundColor={{ backgroundColor }}
         />
     );
 };
@@ -106,9 +114,8 @@ const TopWelcome = () => {
     );
 }
 
-const HomeScreen = () => {
-
-    //const [selectedId, setSelectedId] = useState(null);
+const HomeScreen = ({navigation}) => {
+    console.log(navigation);
 
     return (
         <View>
@@ -117,7 +124,7 @@ const HomeScreen = () => {
                 data={DATA}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id}
-                //extraData={selectedId}
+                extraData={navigation}
             />
         </View>
     );

@@ -18,7 +18,7 @@ const veryfyUser = async (navigation, token, type) => {
     }
     const body = await userInfo.json();
     console.log(body);
-    navigation.navigate("Home1", {type: type, user: body});
+    navigation.navigate("Default", {type: type, user: body});
 }
 
 const LoginScreen = ({navigation}) => {

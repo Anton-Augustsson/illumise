@@ -21,11 +21,6 @@ const App = () => {
             />
 
             <Stack.Screen 
-            name="Home1" 
-            component={HomeScreen}
-            />
-
-            <Stack.Screen 
             name="Default" 
             component={DefaultScreen}
             />

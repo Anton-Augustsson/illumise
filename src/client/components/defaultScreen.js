@@ -4,6 +4,7 @@ import Menu from "./menu/menu"
 import HomeScreen from './userScreen/home/home';
 import OrdersScreen from './userScreen/orders/orders';
 import NotificationScreen from './userScreen/notification/notification';
+import createFoodRequestScreen from './userScreen/createFoodRequestScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -15,6 +16,11 @@ const DefaultScreen = () => {
             <Tab.Screen 
             name="Home" 
             component={HomeScreen}
+            />
+
+            <Tab.Screen 
+            name="FoodRequest" 
+            component={createFoodRequestScreen}
             />
 
             <Tab.Screen 
