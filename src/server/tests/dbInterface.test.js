@@ -22,8 +22,8 @@ describe("Testing dbInterface", () =>
     {
         // Add
         const mail = "test@mail.test";
-        let user1ID = await db.accounts.add("Test1", "Test1", mail, "*");
-        let user2ID = await db.accounts.add("Test2", "Test2", mail, "*");
+        let user1ID = await db.accounts.add("Test1", "Test1", mail, "+46123456789", "*");
+        let user2ID = await db.accounts.add("Test2", "Test2", mail, "+46123456789", "*");
         expect(user1ID).not.toBe(null);
         expect(user2ID).toBe(null);
         // Remove
@@ -35,7 +35,7 @@ describe("Testing dbInterface", () =>
 
     it("Modify Account", async () => 
     {
-        let userID = await db.accounts.add("A1", "A1", "A1@mail.test", "*");
+        let userID = await db.accounts.add("A1", "A1", "A1@mail.test", "+46123456789", "*");
         let result = await db.accounts.update(userID, lastName = "Testing");
         expect(result).toBe(true);
     });
@@ -43,7 +43,7 @@ describe("Testing dbInterface", () =>
     it("Create & Remove Request", async () => 
     {
         // Add
-        let userID    = await db.accounts.add("A2", "A2", "A2@mail.test", "*");
+        let userID    = await db.accounts.add("A2", "A2", "A2@mail.test", "+46123456789", "*");
         let requestID = await db.requests.add(userID, "T1", "this is a test");
         expect(requestID).not.toBe(null);
         // Remove
@@ -53,8 +53,8 @@ describe("Testing dbInterface", () =>
     
     it("Set Request Provider", async () => 
     {
-        let userID    = await db.accounts.add("A3", "A3", "A3@mail.test", "*");
-        let user2ID   = await db.accounts.add("A4", "A4", "A4@mail.test", "*");
+        let userID    = await db.accounts.add("A3", "A3", "A3@mail.test", "+46123456789", "*");
+        let user2ID   = await db.accounts.add("A4", "A4", "A4@mail.test", "+46123456789", "*");
         let requestID = await db.requests.add(userID, "T2", "this is a test");
         let result    = await db.requests.setProvider(requestID, user2ID);
         expect(result).toBe(true);
@@ -62,8 +62,8 @@ describe("Testing dbInterface", () =>
 
     it("Get User Requests", async () => 
     {
-        let userID1    = await db.accounts.add("A5", "A5", "A5@mail.test", "*");
-        let userID2    = await db.accounts.add("A6", "A6", "A6@mail.test", "*");
+        let userID1    = await db.accounts.add("A5", "A5", "A5@mail.test", "+46123456789", "*");
+        let userID2    = await db.accounts.add("A6", "A6", "A6@mail.test", "+46123456789", "*");
         let requestID1 = await db.requests.add(userID1, "T3", "this is a test");
         let requestID2 = await db.requests.add(userID1, "T4", "this is a test");
         
@@ -89,8 +89,8 @@ describe("Testing dbInterface", () =>
 
     it("Get User Providing", async () => 
     {
-        let user1ID    = await db.accounts.add("A7", "A7", "A7@mail.test", "*");
-        let user2ID    = await db.accounts.add("A8", "A8", "A8@mail.test", "*");
+        let user1ID    = await db.accounts.add("A7", "A7", "A7@mail.test", "+46123456789", "*");
+        let user2ID    = await db.accounts.add("A8", "A8", "A8@mail.test", "+46123456789", "*");
         let request1ID = await db.requests.add(user1ID, "T5", "this is a test");
         let request2ID = await db.requests.add(user1ID, "T6", "this is a test");
 
@@ -116,7 +116,7 @@ describe("Testing dbInterface", () =>
 
     it("Set Request Completed", async () => 
     {
-        let userID    = await db.accounts.add("A9", "A9", "A9@mail.test", "*");
+        let userID    = await db.accounts.add("A9", "A9", "A9@mail.test", "+46123456789", "*");
         let requestID = await db.requests.add(userID, "T7", "this is a test");
         let result    = await db.requests.setCompleted(requestID);
         expect(result).toBe(true);
@@ -125,8 +125,8 @@ describe("Testing dbInterface", () =>
     it("Create & Remove Chat", async () => 
     {
         // Add
-        let user1ID   = await db.accounts.add("A10", "A10", "A10@mail", "*");
-        let user2ID   = await db.accounts.add("A11", "A11", "A11@mail", "*");
+        let user1ID   = await db.accounts.add("A10", "A10", "A10@mail", "+46123456789", "*");
+        let user2ID   = await db.accounts.add("A11", "A11", "A11@mail", "+46123456789", "*");
         let requestID = await db.requests.add(user1ID, "T8", "this is a test");
         let chatID    = await db.chat.add(requestID, [user1ID, user2ID]);
         expect(chatID).not.toBe(null);
@@ -138,8 +138,8 @@ describe("Testing dbInterface", () =>
     it("Add & Get Messages", async () => 
     {
         // Add
-        let user1ID   = await db.accounts.add("A12", "A12", "A12@mail", "*");
-        let user2ID   = await db.accounts.add("A13", "A13", "A13@mail", "*");
+        let user1ID   = await db.accounts.add("A12", "A12", "A12@mail", "+46123456789", "*");
+        let user2ID   = await db.accounts.add("A13", "A13", "A13@mail", "+46123456789", "*");
         let requestID = await db.requests.add(user1ID, "T9", "this is a test");
         let chatID    = await db.chat.add(requestID, [user1ID, user2ID]);
         
@@ -155,8 +155,8 @@ describe("Testing dbInterface", () =>
 
     it("Get messages After", async () => 
     {
-        let user1ID   = await db.accounts.add("A14", "A14", "A14@mail", "*");
-        let user2ID   = await db.accounts.add("A15", "A15", "A15@mail", "*");
+        let user1ID   = await db.accounts.add("A14", "A14", "A14@mail", "+46123456789", "*");
+        let user2ID   = await db.accounts.add("A15", "A15", "A15@mail", "+46123456789", "*");
         let requestID = await db.requests.add(user1ID, "T10", "this is a test");
         let chatID    = await db.chat.add(requestID, [user1ID, user2ID]);
         let time1 = Date.now();
@@ -177,8 +177,8 @@ describe("Testing dbInterface", () =>
     it("Get user messages from specific chat - getMessagesFrom()", async () => 
     {
         // Add
-        let user1ID   = await db.accounts.add("A16", "A16", "A16@mail", "*");
-        let user2ID   = await db.accounts.add("A17", "A17", "A17@mail", "*");
+        let user1ID   = await db.accounts.add("A16", "A16", "A16@mail", "+46123456789", "*");
+        let user2ID   = await db.accounts.add("A17", "A17", "A17@mail", "+46123456789", "*");
         let requestID = await db.requests.add(user1ID, "T11", "this is a test");
         let chatID    = await db.chat.add(requestID, [user1ID, user2ID]);
         
@@ -214,7 +214,7 @@ describe("Testing dbInterface", () =>
         let point2000m = coordsToGeoJSON([17.67298542106755  , 59.85936848021486]);
 
         // Add user and requests
-        let userID = await db.accounts.add("Sven", "test", "mail@mail.mail", "password123");
+        let userID = await db.accounts.add("Sven", "test", "mail@mail.mail", "password123", "+46123456789");
 
         let requestID_pointStart = await db.requests.add(userID, "T5", "starting point", pointStart);
         let requestID_point250m  = await db.requests.add(userID, "T5", "250m", point250m);

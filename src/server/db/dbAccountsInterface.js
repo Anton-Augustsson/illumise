@@ -28,7 +28,8 @@ class DBAccountsInterface
     /** @type {Db} @private */
     #database;
 
-    ///TODO: add private collection field
+    /** @type {Collection} @private */
+    #accounts;
 
     /**
      * Creates a new DBAccountsInterface
@@ -38,26 +39,28 @@ class DBAccountsInterface
     constructor(database)
     {
         this.#database = database;
+        this.#accounts = this.#database.collection(accountCollectionName);
     }
     
     /**
-     * Adds a new user account if no other account uses its email
+     * Adds a new user account if no other account uses its email or phone
      * @async
      * @param {String} firstName The fist name of the user
      * @param {String} lastName The last name of the user
      * @param {String} email The email of the user
      * @param {String} password The password of the user
+     * @param {String} phone The phone number of the user
      * @returns {Promise<ObjectID|null>} The id of the created account or null 
      */
-    async add(firstName, lastName, email, password)
+    async add(firstName, lastName, email, phone, password)
     {
-        let collection = this.#database.collection(accountCollectionName);
-        let filter = { email: email };
+        let filter = { email: email, phone: phone };
         let user = 
         {
             firstName: firstName,
             lastName: lastName,
             email: email,
+            phone: phone,
             password: password,
             dateCreated: Date.now(),
             ratings:
@@ -81,7 +84,7 @@ class DBAccountsInterface
         
         try
         {
-            let result  = await collection.updateOne(filter, update, options);
+            let result  = await this.#accounts.updateOne(filter, update, options);
             return result.upsertedId !== null ? result.upsertedId._id : null;
         }
         catch (error)
@@ -98,24 +101,25 @@ class DBAccountsInterface
      * @param {String} firstName The new first name
      * @param {String} lastName The new last name
      * @param {String} email The new email
+     * @param {String} phone The phone number of the user
      * @param {String} password The new password
      * @returns {Promise<Boolean>} If the operation was successful
      */
     async update(userID, firstName = undefined, lastName = undefined, 
-                 email = undefined, password = undefined)
+                 email = undefined, phone = undefined, password = undefined)
     {
-        let collection = this.#database.collection(accountCollectionName);
         let filter = { _id: ObjectID(userID) };
 
         let newValues = {$set: {}};
         if (firstName !== undefined) newValues.$set.firstName = firstName;
         if (lastName  !== undefined) newValues.$set.lastName  = lastName;
         if (email     !== undefined) newValues.$set.email     = email;
+        if (phone     !== undefined) newValues.$set.phone     = phone;
         if (password  !== undefined) newValues.$set.password  = password;
 
         try
         {
-            let result = await collection.updateOne(filter, newValues);
+            let result = await this.#accounts.updateOne(filter, newValues);
             return result.result.ok == 1;
         }
         catch (error)
@@ -134,7 +138,6 @@ class DBAccountsInterface
      */
     async get(email, password)
     {
-        let collection = this.#database.collection(accountCollectionName);
         let filter = 
         {
             email: email,
@@ -149,7 +152,7 @@ class DBAccountsInterface
 
         try
         {
-            let result = await collection.findOne(filter, options);
+            let result = await this.#accounts.findOne(filter, options);
             return result._id;
         }
         catch (error)
@@ -169,12 +172,11 @@ class DBAccountsInterface
     {
         // What to do with references to the user elsewhere in the database?
 
-        let collection = this.#database.collection(accountCollectionName);
         let filter = { _id: ObjectID(userID) };
 
         try
         {
-            let result = await collection.deleteOne(filter);
+            let result = await this.#accounts.deleteOne(filter);
             return result.result.ok == 1 && result.result.n == 1;
         }
         catch (error)
