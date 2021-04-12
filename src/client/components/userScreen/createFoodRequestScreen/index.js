@@ -1,10 +1,18 @@
 import React from 'react';
-import { Text, View, Image} from 'react-native';
+import { Text, View, Image, TextInput} from 'react-native';
+import fs from "./foodStyles"
 
 
 const createFoodRequestScreen = ({navigation}) => {
     return (
-        <Text>FOOOOOOOOOOODST</Text>
+        <View>
+            <Text>FOOOOOOOOOOODST</Text>
+            <TextInput 
+            style={fs.desc}
+            placeholder="banan"
+            multiline={true}
+            />
+        </View>
     );
 }
 
