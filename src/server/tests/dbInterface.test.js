@@ -1,3 +1,6 @@
+/**
+ * This file contains Jest Tests for the database interfaces
+ */
 
 const { DBInterface } = require("../db/dbInterface");
 
@@ -20,12 +23,19 @@ describe("Testing dbInterface", () =>
 
     it("Create & Remove Account", async () => 
     {
+        if (!connected) fail();
+
         // Add
-        const mail = "test@mail.test";
-        let user1ID = await db.accounts.add("Test1", "Test1", mail, "*");
-        let user2ID = await db.accounts.add("Test2", "Test2", mail, "*");
+        let mail = "test@mail.test";
+        let password = "*";
+        let user1ID = await db.accounts.add("Test1", "Test1", mail, password);
+        let user2ID = await db.accounts.add("Test2", "Test2", mail, password);
         expect(user1ID).not.toBe(null);
         expect(user2ID).toBe(null);
+
+        let requestedID = await db.accounts.get(mail, password)
+        expect(requestedID).toStrictEqual(user1ID);
+
         // Remove
         let result1 = await db.accounts.remove(user1ID);
         let result2 = await db.accounts.remove(user2ID);
@@ -35,6 +45,8 @@ describe("Testing dbInterface", () =>
 
     it("Modify Account", async () => 
     {
+        if (!connected) fail();
+
         let userID = await db.accounts.add("A1", "A1", "A1@mail.test", "*");
         let result = await db.accounts.update(userID, lastName = "Testing");
         expect(result).toBe(true);
@@ -42,6 +54,8 @@ describe("Testing dbInterface", () =>
 
     it("Create & Remove Request", async () => 
     {
+        if (!connected) fail();
+
         // Add
         let userID    = await db.accounts.add("A2", "A2", "A2@mail.test", "*");
         let requestID = await db.requests.add(userID, "T1", "this is a test");
@@ -53,6 +67,8 @@ describe("Testing dbInterface", () =>
     
     it("Set Request Provider", async () => 
     {
+        if (!connected) fail();
+
         let userID    = await db.accounts.add("A3", "A3", "A3@mail.test", "*");
         let user2ID   = await db.accounts.add("A4", "A4", "A4@mail.test", "*");
         let requestID = await db.requests.add(userID, "T2", "this is a test");
@@ -62,6 +78,8 @@ describe("Testing dbInterface", () =>
 
     it("Get User Requests", async () => 
     {
+        if (!connected) fail();
+
         let userID1    = await db.accounts.add("A5", "A5", "A5@mail.test", "*");
         let userID2    = await db.accounts.add("A6", "A6", "A6@mail.test", "*");
         let requestID1 = await db.requests.add(userID1, "T3", "this is a test");
@@ -89,6 +107,8 @@ describe("Testing dbInterface", () =>
 
     it("Get User Providing", async () => 
     {
+        if (!connected) fail();
+
         let user1ID    = await db.accounts.add("A7", "A7", "A7@mail.test", "*");
         let user2ID    = await db.accounts.add("A8", "A8", "A8@mail.test", "*");
         let request1ID = await db.requests.add(user1ID, "T5", "this is a test");
@@ -116,6 +136,8 @@ describe("Testing dbInterface", () =>
 
     it("Set Request Completed", async () => 
     {
+        if (!connected) fail();
+
         let userID    = await db.accounts.add("A9", "A9", "A9@mail.test", "*");
         let requestID = await db.requests.add(userID, "T7", "this is a test");
         let result    = await db.requests.setCompleted(requestID);
@@ -124,6 +146,8 @@ describe("Testing dbInterface", () =>
 
     it("Create & Remove Chat", async () => 
     {
+        if (!connected) fail();
+
         // Add
         let user1ID   = await db.accounts.add("A10", "A10", "A10@mail", "*");
         let user2ID   = await db.accounts.add("A11", "A11", "A11@mail", "*");
@@ -137,7 +161,8 @@ describe("Testing dbInterface", () =>
 
     it("Add & Get Messages", async () => 
     {
-        // Add
+        if (!connected) fail();
+
         let user1ID   = await db.accounts.add("A12", "A12", "A12@mail", "*");
         let user2ID   = await db.accounts.add("A13", "A13", "A13@mail", "*");
         let requestID = await db.requests.add(user1ID, "T9", "this is a test");
@@ -155,6 +180,8 @@ describe("Testing dbInterface", () =>
 
     it("Get messages After", async () => 
     {
+        if (!connected) fail();
+
         let user1ID   = await db.accounts.add("A14", "A14", "A14@mail", "*");
         let user2ID   = await db.accounts.add("A15", "A15", "A15@mail", "*");
         let requestID = await db.requests.add(user1ID, "T10", "this is a test");
@@ -169,13 +196,13 @@ describe("Testing dbInterface", () =>
         expect(result1[user1ID][0].message).toBe(message);
 
         let result2 = await db.chat.getMessagesAfter(chatID, Date.now());
-        console.log(result2);
         expect(result2[user1ID].length).toBe(0);
     });
-
     
-    it("Get user messages from specific chat - getMessagesFrom()", async () => 
+    it("Get user messages from specific chat", async () => 
     {
+        if (!connected) fail();
+
         // Add
         let user1ID   = await db.accounts.add("A16", "A16", "A16@mail", "*");
         let user2ID   = await db.accounts.add("A17", "A17", "A17@mail", "*");
@@ -183,15 +210,15 @@ describe("Testing dbInterface", () =>
         let chatID    = await db.chat.add(requestID, [user1ID, user2ID]);
         
         // Add messages to the chat
-        let result    = await db.chat.addMessage(chatID, user1ID, "msg1");
+        let result = await db.chat.addMessage(chatID, user1ID, "msg1");
         expect(result).toBe(true);
-        result    = await db.chat.addMessage(chatID, user2ID, "response1");
+        result = await db.chat.addMessage(chatID, user2ID, "response1");
         expect(result).toBe(true)
-        result    = await db.chat.addMessage(chatID, user1ID, "msg2");
+        result = await db.chat.addMessage(chatID, user1ID, "msg2");
         expect(result).toBe(true)
-        result    = await db.chat.addMessage(chatID, user2ID, "response2");
+        result = await db.chat.addMessage(chatID, user2ID, "response2");
         expect(result).toBe(true)
-        result    = await db.chat.addMessage(chatID, user1ID, "msg3");
+        result = await db.chat.addMessage(chatID, user1ID, "msg3");
         expect(result).toBe(true);
 
         let messages = await db.chat.getMessagesFrom(chatID, user1ID);
@@ -201,11 +228,10 @@ describe("Testing dbInterface", () =>
         expect(messages).toHaveLength(2);
     });
 
-
-
-    //Requests.getNearby() test
-    it("Get nearby requests - getNearby()", async () => 
+    it("Get nearby requests", async () => 
     {
+        if (!connected) fail();
+
         // define points
         let pointStart = coordsToGeoJSON([17.638825          , 59.854004]);
         let point250m  = coordsToGeoJSON([17.63557416149649  , 59.85551799680195]);
@@ -290,24 +316,25 @@ describe("Testing dbInterface", () =>
 /**
  * Help function for getNearby tests.
  * Checks the length of the result, and what it contains
- * //TODO arg types? 
  * @async
- * @param result the db-query result
- * @param requests array of the requests you are working with in the test
- * @param {number} maxRequests the maxRequests arg used in the db-query
+ * @param {[Request]} result the db-query result
+ * @param {[Request]} requests array of the requests you are working with in the test
+ * @param {Number} maxRequests the maxRequests arg used in the db-query
  * @param {[String]} shouldFind array of the body field of the requests that the query should have found
  * @param {[String]} shouldNotFind array of the body field of the requests that the query should not have found
  */
 function checkResultGetNearby(result, requests, maxRequests, shouldFind, shouldNotFind) 
 {
-    if (maxRequests === undefined) {
+    if (maxRequests === undefined)
+    {
         expect(result).toHaveLength(shouldFind.length);
-    } else {
+    } else 
+    {
         expect(result).toHaveLength(maxRequests);
     }
     
-    expected = requests.filter(elem => shouldFind.includes(elem.body));
-    notExpected = requests.filter(elem => shouldNotFind.includes(elem.body));
+    let expected    = requests.filter(elem => shouldFind.includes(elem.body));
+    let notExpected = requests.filter(elem => shouldNotFind.includes(elem.body));
     
     //ensure function was called with proper "shouldFind" and "shouldNotFind" args
     expect(expected.length + notExpected.length).toBe(requests.length); 
@@ -326,8 +353,8 @@ function checkResultGetNearby(result, requests, maxRequests, shouldFind, shouldN
 
 /** 
  * Get a geoJSON representation of a point
- * @param {[number]} coordinates [longitude, latitude] coordinates of a point
- * @returns geoJSON representation of a point with coordinates
+ * @param {[Number]} coordinates [longitude, latitude] coordinates of a point
+ * @returns {{*}} representation of a point with coordinates
  */
 function coordsToGeoJSON(coordinates)
 {

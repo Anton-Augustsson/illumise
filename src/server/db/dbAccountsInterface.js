@@ -3,19 +3,16 @@
  * related users and their accounts.
  */
 
-const { Db, ObjectID } = require("mongodb");
+const { Db, ObjectID, Collection } = require("mongodb");
 const accountCollectionName = "Users";
-
-
 
 /**
  * @typedef User
- * @property {ObjectID} _id
- * @property {string} firstName
- * @property {string} lastName
- * @property {string} email
- * @property {string} password
- * @property {string} phone
+ * @property {String} firstName
+ * @property {String} lastName
+ * @property {String} email
+ * @property {String} password
+ * @property {String} phone
  * @property {number} dateCreated
  */
 
@@ -27,6 +24,8 @@ class DBAccountsInterface
 {
     /** @type {Db} @private */
     #database;
+    /** @type {Collection} @private */
+    #collection;
 
     ///TODO: add private collection field
 
@@ -37,7 +36,8 @@ class DBAccountsInterface
      */
     constructor(database)
     {
-        this.#database = database;
+        this.#database   = database;
+        this.#collection = this.#database.collection(accountCollectionName);
     }
     
     /**
@@ -51,7 +51,6 @@ class DBAccountsInterface
      */
     async add(firstName, lastName, email, password)
     {
-        let collection = this.#database.collection(accountCollectionName);
         let filter = { email: email };
         let user = 
         {
@@ -81,7 +80,7 @@ class DBAccountsInterface
         
         try
         {
-            let result  = await collection.updateOne(filter, update, options);
+            let result  = await this.#collection.updateOne(filter, update, options);
             return result.upsertedId !== null ? result.upsertedId._id : null;
         }
         catch (error)
@@ -104,10 +103,7 @@ class DBAccountsInterface
     async update(userID, firstName = undefined, lastName = undefined, 
                  email = undefined, password = undefined)
     {
-        let collection = this.#database.collection(accountCollectionName);
-        let filter = { _id: ObjectID(userID) };
-
-        let newValues = {$set: {}};
+        let newValues = { $set: {} };
         if (firstName !== undefined) newValues.$set.firstName = firstName;
         if (lastName  !== undefined) newValues.$set.lastName  = lastName;
         if (email     !== undefined) newValues.$set.email     = email;
@@ -115,7 +111,8 @@ class DBAccountsInterface
 
         try
         {
-            let result = await collection.updateOne(filter, newValues);
+            let filter = { _id: ObjectID(userID) };
+            let result = await this.#collection.updateOne(filter, newValues);
             return result.result.ok == 1;
         }
         catch (error)
@@ -134,22 +131,15 @@ class DBAccountsInterface
      */
     async get(email, password)
     {
-        let collection = this.#database.collection(accountCollectionName);
         let filter = 
         {
             email: email,
             password: password
         }
 
-        let options = 
-        {
-            // What we want to return
-            projection: { _id: true }
-        }
-
         try
         {
-            let result = await collection.findOne(filter, options);
+            let result = await this.#collection.findOne(filter);
             return result._id;
         }
         catch (error)
@@ -167,14 +157,10 @@ class DBAccountsInterface
      */
     async remove(userID)
     {
-        // What to do with references to the user elsewhere in the database?
-
-        let collection = this.#database.collection(accountCollectionName);
-        let filter = { _id: ObjectID(userID) };
-
         try
         {
-            let result = await collection.deleteOne(filter);
+            let filter = { _id: ObjectID(userID) };
+            let result = await this.#collection.deleteOne(filter);
             return result.result.ok == 1 && result.result.n == 1;
         }
         catch (error)
