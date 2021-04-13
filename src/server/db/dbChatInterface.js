@@ -43,7 +43,7 @@ class DBChatInterface
      * Adds a new chat if no equivalent chat exists
      * @async
      * @param {String} requestID The id of the related request
-     * @param {[String]} userIDs A list containing the ids of all related users 
+     * @param {[String]} userIDs An array containing the ids of all related users 
      * @returns {Promise<ObjectID|null>} The id of the chat or null
      */
     async add(requestID, userIDs)
@@ -71,7 +71,7 @@ class DBChatInterface
 
         try
         {
-            let result  = await this.#collection.updateOne(filter, update, options);
+            let result = await this.#collection.updateOne(filter, update, options);
             return result.upsertedId !== null ? result.upsertedId._id : null;
         }
         catch (error)

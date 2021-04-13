@@ -61,25 +61,25 @@ class DBRequestsInterface
      * @param {String} userID The id of the user
      * @param {String} header The header of the request
      * @param {String} body The body of the request
-     * @param {Number} cost TODO
+     * @param {Number} cost The cost of the request
      * @returns {Promise<String|null>} The id of the created request or null
      */
     async add(userID, header, body, geoLocation = undefined, cost = undefined)
     {
-        let request = 
-        {
-            dateCreated: Date.now(),
-            dateCompleted: undefined,
-            geoLocation: geoLocation,
-            header: header,
-            body: body,
-            cost: cost,
-            isFulfilled: false,
-            creatorID: userID,
-            providerID: undefined
-        };
         try
         {
+            let request = 
+            {
+                dateCreated: Date.now(),
+                dateCompleted: undefined,
+                geoLocation: geoLocation,
+                header: header,
+                body: body,
+                cost: cost,
+                isFulfilled: false,
+                creatorID: userID,
+                providerID: undefined
+            };
             let result = await this.#collection.insertOne(request);
             return result.insertedId;
         }
@@ -99,13 +99,12 @@ class DBRequestsInterface
      */
     async getUserRequests(userID, num = undefined)
     {
-        let filter = { creatorID: userID };
         try
         {
-            let result = this.#collection.find(filter);
-            let array  = await result.toArray();
-            if (num !== undefined) array.length = num >= 0 ? num : 0;
-            return array;
+            let filter = { creatorID: userID };
+            let result = await this.#collection.find(filter).toArray();
+            if (num !== undefined) result.length = num >= 0 ? num : 0;
+            return result;
         }
         catch (error)
         {
@@ -123,10 +122,10 @@ class DBRequestsInterface
      */
     async getUserProviding(userID, num = undefined)
     {
-        let filter = { providerID: userID };
         try
         {
-            let result = this.#collection.find(filter).toArray();
+            let filter = { providerID: userID };
+            let result = await this.#collection.find(filter).toArray();
             if (num !== undefined) result.length = num >= 0 ? num : 0;
             return result;
         }
@@ -147,21 +146,19 @@ class DBRequestsInterface
      */
      async getNearby(geoLocation, maxDistance, num = undefined)
      {
-        let filter = 
-        {
-            geoLocation: {
-                $near: {
-                    $geometry: geoLocation,
-                    $maxDistance: maxDistance + 10, //10 meter margin
-                    $minDistance: 0
-                }
-            }
-        }
-
         try 
         {
             await this.#collection.createIndex( { geoLocation: "2dsphere"} );
-
+            let filter = 
+            {
+                geoLocation: {
+                    $near: {
+                        $geometry: geoLocation,
+                        $maxDistance: maxDistance + 10, //10 meter margin
+                        $minDistance: 0
+                    }
+                }
+            }
             let result = await this.#collection.find(filter).toArray();
             if (num != undefined) result.length = num >= 0 ? num : 0;
             return result;
@@ -181,18 +178,17 @@ class DBRequestsInterface
      */
     async setCompleted(requestID)
     {
-        let filter = { _id: ObjectID(requestID) };
-        let update = 
-        {
-            $set: 
-            {
-                dateCompleted: Date.now(),
-                isFulFilled: true
-            }
-        };
-        
         try
         {
+            let filter = { _id: ObjectID(requestID) };
+            let update = 
+            {
+                $set: 
+                {
+                    dateCompleted: Date.now(),
+                    isFulFilled: true
+                }
+            };
             let result = await this.#collection.updateOne(filter, update);
             return result.result.ok == 1 && result.result.n == 1;
         }
@@ -212,11 +208,31 @@ class DBRequestsInterface
      */
     async setProvider(requestID, providerID)
     {
-        let filter = { _id: ObjectID(requestID) };
-        let update = { $set: {providerID: providerID} };
-
         try
         {
+            let filter = { _id: ObjectID(requestID) };
+            let update = { $set: { providerID: providerID } };
+            let result = await this.#collection.updateOne(filter, update);
+            return result.result.ok == 1 && result.result.n == 1;
+        }
+        catch (error)
+        {
+            console.error(error);
+            return false;
+        }
+    }
+
+    /**
+     * Sets the cost of a request
+     * @param {String} requestID The id of the request
+     * @param {Number} value The new cost value
+     */
+    async setCost(requestID, value)
+    {
+        try
+        {
+            let filter = { _id: ObjectID(requestID) };
+            let update = { $set: { cost: value } };
             let result = await this.#collection.updateOne(filter, update);
             return result.result.ok == 1 && result.result.n == 1;
         }
@@ -234,11 +250,10 @@ class DBRequestsInterface
      * @returns {Promise<Boolean>} If the operation was successful
      */
     async remove(requestID)
-    {
-        let filter = { _id: ObjectID(requestID) };
-
+    { 
         try
         {
+            let filter = { _id: ObjectID(requestID) };
             let result = await this.#collection.deleteOne(filter);
             return result.result.ok == 1 && result.result.n == 1;
         }

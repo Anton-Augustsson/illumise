@@ -50,36 +50,22 @@ class DBAccountsInterface
      */
     async add(firstName, lastName, email, phone, password)
     {
-        let filter = { email: email, phone: phone };
-        let user = 
-        {
-            firstName: firstName,
-            lastName: lastName,
-            email: email,
-            phone: phone,
-            password: password,
-            dateCreated: Date.now(),
-            ratings:
-            {
-                customer: 
-                {
-                    averageRating: 0,
-                    ratings: {}
-                },
-                provider: 
-                {
-                    averageRating: 0,
-                    ratings: {}
-                }
-            },
-            requestIDs: {},
-            providingIDs: {}
-        };
-        let update  = { $setOnInsert: user };
-        let options = { upsert: true };
-        
         try
         {
+            let filter = { email: email, phone: phone };
+            let update  = 
+            { 
+                $setOnInsert: 
+                {
+                    firstName: firstName,
+                    lastName: lastName,
+                    email: email,
+                    phone: phone,
+                    password: password,
+                    dateCreated: Date.now()
+                } 
+            };
+            let options = { upsert: true };
             let result  = await this.#collection.updateOne(filter, update, options);
             return result.upsertedId !== null ? result.upsertedId._id : null;
         }
@@ -104,16 +90,15 @@ class DBAccountsInterface
     async update(userID, firstName = undefined, lastName = undefined, 
                  email = undefined, phone = undefined, password = undefined)
     {
-        let newValues = { $set: {} };
-        if (firstName !== undefined) newValues.$set.firstName = firstName;
-        if (lastName  !== undefined) newValues.$set.lastName  = lastName;
-        if (email     !== undefined) newValues.$set.email     = email;
-        if (phone     !== undefined) newValues.$set.phone     = phone;
-        if (password  !== undefined) newValues.$set.password  = password;
-
         try
         {
             let filter = { _id: ObjectID(userID) };
+            let newValues = { $set: {} };
+            if (firstName !== undefined) newValues.$set.firstName = firstName;
+            if (lastName  !== undefined) newValues.$set.lastName  = lastName;
+            if (email     !== undefined) newValues.$set.email     = email;
+            if (phone     !== undefined) newValues.$set.phone     = phone;
+            if (password  !== undefined) newValues.$set.password  = password;
             let result = await this.#collection.updateOne(filter, newValues);
             return result.result.ok == 1;
         }
@@ -133,14 +118,13 @@ class DBAccountsInterface
      */
     async get(email, password)
     {
-        let filter = 
-        {
-            email: email,
-            password: password
-        }
-
         try
         {
+            let filter = 
+            {
+                email: email,
+                password: password
+            }
             let result = await this.#collection.findOne(filter);
             return result._id;
         }
@@ -171,6 +155,30 @@ class DBAccountsInterface
             return false;
         }
     }
+
+    /**
+     * Adds a 
+     * @param {*} toUser 
+     * @param {*} fromUser 
+     * @param {*} message 
+     * @param {*} score 
+     */
+    async addProviderReview(toUser, fromUser, message, score)
+    {
+
+    }
+
+    /**
+     * Adds a 
+     * @param {*} toUser 
+     * @param {*} fromUser 
+     * @param {*} message 
+     * @param {*} score 
+     */
+     async addRequesterReview(toUser, fromUser, message, score)
+     {
+ 
+     }
 }
 
 module.exports =
