@@ -19,7 +19,15 @@ const CustomListItem = (props) => {
 
 const styles = StyleSheet.create({
     listItem:{
-        backgroundColor: 'lightgrey',
+        backgroundColor: 'white',
+        shadowColor:"#cccccc",
+        shadowOffset: {
+            width:2,
+            height:4,
+        },
+        shadowOpacity:0.8,
+        shadowRadius: 2,
+        elevation:6,
         padding: 2,
         borderRadius: 10,
         margin: 5,
@@ -27,7 +35,7 @@ const styles = StyleSheet.create({
     listItemView:{
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'center',
+        alignItems:"center",
         marginLeft: 5,
     },
     listItemText:{

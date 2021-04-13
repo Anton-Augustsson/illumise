@@ -3,8 +3,12 @@ import {colors} from "../../mainStyles/colors"
 
 
 const fs = StyleSheet.create({
-    container: {
-        padding:20
+    content: {
+        flex:1,
+        paddingLeft:20,
+        paddingRight:20,
+        paddingBottom:5,
+        paddingTop:5,
     },
     desc: {
         minHeight:100,
@@ -17,6 +21,9 @@ const fs = StyleSheet.create({
         borderColor:colors.INPUT_BORDER,
         borderRadius:10,
         textAlignVertical: "top",
+    },
+    orderContainer: {
+        marginTop:5,
     }
 });
 

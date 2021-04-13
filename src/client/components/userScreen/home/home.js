@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import createFoodRequestScreen from '../createFoodRequestScreen';
+import {colors} from "../../mainStyles/colors"
 import ms from "../../mainStyles/ms"
 import hs from "./homeStyle"
 
@@ -132,7 +133,7 @@ const TopWelcome = () => {
 
 const firstScreen = (nav) => {
     return (
-        <View>
+        <View style={{flex:1}}>
             <TopWelcome/>
             <FlatList
                 data={DATA}
@@ -149,25 +150,23 @@ const Stack = createStackNavigator();
 const HomeScreen = () => {
 
     return (
-        <>
-            <Stack.Navigator 
-                screenOptions={{
-                headerShown:false
-                }}
+        <Stack.Navigator 
+            screenOptions={{
+                headerShown:false,
+                cardStyle:{backgroundColor:colors.DEFAULT_BACKGROUND}
+            }}
+            initialRouteName="FirstScreen"
+        >
+            <Stack.Screen 
+                name="FirstScreen" 
+                component={firstScreen}
+            />
+            <Stack.Screen 
+                name="FoodRequest" 
+                component={createFoodRequestScreen}
+            />
 
-                initialRouteName="FirstScreen"
-            >
-                <Stack.Screen 
-                    name="FirstScreen" 
-                    component={firstScreen}
-                />
-                <Stack.Screen 
-                    name="FoodRequest" 
-                    component={createFoodRequestScreen}
-                />
-
-            </Stack.Navigator>
-        </>
+        </Stack.Navigator>
     );
 }
 

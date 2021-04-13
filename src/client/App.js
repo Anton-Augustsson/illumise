@@ -17,7 +17,8 @@ const App = () => {
             <NavigationContainer>
                 <Stack.Navigator 
                     screenOptions={{
-                    headerShown:false
+                        headerShown:false,
+                        cardStyle:{backgroundColor:colors.DEFAULT_BACKGROUND}
                     }}
 
                     initialRouteName="Login"

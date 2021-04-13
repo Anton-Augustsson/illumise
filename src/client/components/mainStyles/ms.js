@@ -42,7 +42,6 @@ const ms = StyleSheet.create({
     button:{
         justifyContent:"center",
         alignItems:"center",
-        width: "80%",
         minWidth:150,
         height:50,
         borderRadius:15,
