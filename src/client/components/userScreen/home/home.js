@@ -7,6 +7,8 @@ import {
     useState,
     TouchableOpacity
 } from 'react-native';
+import { createStackNavigator } from '@react-navigation/stack';
+import createFoodRequestScreen from '../createFoodRequestScreen';
 import ms from "../../mainStyles/ms"
 import hs from "./homeStyle"
 
@@ -80,7 +82,7 @@ const DATA = [
 const InnerItem = (props)  => {
     return(
         <TouchableOpacity onPress={()=> {
-            props.nav.navigate(props.des);
+            props.nav.navigation.navigate(props.des);
         }} 
         style={hs.innerItemContainer}
         >
@@ -108,11 +110,12 @@ const Item = ({item, nav}) => (
     </View>
 );
 
-const renderItem = ({item}, navigation) => { 
+const renderItem = ({item}, nav) => { 
+
     return (
         <Item
             item={item}
-            nav={navigation}
+            nav={nav}
         />
     );
 };
@@ -125,17 +128,46 @@ const TopWelcome = () => {
     );
 }
 
-const HomeScreen = ({navigation}) => {
 
+
+const firstScreen = (nav) => {
     return (
         <View>
             <TopWelcome/>
             <FlatList
                 data={DATA}
-                renderItem={(item) => renderItem(item, navigation)}
+                renderItem={(item) => renderItem(item, nav)}
                 keyExtractor={(item) => item.id}
             />
         </View>
+    );
+}
+
+
+const Stack = createStackNavigator();
+
+const HomeScreen = () => {
+
+    return (
+        <>
+            <Stack.Navigator 
+                screenOptions={{
+                headerShown:false
+                }}
+
+                initialRouteName="FirstScreen"
+            >
+                <Stack.Screen 
+                    name="FirstScreen" 
+                    component={firstScreen}
+                />
+                <Stack.Screen 
+                    name="FoodRequest" 
+                    component={createFoodRequestScreen}
+                />
+
+            </Stack.Navigator>
+        </>
     );
 }
 

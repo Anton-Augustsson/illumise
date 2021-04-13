@@ -7,6 +7,7 @@ import GoogleButton from "../customComponents/googleButton";
 import FacebookButton from "../customComponents/facebookButton";
 import * as Google from 'expo-auth-session/providers/google';
 import * as Facebook from 'expo-auth-session/providers/facebook';
+import CustomButton from '../customComponents/customButton';
 
 const veryfyUser = async (navigation, token, type) => {
     //Skriver ut användarens data i konsolen
@@ -71,9 +72,8 @@ const LoginScreen = ({navigation}) => {
                     style={ms.logoLarge}
                     source={require("../../assets/samarit_logo2.png")}
                 />
-                <Text style={ms.h1}>SAMARIT</Text>
+                <Text style={ms.h1}>Välkommen till SAMARIT!</Text>
             </View>
-
 
             <GoogleButton
                 onPress={() =>{
@@ -89,7 +89,12 @@ const LoginScreen = ({navigation}) => {
                 disabled={!requestFB}
             />
 
-            <Button title="Pass Login" onPress={() => navigation.navigate("Default")}></Button>
+            <CustomButton
+                style={[ms.loginButton,{backgroundColor:"red"}]}
+                styleText={[ms.loginButtonText,{color:"white"}]}
+                title="Gå förbi inloggning"
+                onPress={() => navigation.navigate("Default")}
+            />
             
         </View>  
     );

@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: "white",
         justifyContent: 'center',
-        padding: 40,
+        padding: 50,
         alignItems: 'center',
     },
     loginTitle: {

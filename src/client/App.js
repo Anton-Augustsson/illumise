@@ -5,13 +5,15 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from './components/loginScreen';
 import DefaultScreen from './components/defaultScreen';
+import Constants from 'expo-constants';
+import {colors} from "./components/mainStyles/colors"
 
 const Stack = createStackNavigator();
 
 const App = () => {
     return(
         <>
-            <View style={{backgroundColor:'green', width:1000, height:50}}></View>
+            <View style={styles.statusbar}></View>
             <NavigationContainer>
                 <Stack.Navigator 
                     screenOptions={{
@@ -37,15 +39,14 @@ const App = () => {
     );
 }
 
-const STATUSBAR_HEIGHT = StatusBar.currentHeight;
+const STATUSBAR_HEIGHT = Constants.statusBarHeight;
 
 
 const styles = StyleSheet.create({
     statusbar: {
         height: STATUSBAR_HEIGHT,
-        backgroundColor: "green",
+        backgroundColor: colors.SAMARIT_GREEN,
     }
-
 });
 
 export default App;
