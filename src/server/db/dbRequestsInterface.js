@@ -61,6 +61,7 @@ class DBRequestsInterface
      * @param {String} userID The id of the user
      * @param {String} header The header of the request
      * @param {String} body The body of the request
+     * @param {GeoLocation} geoLocation The location of the request
      * @param {Number} cost The cost of the request
      * @returns {Promise<String|null>} The id of the created request or null
      */
