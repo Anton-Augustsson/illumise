@@ -1,42 +1,14 @@
 
 const db = require("../server");
+const validate = require("./validate");
+const valid = validate.valid;
+const validParams = validate.validParams;
+const sendFailure = validate.sendFailure;
+const sendSuccess = validate.sendSuccess;
+
 const express = require('express');
 const router = express.Router();
 const Joi = require('joi');
-
-/**
- * Helping function to send error responce
- * @param {json} body - The resived request from the client
- * @param {json} schema - The json object to compare body with
- */
-function valid(body, schema, res)
-{
-  const result = schema.validate(body);
-
-  if(result.error)
-  {
-    res.status(400).send(result.error.message);
-    return false;
-  }
-
-  return true;
-}
-
-/**
- * Helping function to send error responce
- * @param {array} params - Array
- */
-function validParams(params, res)
-{
-  for (let p in params)
-  {
-    if(params[p] == undefined){
-      res.status(400).send(p + " is undefined");
-      return false;
-    }
-  }
-  return true;
-}
 
 /**
  * sends a message to a person
@@ -54,7 +26,8 @@ router.put('/sendMessage', async (req, res) => // post?
 
   if(valid(b, schema, res))
   {
-    let response = await db.chat.add(b.userID, b.chatID);
+    // null
+ //   let response = await db.chat.add(b.userID, b.chatID); TODO
     return res.send('Received a PUT HTTP method');
   }
 });
@@ -73,8 +46,9 @@ router.get('/getAllMessages', async (req, res) =>
 
   if(validParams(params, res))
   {
-    let response = await db.chat.get(params.chatID);
-    return res.send('Received a GET Get all messages HTTP method');
+    let response = await db.chat.getMessages(params.chatID);
+    if(reposnse != null) return sendSuccess(res, response);
+    else return sendFailure(res);
   }
 });
 
@@ -92,8 +66,9 @@ router.put('/newChat', async (req, res) => // POST?
 
   if(valid(b, schema, res))
   {
-    //let response = await db.chat.add(b.requestID); TODO
-    return res.send('Received a PUT HTTP method');
+    let response = await db.chat.add(b.requestID);
+    if(reposnse != null) return sendSuccess(res, response);
+    else return sendFailure(res);
   }
 });
 
@@ -111,8 +86,10 @@ router.delete('/removeChat', async (req, res) =>
 
   if(valid(req.body, schema, res))
   {
+    // false
     let response = await db.chat.remove(b.chatID);
-    return res.send('Received a GET /removeChat HTTP method');
+    if(reposnse != false) return sendSuccess(res);
+    else return sendFailure(res);
   }
 });
 
