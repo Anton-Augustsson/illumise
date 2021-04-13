@@ -306,6 +306,11 @@ describe("Testing dbInterface", () =>
         checkResultGetNearby(result, requests, maxRequests, shouldFind, shouldNotFind);
     });
 
+    it("Add requester review", async () =>
+    {
+
+    });
+
     afterAll(async () => 
     {
         await db.close();
