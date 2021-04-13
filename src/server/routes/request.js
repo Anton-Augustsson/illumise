@@ -1,57 +1,16 @@
 
 const db = require("../server");
+const validate = require("./validate");
+const valid = validate.valid;
+const validParams = validate.validParams;
+const validData = validate.validData;
+const sendFailure = validate.sendFailure;
+const sendSuccess = validate.sendSuccess;
+
 const express = require('express');
 const router = express.Router();
 const Joi = require('joi');
 
-/**
- * Helping function to send error responce
- */
-function valid(body, schema, res)
-{
-  const result = schema.validate(body);
-
-  if(result.error)
-  {
-    res.status(400).send(result.error.message);
-    return false;
-  }
-
-  return true;
-}
-
-/**
- * Helping function to send error responce
- * @param {array} params - Array
- */
-function validParams(params, res)
-{
-  for (let p in params)
-  {
-    if(params[p] == undefined)
-    {
-      res.status(400).send(p + " is undefined");
-      return false;
-    }
-  }
-  return true;
-}
-
-//	.add(userID, header, body, cost = undefined)
-function validData(data, res){
-  let d = data;
-
-  let validHeader = d.header != undefined;
-  let validBody = d.body != undefined;
-  let validCost = d.cost != undefined;
-
-  if(validHeader && validBody && validCost){
-    return true;
-  }
-
-  res.status(404).send("invalid data, should be: header, body, cost ");
-  return false;
-}
 
 /**
  * set payment to done and remove chat (will still be accessible in x time)
@@ -66,7 +25,8 @@ router.put('/completeRequest', async (req, res) =>
   if(valid(req.body, schema, res))
   {
     let response = await db.requests.setCompleted(req.body.requestID);
-    return res.send('Received a PUT HTTP method');
+    if(reposnse != null) return sendSuccess(res, response);
+    else return sendFailure(res);
   }
 });
 
@@ -80,10 +40,12 @@ router.get('/provider/getNearRequests', async (req, res) =>
     geoLocation: req.param('geoLocation'),
   };
 
-  if(validParams(params, res)){
-    let distance = 40;
+  if(validParams(params, res))
+  {
+    let distance = 40; // TODO dont hardcode it
     let response = await db.requests.getNearby(params.geoLocation, distance, undefined);
-    return res.send('Received a GET HTTP method');
+    if(reposnse != null) return sendSuccess(res, response);
+    else return sendFailure(res);
   }
 });
 
@@ -101,8 +63,9 @@ router.get('/provider/set', async (req, res) => // TODO: Not get method
 
   if(validParams(params, res))
   {
-    //let response = await db.requests.getNearby(params.geoLocation, distance, undefined);
-    return res.send('Received a GET HTTP method');
+    let response = await db.requests.getNearby(params.geoLocation, distance, undefined);
+    if(reposnse != null) return sendSuccess(res, response);
+    else return sendFailure(res);
   }
 });
 
@@ -118,9 +81,11 @@ router.get('/provider/getUserProviding', async (req, res) =>
     num: req.param('num')
   };
 
-  if(validParams(params, res)){
+  if(validParams(params, res))
+  {
     let response = await db.requests.getUserProviding(params.providorID, params.num);
-    return res.send('Received a GET HTTP method');
+    if(reposnse != null) return sendSuccess(res, response);
+    else return sendFailure(res);
   }
 });
 
@@ -138,9 +103,11 @@ router.post('/requester/newRequest', async (req, res) =>
 
   let data = req.body.data;
 
-  if(valid(req.body, schema, res) && validData(data, res)){
+  if(valid(req.body, schema, res) && validData(data, res))
+  {
     let response = await db.requests.add(req.body.requestID, data.header, data.body, data.cost);
-    return res.send('Received a POST HTTP method newRequest');
+    if(reposnse != null) return sendSuccess(res, response);
+    else return sendFailure(res);
   }
 });
 
@@ -159,7 +126,8 @@ router.get('/requester/getMyRequest', async (req, res) => // TODO: change getMyR
   if(validParams(params, res))
   {
     let response = await db.requests.getUserRequests(params.requestID, params.num);
-    return res.send('Received a GET HTTP method');
+    if(reposnse != null) return sendSuccess(res, response);
+    else return sendFailure(res);
   }
 });
 
@@ -173,9 +141,11 @@ router.delete('/requester/removeRequest', async (req, res) =>
     requestID: Joi.string(),
   });
 
-  if(valid(req.body, schema, res)){
+  if(valid(req.body, schema, res))
+  {
     let response = await db.requests.remove(req.body.requestID);
-    return res.send('Received a GET /requester/removeRequest HTTP method');
+    if(reposnse != false) return sendSuccess(res);
+    else return sendFailure(res);
   }
 });
 
@@ -194,8 +164,10 @@ router.put('/requester/reviewProvider', async (req, res) =>
     rating: Joi.number().min(0).max(5)
   });
 
-  if(valid(req.body, schema)){
-    //let response = await db.requests.remove(req.body.requestID); TODO
+  if(valid(req.body, schema))
+  {
+    // dont know
+    //let response = await db.requests.remove(req.body.requestID); // TODO
     return res.send('Received a PUT HTTP method');
   }
 });
@@ -212,9 +184,12 @@ router.put('/requester/acceptProvider', async (req, res) =>
     providorID: Joi.string(),
   });
 
-  if(valid(req.body, schema, res)){
+  if(valid(req.body, schema, res))
+  {
+    // bolean
     let response = await db.requests.setProvider(req.body.requestID, req.body.providorID);
-    return res.send('Received a PUT HTTP method');
+    if(reposnse != false) return sendSuccess(res);
+    else return sendFailure(res);
   }
 });
 

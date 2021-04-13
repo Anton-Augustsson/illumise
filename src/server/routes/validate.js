@@ -60,6 +60,23 @@ const validate =
         return false;
     },
 
+    validData: function(data, res)
+    {
+        let d = data;
+
+        let validHeader = d.header != undefined;
+        let validBody = d.body != undefined;
+        let validCost = d.cost != undefined;
+
+        if(validHeader && validBody && validCost){
+            return true;
+        }
+
+        res.status(404).send("invalid data, should be: header, body, cost ");
+        return false;
+    },
+
+
     /**
     * Helping function to send error responce
     * @param {object} res - The responce

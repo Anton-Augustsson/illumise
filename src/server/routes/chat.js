@@ -27,7 +27,7 @@ router.put('/sendMessage', async (req, res) => // post?
   if(valid(b, schema, res))
   {
     // null
- //   let response = await db.chat.add(b.userID, b.chatID); TODO
+    //   let response = await db.chat.add(b.userID, b.chatID); TODO
     return res.send('Received a PUT HTTP method');
   }
 });
@@ -86,7 +86,6 @@ router.delete('/removeChat', async (req, res) =>
 
   if(valid(req.body, schema, res))
   {
-    // false
     let response = await db.chat.remove(b.chatID);
     if(reposnse != false) return sendSuccess(res);
     else return sendFailure(res);
