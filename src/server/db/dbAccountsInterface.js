@@ -39,19 +39,20 @@ class DBAccountsInterface
     }
     
     /**
-     * Adds a new user account if no other account uses its email
+     * Adds a new user account if no other account uses its email or phone
      * @async
      * @param {String} firstName The fist name of the user
      * @param {String} lastName The last name of the user
      * @param {String} email The email of the user
+     * @param {String} phone The phone number of the user
      * @param {String} password The password of the user
      * @returns {Promise<ObjectID|null>} The id of the created account or null 
      */
-    async add(firstName, lastName, email, password)
+    async add(firstName, lastName, email, phone, password)
     {
         try
         {
-            let filter = { email: email };
+            let filter = { email: email, phone: phone };
             let update  = 
             { 
                 $setOnInsert: 
@@ -59,6 +60,7 @@ class DBAccountsInterface
                     firstName: firstName,
                     lastName: lastName,
                     email: email,
+                    phone: phone,
                     password: password,
                     dateCreated: Date.now()
                 } 
@@ -81,11 +83,12 @@ class DBAccountsInterface
      * @param {String} firstName The new first name
      * @param {String} lastName The new last name
      * @param {String} email The new email
+     * @param {String} phone The phone number of the user
      * @param {String} password The new password
      * @returns {Promise<Boolean>} If the operation was successful
      */
     async update(userID, firstName = undefined, lastName = undefined, 
-                 email = undefined, password = undefined)
+                 email = undefined, phone = undefined, password = undefined)
     {
         try
         {
@@ -94,6 +97,7 @@ class DBAccountsInterface
             if (firstName !== undefined) newValues.$set.firstName = firstName;
             if (lastName  !== undefined) newValues.$set.lastName  = lastName;
             if (email     !== undefined) newValues.$set.email     = email;
+            if (phone     !== undefined) newValues.$set.phone     = phone;
             if (password  !== undefined) newValues.$set.password  = password;
             let result = await this.#collection.updateOne(filter, newValues);
             return result.result.ok == 1;

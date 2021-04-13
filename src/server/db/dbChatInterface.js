@@ -25,7 +25,8 @@ class DBChatInterface
     /** @type {Db} @private */
     #database;
 
-    ///TODO: add private collection field
+    /** @type {Collection} @private */
+    #collection;
 
     /**
      * Creates a new DBChatInterface
@@ -35,6 +36,7 @@ class DBChatInterface
     constructor(database)
     {
         this.#database = database;
+        this.#collection = this.#database.collection(chatCollectionName);
     }
 
     /**
@@ -46,8 +48,6 @@ class DBChatInterface
      */
     async add(requestID, userIDs)
     {
-        let collection = this.#database.collection(chatCollectionName);
-
         let messageCollection = {};
         for (let i = 0; i < userIDs.length; i++)
         {
@@ -71,7 +71,7 @@ class DBChatInterface
 
         try
         {
-            let result = await collection.updateOne(filter, update, options);
+            let result = await this.#collection.updateOne(filter, update, options);
             return result.upsertedId !== null ? result.upsertedId._id : null;
         }
         catch (error)
@@ -91,7 +91,6 @@ class DBChatInterface
      */
     async addMessage(chatID, userID, message)
     {
-        let collection = this.#database.collection(chatCollectionName);
         let filter = { _id: ObjectID(chatID) };
         let update = 
         {
@@ -107,7 +106,7 @@ class DBChatInterface
 
         try
         {
-            let result  = await collection.updateOne(filter, update);
+            let result  = await this.#collection.updateOne(filter, update);
             return result.result.ok == 1 && result.result.nModified == 1;
         }
         catch (error)
@@ -120,17 +119,16 @@ class DBChatInterface
     /**
      * Gets all messages in a given chat
      * @async
-     * @param {String} chatID The if of the chat
+     * @param {String} chatID The id of the chat
      * @returns {Promise<MessageCollection>} The message collection
      */
     async getMessages(chatID)
     {
-        let collection = this.#database.collection(chatCollectionName);
         let filter = { _id: ObjectID(chatID) };
 
         try
         {
-            let result = await collection.findOne(filter);
+            let result = await this.#collection.findOne(filter);
             return result == null ? null : result.messageCollection;
         }
         catch (error)
@@ -145,18 +143,17 @@ class DBChatInterface
      * @async
      * @param {String} chatID The id of the chat
      * @param {number} time The number of milliseconds elapsed since January 1, 1970 00:00:00 UTC (get from Date.now)
-     * @returns {Promise<MessageCollection|null>} 
+     * @returns {Promise<MessageCollection|null>} The time-filtered message collection 
      */
     async getMessagesAfter(chatID, time)
     {
-        let collection = this.#database.collection(chatCollectionName);
         let filter = { _id: ObjectID(chatID) };
 
         try
         {
             // TODO: Do this with a db query
 
-            let result = await collection.findOne(filter);
+            let result = await this.#collection.findOne(filter);
             if (result == null) return null;
 
             let values  = Object.values(result.messageCollection);
@@ -185,12 +182,11 @@ class DBChatInterface
      */
     async getMessagesFrom(chatID, userID)
     {
-        let collection = this.#database.collection(chatCollectionName);
         let filter = { _id: ObjectID(chatID)};
 
         try
         {
-            let result = await collection.findOne(filter); //TODO: get only the element matching userID in the query somehow
+            let result = await this.#collection.findOne(filter); //TODO: get only the element matching userID in the query somehow
 
             return result === null ? null : result.messageCollection[userID];
         }
@@ -209,12 +205,11 @@ class DBChatInterface
      */
     async remove(chatID)
     {
-        let collection = this.#database.collection(chatCollectionName);
         let filter = { _id: ObjectID(chatID) };
 
         try
         {
-            let result = await collection.deleteOne(filter);
+            let result = await this.#collection.deleteOne(filter);
             return result.result.ok == 1 && result.result.n == 1;
         }
         catch (error)
