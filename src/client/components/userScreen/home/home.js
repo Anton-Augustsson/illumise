@@ -122,20 +122,22 @@ const renderItem = ({item}, nav) => {
     );
 };
 
-const TopWelcome = () => {
+const TopWelcome = ({user}) => {
+    
     return (
         <View style={hs.welcomeContainer}>
-            <Text style={ms.h2}>God dag</Text>
+            <Text style={ms.h2}>Goddag {user.user.name}!</Text>
         </View>
     );
 }
 
 
 
-const FirstScreen = (nav) => {
+const FirstScreen = ({nav, user}) => {
     return (
         <View style={{flex:1}}>
-            <TopWelcome/>
+            
+            <TopWelcome user={user}/>
             <FlatList
                 data={DATA}
                 renderItem={(item) => renderItem(item, nav)}
@@ -148,7 +150,7 @@ const FirstScreen = (nav) => {
 
 const Stack = createStackNavigator();
 
-const HomeScreen = (navigation) => {
+const HomeScreen = (user) => {
     return (
         <Stack.Navigator 
             screenOptions={{
@@ -159,7 +161,7 @@ const HomeScreen = (navigation) => {
         >
             <Stack.Screen 
                 name="FirstScreen" 
-                component={FirstScreen}
+                children={(navigation)=><FirstScreen nav={navigation} user={user}/>}
             />
 
             <Stack.Screen 

@@ -15,8 +15,7 @@ const createFoodRequestScreen = ({navigation}) => {
     const [id, setId] = useState(0);
 
     const createFoodRequest = (addr, list) =>{
-        //navigation.navigate("")
-        console.log({id: 0, type: 'food', delivAddress: addr, shoppingList: list});
+        navigation.navigate("FoodRequestDone", {id: 0, type: 'food', delivAddress: addr, shoppingList: list});
     }
 
     const [textDel, setTextDel] = useState("");
@@ -49,33 +48,32 @@ const createFoodRequestScreen = ({navigation}) => {
             <View style={fs.content}>
                 
                 <View style={{flex:1}}>
-                    <Text style={ms.h1}>Leverera till:</Text>
+                    <Text style={ms.h3}>Leverera till:</Text>
                     <TextInput 
                         style={fs.desc}
                         placeholder="Adress"
-                        multiline={true}
                         onChangeText={onChangeDel}
                     />
 
                     <View style={{marginTop:25, marginBottom:25}}>
-                        <Text style={ms.h1}>
+                        <Text style={ms.h3}>
                             Lägg till en vara:
                         </Text>
                         <TextInput
                             style={fs.desc}
                             placeholder="Beskriv vara"
-                            multiline={true}
                             onChangeText={onChangeArticle}
                         />
                         <CustomButton
                         style={ms.button}
                         title="Lägg till vara"
+                        styleText={{fontWeight:"bold"}}
                         onPress={addItem}
                         arg1={textArticle}
                         />
                     </View>
 
-                    <Text style={ms.h1}>Inköpslista:</Text>
+                    <Text style={ms.h3}>Inköpslista:</Text>
                     <FlatList
                         data={items}
                         renderItem={({item}) => <CustomListItem id={item.id} text={item.text} deleteItem={deleteItem}/>}
@@ -88,6 +86,7 @@ const createFoodRequestScreen = ({navigation}) => {
                 <View style={fs.orderContainer}>
                     <CustomButton
                         style={ms.button}
+                        styleText={{fontWeight:"bold"}}
                         title="Slutför beställning"
                         onPress={createFoodRequest}
                         arg1={textDel}

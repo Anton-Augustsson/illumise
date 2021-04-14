@@ -11,7 +11,6 @@ const fs = StyleSheet.create({
         paddingTop:5,
     },
     desc: {
-        minHeight:100,
         paddingLeft:10,
         paddingRight:10,
         paddingTop:5,
@@ -21,6 +20,8 @@ const fs = StyleSheet.create({
         borderColor:colors.INPUT_BORDER,
         borderRadius:10,
         textAlignVertical: "top",
+        marginTop:5,
+        marginBottom:5,
     },
     orderContainer: {
         marginTop:5,

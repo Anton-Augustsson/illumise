@@ -92,7 +92,7 @@ const ms = StyleSheet.create({
     header: {
         width:"100%",
         height:50,
-        backgroundColor:colors.SAMARIT_BLUE,
+        backgroundColor:colors.SAMARIT_GREEN,
         alignItems:"center",
         justifyContent:"center",
         flexDirection:"row",
