@@ -12,6 +12,7 @@ import createFoodRequestScreen from '../createFoodRequestScreen';
 import {colors} from "../../mainStyles/colors"
 import ms from "../../mainStyles/ms"
 import hs from "./homeStyle"
+import FoodRequestDoneScreen from "./foodRequestDone";
 
 const DATA = [
     {
@@ -121,20 +122,20 @@ const renderItem = ({item}, nav) => {
     );
 };
 
-const TopWelcome = () => {
+const TopWelcome = (name) => {
     return (
         <View style={hs.welcomeContainer}>
-            <Text style={ms.h2}>God dag</Text>
+            <Text style={ms.h2}>God dag {name}</Text>
         </View>
     );
 }
 
 
 
-const firstScreen = (nav) => {
+const FirstScreen = (nav, route) => {
     return (
         <View style={{flex:1}}>
-            <TopWelcome/>
+            <TopWelcome name={route.params.user.name}/>
             <FlatList
                 data={DATA}
                 renderItem={(item) => renderItem(item, nav)}
@@ -147,7 +148,9 @@ const firstScreen = (nav) => {
 
 const Stack = createStackNavigator();
 
-const HomeScreen = () => {
+const HomeScreen = (navigation, route) => {
+    console.log(route);
+    console.log("HOMESCREENHOMESCREENHOMESCREENHOMESCREENHOMESCREENHOMESCREENHOMESCREENHOMESCREENHOMESCREENHOMESCREENHOMESCREENHOMESCREENHOMESCREENHOMESCREENHOMESCREENHOMESCREENHOMESCREENHOMESCREENHOMESCREEN")
 
     return (
         <Stack.Navigator 
@@ -159,13 +162,18 @@ const HomeScreen = () => {
         >
             <Stack.Screen 
                 name="FirstScreen" 
-                component={firstScreen}
+                component={()=><FirstScreen route={route}/>}
             />
+
             <Stack.Screen 
                 name="FoodRequest" 
                 component={createFoodRequestScreen}
             />
 
+            <Stack.Screen 
+                name="FoodRequestDone" 
+                component={FoodRequestDoneScreen}
+            />
         </Stack.Navigator>
     );
 }

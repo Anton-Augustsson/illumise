@@ -7,62 +7,39 @@ import CustomListItem from "../../customComponents/customListItem"
 import ms from '../../mainStyles/ms';
 import fs from "./foodStyles";
 
-const SHOPPING_LIST = [
-    {
-        id: "1",
-        text:"Arla Mellanmjölk"
-    },{
-        id: "2",
-        text:"Arla Mellanmjölk"
-    },{
-        id: "3",
-        text:"Arla Mellanmjölk"
-    },{
-        id: "4",
-        text:"Arla Mellanmjölk"
-    },{
-        id: "5",
-        text:"Arla Mellanmjölk"
-    },{
-        id: "6",
-        text:"Arla Mellanmjölk"
-    },{
-        id: "8",
-        text:"Arla Mellanmjölk"
-    },{
-        id: "234",
-        text:"Arla Mellanmjölk"
-    },{
-        id: "523491",
-        text:"Arla Mellanmjölk"
-    },{
-        id: "5231",
-        text:"Arla Mellanmjölk"
-    },{
-        id: "5123",
-        text:"Arla Mellanmjölk"
-    },{
-        id: "5341234",
-        text:"Arla Mellanmjölk"
-    },{
-        id: "53ewifj41234",
-        text:"Arla Mellanmjölk"
-    },{
-        id: "53412ewhfi34",
-        text:"banna"
-    },{
-        id: "5ife19341234",
-        text:"Arla Mellanmjölk"
-    }
-]
+//TODO vi måste ha någon sorts uuid generator
 
-const renderItem = ({item}) => {
-    return (
-        <CustomListItem text={item.text}/>
-    );
-}
+
 
 const createFoodRequestScreen = ({navigation}) => {
+    const [id, setId] = useState(0);
+
+    const createFoodRequest = (addr, list) =>{
+        //navigation.navigate("")
+        console.log({id: 0, type: 'food', delivAddress: addr, shoppingList: list});
+    }
+
+    const [textDel, setTextDel] = useState("");
+    const onChangeDel = textValue => setTextDel(textValue); 
+
+    const [textArticle, setTextArticle] = useState('');
+    const onChangeArticle = textValue => setTextArticle(textValue);
+
+    const [items, setItems] = useState([]);
+
+    const deleteItem = (id) => {
+        setItems(prevItems => {
+            return prevItems.filter(item => item.id != id);
+        })
+    }
+
+    const addItem = (textArticle) => {
+        setItems(prevItems => {
+            setId(id+1);
+            return [{id:id, text: textArticle},...prevItems]
+        })
+    }
+
     return (
         <View style={{flex:1}}>
             <CustomHeader
@@ -72,24 +49,49 @@ const createFoodRequestScreen = ({navigation}) => {
             <View style={fs.content}>
                 
                 <View style={{flex:1}}>
-                    <Text>Leverera till:</Text>
+                    <Text style={ms.h1}>Leverera till:</Text>
                     <TextInput 
                         style={fs.desc}
-                        placeholder="Beskrivning"
+                        placeholder="Adress"
                         multiline={true}
+                        onChangeText={onChangeDel}
                     />
-                    <Text>Inköpslista:</Text>
+
+                    <View style={{marginTop:25, marginBottom:25}}>
+                        <Text style={ms.h1}>
+                            Lägg till en vara:
+                        </Text>
+                        <TextInput
+                            style={fs.desc}
+                            placeholder="Beskriv vara"
+                            multiline={true}
+                            onChangeText={onChangeArticle}
+                        />
+                        <CustomButton
+                        style={ms.button}
+                        title="Lägg till vara"
+                        onPress={addItem}
+                        arg1={textArticle}
+                        />
+                    </View>
+
+                    <Text style={ms.h1}>Inköpslista:</Text>
                     <FlatList
-                        data={SHOPPING_LIST}
-                        renderItem={renderItem}
+                        data={items}
+                        renderItem={({item}) => <CustomListItem id={item.id} text={item.text} deleteItem={deleteItem}/>}
                         keyExtractor={(item) => item.id}
                     />   
                 </View>
+
+               
 
                 <View style={fs.orderContainer}>
                     <CustomButton
                         style={ms.button}
                         title="Slutför beställning"
+                        onPress={createFoodRequest}
+                        arg1={textDel}
+                        arg2={items}
                     />
                 </View>
             </View>

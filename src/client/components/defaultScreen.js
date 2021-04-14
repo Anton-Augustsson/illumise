@@ -8,7 +8,7 @@ import NotificationScreen from './userScreen/notification/notification';
 
 const Tab = createBottomTabNavigator();
 
-const DefaultScreen = () => {
+const DefaultScreen = (navigation, route) => {
 
     //https://reactnavigation.org/docs/bottom-tab-navigator
     return (
@@ -18,7 +18,7 @@ const DefaultScreen = () => {
             >
             <Tab.Screen 
             name="Home" 
-            component={HomeScreen}
+            component={() => <HomeScreen route={route}/>}
             />
 
             <Tab.Screen 

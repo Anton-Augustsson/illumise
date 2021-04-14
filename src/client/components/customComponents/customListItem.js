@@ -2,16 +2,14 @@ import React, {useState} from 'react';
 import { Text, View, Image, TextInput, Button, Switch, TouchableOpacity, StyleSheet} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-const CustomListItem = (props) => {
+const CustomListItem = (props, {deleteItem}) => {
     return(
         <TouchableOpacity style={styles.listItem}>
             <View style={styles.listItemView}>
                 <Text style={styles.listItemText}>
                     {props.text}
                 </Text>
-                <Ionicons name="close-circle-sharp" size={30} color="red" onPress={() =>{
-                    console.log("Hej ANTOOON");
-                }}/>
+                <Ionicons name="close-circle-sharp" size={30} color="red" onPress={() => props.deleteItem(props.id)}/>
             </View>
         </TouchableOpacity>
     );
