@@ -1,5 +1,6 @@
 start:
-	sudo npm install expo
+	expo login
+	sudo npm install
 	expo start
 
 clean:

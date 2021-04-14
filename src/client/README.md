@@ -27,7 +27,13 @@ Answer taken from: https://stackoverflow.com/questions/55763428/react-native-err
 
 
 ### How to run the app 
-Be inside the client directory and run: ```expo start```
+Be inside the client directory and run: ```make start```  
+Then you need to login to expo with: 
+* Email: ```illumise420@gmail.com```
+* Password: ```expologin123```
+
+
+
 
 
 
