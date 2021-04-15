@@ -13,86 +13,39 @@ import {colors} from "../../mainStyles/colors"
 import ms from "../../mainStyles/ms"
 import hs from "./homeStyle"
 import FoodRequestDoneScreen from "./foodRequestDone";
+import RequestIcon from "../../customComponents/requestIcon"
 
 const DATA = [
     {
         id: "1",
-        title: "First Item",
-        img1:require("../../../assets/samarit_logo2.png"),
-        img2:require("../../../assets/samarit_logo2.png"),
+        title1: "Mat",
+        title2: "Paket",
+        type1: "food",
+        type2: "package",
         des1: "FoodRequest",
         des2: "FoodRequest",
     },
     {
         id: "2",
-        title: "Second Item",
-        img1:require("../../../assets/samarit_logo2.png"),
-        img2:require("../../../assets/samarit_logo2.png"),
+        title1: "Post",
+        title2: "Annat",
+        type1: "mail",
+        type2: "other",
         des1: "FoodRequest",
         des2: "FoodRequest",
-    },
-    {
-        id: "3",
-        title: "Third Item",
-        img1:require("../../../assets/samarit_logo2.png"),
-        img2:require("../../../assets/samarit_logo2.png"),
-        des1: "FoodRequest",
-        des2: "FoodRequest",
-    },
-    {
-        id: "4",
-        title: "Third Item",
-        img1:require("../../../assets/samarit_logo2.png"),
-        img2:require("../../../assets/samarit_logo2.png"),
-        des1: "FoodRequest",
-        des2: "FoodRequest",
-    },
-    {
-        id: "5",
-        title: "Third Item",
-        img1:require("../../../assets/samarit_logo2.png"),
-        img2:require("../../../assets/samarit_logo2.png"),
-        des1: "FoodRequest",
-        des2: "FoodRequest",
-    },
-    {
-        id: "6",
-        title: "Third Item",
-        img1:require("../../../assets/samarit_logo2.png"),
-        img2:require("../../../assets/samarit_logo2.png"),
-        des1: "FoodRequest",
-        des2: "FoodRequest",
-    },
-    {
-        id: "7",
-        title: "Third Item",
-        img1:require("../../../assets/samarit_logo2.png"),
-        img2:require("../../../assets/samarit_logo2.png"),
-        des1: "FoodRequest",
-        des2: "FoodRequest",
-    },
-    {
-        id: "8",
-        title: "Third Item",
-        img1:require("../../../assets/samarit_logo2.png"),
-        img2:require("../../../assets/samarit_logo2.png"),
-        des1: "FoodRequest",
-        des2: "FoodRequest",
-    },
+    }
 ];
 
 const InnerItem = (props)  => {
     return(
-        <TouchableOpacity onPress={()=> {
-            props.nav.navigation.navigate(props.des);
-        }} 
-        style={hs.innerItemContainer}
+        <TouchableOpacity 
+            onPress={()=> {
+                props.nav.navigation.navigate(props.des);
+            }} 
+            style={hs.innerItemContainer}
         >
-            <Image
-                resizeMode={'cover'}
-                style={hs.iconSize}
-                source={props.source}
-            />
+            <RequestIcon type={props.type} size={70} color="white"/>
+            <Text style={hs.innerItemTitle}>{props.title}</Text>
         </TouchableOpacity>
     );
 }
@@ -100,14 +53,16 @@ const InnerItem = (props)  => {
 const Item = ({item, nav}) => (
     <View style={hs.itemContainer}> 
         <InnerItem
-            source={item.img1}
+            type={item.type1}
             des={item.des1}
             nav={nav}
+            title={item.title1}
         />
         <InnerItem
-            source={item.img2}
+            type={item.type2}
             des={item.des2}
             nav={nav}
+            title={item.title2}
         />
     </View>
 );

@@ -1,4 +1,5 @@
 import {StyleSheet} from 'react-native';
+import {colors} from "../../mainStyles/colors"
 
 const itemContainerBackground = "#069547"
 
@@ -17,9 +18,19 @@ const hs = StyleSheet.create({
         justifyContent:"space-evenly",
         marginTop:"5%",
     },
-    iconSize: {
-        width:150,
+    innerItemContainer: {
+        width:"40%",
         height:150,
+        backgroundColor: colors.SAMARIT_GREEN,
+        alignItems:"center",
+        justifyContent:"center",
+        borderRadius: 20,
+    },
+    innerItemTitle: {
+        color: "white",
+        fontWeight:"bold",
+        fontSize:20,
+        marginTop:3,
     },
     welcomeContainer: {
         width:"100%",

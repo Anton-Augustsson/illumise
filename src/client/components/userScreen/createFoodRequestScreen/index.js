@@ -12,6 +12,7 @@ import fs from "./foodStyles";
 
 
 const createFoodRequestScreen = ({navigation}) => {
+    //TODO ID MÅSTE VARA EN STRÄNG
     const [id, setId] = useState(0);
 
     const createFoodRequest = (addr, list) =>{
