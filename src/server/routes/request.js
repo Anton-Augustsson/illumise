@@ -25,7 +25,7 @@ router.put('/completeRequest', async (req, res) =>
   if(valid(req.body, schema, res))
   {
     let response = await db.requests.setCompleted(req.body.requestID);
-    if(reposnse != null) return sendSuccess(res, response);
+    if(response != null) return sendSuccess(res, response);
     else return sendFailure(res);
   }
 });
@@ -44,7 +44,7 @@ router.get('/provider/getNearRequests', async (req, res) =>
   {
     let distance = 40; // TODO dont hardcode it
     let response = await db.requests.getNearby(params.geoLocation, distance, undefined);
-    if(reposnse != null) return sendSuccess(res, response);
+    if(response != null) return sendSuccess(res, response);
     else return sendFailure(res);
   }
 });
@@ -64,7 +64,7 @@ router.get('/provider/set', async (req, res) => // TODO: Not get method
   if(validParams(params, res))
   {
     let response = await db.requests.getNearby(params.geoLocation, distance, undefined);
-    if(reposnse != null) return sendSuccess(res, response);
+    if(response != null) return sendSuccess(res, response);
     else return sendFailure(res);
   }
 });
@@ -84,7 +84,7 @@ router.get('/provider/getUserProviding', async (req, res) =>
   if(validParams(params, res))
   {
     let response = await db.requests.getUserProviding(params.providorID, params.num);
-    if(reposnse != null) return sendSuccess(res, response);
+    if(response != null) return sendSuccess(res, response);
     else return sendFailure(res);
   }
 });
@@ -106,7 +106,7 @@ router.post('/requester/newRequest', async (req, res) =>
   if(valid(req.body, schema, res) && validData(data, res))
   {
     let response = await db.requests.add(req.body.requestID, data.header, data.body, data.cost);
-    if(reposnse != null) return sendSuccess(res, response);
+    if(response != null) return sendSuccess(res, response);
     else return sendFailure(res);
   }
 });
@@ -126,7 +126,7 @@ router.get('/requester/getMyRequest', async (req, res) => // TODO: change getMyR
   if(validParams(params, res))
   {
     let response = await db.requests.getUserRequests(params.requestID, params.num);
-    if(reposnse != null) return sendSuccess(res, response);
+    if(response != null) return sendSuccess(res, response);
     else return sendFailure(res);
   }
 });
@@ -144,7 +144,7 @@ router.delete('/requester/removeRequest', async (req, res) =>
   if(valid(req.body, schema, res))
   {
     let response = await db.requests.remove(req.body.requestID);
-    if(reposnse != false) return sendSuccess(res);
+    if(response != false) return sendSuccess(res);
     else return sendFailure(res);
   }
 });
@@ -188,7 +188,7 @@ router.put('/requester/acceptProvider', async (req, res) =>
   {
     // bolean
     let response = await db.requests.setProvider(req.body.requestID, req.body.providorID);
-    if(reposnse != false) return sendSuccess(res);
+    if(response != false) return sendSuccess(res);
     else return sendFailure(res);
   }
 });

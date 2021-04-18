@@ -99,7 +99,7 @@ const validate =
         let o = objectResponce;
         if(o == undefined) o = console.log(JSON.stringify(undefined));
         else o = JSON.stringify(o);
-        res.status(404).send(o);
+        res.send(o);
     }
 };
 

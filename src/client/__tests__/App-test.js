@@ -2,40 +2,53 @@
  * @format
  */
 
-import 'react-native';
-import React from 'react';
-import App from '../App';
-import chat from '../client-communication/chat'
+ import 'react-native';
+ import React from 'react';
+ import App from '../App';
+ import request from '../client-communication/request';
+ import chat from '../client-communication/chat';
+ import account from '../client-communication/account';
+ 
+ 
+ // Note: test renderer must be required after react-native.
+ import renderer from 'react-test-renderer';
+ 
+ it('renders correctly', () => {
+   renderer.create(<App />);
+ });
+ 
 
-// Note: test renderer must be required after react-native.
-import renderer from 'react-test-renderer';
-
-it('renders correctly', () => {
-  renderer.create(<App />);
-});
-
-function resolveAfter2Seconds() {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve('resolved');
-    }, 2000);
-  });
-}
-async function asyncCall() {
-  console.log('calling');
-  const result = await resolveAfter2Seconds();
-  console.log(result);
-  // expected output: "resolved"
-}
-
-test('some test', async() => {
-  let response = await asyncCall();
+ test('test completeRequest', async() => {
+  let response = await request.completeRequest('antonabcdefg');
   expect(response).not.toBeNull();
 });
 
+test('test createAccount', async() => {
+  var credentials = {"firstName":"J", "lastName":"j", "email":"e", "token":"s" };
+  let response = await account.createAccount(credentials);
+  expect(response).not.toBeNull();
+});
 
-/***chat tests***/
 test('test sendMessage', async() => {
-  let response = await chat.sendMessage('1', '1');
+  let response = await chat.sendMessage('antonabcdefg', 'chat123');
   expect(response).not.toBeNull();
 });
+
+
+/*
+test('test set', async() => {
+  let response = await request.provider.set('gdfs', 'sdaf');
+  expect(response).not.toBeNull();
+});
+
+test('test getUserProviding', async() => {
+  let response = await request.provider.getUserProviding('gdsf', '1');
+  expect(response).not.toBeNull();
+});
+
+test('test newRequest', async() => {
+  let response = await request.requester.newRequest('anton', 'some data');
+  expect(response).not.toBeNull();
+});*/
+ 
+ 

@@ -23,8 +23,8 @@ const account =
             body: JSON.stringify(toCreate)
         });
 
-        let result = await response.text(); //should be json
-        console.log(result);
+        let result = await response.json(); //should be json
+        console.log("ID of created account: " + result);
     },
 
     /**

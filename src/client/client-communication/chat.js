@@ -59,8 +59,8 @@ const chat =
             body: JSON.stringify(toCreate)
         });
 
-        let result = await response.text(); //should be json
-        console.log(result);
+        let result = await response.json(); //should be json
+        console.log("New chat created with ID: " + result);
     },
 
     /**

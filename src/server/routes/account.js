@@ -27,7 +27,7 @@ router.put('/createAccount', async (req, res) =>
   if(valid(req.body, schema, res) && validCredentials(c, res))
   {
     let response = await db.accounts.add(c.firstName, c.lastName, c.email, c.token);
-    if(reposnse != null) return sendSuccess(res, response);
+    if(response != null) return sendSuccess(res, response);
     else return sendFailure(res);
   }
 });
@@ -45,7 +45,7 @@ router.delete('/removeAccount', async (req, res) =>
   if(valid(req.body, schema, res))
   {
     let response = await db.accounts.remove(req.body.userID);
-    if(reposnse != false) return sendSuccess(res);
+    if(response != false) return sendSuccess(res);
     else return sendFailure(res);
   }
 });

@@ -3,7 +3,7 @@ require('isomorphic-fetch');
 /**
  * Interface for communicating wih the server
  */
-const serviceRequest =
+const request =
 {
     serviceUrl: 'http://localhost:3000/request',
 
@@ -14,8 +14,7 @@ const serviceRequest =
     completeRequest: async function(requestID)
     {   
         let data = 
-        {   requestID: requestID }
-        console.log(data);
+        {requestID: requestID }
         let url = this.serviceUrl + '/completeRequest';
         let response = await fetch(url, {
             method: 'PUT',
@@ -25,8 +24,8 @@ const serviceRequest =
             body: JSON.stringify(data)
         });
 
-        let result = await response.text(); //should be .json
-        console.log(result);
+        let result = await response.json(); //should be .json
+        console.log("completed request: " + result);
     },
 
     provider:
@@ -38,7 +37,7 @@ const serviceRequest =
         getNearRequests: async function(geoLocation)
         {
             let params = '?geoLocation=' + geoLocation;
-            let url = serviceRequest.serviceUrl + '/provider/getNearRequests'+ params;
+            let url = request.serviceUrl + '/provider/getNearRequests'+ params;
             let response = await fetch(url);
             
             let result = await response.text(); //should be json
@@ -53,7 +52,7 @@ const serviceRequest =
         set: async function(providerID, requestID)
         {   
             let params = '?providerID=' + providerID + '&requestID=' + requestID;
-            let url = serviceRequest.serviceUrl + '/provider/set' + params;
+            let url = request.serviceUrl + '/provider/set' + params;
             let response = await fetch(url);
 
             let result = await response.text(); //should be json
@@ -68,7 +67,7 @@ const serviceRequest =
         getUserProviding: async function(providerID, num)
         {
             let params = '?providerID=' + providerID + '&num=' + num;
-            let url = serviceRequest.serviceUrl + '/provider/getUserProviding' + params;
+            let url = request.serviceUrl + '/provider/getUserProviding' + params;
             let response = await fetch(url);
             let result = await response.text();  //should be json
             console.log(result);
@@ -86,7 +85,7 @@ const serviceRequest =
         {   
             let newReq = {requestID: requestID, data: data};
             console.log(newReq);
-            let url = serviceRequest.serviceUrl + '/requester/newRequest';
+            let url = request.serviceUrl + '/requester/newRequest';
             let response = await fetch(url, {
                 method: 'POST',
                 headers: {
@@ -107,7 +106,7 @@ const serviceRequest =
         getUserRequest: async function(requestID, num) // num is the number of my requests starting from most recent //async  await
         {
             let params = '?requestID=' + requestID + '&num=' + num;
-            let url = serviceRequest.serviceUrl + '/requester/getMyRequest' + params;        
+            let url = request.serviceUrl + '/requester/getMyRequest' + params;        
             let response = await fetch(url);
 
             let result = await response.text(); //should be json
@@ -120,7 +119,7 @@ const serviceRequest =
          */
         removeRequest: async function(requestID)
         {
-            let url = serviceRequest.serviceUrl + '/requester/removeRequest';
+            let url = request.serviceUrl + '/requester/removeRequest';
             let toRemove = {requestID: requestID};
             let response = await fetch(url, {
                 method: 'DELETE',
@@ -142,7 +141,7 @@ const serviceRequest =
          */
         reviewProvider: async function(requestID, providerID, rating) 
         {
-            let url = serviceRequest.serviceUrl + '/requester/reviewProvider';
+            let url = request.serviceUrl + '/requester/reviewProvider';
             let toRate = {requestID: requestID, providerID: providerID, rating: rating};
             let response = await fetch(url, {
                 method: 'PUT',
@@ -163,7 +162,7 @@ const serviceRequest =
          */
         acceptProvider: async function(requestID, providerID) 
         {
-            let url = serviceRequest.serviceUrl + '/requester/acceptProvider';
+            let url = request.serviceUrl + '/requester/acceptProvider';
             let toAccept = {requestID: requestID, providerID: providerID};
             let response = await fetch(url, {
                 method: 'PUT',
@@ -180,4 +179,4 @@ const serviceRequest =
     }
 };
 
-export default serviceRequest;
+export default request;
