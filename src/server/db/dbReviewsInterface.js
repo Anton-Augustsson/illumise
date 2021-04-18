@@ -322,7 +322,7 @@ class DBReviewsInterface
      * @param {String} userID The id of the user that has the review
      * @param {String} requestID The id of the review related to the review
      * @param {ReviewType} type The type of review 
-     * @returns {Boolean} If the review was removed successfully
+     * @returns {Promise<Boolean>} If the review was removed successfully
      */
     async removeTo(userID, requestID, type)
     {
@@ -349,7 +349,7 @@ class DBReviewsInterface
      * @param {String} userID The id of the user that created the review
      * @param {String} requestID The id of the review related to the review
      * @param {ReviewType} type The type of review
-     * @returns {Boolean} If the review was removed successfully
+     * @returns {Promise<Boolean>} If the review was removed successfully
      */
     async removeFrom(userID, requestID, type)
     {
