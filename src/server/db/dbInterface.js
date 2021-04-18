@@ -45,18 +45,24 @@ const dbName = "Main";
     {
         "_id": { "$oid" },
         userID,
-        requesterCollection,
-        providerCollection
-    }
-
-    RequesterCollection / ProviderCollection
-    {
-        averageRating, //(0 - 5)
-        numRatings,
-        ratings:
-        [
-            ...
-        ]
+        requesterCollection:
+        {
+            averageRating, //(0 - 5)
+            numRatings,
+            ratings:
+            {
+                requestID: Rating
+            }
+        },
+        providerCollection:
+        {
+            averageRating, //(0 - 5)
+            numRatings,
+            ratings:
+            {
+                requestID: Rating
+            }
+        }
     }
 
     Rating
@@ -64,8 +70,7 @@ const dbName = "Main";
         value, //(0 - 5)
         message,
         dateCreated,
-        creatorID,
-        requestID
+        creatorID
     }
 
     Chat
@@ -202,7 +207,7 @@ class DBInterface
      */
     async clear()
     {
-        if (this.#database !== null && isTesting)
+        if (this.#database !== null && this.#isTesting)
         {
             await this.#database.dropDatabase();
         }

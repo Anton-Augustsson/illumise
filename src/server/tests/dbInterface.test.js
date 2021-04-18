@@ -3,6 +3,7 @@
  */
 
 const { DBInterface } = require("../db/dbInterface");
+const { ReviewType }  = require("../db/dbReviewsInterface");
 
 describe("Testing dbInterface", () =>
 {
@@ -307,9 +308,141 @@ describe("Testing dbInterface", () =>
         checkResultGetNearby(result, requests, maxRequests, shouldFind, shouldNotFind);
     });
 
-    it("Add requester review", async () =>
+    it("Add reviews", async () =>
     {
+        if (!connected) fail();
 
+        let user1ID    = await db.accounts.add("A18", "A18", "A18@mail", "+46123456789", "*");
+        let user2ID    = await db.accounts.add("A19", "A19", "A19@mail", "+46123456789", "*");
+        let request1ID = await db.requests.add(user1ID, "T11", "this is a test");
+        let request2ID = await db.requests.add(user1ID, "T12", "this is a test");
+        let message1   = "It was OK";
+        let message2   = "It was Good";
+
+        let result = await db.reviews.add(user1ID, user2ID, request1ID, message1, 3, ReviewType.Requester);
+        expect(result).toEqual(true);
+
+        result = await db.reviews.add(user1ID, user2ID, request1ID, message2, 3, ReviewType.Requester);
+        expect(result).toEqual(false); // Same request cant be added twice to the same collection
+
+        result = await db.reviews.add(user1ID, user2ID, request1ID, message1, 1, ReviewType.Provider);
+        expect(result).toEqual(true);
+
+        result = await db.reviews.add(user1ID, user2ID, request1ID, message2, 2, ReviewType.Provider);
+        expect(result).toEqual(false); // Same request cant be added twice to the same collection
+
+        result = await db.reviews.add(user1ID, user2ID, request2ID, message2, 4, ReviewType.Requester);
+        expect(result).toEqual(true);
+
+        result = await db.reviews.add(user2ID, user1ID, request1ID, message1, 4, ReviewType.Provider);
+        expect(result).toEqual(true);
+
+        result = await db.reviews.add(user2ID, user1ID, request1ID, message2, 4, ReviewType.Provider);
+        expect(result).toEqual(false);
+
+        result = await db.reviews.add(user2ID, user1ID, request2ID, message2, 4, ReviewType.Provider);
+        expect(result).toEqual(true);
+    });
+
+    it("Remove reviews", async () =>
+    {
+        if (!connected) fail();
+
+        let user1ID   = await db.accounts.add("A40", "A40", "A40@mail", "+46123456789", "*");
+        let user2ID   = await db.accounts.add("A41", "A41", "A41@mail", "+46123456789", "*");
+        let requestID = await db.requests.add(user1ID, "T40", "this is a test");
+        let message   = "It was OK";
+
+        let result = await db.reviews.add(user1ID, user2ID, requestID, message, 3, ReviewType.Requester);
+        result     = await db.reviews.add(user2ID, user1ID, requestID, message, 1, ReviewType.Requester);
+
+        result = await db.reviews.removeTo(user2ID, requestID, ReviewType.Provider);
+        expect(result).toEqual(false);
+
+        result = await db.reviews.removeTo(user2ID, requestID, ReviewType.Requester);
+        expect(result).toEqual(true);
+
+        result = await db.reviews.removeTo(user2ID, requestID, ReviewType.Requester);
+        expect(result).toEqual(false);
+
+        result = await db.reviews.add(user2ID, user1ID, requestID, message, 4, ReviewType.Requester);
+        expect(result).toEqual(true);
+
+        result = await db.reviews.removeFrom(user1ID, requestID, ReviewType.Requester);
+        expect(result).toEqual(true);
+
+        result = await db.reviews.removeFrom(user1ID, requestID, ReviewType.Requester);
+        expect(result).toEqual(false);
+    });
+
+    it("Get review to/from", async () => 
+    {
+        if (!connected) fail();
+
+        let user1ID   = await db.accounts.add("A20", "A20", "A20@mail", "+46123456789", "*");
+        let user2ID   = await db.accounts.add("A21", "A21", "A21@mail", "+46123456789", "*");
+        let requestID = await db.requests.add(user1ID, "T13", "this is a test");
+        let message   = "It was OK";
+        let value     = 3;
+        
+        await db.reviews.add(user1ID, user2ID, requestID, message, value, ReviewType.Requester);
+        await db.reviews.add(user2ID, user2ID, requestID, message, value, ReviewType.Requester);
+
+        let result = await db.reviews.getSpecificToUser(user1ID, requestID, ReviewType.Requester);
+        expect(result).not.toBe(null);
+        expect(result.value).toBe(value);
+        expect(result.message).toStrictEqual(message);
+        expect(result.targetID).toStrictEqual(user1ID);
+
+        result = await db.reviews.getAllToUser(user1ID, ReviewType.Requester);
+        expect(result).not.toBe(null);
+        expect(result.length).toBeGreaterThan(0);
+        for (let i = 0; i < result.length; i++)
+        {
+            expect(result[i].targetID).toStrictEqual(user1ID);
+            expect(result[i].requestID).toStrictEqual(requestID);
+        }
+
+        result = await db.reviews.getAllFromUser(user2ID, ReviewType.Requester);
+        expect(result).not.toBe(null);
+        expect(result.length).toBeGreaterThan(0);
+    });
+
+    it("Update a review", async () => 
+    {
+        if (!connected) fail();
+
+        let user1ID   = await db.accounts.add("A22", "A22", "A22@mail", "+46123456789", "*");
+        let user2ID   = await db.accounts.add("A23", "A23", "A23@mail", "+46123456789", "*");
+        let requestID = await db.requests.add(user1ID, "T14", "this is a test");
+        let message1  = "It OK";
+        let message2  = "It was OK";
+
+        await db.reviews.add(user1ID, user2ID, requestID, message1, 3, ReviewType.Requester);
+        let result = await db.reviews.getSpecificToUser(user1ID, requestID, ReviewType.Requester);
+        expect(result.message).toStrictEqual(message1);
+
+        result = await db.reviews.update(user1ID, requestID, ReviewType.Requester, message2);
+        expect(result).toBe(true);
+
+        result = await db.reviews.getSpecificToUser(user1ID, requestID, ReviewType.Requester);
+        expect(result.message).toStrictEqual(message2);
+    });
+
+    it("Get user rating", async () => 
+    {
+        if (!connected) fail();
+
+        let user1ID   = await db.accounts.add("A24", "A24", "A24@mail", "+46123456789", "*");
+        let user2ID   = await db.accounts.add("A25", "A25", "A25@mail", "+46123456789", "*");
+        let requestID = await db.requests.add(user1ID, "T15", "this is a test");
+        let message   = "It OK";
+        let rating    = 3;
+
+        await db.reviews.add(user1ID, user2ID, requestID, message, rating, ReviewType.Requester);
+        let result = await db.reviews.getRating(user1ID, ReviewType.Requester);
+        console.log(result);
+        expect(result.averageRating).toBe(rating)
     });
 
     afterAll(async () => 

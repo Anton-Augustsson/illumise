@@ -99,8 +99,9 @@ class DBAccountsInterface
             if (email     !== undefined) newValues.$set.email     = email;
             if (phone     !== undefined) newValues.$set.phone     = phone;
             if (password  !== undefined) newValues.$set.password  = password;
+            
             let result = await this.#collection.updateOne(filter, newValues);
-            return result.result.ok == 1;
+            return result.result.ok == 1 && result.result.nModified == 1;
         }
         catch (error)
         {
@@ -155,30 +156,6 @@ class DBAccountsInterface
             return false;
         }
     }
-
-    /**
-     * Adds a 
-     * @param {*} toUser 
-     * @param {*} fromUser 
-     * @param {*} message 
-     * @param {*} score 
-     */
-    async addProviderReview(toUser, fromUser, message, score)
-    {
-
-    }
-
-    /**
-     * Adds a 
-     * @param {*} toUser 
-     * @param {*} fromUser 
-     * @param {*} message 
-     * @param {*} score 
-     */
-     async addRequesterReview(toUser, fromUser, message, score)
-     {
- 
-     }
 }
 
 module.exports =

@@ -191,7 +191,7 @@ class DBRequestsInterface
                 }
             };
             let result = await this.#collection.updateOne(filter, update);
-            return result.result.ok == 1 && result.result.n == 1;
+            return result.result.ok == 1 && result.result.nModified == 1;
         }
         catch (error)
         {
@@ -214,7 +214,7 @@ class DBRequestsInterface
             let filter = { _id: ObjectID(requestID) };
             let update = { $set: { providerID: providerID } };
             let result = await this.#collection.updateOne(filter, update);
-            return result.result.ok == 1 && result.result.n == 1;
+            return result.result.ok == 1 && result.result.nModified == 1;
         }
         catch (error)
         {
@@ -235,7 +235,7 @@ class DBRequestsInterface
             let filter = { _id: ObjectID(requestID) };
             let update = { $set: { cost: value } };
             let result = await this.#collection.updateOne(filter, update);
-            return result.result.ok == 1 && result.result.n == 1;
+            return result.result.ok == 1 && result.result.nModified == 1;
         }
         catch (error)
         {

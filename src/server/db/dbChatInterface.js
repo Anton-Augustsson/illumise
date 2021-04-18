@@ -3,7 +3,7 @@
  * to chats and messages.
  */
 
-const { Db, ObjectID } = require("mongodb");
+const { Db, ObjectID, Collection } = require("mongodb");
 const chatCollectionName = "Chat";
 
 /**
