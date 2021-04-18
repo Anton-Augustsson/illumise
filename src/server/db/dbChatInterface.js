@@ -44,7 +44,7 @@ class DBChatInterface
      * @async
      * @param {String} requestID The id of the related request
      * @param {[String]} userIDs An array containing the ids of all related users 
-     * @returns {Promise<ObjectID|null>} The id of the chat or null
+     * @returns {Promise<?String>} The id of the chat or null
      */
     async add(requestID, userIDs)
     {
@@ -87,7 +87,7 @@ class DBChatInterface
      * @param {String} chatID The id of the chat
      * @param {String} userID The user id of the sender
      * @param {String} message The message sent
-     * @returns {Promise<boolean>} If the message was added successfully 
+     * @returns {Promise<Boolean>} If the message was added successfully 
      */
     async addMessage(chatID, userID, message)
     {
@@ -120,7 +120,7 @@ class DBChatInterface
      * Gets all messages in a given chat
      * @async
      * @param {String} chatID The id of the chat
-     * @returns {Promise<MessageCollection>} The message collection
+     * @returns {Promise<?MessageCollection>} The message collection
      */
     async getMessages(chatID)
     {
@@ -143,7 +143,7 @@ class DBChatInterface
      * @async
      * @param {String} chatID The id of the chat
      * @param {number} time The number of milliseconds elapsed since January 1, 1970 00:00:00 UTC (get from Date.now)
-     * @returns {Promise<MessageCollection|null>} The time-filtered message collection 
+     * @returns {Promise<?MessageCollection>} The time-filtered message collection 
      */
     async getMessagesAfter(chatID, time)
     {
@@ -176,9 +176,10 @@ class DBChatInterface
     
     /**
      * Get all chat messages from a specific user
+     * @async
      * @param {String} chatID the chat to get messages from
      * @param {String} userID the user messages to find
-     * @returns {Promise<[ChatMessage]|null>} The message collection
+     * @returns {Promise<?[ChatMessage]>} The message collection
      */
     async getMessagesFrom(chatID, userID)
     {

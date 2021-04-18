@@ -63,7 +63,7 @@ class DBRequestsInterface
      * @param {String} body The body of the request
      * @param {GeoLocation} geoLocation The location of the request
      * @param {Number} cost The cost of the request
-     * @returns {Promise<String|null>} The id of the created request or null
+     * @returns {Promise<?String>} The id of the created request or null
      */
     async add(userID, header, body, geoLocation = undefined, cost = undefined)
     {
@@ -96,7 +96,7 @@ class DBRequestsInterface
      * @async
      * @param {String} userID The id of the user
      * @param {Number} num The number of requests to get, if not set all will be returned
-     * @returns {Promise<[Request]|null>} The requests BSON objects in a list or null
+     * @returns {Promise<?[Request]>} The requests BSON objects in a list or null
      */
     async getUserRequests(userID, num = undefined)
     {
@@ -119,7 +119,7 @@ class DBRequestsInterface
      * @async
      * @param {String} userID The id of the user
      * @param {Number} num The number of requests to get, if not set all will be returned
-     * @returns {Promise<[Request]|null>} The requests BSON objects in a list or null
+     * @returns {Promise<?[Request]>} The requests BSON objects in a list or null
      */
     async getUserProviding(userID, num = undefined)
     {
@@ -143,7 +143,7 @@ class DBRequestsInterface
      * @param {GeoLocation} geoLocation The location to search around
      * @param {Number} maxDistance The maximum distance in meters to search from geoLocation
      * @param {Number} num The number of nearby requests to retrieve
-     * @returns {Promise<[Request]|null>} The requests BSON objects in a list or null
+     * @returns {Promise<?[Request]>} The requests BSON objects in a list or null
      */
      async getNearby(geoLocation, maxDistance, num = undefined)
      {
@@ -225,8 +225,9 @@ class DBRequestsInterface
 
     /**
      * Sets the cost of a request
+     * @async
      * @param {String} requestID The id of the request
-     * @param {Number} value The new cost value
+     * @param {Promise<Boolean>} value The new cost value
      */
     async setCost(requestID, value)
     {

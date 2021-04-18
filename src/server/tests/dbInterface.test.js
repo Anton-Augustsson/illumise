@@ -196,6 +196,7 @@ describe("Testing dbInterface", () =>
         expect(result1[user2ID].length).toBe(0);
         expect(result1[user1ID][0].message).toBe(message);
 
+        let result2 = await db.chat.getMessagesAfter(chatID, Date.now());
         expect(result2[user1ID].length).toBe(0);
     });
     

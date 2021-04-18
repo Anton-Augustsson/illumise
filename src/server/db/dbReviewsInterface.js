@@ -68,6 +68,7 @@ class DBReviewsInterface
     
     /**
      * Adds a review
+     * @async
      * @param {String} userIDTo The id of the user the review is for
      * @param {String} userIDFrom The id of the user writing the review
      * @param {String} requestID The id of the request the review is related to
@@ -152,6 +153,7 @@ class DBReviewsInterface
 
     /**
      * Updates a review
+     * @async
      * @param {String} userID The id of the user that has the review
      * @param {String} requestID The id of the request related to the review
      * @param {ReviewType} type The type of review
@@ -207,6 +209,7 @@ class DBReviewsInterface
 
     /**
      * Gets the rating data from a user
+     * @async
      * @param {String} userID The user that has the reviews
      * @param {ReviewType} type The type of review data to get
      * @returns {?RatingData} The rating data or null
@@ -235,6 +238,7 @@ class DBReviewsInterface
 
     /**
      * Gets a specific review to a user
+     * @async
      * @param {String} userID The id of the user that has the review
      * @param {String} requestID The id of the request related to the review
      * @param {ReviewType} type The type of review
@@ -265,6 +269,7 @@ class DBReviewsInterface
 
     /**
      * Gets all reviews to a user
+     * @async
      * @param {String} userID The id of the user that has the review
      * @param {ReviewType} type The type of review
      * @returns {Promise<?[Review]>} An array of all reviews or null
@@ -292,6 +297,7 @@ class DBReviewsInterface
 
     /**
      * Gets all reviews created by a user
+     * @async
      * @param {String} userID The id of the user that created the review
      * @param {ReviewType} type The type of review
      * @returns {Promise<?[Review]>} An array of all reviews or null
@@ -319,6 +325,7 @@ class DBReviewsInterface
 
     /**
      * Removes a specific review to a user
+     * @async
      * @param {String} userID The id of the user that has the review
      * @param {String} requestID The id of the review related to the review
      * @param {ReviewType} type The type of review 
@@ -346,6 +353,7 @@ class DBReviewsInterface
 
     /**
      * Removes a specific review from a user
+     * @async
      * @param {String} userID The id of the user that created the review
      * @param {String} requestID The id of the review related to the review
      * @param {ReviewType} type The type of review
