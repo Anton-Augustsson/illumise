@@ -1,13 +1,31 @@
 /** Initialize Communication */
+
+const { DBInterface } = require("./db/dbInterface");
 const express = require('express');
 const app = express();
 
-/** Initialize WebSocket */
-/** https://www.tutorialspoint.com/socket.io/socket.io_hello_world.htm */
+/**
+ * Initialze server interface
+ */
+let db;
+let connected;
 
+async function initDB()
+{
+    let url = "mongodb+srv://admin:123@cluster0.j0bss.mongodb.net/main?retryWrites=true&w=majority";
+    db = new DBInterface(undefined, undefined, url);
+    connected = await db.connect();
+    db.clear();
+}
+
+initDB();
+
+/**
+ * Initialize WebSocket
+ */
+/** https://www.tutorialspoint.com/socket.io/socket.io_hello_world.htm */
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-
 
 //Whenever someone connects this gets executed
 io.on('connection', function(socket) {
@@ -38,10 +56,14 @@ io.on('connection', function(socket) {
 
 });
 
-/** Initialize Rest API  */
+/**
+ * Initialize Rest API
+ */
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
+// export db
+module.exports = db;
 const request = require('./routes/request');
 app.use('/request', request);
 
@@ -52,14 +74,10 @@ const account = require('./routes/account');
 app.use('/account', account);
 
 
-/** Listen on port */
+/**
+ * Listen on port
+ */
 //http.listen(300, function() {}
 http.listen(3000, function() {
    console.log('listening on *:3000');
 });
-
-/* 
-app.listen(process.env.PORT, () =>
-  console.log(`Example app listening on port ${process.env.PORT}!`),
-);
-*/

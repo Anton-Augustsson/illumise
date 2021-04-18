@@ -142,6 +142,42 @@ communication.account.<function>
 
 ### Server API
 We will use the same functions as the Client Communcation API
+```
+dbInterface
+{
+.requests
+{
+	.add(userID, header, body, cost = undefined)  // newRequest
+	.remove(requestID)  // removeRequest
+	.getUserRequests(userID, num = undefined)  // getUserRequest
+	.getUserProviding(userID, num = undefined)  // getUserProviding
+	.getNearby(geoLocation, distance, num = undefined)  // getNearRequests
+	.setCompleted(requestID)  // completeRequest
+    .setProvider(requestID, providerID)  // set
+    // reviewProvider
+    // acceptProvider
+}
+
+.accounts
+{
+    .add(firstName, lastName, email, password) // createAccount
+    .remove(userID)  // removeAccount
+    .update(userID, firstName = undefined, lastName = undefined, email = undefined, password = undefined)  // changeCredentials
+    .get(email, password)
+}
+
+.chat
+{
+	.add(requestID, userIDs)  // newChat
+	.remove(chatID)  // removeChat
+	.addMessage(chatID, userID, message)  // sendMessage
+	.getMessages(chatID)  // getAllMessages
+	.getMessagesAfter(chatID, time)
+	.getMessagesFrom(chatID, userID)
+}
+}
+
+```
 
 ## Credentials
 ```js

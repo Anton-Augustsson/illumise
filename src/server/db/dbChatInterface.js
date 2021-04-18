@@ -187,7 +187,6 @@ class DBChatInterface
         try
         {
             let result = await this.#collection.findOne(filter); //TODO: get only the element matching userID in the query somehow
-
             return result === null ? null : result.messageCollection[userID];
         }
         catch (error)

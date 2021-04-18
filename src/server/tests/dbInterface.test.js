@@ -164,7 +164,6 @@ describe("Testing dbInterface", () =>
     {
         if (!connected) fail();
 
-        // Add
         let user1ID   = await db.accounts.add("A12", "A12", "A12@mail", "+46123456789", "*");
         let user2ID   = await db.accounts.add("A13", "A13", "A13@mail", "+46123456789", "*");
         let requestID = await db.requests.add(user1ID, "T9", "this is a test");
@@ -197,7 +196,6 @@ describe("Testing dbInterface", () =>
         expect(result1[user2ID].length).toBe(0);
         expect(result1[user1ID][0].message).toBe(message);
 
-        let result2 = await db.chat.getMessagesAfter(chatID, Date.now());
         expect(result2[user1ID].length).toBe(0);
     });
     

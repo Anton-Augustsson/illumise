@@ -27,6 +27,8 @@ class DBAccountsInterface
     /** @type {Collection} @private */
     #collection;
 
+    ///TODO: add private collection field
+
     /**
      * Creates a new DBAccountsInterface
      * @constructor
