@@ -47,7 +47,7 @@ router.get('/getAllMessages', async (req, res) =>
   if(validParams(params, res))
   {
     let response = await db.chat.getMessages(params.chatID);
-    if(reposnse != null) return sendSuccess(res, response);
+    if(response != null) return sendSuccess(res, response);
     else return sendFailure(res);
   }
 });
@@ -67,7 +67,7 @@ router.put('/newChat', async (req, res) => // POST?
   if(valid(b, schema, res))
   {
     let response = await db.chat.add(b.requestID);
-    if(reposnse != null) return sendSuccess(res, response);
+    if(response != null) return sendSuccess(res, response);
     else return sendFailure(res);
   }
 });
@@ -87,7 +87,7 @@ router.delete('/removeChat', async (req, res) =>
   if(valid(req.body, schema, res))
   {
     let response = await db.chat.remove(b.chatID);
-    if(reposnse != false) return sendSuccess(res);
+    if(response != false) return sendSuccess(res);
     else return sendFailure(res);
   }
 });
