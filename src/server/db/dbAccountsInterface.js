@@ -4,6 +4,20 @@
  */
 
 const { Db, ObjectID } = require("mongodb");
+const accountCollectionName = "Users";
+
+
+
+/**
+ * @typedef User
+ * @property {ObjectID} _id
+ * @property {string} firstName
+ * @property {string} lastName
+ * @property {string} email
+ * @property {string} password
+ * @property {string} phone
+ * @property {number} dateCreated
+ */
 
 /**
  * Represents the public database interface related to accounts
@@ -13,6 +27,8 @@ class DBAccountsInterface
 {
     /** @type {Db} @private */
     #database;
+
+    ///TODO: add private collection field
 
     /**
      * Creates a new DBAccountsInterface
@@ -35,7 +51,7 @@ class DBAccountsInterface
      */
     async add(firstName, lastName, email, password)
     {
-        let collection = this.#database.collection("Users");
+        let collection = this.#database.collection(accountCollectionName);
         let filter = { email: email };
         let user = 
         {
@@ -60,14 +76,24 @@ class DBAccountsInterface
             requestIDs: {},
             providingIDs: {}
         };
-        let update = { $setOnInsert: user };
+        let update  = { $setOnInsert: user };
         let options = { upsert: true };
-        let result = await collection.updateOne(filter, update, options);
-        return result.upsertedId !== null ? result.upsertedId._id : null;
+        
+        try
+        {
+            let result  = await collection.updateOne(filter, update, options);
+            return result.upsertedId !== null ? result.upsertedId._id : null;
+        }
+        catch (error)
+        {
+            console.log(error);
+            return null;
+        }
     }
 
     /**
      * Updates properties of a user
+     * @async
      * @param {String} userID The id of the user to update
      * @param {String} firstName The new first name
      * @param {String} lastName The new last name
@@ -78,7 +104,7 @@ class DBAccountsInterface
     async update(userID, firstName = undefined, lastName = undefined, 
                  email = undefined, password = undefined)
     {
-        let collection = this.#database.collection("Users");
+        let collection = this.#database.collection(accountCollectionName);
         let filter = { _id: ObjectID(userID) };
 
         let newValues = {$set: {}};
@@ -100,6 +126,40 @@ class DBAccountsInterface
     }
 
     /**
+     * Gets the id of the user with the given email if the password matches
+     * @async
+     * @param {String} email The email of the user
+     * @param {String} password The password of the user
+     * @returns {String|null} The id of the user
+     */
+    async get(email, password)
+    {
+        let collection = this.#database.collection(accountCollectionName);
+        let filter = 
+        {
+            email: email,
+            password: password
+        }
+
+        let options = 
+        {
+            // What we want to return
+            projection: { _id: true }
+        }
+
+        try
+        {
+            let result = await collection.findOne(filter, options);
+            return result._id;
+        }
+        catch (error)
+        {
+            console.error(error);
+            return null;
+        }
+    }
+
+    /**
      * Removes a user account
      * @async
      * @param {String} userID The id of the user to remove
@@ -109,7 +169,7 @@ class DBAccountsInterface
     {
         // What to do with references to the user elsewhere in the database?
 
-        let collection = this.#database.collection("Users");
+        let collection = this.#database.collection(accountCollectionName);
         let filter = { _id: ObjectID(userID) };
 
         try
