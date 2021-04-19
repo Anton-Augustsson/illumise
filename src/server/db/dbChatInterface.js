@@ -54,11 +54,9 @@ class DBChatInterface
             messageCollection[userIDs[i]] = [];
         }
 
-        // TODO: Handle different ordering of ids (sort first?)
         let filter =
         {
-            requestID: requestID,
-            messageCollection: messageCollection
+            requestID: requestID
         }
         let chat =
         {
