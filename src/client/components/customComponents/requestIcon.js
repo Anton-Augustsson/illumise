@@ -20,6 +20,14 @@ const RequestIcon = (props) => {
         case "other":
             name = "dots-three-horizontal";
             icon = Entypo;
+            break;
+        case "msg":
+            name = "message";
+            icon = MaterialIcons;
+            break;
+        default:
+            return null;
+            break;
     }
     const ThisIcon = icon;
     return <ThisIcon name={name} size={props.size} color={props.color}/>

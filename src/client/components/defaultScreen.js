@@ -4,6 +4,7 @@ import Menu from "./menu/menu"
 import HomeScreen from './userScreen/home/home';
 import OrdersScreen from './userScreen/orders/orders';
 import NotificationScreen from './userScreen/notification/notification';
+import BurgarScreen from './menu/burgar/burgar';
 
 const Tab = createBottomTabNavigator();
 
@@ -27,6 +28,11 @@ const DefaultScreen = ({navigation, route}) => {
             <Tab.Screen 
             name="Notification" 
             component={NotificationScreen}
+            />
+
+            <Tab.Screen 
+            name="Burgar" 
+            component={BurgarScreen}
             />
         </Tab.Navigator>
     );

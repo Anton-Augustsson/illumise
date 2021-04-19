@@ -76,7 +76,7 @@ const Menu = (props) => {
                             setColorBurgar(colors.SAMARIT_GREEN);
                             setColorHome(colors.MENU_ICON);
                             setColorOrders(colors.MENU_ICON);
-                            props.navigation.navigate("Home"); 
+                            props.navigation.navigate("Burgar"); 
                         }}>
                     <Ionicons
                         name="menu"
