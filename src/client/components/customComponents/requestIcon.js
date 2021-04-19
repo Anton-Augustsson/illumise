@@ -1,5 +1,5 @@
 import React from "react";
-import { FontAwesome5, Octicons, MaterialIcons, Entypo} from '@expo/vector-icons';
+import { FontAwesome5, Octicons, MaterialIcons, Entypo, AntDesign} from '@expo/vector-icons';
 
 const RequestIcon = (props) => {
     var name;
@@ -26,7 +26,8 @@ const RequestIcon = (props) => {
             icon = MaterialIcons;
             break;
         default:
-            return null;
+            name = "unkownfile1";
+            icon = AntDesign;
             break;
     }
     const ThisIcon = icon;

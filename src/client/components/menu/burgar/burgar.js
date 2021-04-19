@@ -7,16 +7,17 @@ import CustomHeader from "../../customComponents/customHeader";
 import SettingsScreen from "./settings/settings";
 import ProfileScreen from "./profile/profile";
 import FaqScreen from "./faq/faq";
+import BurgarIcons from "../../customComponents/burgarIcons";
 
 const BURGAR = [
     {
         "id":"1",
-        "title":"Inställningar",
-        "des":"Settings",
-    },{
-        "id":"2",
         "title":"Profil",
         "des":"Profile",
+    },{
+        "id":"2",
+        "title":"Inställningar",
+        "des":"Settings",
     },{
         "id":"3",
         "title":"Hjälp",
@@ -30,6 +31,7 @@ const BurgarItem = (item, navigation) => {
         <TouchableOpacity 
             onPress={()=>{navigation.navigate(item.des)}}
             style={ms.itemContainer}>
+            <BurgarIcons type={item.des} size={30} color="black"/>
             <Text numberOfLines={2} style={ms.msg}>{item.title}</Text>
         </TouchableOpacity>
     );

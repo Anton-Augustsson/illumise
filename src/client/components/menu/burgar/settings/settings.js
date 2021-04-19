@@ -4,7 +4,6 @@ import CustomHeader from '../../../customComponents/customHeader';
 import ms from "../../../mainStyles/ms";
 
 const SettingsScreen = ({navigation}) => {
-    console.log("hJEJJEJ");
     return (
         <View style={{flex:1}}>
             <CustomHeader
