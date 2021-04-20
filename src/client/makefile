@@ -1,6 +1,6 @@
 start:
 	expo login
-	sudo npm install
+	sudo npm install --package-lock-only
 	expo start
 
 android:
