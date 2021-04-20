@@ -1,0 +1,26 @@
+name: Client Tests
+
+on:
+  push:
+    branches: [ main ]
+
+  pull_request:
+    branches: [ main ]
+    paths: ./src/client/**
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+
+      - name: Install Client Dependencies
+        run: make start
+        working-directory: ./src/client/
+
+      - name: Client Tests
+        run: npm test
+        working-directory: ./src/client/

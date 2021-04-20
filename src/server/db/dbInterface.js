@@ -8,6 +8,7 @@ const { DBConnectionHandler } = require("./dbConnectionHandler");
 const { DBRequestsInterface } = require("./dbRequestsInterface");
 const { DBAccountsInterface } = require("./dbAccountsInterface");
 const { DBChatInterface }     = require("./dbChatInterface");
+const { DBReviewsInterface }  = require("./dbReviewsInterface");
 
 const testDBName = "testDB";
 const dbName = "Main";
@@ -36,7 +37,7 @@ const dbName = "Main";
         lastName,
         email,
         password,
-        phone,  //TODO
+        phone,
         dateCreated
     }
 
@@ -44,18 +45,23 @@ const dbName = "Main";
     {
         "_id": { "$oid" },
         userID,
-        customerCollection,
-        providerCollection
-    }
-
-    CustomerCollections / ProviderCollection
-    {
-        "_id": { "$oid" },
-        averageRating, //(0 - 5)
-        numRatings,
-        ratings:
+        requesterCollection:
         {
-            ...
+            averageRating, //(0 - 5)
+            numRatings,
+            ratings:
+            {
+                requestID: Rating
+            }
+        },
+        providerCollection:
+        {
+            averageRating, //(0 - 5)
+            numRatings,
+            ratings:
+            {
+                requestID: Rating
+            }
         }
     }
 
@@ -64,7 +70,7 @@ const dbName = "Main";
         value, //(0 - 5)
         message,
         dateCreated,
-        requestID
+        creatorID
     }
 
     Chat
@@ -104,6 +110,8 @@ class DBInterface
     #accounts;
     /** @type {DBChatInterface} @private */
     #chat;
+    /** @type {DBReviewsInterface} */
+    #reviews;
     /** @type {boolean} @private */
     #isTesting;
 
@@ -151,6 +159,15 @@ class DBInterface
     }
 
     /**
+     * The interface responsible for handling reviews
+     * @type {DBReviewsInterface}
+     */
+    get reviews()
+    {
+        return this.#reviews;
+    }
+
+    /**
      * Establishes a database connection
      * @returns {Promise<Boolean>} If connection was successful
      */
@@ -163,6 +180,7 @@ class DBInterface
             this.#requests = new DBRequestsInterface(this.#database);
             this.#accounts = new DBAccountsInterface(this.#database);
             this.#chat     = new DBChatInterface(this.#database);
+            this.#reviews  = new DBReviewsInterface(this.#database);
             return true;
         }
         return false;
@@ -178,17 +196,18 @@ class DBInterface
         this.#requests = null;
         this.#accounts = null;
         this.#chat     = null;
+        this.#reviews  = null;
         await this.#connection.close();
     }
 
     /**
-     * Clears the database
+     * Clears the database, does nothing if not in testing mode
      * @async
      * @returns {Promise<void>}
      */
     async clear()
     {
-        if (this.#database !== null)
+        if (this.#database !== null && this.#isTesting)
         {
             await this.#database.dropDatabase();
         }
