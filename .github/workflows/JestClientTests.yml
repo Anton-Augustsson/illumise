@@ -6,7 +6,9 @@ on:
 
   pull_request:
     branches: [ main ]
-    paths: ./src/client/**
+    paths: 
+     - ./src/client/**
+     - .github/workflows/JestClientTests.yml
 
 jobs:
   build:
