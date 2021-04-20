@@ -24,7 +24,7 @@ jobs:
         working-directory: ./src/server/
 
       - name: Start Server
-        run: node server
+        run: node server &
         working-directory: ./src/server/
 
       - name: Install Client Dependencies
