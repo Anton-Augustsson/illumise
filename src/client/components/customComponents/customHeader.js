@@ -1,10 +1,7 @@
 import React from 'react';
-<<<<<<< HEAD
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import {colors} from "../mainStyles/colors";
-
-
 
 const CustomHeader = (props) => {
     var goBack =  
@@ -25,26 +22,10 @@ const CustomHeader = (props) => {
         <View style={styles.header}>
             {goBack}
             <Text style={styles.headerTitle}>{props.title}</Text>
-=======
-import {Text, View} from 'react-native';
-import CustomButton from "./customButton";
-import ms from "../mainStyles/ms";
-
-const CustomHeader = (props) => {
-    return (
-        <View style={ms.header}>
-            <CustomButton
-                style={ms.headerBack}
-                title="Gå tillbaka"
-                onPress={() => props.nav.goBack()}
-            />
-            <Text style={ms.headerTitle}>{props.title}</Text>
->>>>>>> main
         </View>
     );
 }
 
-<<<<<<< HEAD
 const styles = StyleSheet.create({
     header: {
         width:"100%",
@@ -70,6 +51,4 @@ const styles = StyleSheet.create({
     }
 });
 
-=======
->>>>>>> main
 export default CustomHeader;

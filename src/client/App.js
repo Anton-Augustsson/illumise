@@ -4,11 +4,7 @@ import {Platform, StatusBar, View, StyleSheet, Text} from "react-native";
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from './components/loginScreen';
-<<<<<<< HEAD
 import MainScreen from './components/mainScreen/mainScreen';
-=======
-import DefaultScreen from './components/defaultScreen';
->>>>>>> main
 import Constants from 'expo-constants';
 import {colors} from "./components/mainStyles/colors"
 
@@ -33,13 +29,8 @@ const App = () => {
                     />
 
                     <Stack.Screen 
-<<<<<<< HEAD
                         name="Main" 
                         component={MainScreen}
-=======
-                        name="Default" 
-                        component={DefaultScreen}
->>>>>>> main
                     />
 
 

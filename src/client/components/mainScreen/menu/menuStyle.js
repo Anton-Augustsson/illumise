@@ -1,9 +1,5 @@
 import {StyleSheet} from 'react-native';
-<<<<<<< HEAD:src/client/components/mainScreen/menu/menuStyle.js
 import {colors} from "../../mainStyles/colors"
-=======
-import {colors} from "../mainStyles/colors"
->>>>>>> main:src/client/components/menu/menuStyle.js
 
 const menuBackground = "white";
 const borderTopBackground = "black"

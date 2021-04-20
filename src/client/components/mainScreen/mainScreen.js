@@ -8,11 +8,7 @@ import BurgarScreen from './burgar/burgar';
 
 const Tab = createBottomTabNavigator();
 
-<<<<<<< HEAD:src/client/components/mainScreen/mainScreen.js
 const MainScreen = ({navigation, route}) => {
-=======
-const DefaultScreen = ({navigation, route}) => {
->>>>>>> main:src/client/components/defaultScreen.js
     //https://reactnavigation.org/docs/bottom-tab-navigator
     return (
         <Tab.Navigator 
