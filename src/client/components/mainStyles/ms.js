@@ -1,34 +1,29 @@
 import {StyleSheet} from 'react-native';
+import {colors} from "./colors"
 
-const greenSamarit = "#069547";
-const blueSamarit = "#39C6F4";
 
 const ms = StyleSheet.create({
     // MAIN STYLES
     h1: {
         fontSize:30,
         fontWeight: "bold",
-        color: "white",
+        marginBottom:15,
     },
     h2: {
         fontSize:25,
         fontWeight: "bold",
-        color: "white",
     }, 
     h3: {
         fontSize:20,
         fontWeight: "bold",
-        color: "white",
     },
     h4: {
         fontSize:15,
         fontWeight: "bold",
-        color: "white",
     },
     h5: {
         fontSize:10,
         fontWeight: "bold",
-        color: "white",
     },
     h6: {
         fontSize:5,
@@ -44,26 +39,34 @@ const ms = StyleSheet.create({
         padding: 5,
         margin: 5,
     },
-    blueButton: {
-        backgroundColor: blueSamarit,
-        borderRadius: 10,
-        width: 300,
-        height: 50,
-    },
-    greenButton: {
-        justifyContent:"center",
-        alignItems:"center",
-        backgroundColor: greenSamarit,
-        borderRadius: 15,
-        width:300,
-        height:50,
-    },
     button:{
         justifyContent:"center",
         alignItems:"center",
-        width:300,
+        minWidth:150,
         height:50,
         borderRadius:15,
+        backgroundColor:colors.SAMARIT_GREEN,
+    },
+    loginButton: {
+        marginTop:5,
+        flexDirection:"row",
+        alignItems:"center",
+        width: "100%",
+        minWidth:200,
+        minHeight:50,
+        padding:5,
+        borderRadius:15,
+    },
+    loginButtonIcon: {
+        position:"absolute",
+        left:10,
+        height:40,
+        width:40,
+    },
+    loginButtonText: {
+        marginLeft:55,
+        fontSize:20,
+        fontWeight:"bold",
     },
     logoContainer: {
         justifyContent: "center",
@@ -85,6 +88,23 @@ const ms = StyleSheet.create({
     logoSmall: { //For small logos in navigation bar
         width: 20,
         height: 20,
+    },
+    itemContainer: {
+        width:"100%",
+        height:60,
+        backgroundColor:"white",
+        borderBottomWidth:1,
+        borderBottomColor: "grey",
+        borderStyle:"solid",
+        flexDirection:"row",
+        alignItems:"center",
+        paddingLeft:"5%",
+        paddingRight:"5%",
+    },
+    msg: {
+        marginLeft:"5%",
+        marginRight:60,
+        lineHeight:20,
     }
 });
 

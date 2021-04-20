@@ -1,14 +1,17 @@
 import {StyleSheet} from 'react-native';
+import {colors} from "../../mainStyles/colors"
 
-const menuBackground = "red";
+const menuBackground = "white";
 const borderTopBackground = "black"
 
 const mms = StyleSheet.create({
     menuContainer: {
-        height:75,
+        height:60,
         flexDirection:"row",
-        justifyContent:"space-evenly",
-        borderTopWidth: 2,
+        justifyContent:"space-between",
+        paddingLeft:"5%",
+        paddingRight:"5%",
+        borderTopWidth: 1,
         borderStyle: "solid",
         borderTopColor: borderTopBackground, 
         backgroundColor: menuBackground,
@@ -16,13 +19,10 @@ const mms = StyleSheet.create({
     menuItemContainer: {
         justifyContent:"center",
         alignItems:"center",
-        height:"100%",
+        width:60,
     },
-    menuIconSize: {
-        alignSelf:"center",
-        width:65,
-        height:65,
-    }
+    menuIcon: {
+    },
 });
 
 export default mms;
