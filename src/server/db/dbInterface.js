@@ -8,8 +8,10 @@ const { DBConnectionHandler } = require("./dbConnectionHandler");
 const { DBRequestsInterface } = require("./dbRequestsInterface");
 const { DBAccountsInterface } = require("./dbAccountsInterface");
 const { DBChatInterface }     = require("./dbChatInterface");
+const { DBReviewsInterface }  = require("./dbReviewsInterface");
 
-const dbName = "testDB";
+const testDBName = "testDB";
+const dbName = "Main";
 
 /*
     Database structure:
@@ -35,7 +37,7 @@ const dbName = "testDB";
         lastName,
         email,
         password,
-        phone,  //TODO
+        phone,
         dateCreated
     }
 
@@ -43,18 +45,23 @@ const dbName = "testDB";
     {
         "_id": { "$oid" },
         userID,
-        customerCollection,
-        providerCollection
-    }
-
-    CustomerCollections / ProviderCollection
-    {
-        "_id": { "$oid" },
-        averageRating, //(0 - 5)
-        numRatings,
-        ratings:
+        requesterCollection:
         {
-            ...
+            averageRating, //(0 - 5)
+            numRatings,
+            ratings:
+            {
+                requestID: Rating
+            }
+        },
+        providerCollection:
+        {
+            averageRating, //(0 - 5)
+            numRatings,
+            ratings:
+            {
+                requestID: Rating
+            }
         }
     }
 
@@ -63,7 +70,7 @@ const dbName = "testDB";
         value, //(0 - 5)
         message,
         dateCreated,
-        requestID
+        creatorID
     }
 
     Chat
@@ -71,20 +78,15 @@ const dbName = "testDB";
         "_id": { "$oid" },
         requestID,
         dateCreated,
-        messageCollections: // 2 st
+        messageCollection:
         {
-            ...
-        }
-    }
-
-    MessageCollection
-    {
-        "_id": { "$oid" },
-        userID,
-        messages: 
-        {
-            time,
-            message
+            userID:
+            [
+                {
+                    time,
+                    message
+                }
+            ]
         }
     }
 */
@@ -108,6 +110,10 @@ class DBInterface
     #accounts;
     /** @type {DBChatInterface} @private */
     #chat;
+    /** @type {DBReviewsInterface} */
+    #reviews;
+    /** @type {boolean} @private */
+    #isTesting;
 
     /**
      * Creates a DBInterface
@@ -115,12 +121,14 @@ class DBInterface
      * @param {String} host The ip-address or host name of the host
      * @param {String} port The port used by the database
      * @param {String} url The mongoDB connection url
+     * @param {Boolean} isTesting If this will be used for testing
      */
-    constructor(host = "localhost", port = "27017", url = undefined)
+    constructor(host = "localhost", port = "27017", url = undefined, isTesting = false)
     {
         url = url === undefined ? `mongodb://${host}:${port}` : url;
         console.log("Connecting To: " + url);
         this.#connection = new DBConnectionHandler(url);
+        this.#isTesting  = isTesting;
     }
 
     /**
@@ -151,6 +159,15 @@ class DBInterface
     }
 
     /**
+     * The interface responsible for handling reviews
+     * @type {DBReviewsInterface}
+     */
+    get reviews()
+    {
+        return this.#reviews;
+    }
+
+    /**
      * Establishes a database connection
      * @returns {Promise<Boolean>} If connection was successful
      */
@@ -159,10 +176,11 @@ class DBInterface
         let client = await this.#connection.connectAsync()
         if (client !== null)
         {
-            this.#database = client.db(dbName);
+            this.#database = client.db(this.#isTesting ? testDBName : dbName);
             this.#requests = new DBRequestsInterface(this.#database);
             this.#accounts = new DBAccountsInterface(this.#database);
             this.#chat     = new DBChatInterface(this.#database);
+            this.#reviews  = new DBReviewsInterface(this.#database);
             return true;
         }
         return false;
@@ -178,17 +196,20 @@ class DBInterface
         this.#requests = null;
         this.#accounts = null;
         this.#chat     = null;
+        this.#reviews  = null;
         await this.#connection.close();
     }
 
     /**
-     * Clears the database
+     * Clears the database, does nothing if not in testing mode
+     * @async
+     * @returns {Promise<void>}
      */
     async clear()
     {
-        if (this.#database !== null)
+        if (this.#database !== null && this.#isTesting)
         {
-            return await this.#database.dropDatabase();
+            await this.#database.dropDatabase();
         }
     }
 }

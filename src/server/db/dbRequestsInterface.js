@@ -3,7 +3,34 @@
  * related to requests.
  */
 
-const { Db, ObjectID } = require("mongodb");
+/**
+ * @typedef GeoLocation
+ * @property {String} type
+ * @property {[Coordinate]} coordinates 
+ */
+
+/**
+ * @typedef Coordinate
+ * @property {[longitude:Number, latitude:Number]} coordinates longitude, latitude 
+ */
+
+
+const { Db, Collection, ObjectID } = require("mongodb");
+
+const requestCollectionName = "Requests";
+
+/**
+ * @typedef Request
+ * @property {number} dateCreated
+ * @property {number} dateCompleted
+ * @property {GeoLocation} geoLocation
+ * @property {String} header
+ * @property {String} body
+ * @property {Number} const
+ * @property {Boolean} isFulFilled
+ * @property {String} creatorID
+ * @property {String} providerID
+ */
 
 /**
  * Represents the public database interface related to requests
@@ -14,6 +41,9 @@ class DBRequestsInterface
     /** @type {Db} @private */
     #database;
 
+    /** @type {Collection} @private */
+    #collection;
+    
     /**
      * Creates a new DBRequestInterface
      * @constructor
@@ -22,6 +52,7 @@ class DBRequestsInterface
     constructor(database)
     {
         this.#database = database;
+        this.#collection = this.#database.collection(requestCollectionName);
     }
 
     /**
@@ -30,27 +61,27 @@ class DBRequestsInterface
      * @param {String} userID The id of the user
      * @param {String} header The header of the request
      * @param {String} body The body of the request
-     * @param {Number} cost TODO
-     * @returns {Promise<ObjectID|null>} The id of the created request or null
+     * @param {GeoLocation} geoLocation The location of the request
+     * @param {Number} cost The cost of the request
+     * @returns {Promise<?String>} The id of the created request or null
      */
-    async add(userID, header, body, cost = undefined)
+    async add(userID, header, body, geoLocation = undefined, cost = undefined)
     {
-        let collection = this.#database.collection("Requests");
-        let request = 
-        {
-            dateCreated: Date.now(),
-            dateCompleted: undefined,
-            geoLocation: undefined,
-            header: header,
-            body: body,
-            cost: cost,
-            isFulfilled: false,
-            creatorID: userID,
-            providerID: undefined
-        };
         try
         {
-            let result = await collection.insertOne(request);
+            let request = 
+            {
+                dateCreated: Date.now(),
+                dateCompleted: undefined,
+                geoLocation: geoLocation,
+                header: header,
+                body: body,
+                cost: cost,
+                isFulfilled: false,
+                creatorID: userID,
+                providerID: undefined
+            };
+            let result = await this.#collection.insertOne(request);
             return result.insertedId;
         }
         catch (error)
@@ -59,25 +90,22 @@ class DBRequestsInterface
             return null;
         }
     }
- 
+
     /**
      * Gets requests created by a user
      * @async
      * @param {String} userID The id of the user
      * @param {Number} num The number of requests to get, if not set all will be returned
-     * @returns {Promise<[*]>|null} The requests BSON objects in a list or null
+     * @returns {Promise<?[Request]>} The requests BSON objects in a list or null
      */
     async getUserRequests(userID, num = undefined)
     {
-        //TODO: Wrap return values in custom class
-        let collection = this.#database.collection("Requests");
-        let filter = { creatorID: userID };
         try
         {
-            let result = collection.find(filter);
-            let array  = await result.toArray();
-            if (num !== undefined) array.length = num;
-            return array;
+            let filter = { creatorID: userID };
+            let result = await this.#collection.find(filter).toArray();
+            if (num !== undefined) result.length = num >= 0 ? num : 0;
+            return result;
         }
         catch (error)
         {
@@ -88,21 +116,19 @@ class DBRequestsInterface
 
     /**
      * Gets requests that the user is set as a provider for
+     * @async
      * @param {String} userID The id of the user
      * @param {Number} num The number of requests to get, if not set all will be returned
-     * @returns {Promise<[*]>|null} The requests BSON objects in a list or null
+     * @returns {Promise<?[Request]>} The requests BSON objects in a list or null
      */
     async getUserProviding(userID, num = undefined)
     {
-        //TODO: Wrap return values in custom class
-        let collection = this.#database.collection("Requests");
-        let filter = { providerID: userID };
         try
         {
-            let result = collection.find(filter);
-            let array  = await result.toArray();
-            if (num !== undefined) array.length = num;
-            return array;
+            let filter = { providerID: userID };
+            let result = await this.#collection.find(filter).toArray();
+            if (num !== undefined) result.length = num >= 0 ? num : 0;
+            return result;
         }
         catch (error)
         {
@@ -110,12 +136,41 @@ class DBRequestsInterface
             return null;
         }
     }
-    
-    async getNearby(geoLocation, distance, num)
-    {
-        
-    }
- 
+
+    /**
+     * Get nearby requests
+     * @async
+     * @param {GeoLocation} geoLocation The location to search around
+     * @param {Number} maxDistance The maximum distance in meters to search from geoLocation
+     * @param {Number} num The number of nearby requests to retrieve
+     * @returns {Promise<?[Request]>} The requests BSON objects in a list or null
+     */
+     async getNearby(geoLocation, maxDistance, num = undefined)
+     {
+        try 
+        {
+            await this.#collection.createIndex( { geoLocation: "2dsphere"} );
+            let filter = 
+            {
+                geoLocation: {
+                    $near: {
+                        $geometry: geoLocation,
+                        $maxDistance: maxDistance + 10, //10 meter margin
+                        $minDistance: 0
+                    }
+                }
+            }
+            let result = await this.#collection.find(filter).toArray();
+            if (num != undefined) result.length = num >= 0 ? num : 0;
+            return result;
+        }
+        catch (error)
+        {
+            console.log(error);
+            return null;
+        }
+     }
+
     /**
      * Marks a requests as fulfilled and sets the completed time
      * @async
@@ -124,21 +179,19 @@ class DBRequestsInterface
      */
     async setCompleted(requestID)
     {
-        let collection = this.#database.collection("Requests");
-        let filter = { _id: ObjectID(requestID) };
-        let update = 
-        {
-            $set: 
-            {
-                dateCompleted: Date.now(),
-                isFulFilled: true
-            }
-        };
-        
         try
         {
-            let result = await collection.updateOne(filter, update);
-            return result.result.ok == 1;
+            let filter = { _id: ObjectID(requestID) };
+            let update = 
+            {
+                $set: 
+                {
+                    dateCompleted: Date.now(),
+                    isFulFilled: true
+                }
+            };
+            let result = await this.#collection.updateOne(filter, update);
+            return result.result.ok == 1 && result.result.nModified == 1;
         }
         catch (error)
         {
@@ -156,14 +209,34 @@ class DBRequestsInterface
      */
     async setProvider(requestID, providerID)
     {
-        let collection = this.#database.collection("Requests");
-        let filter = { _id: ObjectID(requestID) };
-        let update = { $set: {providerID: providerID} };
-
         try
         {
-            let result = await collection.updateOne(filter, update);
-            return result.result.ok == 1;
+            let filter = { _id: ObjectID(requestID) };
+            let update = { $set: { providerID: providerID } };
+            let result = await this.#collection.updateOne(filter, update);
+            return result.result.ok == 1 && result.result.nModified == 1;
+        }
+        catch (error)
+        {
+            console.error(error);
+            return false;
+        }
+    }
+
+    /**
+     * Sets the cost of a request
+     * @async
+     * @param {String} requestID The id of the request
+     * @param {Promise<Boolean>} value The new cost value
+     */
+    async setCost(requestID, value)
+    {
+        try
+        {
+            let filter = { _id: ObjectID(requestID) };
+            let update = { $set: { cost: value } };
+            let result = await this.#collection.updateOne(filter, update);
+            return result.result.ok == 1 && result.result.nModified == 1;
         }
         catch (error)
         {
@@ -179,13 +252,11 @@ class DBRequestsInterface
      * @returns {Promise<Boolean>} If the operation was successful
      */
     async remove(requestID)
-    {
-        let collection = this.#database.collection("Requests");
-        let filter = { _id: ObjectID(requestID) };
-
+    { 
         try
         {
-            let result = await collection.deleteOne(filter);
+            let filter = { _id: ObjectID(requestID) };
+            let result = await this.#collection.deleteOne(filter);
             return result.result.ok == 1 && result.result.n == 1;
         }
         catch (error)
