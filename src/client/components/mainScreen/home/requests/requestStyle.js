@@ -2,7 +2,7 @@ import {StyleSheet} from 'react-native';
 import {colors} from "../../../mainStyles/colors"
 
 
-const fs = StyleSheet.create({
+const rs = StyleSheet.create({
     content: {
         flex:1,
         paddingLeft:20,
@@ -27,15 +27,19 @@ const fs = StyleSheet.create({
         marginTop:5,
     },
     bsContentContainer: {
-        backgroundColor:"red",
-        height:300,
+        backgroundColor:"#FFFFFF",
+        height:"100%",
+        paddingLeft:20,
+        paddingRight:20,
+        paddingTop:5,
     },
     bsHeaderContainer: {
-        backgroundColor:"red",
+        backgroundColor:"#FFFFFF",
         height:20,
         width:"100%",
         justifyContent:"center",
         alignItems:"center",
+        flexDirection:"row",
         borderTopRightRadius:20,
         borderTopLeftRadius:20,
         shadowColor: "#333333",
@@ -43,6 +47,10 @@ const fs = StyleSheet.create({
         shadowRadius: 2,
         shadowOpacity: 0.4,
         //elevation:1,
+    },
+    bsHeaderCross: {
+        position:"absolute",
+        right:10,
     },
     bsDrawIndicator: {
         backgroundColor:"grey",
@@ -52,4 +60,4 @@ const fs = StyleSheet.create({
     }
 });
 
-export default fs;
+export default rs;

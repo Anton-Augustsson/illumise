@@ -1,3 +1,6 @@
+node: 
+	sudo npm install 
+
 start:
 	expo login
 	sudo npm install --package-lock-only

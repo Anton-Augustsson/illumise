@@ -8,12 +8,13 @@ import {
     TouchableOpacity
 } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
-import FoodRequestScreen from './foodRequestScreen/foodRequest';
+import FoodRequestScreen from './requests/foodRequestScreen/foodRequest';
 import {colors} from "../../mainStyles/colors"
 import ms from "../../mainStyles/ms"
 import hs from "./homeStyle"
-import FoodRequestDoneScreen from "./foodRequestScreen/foodRequestDone";
+import ReceiptScreen from "./requests/receipt/receipt";
 import RequestIcon from "../../customComponents/requestIcon"
+import DeliverScreen from './requests/deliver/deliver';
 
 const DATA = [
     {
@@ -125,8 +126,13 @@ const HomeScreen = (user) => {
             />
 
             <Stack.Screen 
-                name="FoodRequestDone" 
-                component={FoodRequestDoneScreen}
+                name="Deliver" 
+                component={DeliverScreen}
+            />
+
+            <Stack.Screen 
+                name="Receipt" 
+                component={ReceiptScreen}
             />
         </Stack.Navigator>
     );

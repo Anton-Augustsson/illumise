@@ -1,8 +1,8 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Text, View, Image, StyleSheet} from 'react-native';
-import CustomButton from '../../../customComponents/customButton';
-import ms from "../../../mainStyles/ms"
-import {colors} from "../../../mainStyles/colors"
+import CustomButton from '../../../../customComponents/customButton';
+import ms from "../../../../mainStyles/ms"
+import {colors} from "../../../../mainStyles/colors"
 import { FlatList } from 'react-native-gesture-handler';
 
 const SuperReceipt = ({params}) => {
@@ -17,6 +17,7 @@ const SuperReceipt = ({params}) => {
                 renderItem={({item})=><Text>{item.text}</Text>}
                 keyExtractor={(item) => item.id}
             />
+            
         </View>
     );
 }
@@ -40,7 +41,7 @@ const rs = StyleSheet.create({
     }
 }); 
 
-const FoodRequestDoneScreen = ({navigation, route}) => {
+const ReceiptScreen = ({navigation, route}) => {
     //VI KAN FÅ UT INFO GENOM route.params.delivAddress
     return (
         <View style={{flex:1}}>
@@ -54,4 +55,4 @@ const FoodRequestDoneScreen = ({navigation, route}) => {
     );
 }
 
-export default FoodRequestDoneScreen;
+export default ReceiptScreen;
