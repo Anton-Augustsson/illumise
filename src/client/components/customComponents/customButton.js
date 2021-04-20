@@ -1,7 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
+<<<<<<< HEAD
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import CustomHeader from './customHeader';
+=======
+import {View, Text, TouchableOpacity} from 'react-native';
+>>>>>>> main
   
 const CustomButton = (props) => {
     return (

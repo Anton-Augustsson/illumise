@@ -1,5 +1,9 @@
 import React from "react";
+<<<<<<< HEAD
 import { FontAwesome5, Octicons, MaterialIcons, Entypo, AntDesign} from '@expo/vector-icons';
+=======
+import { FontAwesome5, Octicons, MaterialIcons, Entypo} from '@expo/vector-icons';
+>>>>>>> main
 
 const RequestIcon = (props) => {
     var name;
@@ -20,6 +24,7 @@ const RequestIcon = (props) => {
         case "other":
             name = "dots-three-horizontal";
             icon = Entypo;
+<<<<<<< HEAD
             break;
         case "msg":
             name = "message";
@@ -29,6 +34,8 @@ const RequestIcon = (props) => {
             name = "unkownfile1";
             icon = AntDesign;
             break;
+=======
+>>>>>>> main
     }
     const ThisIcon = icon;
     return <ThisIcon name={name} size={props.size} color={props.color}/>

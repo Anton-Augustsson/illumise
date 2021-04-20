@@ -19,7 +19,11 @@ const veryfyUser = async (navigation, token, type) => {
     }
     const body = await userInfo.json();
     //console.log(body);
+<<<<<<< HEAD
     navigation.navigate("Main", {type: type, user: body});
+=======
+    navigation.navigate("Default", {type: type, user: body});
+>>>>>>> main
 }
 
 const LoginScreen = ({navigation}) => {
@@ -95,7 +99,11 @@ const LoginScreen = ({navigation}) => {
                 style={[ms.loginButton,{backgroundColor:"red"}]}
                 styleText={[ms.loginButtonText,{color:"white"}]}
                 title="Gå förbi inloggning"
+<<<<<<< HEAD
                 onPress={() => navigation.navigate("Main", {type:"google",user:{id:"104735997383881408322",email:"marholdtv@gmail.com",verified_email:true,name:"Marhold Marhold",given_name:"Bengt",family_name:"Olsson",picture:"https://lh3.googleusercontent.com/-ggukNDG0VX8/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucnZ9CX2t6F0LbHJ31docWtx8Eaj3A/s96-c/photo.jpg",locale:"sv"}})}
+=======
+                onPress={() => navigation.navigate("Default", {type:"google",user:{id:"104735997383881408322",email:"marholdtv@gmail.com",verified_email:true,name:"Marhold Marhold",given_name:"Bengt",family_name:"Olsson",picture:"https://lh3.googleusercontent.com/-ggukNDG0VX8/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucnZ9CX2t6F0LbHJ31docWtx8Eaj3A/s96-c/photo.jpg",locale:"sv"}})}
+>>>>>>> main
             />
             
             

@@ -5,7 +5,11 @@ start:
 
 android:
 	expo login
+<<<<<<< HEAD
 	sudo npm install --package-lock-only
+=======
+	sudo npm install
+>>>>>>> main
 	expo start --android
 
 test:

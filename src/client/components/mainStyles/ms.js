@@ -89,6 +89,7 @@ const ms = StyleSheet.create({
         width: 20,
         height: 20,
     },
+<<<<<<< HEAD
     itemContainer: {
         width:"100%",
         height:60,
@@ -105,6 +106,24 @@ const ms = StyleSheet.create({
         marginLeft:"5%",
         marginRight:60,
         lineHeight:20,
+=======
+    header: {
+        width:"100%",
+        height:50,
+        backgroundColor:colors.SAMARIT_GREEN,
+        alignItems:"center",
+        justifyContent:"center",
+        flexDirection:"row",
+    },
+    headerTitle: {
+        fontSize: 20,
+        fontWeight:"bold",
+        color: 'white',
+    },
+    headerBack: {
+        position:"absolute",
+        left:10,
+>>>>>>> main
     }
 });
 
