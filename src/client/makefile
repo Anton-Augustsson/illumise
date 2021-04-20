@@ -3,6 +3,11 @@ start:
 	sudo npm install
 	expo start
 
+android:
+	expo login
+	sudo npm install
+	expo start --android
+
 test:
 	npm test
 	

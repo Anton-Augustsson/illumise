@@ -1,23 +1,134 @@
 import React from 'react';
-import { Text, View, Image} from 'react-native';
+import { 
+    Text, 
+    View, 
+    Image, 
+    FlatList, 
+    useState,
+    TouchableOpacity
+} from 'react-native';
+import { createStackNavigator } from '@react-navigation/stack';
+import createFoodRequestScreen from '../createFoodRequestScreen';
+import {colors} from "../../mainStyles/colors"
 import ms from "../../mainStyles/ms"
 import hs from "./homeStyle"
+import FoodRequestDoneScreen from "./foodRequestDone";
+import RequestIcon from "../../customComponents/requestIcon"
 
-const HomeScreen = ({navigation, route}) => {
+const DATA = [
+    {
+        id: "1",
+        title1: "Mat",
+        title2: "Paket",
+        type1: "food",
+        type2: "package",
+        des1: "FoodRequest",
+        des2: "FoodRequest",
+    },
+    {
+        id: "2",
+        title1: "Post",
+        title2: "Annat",
+        type1: "mail",
+        type2: "other",
+        des1: "FoodRequest",
+        des2: "FoodRequest",
+    }
+];
 
-    return (        
-        <View style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-        }}>
-            <Text  style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-                fontSize: ms.h3.fontSize,
-                fontWeight: ms.h3.fontWeight,
-            }}>Welcome {route.params.user.name}</Text>
+const InnerItem = (props)  => {
+    return(
+        <TouchableOpacity 
+            onPress={()=> {
+                props.nav.navigation.navigate(props.des);
+            }} 
+            style={hs.innerItemContainer}
+        >
+            <RequestIcon type={props.type} size={70} color="white"/>
+            <Text style={hs.innerItemTitle}>{props.title}</Text>
+        </TouchableOpacity>
+    );
+}
+
+const Item = ({item, nav}) => (
+    <View style={hs.itemContainer}> 
+        <InnerItem
+            type={item.type1}
+            des={item.des1}
+            nav={nav}
+            title={item.title1}
+        />
+        <InnerItem
+            type={item.type2}
+            des={item.des2}
+            nav={nav}
+            title={item.title2}
+        />
+    </View>
+);
+
+const renderItem = ({item}, nav) => { 
+
+    return (
+        <Item
+            item={item}
+            nav={nav}
+        />
+    );
+};
+
+const TopWelcome = ({user}) => {
+    
+    return (
+        <View style={hs.welcomeContainer}>
+            <Text style={ms.h2}>Goddag {user.user.name}!</Text>
         </View>
+    );
+}
+
+
+
+const FirstScreen = ({nav, user}) => {
+    return (
+        <View style={{flex:1}}>
+            
+            <TopWelcome user={user}/>
+            <FlatList
+                data={DATA}
+                renderItem={(item) => renderItem(item, nav)}
+                keyExtractor={(item) => item.id}
+            />
+        </View>
+    );
+}
+
+
+const Stack = createStackNavigator();
+
+const HomeScreen = (user) => {
+    return (
+        <Stack.Navigator 
+            screenOptions={{
+                headerShown:false,
+                cardStyle:{backgroundColor:colors.DEFAULT_BACKGROUND}
+            }}
+            initialRouteName="FirstScreen"
+        >
+            <Stack.Screen 
+                name="FirstScreen" 
+                children={(navigation)=><FirstScreen nav={navigation} user={user}/>}
+            />
+
+            <Stack.Screen 
+                name="FoodRequest" 
+                component={createFoodRequestScreen}
+            />
+
+            <Stack.Screen 
+                name="FoodRequestDone" 
+                component={FoodRequestDoneScreen}
+            />
+        </Stack.Navigator>
     );
 }
 

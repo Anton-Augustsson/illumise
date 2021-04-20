@@ -4,9 +4,8 @@ const styles = StyleSheet.create({
     //LOGIN
     loginContainer: {
         flex: 1,
-        backgroundColor: "white",
         justifyContent: 'center',
-        padding: 40,
+        padding: 35,
         alignItems: 'center',
     },
     loginTitle: {
