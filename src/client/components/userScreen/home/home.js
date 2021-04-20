@@ -3,6 +3,8 @@ import { Text, View, Image} from 'react-native';
 import ms from "../../mainStyles/ms"
 import hs from "./homeStyle"
 
+const {Localization} = require("../../../modules/localization");
+
 const HomeScreen = ({navigation, route}) => {
 
     return (        
@@ -16,7 +18,7 @@ const HomeScreen = ({navigation, route}) => {
                 alignItems: 'center',
                 fontSize: ms.h3.fontSize,
                 fontWeight: ms.h3.fontWeight,
-            }}>Welcome {route.params.user.name}</Text>
+            }}>{Localization.getText("welcome")} {route.params.user.name}</Text>
         </View>
     );
 }
