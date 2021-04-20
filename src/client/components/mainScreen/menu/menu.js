@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import { View, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import mms from "./menuStyle";
-import {colors} from "../mainStyles/colors";
+import {colors} from "../../mainStyles/colors";
 import {Feather, FontAwesome, Ionicons, FontAwesome5} from '@expo/vector-icons';
 
 const Menu = (props) => {
@@ -76,7 +76,7 @@ const Menu = (props) => {
                             setColorBurgar(colors.SAMARIT_GREEN);
                             setColorHome(colors.MENU_ICON);
                             setColorOrders(colors.MENU_ICON);
-                            props.navigation.navigate("Home"); 
+                            props.navigation.navigate("Burgar"); 
                         }}>
                     <Ionicons
                         name="menu"

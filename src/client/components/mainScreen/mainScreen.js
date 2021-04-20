@@ -1,13 +1,14 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Menu from "./menu/menu"
-import HomeScreen from './userScreen/home/home';
-import OrdersScreen from './userScreen/orders/orders';
-import NotificationScreen from './userScreen/notification/notification';
+import HomeScreen from './home/home';
+import OrdersScreen from './orders/orders';
+import NotificationScreen from './notification/notification';
+import BurgarScreen from './burgar/burgar';
 
 const Tab = createBottomTabNavigator();
 
-const DefaultScreen = ({navigation, route}) => {
+const MainScreen = ({navigation, route}) => {
     //https://reactnavigation.org/docs/bottom-tab-navigator
     return (
         <Tab.Navigator 
@@ -28,10 +29,15 @@ const DefaultScreen = ({navigation, route}) => {
             name="Notification" 
             component={NotificationScreen}
             />
+
+            <Tab.Screen 
+            name="Burgar" 
+            component={BurgarScreen}
+            />
         </Tab.Navigator>
     );
 }
 
 
 
-export default DefaultScreen;
+export default MainScreen;

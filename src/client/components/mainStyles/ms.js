@@ -89,22 +89,22 @@ const ms = StyleSheet.create({
         width: 20,
         height: 20,
     },
-    header: {
+    itemContainer: {
         width:"100%",
-        height:50,
-        backgroundColor:colors.SAMARIT_GREEN,
-        alignItems:"center",
-        justifyContent:"center",
+        height:60,
+        backgroundColor:"white",
+        borderBottomWidth:1,
+        borderBottomColor: "grey",
+        borderStyle:"solid",
         flexDirection:"row",
+        alignItems:"center",
+        paddingLeft:"5%",
+        paddingRight:"5%",
     },
-    headerTitle: {
-        fontSize: 20,
-        fontWeight:"bold",
-        color: 'white',
-    },
-    headerBack: {
-        position:"absolute",
-        left:10,
+    msg: {
+        marginLeft:"5%",
+        marginRight:60,
+        lineHeight:20,
     }
 });
 
