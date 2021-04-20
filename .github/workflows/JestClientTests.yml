@@ -17,10 +17,22 @@ jobs:
         with:
           node-version: 12
 
-      - name: Install Client Dependencies
-        run: make start
-        working-directory: ./src/client/
+      - name: Install Server Dependencies
+        run: npm run setup
+        working-directory: ./src/server/
 
+      - name: Start Server
+        run: node server
+        working-directory: ./src/server/
+
+      - name: Install Client Dependencies
+        run: npm install
+        working-directory: ./src/client/
+        
       - name: Client Tests
         run: npm test
         working-directory: ./src/client/
+        
+      - name: Shutdown Server
+        run: pkill node
+        working-directory: ./src/server/
