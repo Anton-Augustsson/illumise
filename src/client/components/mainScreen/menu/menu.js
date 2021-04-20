@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import { View, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import mms from "./menuStyle";
-import {colors} from "../mainStyles/colors";
+import {colors} from "../../mainStyles/colors";
 import {Feather, FontAwesome, Ionicons, FontAwesome5} from '@expo/vector-icons';
 
 const Menu = (props) => {

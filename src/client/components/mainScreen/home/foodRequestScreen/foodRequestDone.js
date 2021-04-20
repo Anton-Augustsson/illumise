@@ -1,8 +1,8 @@
 import React from 'react';
 import { Text, View, Image, StyleSheet} from 'react-native';
-import CustomButton from '../../customComponents/customButton';
-import ms from "../../mainStyles/ms"
-import {colors} from "../../mainStyles/colors"
+import CustomButton from '../../../customComponents/customButton';
+import ms from "../../../mainStyles/ms"
+import {colors} from "../../../mainStyles/colors"
 import { FlatList } from 'react-native-gesture-handler';
 
 const SuperReceipt = ({params}) => {

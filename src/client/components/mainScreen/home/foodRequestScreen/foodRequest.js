@@ -1,17 +1,18 @@
-import React, {useState} from 'react';
-import { Text, View, Image, TextInput, Button, Switch, TouchableOpacity, StyleSheet} from 'react-native';
+import React, {useState, useRef} from 'react';
+import { Text, View, Image, TextInput, Button, Animated, TouchableWithoutFeedback} from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
-import CustomButton from "../../customComponents/customButton";
-import CustomHeader from "../../customComponents/customHeader"
-import CustomListItem from "../../customComponents/customListItem"
-import ms from '../../mainStyles/ms';
+import CustomButton from "../../../customComponents/customButton";
+import CustomHeader from "../../../customComponents/customHeader"
+import CustomListItem from "../../../customComponents/customListItem"
+import ms from '../../../mainStyles/ms';
 import fs from "./foodStyles";
+import BottomSheet from "reanimated-bottom-sheet";
 
 //TODO vi måste ha någon sorts uuid generator
 
 
 
-const createFoodRequestScreen = ({navigation}) => {
+const FoodRequestScreen = ({navigation}) => {
     //TODO ID MÅSTE VARA EN STRÄNG
     const [id, setId] = useState(0);
 
@@ -40,13 +41,47 @@ const createFoodRequestScreen = ({navigation}) => {
         })
     }
 
+    const renderContent = () => (
+        <View
+            style={fs.bsContentContainer}
+        >
+            <Text>Swipe down to close</Text>
+        </View>
+    );
+
+    const renderHeader = () => (
+        <View style={fs.bsHeaderContainer}>
+            <View style={fs.bsDrawIndicator}></View>
+        </View>
+    );
+
+    var fall = new Animated.Value(1);
+    console.log(fall);
+    const sheetRef = useRef(null);   
+
+
     return (
         <View style={{flex:1}}>
+            <BottomSheet
+                ref={sheetRef}
+                snapPoints={[300, 0, 0]}
+                initialSnap={1}
+                renderContent={renderContent}
+                renderHeader={renderHeader}
+                enabledContentGestureInteraction={false}
+                callbackNode={fall.setValue(1)}
+            />
             <CustomHeader
                 title="Mat"
                 nav={navigation}
             />
-            <View style={fs.content}>
+            <TouchableWithoutFeedback 
+                onPress={()=>sheetRef.current.snapTo(1)}
+                touchSoundDisabled={true}
+            >
+            <Animated.View style={[fs.content,
+                {opacity: Animated.add(0.2, Animated.multiply(fall, 1.0))}]
+            }>
                 
                 <View style={{flex:1}}>
                     <Text style={ms.h3}>Leverera till:</Text>
@@ -69,7 +104,7 @@ const createFoodRequestScreen = ({navigation}) => {
                         style={ms.button}
                         title="Lägg till vara"
                         styleText={{fontWeight:"bold"}}
-                        onPress={addItem}
+                        onPress={() => sheetRef.current.snapTo(0)}
                         arg1={textArticle}
                         />
                     </View>
@@ -82,7 +117,7 @@ const createFoodRequestScreen = ({navigation}) => {
                     />   
                 </View>
 
-               
+            
 
                 <View style={fs.orderContainer}>
                     <CustomButton
@@ -94,9 +129,12 @@ const createFoodRequestScreen = ({navigation}) => {
                         arg2={items}
                     />
                 </View>
-            </View>
-        </View>
+
+            </Animated.View>
+        </TouchableWithoutFeedback>
+    </View>
     );
 }
 
-export default createFoodRequestScreen;
+
+export default FoodRequestScreen;

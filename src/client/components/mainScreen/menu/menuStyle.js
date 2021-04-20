@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import {colors} from "../mainStyles/colors"
+import {colors} from "../../mainStyles/colors"
 
 const menuBackground = "white";
 const borderTopBackground = "black"
