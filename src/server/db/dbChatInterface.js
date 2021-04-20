@@ -3,7 +3,7 @@
  * to chats and messages.
  */
 
-const { Db, ObjectID } = require("mongodb");
+const { Db, ObjectID, Collection } = require("mongodb");
 const chatCollectionName = "Chat";
 
 /**
@@ -25,7 +25,8 @@ class DBChatInterface
     /** @type {Db} @private */
     #database;
 
-    ///TODO: add private collection field
+    /** @type {Collection} @private */
+    #collection;
 
     /**
      * Creates a new DBChatInterface
@@ -35,30 +36,27 @@ class DBChatInterface
     constructor(database)
     {
         this.#database = database;
+        this.#collection = this.#database.collection(chatCollectionName);
     }
 
     /**
      * Adds a new chat if no equivalent chat exists
      * @async
      * @param {String} requestID The id of the related request
-     * @param {[String]} userIDs A list containing the ids of all related users 
-     * @returns {Promise<ObjectID|null>} The id of the chat or null
+     * @param {[String]} userIDs An array containing the ids of all related users 
+     * @returns {Promise<?String>} The id of the chat or null
      */
     async add(requestID, userIDs)
     {
-        let collection = this.#database.collection(chatCollectionName);
-
         let messageCollection = {};
         for (let i = 0; i < userIDs.length; i++)
         {
             messageCollection[userIDs[i]] = [];
         }
 
-        // TODO: Handle different ordering of ids (sort first?)
         let filter =
         {
-            requestID: requestID,
-            messageCollection: messageCollection
+            requestID: requestID
         }
         let chat =
         {
@@ -71,7 +69,7 @@ class DBChatInterface
 
         try
         {
-            let result  = await collection.updateOne(filter, update, options);
+            let result = await this.#collection.updateOne(filter, update, options);
             return result.upsertedId !== null ? result.upsertedId._id : null;
         }
         catch (error)
@@ -87,11 +85,10 @@ class DBChatInterface
      * @param {String} chatID The id of the chat
      * @param {String} userID The user id of the sender
      * @param {String} message The message sent
-     * @returns {Promise<boolean>} If the message was added successfully 
+     * @returns {Promise<Boolean>} If the message was added successfully 
      */
     async addMessage(chatID, userID, message)
     {
-        let collection = this.#database.collection(chatCollectionName);
         let filter = { _id: ObjectID(chatID) };
         let update = 
         {
@@ -107,7 +104,7 @@ class DBChatInterface
 
         try
         {
-            let result  = await collection.updateOne(filter, update);
+            let result  = await this.#collection.updateOne(filter, update);
             return result.result.ok == 1 && result.result.nModified == 1;
         }
         catch (error)
@@ -120,17 +117,16 @@ class DBChatInterface
     /**
      * Gets all messages in a given chat
      * @async
-     * @param {String} chatID The if of the chat
-     * @returns {Promise<MessageCollection>} The message collection
+     * @param {String} chatID The id of the chat
+     * @returns {Promise<?MessageCollection>} The message collection
      */
     async getMessages(chatID)
     {
-        let collection = this.#database.collection(chatCollectionName);
         let filter = { _id: ObjectID(chatID) };
 
         try
         {
-            let result = await collection.findOne(filter);
+            let result = await this.#collection.findOne(filter);
             return result == null ? null : result.messageCollection;
         }
         catch (error)
@@ -145,18 +141,17 @@ class DBChatInterface
      * @async
      * @param {String} chatID The id of the chat
      * @param {number} time The number of milliseconds elapsed since January 1, 1970 00:00:00 UTC (get from Date.now)
-     * @returns {Promise<MessageCollection|null>} 
+     * @returns {Promise<?MessageCollection>} The time-filtered message collection 
      */
     async getMessagesAfter(chatID, time)
     {
-        let collection = this.#database.collection(chatCollectionName);
         let filter = { _id: ObjectID(chatID) };
 
         try
         {
             // TODO: Do this with a db query
 
-            let result = await collection.findOne(filter);
+            let result = await this.#collection.findOne(filter);
             if (result == null) return null;
 
             let values  = Object.values(result.messageCollection);
@@ -179,19 +174,18 @@ class DBChatInterface
     
     /**
      * Get all chat messages from a specific user
+     * @async
      * @param {String} chatID the chat to get messages from
      * @param {String} userID the user messages to find
-     * @returns {Promise<[ChatMessage]|null>} The message collection
+     * @returns {Promise<?[ChatMessage]>} The message collection
      */
     async getMessagesFrom(chatID, userID)
     {
-        let collection = this.#database.collection(chatCollectionName);
         let filter = { _id: ObjectID(chatID)};
 
         try
         {
-            let result = await collection.findOne(filter); //TODO: get only the element matching userID in the query somehow
-
+            let result = await this.#collection.findOne(filter); //TODO: get only the element matching userID in the query somehow
             return result === null ? null : result.messageCollection[userID];
         }
         catch (error)
@@ -209,12 +203,11 @@ class DBChatInterface
      */
     async remove(chatID)
     {
-        let collection = this.#database.collection(chatCollectionName);
         let filter = { _id: ObjectID(chatID) };
 
         try
         {
-            let result = await collection.deleteOne(filter);
+            let result = await this.#collection.deleteOne(filter);
             return result.result.ok == 1 && result.result.n == 1;
         }
         catch (error)
