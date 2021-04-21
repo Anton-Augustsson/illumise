@@ -2,11 +2,49 @@
     "en": 
     {
         "test": "this was a test",
-        "welcome": "Welcome"
+        "welcome": "Welcome",
+        "deliveryInfo": "Delivery info",
+        "enterDelivAddress": "Enter delivery address",
+        "deliveryAddress": "Delivery address",
+        "finishOrder": "Finish order",
+        "postAndPackage": "Mail & Package",
+        "enterPackageRef": "Enter the package reference code:",
+        "refCode": "Reference code",
+        "otherInfo": "Other information",
+        "enterPostOffice": "Enter post office:",
+        "postOffice": "Post office",
+        "continue": "Continue",
+        "enterPickupLoc": "Enter pickup location for the ID",
+        "pickupLoc": "Pickup location",
+        "cart": "Cart",
+        "proposalForArticles": "Proposal for articles",
+        "addOwnArticle": "Add your own article",
+        "name": "Name",
+        "brand": "Brand",
+        "legitimationPrompt": "Does the post office require your ID to pickup the package?"
     },
     "se": 
     {
         "test": "detta var ett test",
-        "welcome": "Välkommen"
+        "welcome": "Välkommen",
+        "deliveryInfo": "Leveransuppgifter",
+        "enterDelivAddress": "Ange leveransadress",
+        "deliveryAddress": "Leveransadress",
+        "finishOrder": "Slutför beställning",
+        "postAndPackage": "Post & Paket",
+        "enterPackageRef": "Ange paketets referenskod:",
+        "otherInfo": "Övrig information",
+        "enterPostOffice": "Ange postombud:",
+        "continue": "Gå vidare",
+        "refCode": "Referenskod",
+        "postOffice": "Postombud",
+        "enterPickupLoc": "Ange upphämtningsplats för legitimationen:",
+        "pickupLoc": "Upphämtningsplats",
+        "cart": "Korg",
+        "proposalForArticles": "Förslag på varor",
+        "addOwnArticle": "Lägg till en egen vara",
+        "name": "Namn",
+        "brand": "Märke",
+        "legitimationPrompt": "Kräver postombudet att din legitimation visas vid avhämtning?"
     } 
 }
