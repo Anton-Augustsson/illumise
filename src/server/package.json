@@ -4,19 +4,20 @@
     "description": "",
     "main": "index.js",
     "directories": {
-      "test": "tests"
+        "test": "tests"
     },
     "dependencies": {
-      "dependencies": "^0.0.1",
-      "express": "^4.17.1",
-      "jest": "^26.6.3",
-      "joi": "^17.4.0",
-      "mongodb": "^3.6.6",
-      "socket.io": "^4.0.0"
+        "dependencies": "^0.0.1",
+        "express": "^4.17.1",
+        "jest": "^26.6.3",
+        "joi": "^17.4.0",
+        "mongodb": "^3.6.6",
+        "socket.io": "^4.0.1"
     },
     "scripts": {
-      "test": "jest"
+        "setup": "npm install express joi mongodb socket.io",
+        "test": "jest"
     },
     "author": "",
     "license": "ISC"
-  }
+}

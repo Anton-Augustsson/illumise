@@ -9,28 +9,31 @@ import {
 } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import FoodRequestScreen from './requests/foodRequestScreen/foodRequest';
+import PostRequestScreen from './requests/postRequestScreen/postRequestScreen';
+import LegitimationScreen from './requests/postRequestScreen/legitimation';
 import {colors} from "../../mainStyles/colors"
 import ms from "../../mainStyles/ms"
 import hs from "./homeStyle"
 import ReceiptScreen from "./requests/receipt/receipt";
 import RequestIcon from "../../customComponents/requestIcon"
 import DeliverScreen from './requests/deliver/deliver';
+import { Localization } from '../../../modules/localization';
 
 const DATA = [
     {
         id: "1",
         title1: "Mat",
-        title2: "Paket",
+        title2: "Paket & Post",
         type1: "food",
         type2: "package",
         des1: "FoodRequest",
-        des2: "FoodRequest",
+        des2: "PostRequest",
     },
     {
         id: "2",
-        title1: "Post",
+        title1: "Shopping",
         title2: "Annat",
-        type1: "mail",
+        type1: "shopping",
         type2: "other",
         des1: "FoodRequest",
         des2: "FoodRequest",
@@ -82,7 +85,7 @@ const TopWelcome = ({user}) => {
     
     return (
         <View style={hs.welcomeContainer}>
-            <Text style={ms.h2}>Goddag {user.user.name}!</Text>
+            <Text style={ms.h2}>{Localization.getText("welcome")} {user.user.name}!</Text>
         </View>
     );
 }
@@ -126,8 +129,18 @@ const HomeScreen = (user) => {
             />
 
             <Stack.Screen 
+                name="Legitimation" 
+                component={LegitimationScreen}
+            />
+
+            <Stack.Screen 
                 name="Deliver" 
                 component={DeliverScreen}
+            />
+
+            <Stack.Screen
+                name="PostRequest"
+                component={PostRequestScreen}
             />
 
             <Stack.Screen 

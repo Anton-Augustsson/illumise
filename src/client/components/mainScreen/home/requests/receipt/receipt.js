@@ -9,11 +9,9 @@ const SuperReceipt = ({params}) => {
     return (
         <View style={rs.container}>
             <Text style={ms.h4}>Address</Text>
-            <Text>{params.delivAddress}</Text>
 
             <Text style={ms.h4}>Varor</Text>
             <FlatList
-                data={params.shoppingList}
                 renderItem={({item})=><Text>{item.text}</Text>}
                 keyExtractor={(item) => item.id}
             />
