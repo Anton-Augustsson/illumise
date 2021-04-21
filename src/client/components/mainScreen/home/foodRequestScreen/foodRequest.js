@@ -2,8 +2,8 @@ import React, {useState, useRef} from 'react';
 import { Text, View, Image, TextInput, Button, Animated, TouchableWithoutFeedback} from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import CustomButton from "../../../customComponents/customButton";
-import CustomHeader from "../../../customComponents/customHeader"
-import CustomListItem from "../../../customComponents/customListItem"
+import CustomHeader from "../../../customComponents/customHeader";
+import CustomListItem from "../../../customComponents/customListItem";
 import ms from '../../../mainStyles/ms';
 import fs from "./foodStyles";
 import BottomSheet from "reanimated-bottom-sheet";

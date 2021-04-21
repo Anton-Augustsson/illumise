@@ -9,11 +9,13 @@ import {
 } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import FoodRequestScreen from './foodRequestScreen/foodRequest';
-import {colors} from "../../mainStyles/colors"
-import ms from "../../mainStyles/ms"
-import hs from "./homeStyle"
+import {colors} from "../../mainStyles/colors";
+import ms from "../../mainStyles/ms";
+import hs from "./homeStyle";
 import FoodRequestDoneScreen from "./foodRequestScreen/foodRequestDone";
-import RequestIcon from "../../customComponents/requestIcon"
+import RequestIcon from "../../customComponents/requestIcon";
+
+const {Localization} = require("../../../modules/localization");
 
 const DATA = [
     {
@@ -81,7 +83,7 @@ const TopWelcome = ({user}) => {
     
     return (
         <View style={hs.welcomeContainer}>
-            <Text style={ms.h2}>Goddag {user.user.name}!</Text>
+            <Text style={ms.h2}>{Localization.getText("welcome")} {user.user.name}!</Text>
         </View>
     );
 }

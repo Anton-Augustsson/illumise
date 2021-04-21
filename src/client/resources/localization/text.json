@@ -1,0 +1,12 @@
+{
+    "en": 
+    {
+        "test": "this was a test",
+        "welcome": "Welcome"
+    },
+    "se": 
+    {
+        "test": "detta var ett test",
+        "welcome": "Välkommen"
+    } 
+}
