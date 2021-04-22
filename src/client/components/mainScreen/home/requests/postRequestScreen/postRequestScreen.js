@@ -8,48 +8,62 @@ import rs from "../requestStyle";
 import MapView from 'react-native-maps';
 import * as Location from 'expo-location';
 import {Localization} from '../../../../../modules/localization'
+import IconButton from '../../../../customComponents/iconButton';
+import FloatingInput from '../../../../customComponents/Inputs/floatingInput';
 
 
 const PostRequestScreen = ({navigation}) => {
+    const [location, setLocation] = useState("");
+    const [refCode, setRefCode] = useState("");
+    const [otherInfo, setOtherInfo] = useState("");
+
+
+    const nextScreen = () =>{
+        var result = {
+            type: "post",
+            stops: [location],
+            postObject: {refCode: refCode, otherInfo: otherInfo}
+        }
+        setRefCode("");
+        setOtherInfo("");
+        navigation.navigate("Legitimation", result);
+    }
     return (
         <View style={{flex:1}}>
             <CustomHeader
                     title={Localization.getText("postAndPackage")}
                     nav={navigation}
+            />
+            <View style={rs.content}>
+                <Text style={ms.h3}>{Localization.getText("enterPostOffice")}</Text>
+                <GooglePlaces
+                    placeholder={Localization.getText("deliveryAddress")}
+                    onPress={(data, details = null) => {
+                    // 'details' is provided when fetchDetails = true
+                    setLocation(data.description);
+                    }}
                 />
-            <View style={styles.container}>
-               
+
                     <Text style={ms.h3}>{Localization.getText("enterPackageRef")}</Text>
-                    <TextInput style={rs.desc} multiline placeholder={Localization.getText("refCode")}/> 
-
+                    <FloatingInput 
+                        placeholder={Localization.getText("refCode")}
+                        onChangeText={(text)=>setRefCode(text)}
+                    />
+    
                     <Text style={ms.h3}>{Localization.getText("otherInfo")}</Text>
-                    <TextInput style={rs.desc} multiline placeholder={Localization.getText("otherInfo")}/> 
-
-                    <Text style={ms.h3}>{Localization.getText("enterPostOffice")}</Text>
-                    <GooglePlaces
-                        placeholder={Localization.getText("deliveryAddress")}
-                        onPress={(data, details = null) => {
-                        // 'details' is provided when fetchDetails = true
-                        console.log(data, details);
-                        }}
+                    <FloatingInput 
+                        placeholder={Localization.getText("otherInfo")}
+                        onChangeText={(text)=>setOtherInfo(text)}
                     />
-
-                    <CustomButton 
-                        style={ms.button}
-                        styleText={{fontWeight:"bold"}}
-                        title={Localization.getText("continue")}
-                        onPress={()=>navigation.navigate("Legitimation")}
-                    />
+            </View>
+            <View style={rs.moveOnContainer}>
+                <IconButton onPress={nextScreen}/>
             </View>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex:1,
-        padding:20,
-    },
     map: {
       width: "100%",
       height: "70%",

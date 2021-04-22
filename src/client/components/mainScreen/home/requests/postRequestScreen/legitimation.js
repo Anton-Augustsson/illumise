@@ -9,19 +9,31 @@ import * as Location from 'expo-location';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import {Localization} from '../../../../../modules/localization'
 import GooglePlaces from '../../../../customComponents/Inputs/googlePlaces';
+import IconButton from '../../../../customComponents/iconButton';
 
 
-const LegitimationScreen = ({navigation}) => {
+const LegitimationScreen = ({navigation, route}) => {
     const [isEnabled, setIsEnabled] = useState(false);
     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+    const [location, setLocation] = useState("");
+    
+    const nextScreen = () => {
+        if(isEnabled){ 
+            var result = Object.assign({}, route.params);
+            result.stops.unshift(location);
+        }
+        navigation.navigate("Deliver", result);
+    } 
 
+    //;//{Localization.getText("legitimationPrompt")}
     return (
+        
         <View style={{flex:1}}>
             <CustomHeader
                     title={Localization.getText("postAndPackage")}
                     nav={navigation}
                 />
-            <View style={styles.container}>
+            <View style={rs.content}>
                 <View style={{
                     flexDirection:'row',
                     alignItems: 'center',
@@ -38,31 +50,25 @@ const LegitimationScreen = ({navigation}) => {
                         value={isEnabled}
                     />
                 </View>
+                <View style={isEnabled ? {display:"flex"} : {display:"none"}}>
                     <Text style={[ms.h3, {marginTop: 50}]}>{Localization.getText("enterPickupLoc")}</Text>
                     <GooglePlaces
                         placeholder={Localization.getText("deliveryAddress")}
                         onPress={(data, details = null) => {
                         // 'details' is provided when fetchDetails = true
-                        console.log(data, details);
+                        setLocation(data.description);
                         }}
-                    />
-
-                    <CustomButton 
-                        style={ms.button}
-                        styleText={{fontWeight:"bold"}}
-                        title={Localization.getText("continue")}
-                        onPress={()=>navigation.navigate("Deliver")}
-                    />
+                        />
+                </View>
+            </View>
+            <View style={rs.moveOnContainer}>
+                <IconButton onPress={nextScreen} />
             </View>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex:1,
-        padding:20,
-    },
     map: {
       width: "100%",
       height: "70%",

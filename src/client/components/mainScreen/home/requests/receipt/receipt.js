@@ -40,6 +40,7 @@ const rs = StyleSheet.create({
 }); 
 
 const ReceiptScreen = ({navigation, route}) => {
+    console.log(route.params);
     //VI KAN FÅ UT INFO GENOM route.params.delivAddress
     return (
         <View style={{flex:1}}>

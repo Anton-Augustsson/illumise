@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { Text, View, Image, TextInput, Button, Switch, TouchableOpacity, StyleSheet} from 'react-native';
+import { Text, View, TouchableOpacity, StyleSheet} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 const CartItem = (props) => {
@@ -45,7 +45,10 @@ const CartItem = (props) => {
         <TouchableOpacity onPress={()=>setExpand(!expand)} style={styles.listItem}>
             <View style={styles.listItemView}>
                 <Text numberOfLines={1} style={styles.listItemText}>
-                    hej jag gillar att spela på ett jävla på ett skita kefjkej ke 
+                    {props.name}
+                </Text>
+                <Text>
+                    {props.quantity}
                 </Text>
                 <Ionicons 
                     name="close-circle-sharp" 
@@ -56,10 +59,7 @@ const CartItem = (props) => {
             </View>
             <View style={styles.listItemInfo}>
                 <Text>
-                    HEJ Jag giallar ekj kewj wkejfkw ejkwej wekwje
-                    kefj woej fweoij ewiojf weioj efwikj ewi jwei
-                    ekw jfiwoejfwoei jfieowjfoewije iwj owie jweoij
-                    wekfjoew jfoewij ewijf iwoej ioewj iewji jwei
+                    {props.otherInfo}
                 </Text>
             </View>
         </TouchableOpacity>

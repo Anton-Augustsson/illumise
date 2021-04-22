@@ -11,6 +11,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import FoodRequestScreen from './requests/foodRequestScreen/foodRequest';
 import PostRequestScreen from './requests/postRequestScreen/postRequestScreen';
 import LegitimationScreen from './requests/postRequestScreen/legitimation';
+import ShoppingRequestScreen from "./requests/shoppingRequestScreen/shoppingRequest";
 import {colors} from "../../mainStyles/colors"
 import ms from "../../mainStyles/ms"
 import hs from "./homeStyle"
@@ -18,6 +19,7 @@ import ReceiptScreen from "./requests/receipt/receipt";
 import RequestIcon from "../../customComponents/requestIcon"
 import DeliverScreen from './requests/deliver/deliver';
 import { Localization } from '../../../modules/localization';
+import OtherRequestScreen from './requests/OtherRequestScreen/otherRequest';
 
 const DATA = [
     {
@@ -35,8 +37,8 @@ const DATA = [
         title2: "Annat",
         type1: "shopping",
         type2: "other",
-        des1: "FoodRequest",
-        des2: "FoodRequest",
+        des1: "ShoppingRequest",
+        des2: "OtherRequest",
     }
 ];
 
@@ -126,6 +128,16 @@ const HomeScreen = (user) => {
             <Stack.Screen 
                 name="FoodRequest" 
                 component={FoodRequestScreen}
+            />
+
+            <Stack.Screen 
+                name="ShoppingRequest" 
+                component={ShoppingRequestScreen}
+            />
+
+            <Stack.Screen 
+                name="OtherRequest" 
+                component={OtherRequestScreen}
             />
 
             <Stack.Screen 

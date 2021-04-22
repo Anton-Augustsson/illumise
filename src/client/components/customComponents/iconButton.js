@@ -22,7 +22,6 @@ const Icon = (props) => {
 }
   
 const IconButton = (props) => {
-    console.log(props)
     return (
         <TouchableOpacity 
             style={[ms.button,{flexDirection:"row"}]}
@@ -31,8 +30,12 @@ const IconButton = (props) => {
             <Text style={{color:"white", fontWeight:"bold", fontSize:15, marginRight:5}}>
                 {Localization.getText(props.title == null ? "continue" : props.title)}
             </Text>
-            <Icon title={props.title} size={props.size == null ? 22 : props.size} color={props.color == null ? "white" : props.color}/>
-
+            <View style={{paddingTop:6, paddingBottom:6,paddingRight:20}}>
+                <Icon title={props.title} size={props.size == null ? 22 : props.size} color={props.color == null ? "white" : props.color}/>
+                {props.component == null ? null : 
+                props.component 
+                }
+            </View>
         </TouchableOpacity>
     );
 }

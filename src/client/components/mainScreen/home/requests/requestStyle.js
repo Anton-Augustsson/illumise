@@ -5,7 +5,28 @@ import {colors} from "../../../mainStyles/colors"
 const rs = StyleSheet.create({
     content: {
         flex:1,
-        paddingTop:5,
+        paddingRight:20,
+        paddingLeft:20,
+        paddingBottom:20,
+    },
+    moveOnContainer: {
+        paddingTop: 6,
+        paddingBottom: 6,
+        paddingRight:20,
+        paddingLeft:20,
+    },
+    moveOnContainer2: {
+        paddingTop: 5,
+        paddingBottom: 5,
+        flexDirection:"row",
+        justifyContent:"space-evenly",
+        paddingRight:20,
+        paddingLeft:20,
+    },
+    scrollDown: {
+        alignSelf:"center",
+        alignItems:"center",
+        marginTop:"40%",
     },
     desc: {
         paddingLeft:10,
@@ -20,17 +41,15 @@ const rs = StyleSheet.create({
         marginTop:5,
         marginBottom:5,
     },
-    moveOnContainer: {
-        paddingTop: 5,
-        paddingBottom: 5,
-        flexDirection:"row",
-        justifyContent:"space-evenly",
+    bsContentContainer: {
+        backgroundColor:"#FFFFFF",
+        height:"100%",
+        paddingTop:5,
     },
     bsContentContainer: {
         backgroundColor:"#FFFFFF",
         height:"100%",
         paddingTop:5,
-        paddingBottom:10,
     },
     bsHeaderContainer: {
         backgroundColor:"#FFFFFF",
@@ -104,7 +123,26 @@ const rs = StyleSheet.create({
         borderColor:"grey",
         padding:5,
     },
-    
+    multiLinetextInput: {
+        minHeight:100,
+        maxHeight:250,
+        textAlignVertical:"top",
+        paddingTop:10,
+        paddingBottom:10,
+    },
+    overlayOuter: {
+        position:"absolute",
+        height:"100%",
+        width:"100%",
+        top:0,
+        right:0,
+        left:0,
+        bottom:0,
+    },
+    overlayInner: {
+        flex:1,
+        backgroundColor:colors.OVERLAY,
+    },
 });
 
 export default rs;

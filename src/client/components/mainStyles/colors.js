@@ -6,4 +6,5 @@ export const colors = {
     SAMARIT_CANCEL:"red",
     DEFAULT_BACKGROUND:"white",
     MENU_ICON: "#585858",
+    OVERLAY: "rgba(0,0,0,0.5)",
 }

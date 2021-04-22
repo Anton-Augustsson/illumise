@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {View, TextInput, Text, StyleSheet} from 'react-native';
 import {colors} from "../../mainStyles/colors"
   
-const FloatingInput = ({placeholder, ...props}) => {
+const FloatingInput = ({placeholder, onChangeText, onFocus, onBlur, style, ...props}) => {
     const [isFocused, setFocus] = useState(false);
     const [hasText, setHasText] = useState(false); 
     const styles = StyleSheet.create({
@@ -42,10 +42,14 @@ const FloatingInput = ({placeholder, ...props}) => {
             </Text>
             <TextInput
                 {...props}
-                style={styles.textInput}
-                onFocus={()=>{setFocus(true);}}
-                onBlur={()=>{setFocus(false)}}
-                onChangeText={(text)=>{setHasText(text === "" ? false : true)}}
+                style={[styles.textInput,style]}
+                onFocus={()=>{setFocus(true); onFocus != null ? onFocus : null;}}
+                onBlur={()=>{setFocus(false); onFocus != null ? onBlur : null;}}
+                onChangeText={(text)=>{
+                    console.log("hej");
+                    setHasText(text === "" ? false : true);
+                    onChangeText != null ? onChangeText(text) : null;
+                }}
             />
         </View>
     );
