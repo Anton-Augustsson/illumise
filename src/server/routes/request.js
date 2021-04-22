@@ -74,6 +74,7 @@ router.put('/provider/set', async (req, res) =>
   {
     // TODO change from setPovider to somthing else that simply shows the intrest of providing
     let response = await db.requests.setProvider(body.requestID, body.providorID);
+    console.log(response);
     if(response != false) return sendSuccess(res, response);
     else return sendFailure(res);
   }
