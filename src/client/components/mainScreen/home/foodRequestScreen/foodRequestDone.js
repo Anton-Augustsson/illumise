@@ -1,17 +1,18 @@
 import React from 'react';
 import { Text, View, Image, StyleSheet} from 'react-native';
 import CustomButton from '../../../customComponents/customButton';
-import ms from "../../../mainStyles/ms"
-import {colors} from "../../../mainStyles/colors"
+import ms from "../../../mainStyles/ms";
 import { FlatList } from 'react-native-gesture-handler';
+import { Localization } from '../../../../modules/localization';
 
-const SuperReceipt = ({params}) => {
+const SuperReceipt = ({params}) => 
+{
     return (
         <View style={rs.container}>
-            <Text style={ms.h4}>Address</Text>
+            <Text style={ms.h4}>{Localization.getText("address")}</Text>
             <Text>{params.delivAddress}</Text>
 
-            <Text style={ms.h4}>Varor</Text>
+            <Text style={ms.h4}>{Localization.getText("goods")}</Text>
             <FlatList
                 data={params.shoppingList}
                 renderItem={({item})=><Text>{item.text}</Text>}
@@ -40,14 +41,15 @@ const rs = StyleSheet.create({
     }
 }); 
 
-const FoodRequestDoneScreen = ({navigation, route}) => {
+const FoodRequestDoneScreen = ({navigation, route}) => 
+{
     //VI KAN FÅ UT INFO GENOM route.params.delivAddress
     return (
         <View style={{flex:1}}>
             <SuperReceipt params={route.params}/>
             <CustomButton
                 style={[ms.button, {marginBottom:20,marginLeft:20,marginRight:20}]}
-                title="Kolla dina ordrar"
+                title={Localization.getText("checkYourOrders")}
                 onPress={() => navigation.navigate("Orders")}
             />
         </View>

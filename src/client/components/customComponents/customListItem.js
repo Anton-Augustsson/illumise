@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import { Text, View, Image, TextInput, Button, Switch, TouchableOpacity, StyleSheet} from 'react-native';
+import React from 'react';
+import { Text, View, TouchableOpacity, StyleSheet} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 const CustomListItem = (props, {deleteItem}) => {

@@ -1,12 +1,5 @@
 import React from 'react';
-import { 
-    Text, 
-    View, 
-    Image, 
-    FlatList, 
-    useState,
-    TouchableOpacity
-} from 'react-native';
+import { Text, View, FlatList, TouchableOpacity } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import FoodRequestScreen from './foodRequestScreen/foodRequest';
 import {colors} from "../../mainStyles/colors";
@@ -14,14 +7,13 @@ import ms from "../../mainStyles/ms";
 import hs from "./homeStyle";
 import FoodRequestDoneScreen from "./foodRequestScreen/foodRequestDone";
 import RequestIcon from "../../customComponents/requestIcon";
-
-const {Localization} = require("../../../modules/localization");
+import { Localization } from "../../../modules/localization";
 
 const DATA = [
     {
         id: "1",
-        title1: "Mat",
-        title2: "Paket",
+        title1: Localization.getText("food"),
+        title2: Localization.getText("package"),
         type1: "food",
         type2: "package",
         des1: "FoodRequest",
@@ -29,8 +21,8 @@ const DATA = [
     },
     {
         id: "2",
-        title1: "Post",
-        title2: "Annat",
+        title1: Localization.getText("mail"),
+        title2: Localization.getText("other"),
         type1: "mail",
         type2: "other",
         des1: "FoodRequest",
@@ -38,7 +30,8 @@ const DATA = [
     }
 ];
 
-const InnerItem = (props)  => {
+const InnerItem = (props)  => 
+{
     return(
         <TouchableOpacity 
             onPress={()=> {
@@ -69,8 +62,8 @@ const Item = ({item, nav}) => (
     </View>
 );
 
-const renderItem = ({item}, nav) => { 
-
+const renderItem = ({item}, nav) => 
+{ 
     return (
         <Item
             item={item}
@@ -79,8 +72,8 @@ const renderItem = ({item}, nav) => {
     );
 };
 
-const TopWelcome = ({user}) => {
-    
+const TopWelcome = ({user}) => 
+{
     return (
         <View style={hs.welcomeContainer}>
             <Text style={ms.h2}>{Localization.getText("welcome")} {user.user.name}!</Text>

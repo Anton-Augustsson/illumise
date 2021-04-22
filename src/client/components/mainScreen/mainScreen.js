@@ -11,33 +11,30 @@ const Tab = createBottomTabNavigator();
 const MainScreen = ({navigation, route}) => {
     //https://reactnavigation.org/docs/bottom-tab-navigator
     return (
-        <Tab.Navigator 
-            initialRouteName="Home"
-            tabBar={props=><Menu {...props}/>}
-            >
+        <Tab.Navigator initialRouteName="Home"
+                       tabBar={props=><Menu {...props}/>}>
+
             <Tab.Screen 
-            name="Home" 
-            children={()=><HomeScreen user={route.params.user}/>}
+                name="Home" 
+                children={()=><HomeScreen user={route.params.user}/>}
             />
 
             <Tab.Screen 
-            name="Orders" 
-            component={OrdersScreen}
+                name="Orders" 
+                component={OrdersScreen}
             />
 
             <Tab.Screen 
-            name="Notification" 
-            component={NotificationScreen}
+                name="Notification" 
+                component={NotificationScreen}
             />
 
             <Tab.Screen 
-            name="Burgar" 
-            component={BurgarScreen}
+                name="Burgar" 
+                component={BurgarScreen}
             />
         </Tab.Navigator>
     );
 }
-
-
 
 export default MainScreen;
