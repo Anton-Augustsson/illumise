@@ -5,6 +5,7 @@ const valid = validate.valid;
 const validParams = validate.validParams;
 const sendFailure = validate.sendFailure;
 const sendSuccess = validate.sendSuccess;
+const idSize      = validate.idSize;
 
 const express = require('express');
 const router = express.Router();
@@ -18,8 +19,9 @@ const Joi = require('joi');
 router.put('/sendMessage', async (req, res) => // post?
 {
   const schema = Joi.object({
-    userID: Joi.string(),
-    chatID: Joi.string()
+    userID: Joi.string().min(idSize).max(idSize),
+    chatID: Joi.string().min(idSize).max(idSize),
+    msg: Joi.string()
   });
 
   let b = req.body;
@@ -27,8 +29,9 @@ router.put('/sendMessage', async (req, res) => // post?
   if(valid(b, schema, res))
   {
     // null
-    //   let response = await db.chat.add(b.userID, b.chatID); TODO
-    return res.send('Received a PUT HTTP method');
+    let response = await db.chat.addMessage(b.userID, b.chatID, b.msg);
+    if(response != false) return sendSuccess(res, response);
+    else return sendFailure(res);
   }
 });
 
@@ -55,18 +58,20 @@ router.get('/getAllMessages', async (req, res) =>
 /**
  * setup a new chat for a new service provider
  * @param {string} requestID - The id of the request that is the chat should be created for
+ * @param {[string]} usersID - The an array of two users
  */
 router.put('/newChat', async (req, res) => // POST?
 {
   const schema = Joi.object({
-    requestID: Joi.string() // TODO userID do you need it?
+    requestID: Joi.string(),
+    usersID: Joi.array().min(2).items(Joi.string())
   });
 
   let b = req.body;
 
   if(valid(b, schema, res))
   {
-    let response = await db.chat.add(b.requestID);
+    let response = await db.chat.add(b.requestID, b.usersID);
     if(response != null) return sendSuccess(res, response);
     else return sendFailure(res);
   }

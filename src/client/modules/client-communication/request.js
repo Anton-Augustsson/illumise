@@ -1,11 +1,14 @@
 require('isomorphic-fetch');
+import communication from './communication';
+const url = communication.url;
+const returnResponse = communication.returnResponse;
 
 /**
  * Interface for communicating wih the server
  */
 const request =
 {
-    serviceUrl: 'http://localhost:3000/request',
+    serviceUrl: url + '/request',
 
     /**
      * set payment to done and remove chat (will still be accessible in x time)
@@ -13,8 +16,7 @@ const request =
      */
     completeRequest: async function(requestID)
     {   
-        let data = 
-        {requestID: requestID }
+        let data = {requestID: requestID };
         let url = this.serviceUrl + '/completeRequest';
         let response = await fetch(url, {
             method: 'PUT',
@@ -24,8 +26,7 @@ const request =
             body: JSON.stringify(data)
         });
 
-        let result = await response.json(); //should be .json
-        console.log("completed request: " + result);
+        return returnResponse(response);
     },
 
     provider:
@@ -33,30 +34,36 @@ const request =
         /**
          * get available request in x radius from location.
          * @param {string} geoLocation - The current location of the provider
+         * @param {int} maxDistance - The max sistance of the acceptile location
+         * @param {int} maxRequests - The number of request that the proider whants to se
          */
-        getNearRequests: async function(geoLocation)
+        getNearRequests: async function(geoLocation, maxDistance, maxRequests)
         {
-            let params = '?geoLocation=' + geoLocation;
-            let url = request.serviceUrl + '/provider/getNearRequests'+ params;
+            let params = '?geoLocation=' + geoLocation + '&maxDistance=' + maxDistance + '&maxRequests=' + maxRequests;
+            let url = request.serviceUrl + '/provider/getNearRequests' + params;
             let response = await fetch(url);
-            
-            let result = await response.text(); //should be json
-            console.log(result);
+
+            return returnResponse(response);
         },
 
         /**
          * select an available request
-         * @param {string} providerID - The id of the provider with select a request to performed
          * @param {string} requestID - The id of the request to be selected
+         * @param {string} providerID - The id of the provider with select a request to performed
          */
-        set: async function(providerID, requestID)
+        set: async function(requestID, providerID)
         {   
-            let params = '?providerID=' + providerID + '&requestID=' + requestID;
-            let url = request.serviceUrl + '/provider/set' + params;
-            let response = await fetch(url);
-
-            let result = await response.text(); //should be json
-            console.log(result);
+            let body = {requestID: requestID, providerID: providerID};
+            console.log(body.requestID + " and " + body.providerID);
+            let url = request.serviceUrl + '/provider/set';
+            let response = await fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8'
+                },
+                body: JSON.stringify(body)
+            });
+            return returnResponse(response);
         },
 
         /**
@@ -69,8 +76,8 @@ const request =
             let params = '?providerID=' + providerID + '&num=' + num;
             let url = request.serviceUrl + '/provider/getUserProviding' + params;
             let response = await fetch(url);
-            let result = await response.text();  //should be json
-            console.log(result);
+
+            return returnResponse(response);
         }
     },
 
@@ -79,11 +86,12 @@ const request =
         /**
          * Create a new request
          * @param {string} requestID - The user id for the user who want to create the request
+         * @param {string} type - The type of the request
          * @param {json} data - A object of the request. Needs to match the structure of database request
          */
-        newRequest: async function(requestID, data) //async
+        newRequest: async function(requestID, type, data)
         {   
-            let newReq = {requestID: requestID, data: data};
+            let newReq = {requestID: requestID, type: type, data: data};
             console.log(newReq);
             let url = request.serviceUrl + '/requester/newRequest';
             let response = await fetch(url, {
@@ -94,8 +102,7 @@ const request =
                 body: JSON.stringify(newReq)
             });
 
-            let result = await response.text(); //should be json.
-            console.log(result);
+            return returnResponse(response);
         },
 
         /**
@@ -109,8 +116,7 @@ const request =
             let url = request.serviceUrl + '/requester/getMyRequest' + params;        
             let response = await fetch(url);
 
-            let result = await response.text(); //should be json
-            console.log(result);
+            return returnResponse(response);
         },
 
         /**
@@ -129,8 +135,7 @@ const request =
                 body: JSON.stringify(toRemove)
             });
 
-            let result = await response.text() //should be json
-            console.log(result);
+            return returnResponse(response);
         },
 
         /**
@@ -151,8 +156,7 @@ const request =
                 body: JSON.stringify(toRate)
             });
 
-            let result = await response.text() //should be json
-            console.log(result);
+            return returnResponse(response);
         },
 
         /**
@@ -172,9 +176,8 @@ const request =
                 body: JSON.stringify(toAccept)
             });
 
-            let result = await response.text() //should be json
-            console.log(result);
-            
+            return returnResponse(response);
+
         }
     }
 };
