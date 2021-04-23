@@ -130,7 +130,14 @@ const ShoppingRequestScreen = ({navigation}) => {
                 <MyBottomSheet
                     ref={sheetRef}
                     snapPoints={["65%", 0, 0]}
-                    renderContent={<Cart data={items} deleteItem={deleteItem} onPress={nextScreen}/>}
+                    renderContent={
+                        <Cart 
+                            data={items} 
+                            setData={setItems} 
+                            deleteItem={deleteItem} 
+                            onPress={nextScreen}
+                        />
+                    }
                 />
                 <ScrollView contentContainerStyle={{flexGrow:1}}>
                     <View style={rs.content}>

@@ -1,89 +1,86 @@
 import React, {useState} from 'react';
 import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
-import { FlatList } from 'react-native-gesture-handler';
+import { FlatList, TextInput } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 import IconButton from './iconButton';
 import ms from "../mainStyles/ms";
 import rs from "../mainScreen/home/requests/requestStyle";
 import {Localization} from "../../modules/localization";
+import QuantityChooser from './quantityChooser';
+import FloatingInput from './Inputs/floatingInput';
 
-const CartItem = (props) => {
-    const [expand, setExpand] = useState(false);
-
-    const styles = StyleSheet.create({
-        listItem:{
-            backgroundColor: 'white',
-            shadowColor:"#cccccc",
-            shadowOffset: {
-                width:2,
-                height:4,
-            },
-            shadowOpacity:0.8,
-            shadowRadius: 2,
-            elevation:4,
-            paddingRight:8,
-            paddingLeft:8,
-            paddingBottom:expand ? 8 : 0,
-            borderRadius: 10,
-            marginLeft:10,
-            marginRight:10,
-            marginTop:5,
-            marginBottom:5,
-        },
-        listItemView:{ height:40,
-            flexDirection: 'row',
-            alignItems:"center",
-            justifyContent: 'space-between',
-        },
-        listItemInfo: {
-            borderTopWidth:0.5,
-            display:expand ? "flex" : "none",
-        },
-        listItemText:{
-            width:"80%",
-            fontSize: 15,
-            fontWeight: 'bold',
-        }
-    });
-    return(
-        <TouchableOpacity onPress={()=>setExpand(!expand)} style={styles.listItem}>
-            <View style={styles.listItemView}>
-                <Text numberOfLines={1} style={styles.listItemText}>
-                    {props.name}
-                </Text>
-                <Text>
-                    {props.quantity}
-                </Text>
-                <Ionicons 
-                    name="close-circle-sharp" 
-                    size={30} 
-                    color="red" 
-                    onPress={() => props.deleteItem(props.id)}
-                />
-            </View>
-            <View style={styles.listItemInfo}>
-                <Text>
-                    {props.otherInfo}
-                </Text>
-            </View>
-        </TouchableOpacity>
-    );
-}
-
- 
 const Cart = (props) => {
+
+    const CartItem = ({data, setData, item, deleteItem}) => {
+        const [expand, setExpand] = useState(false);
+        const [quantity, setQuantity] = useState(item.quantity);
+    
+        return(
+            <TouchableOpacity onPress={()=>setExpand(!expand)} style={styles.listItemContainer}>
+                <View style={[styles.listItemView, styles.margin]}>
+                    <Text numberOfLines={1} style={styles.listItemText}>
+                        {item.name}
+                    </Text>
+                    <Text style={styles.quantity}>
+                        {quantity}
+                    </Text>
+                    <Ionicons 
+                        name="close-circle-sharp" 
+                        size={35} 
+                        color="red" 
+                        onPress={() => deleteItem(item.id)}
+                    />
+                </View>
+                <View style={[styles.listItemInfo, styles.margin, {display: expand ? "flex" : "none"}]}>
+                    <View style={styles.otherInfo}>
+                        <Text style={ms.h4}>{Localization.getText("otherInfo")}</Text>
+                        <Text>
+                            {item.otherInfo}
+                        </Text>
+                    </View>
+                    <View style={styles.changeQuantity}>
+                        <Text style={styles.changeQuantityText}>{Localization.getText("changeQuantity")}</Text>
+                        <QuantityChooser
+                            state={quantity}
+                            setState={setQuantity}
+                            onPressPlus={()=>{
+                                for (let i = 0; i < data.length; i++) {
+                                    if(data[i].id == item.id) {
+                                        data[i].quantity += 1;
+                                        setData(data);
+                                        break;
+                                    }
+                                }
+
+                            }}
+                            onPressMinus={()=>{
+                                for (let i = 0; i < data.length; i++) {
+                                    if(data[i].id == item.id) {
+                                        data[i].quantity -= 1;
+                                        setData(data);
+                                        break;
+                                    }
+                                }
+                            }}
+                        />
+                    </View>
+                </View>
+            </TouchableOpacity>
+        );
+    }
+
     return(
         <>
             <FlatList
                 data={props.data}
+                setData={props.setData}
                 renderItem={({item}) => 
-                                <CartItem 
-                                    id={item.id} 
-                                    name={item.name} 
-                                    quantity={item.quantity} 
-                                    otherInfo={item.otherInfo} 
-                                    deleteItem={props.deleteItem}
-                            />}
+                    <CartItem 
+                        data={props.data}
+                        setData={props.setData}
+                        item={item} 
+                        deleteItem={props.deleteItem}
+                    />}
                 ListEmptyComponent={()=>
                     <Text style={[ms.h3, {alignSelf:"center"}]}>
                         {Localization.getText("emptyShoppingCartPrompt")}
@@ -97,5 +94,62 @@ const Cart = (props) => {
         </>
     );
 }
+
+const styles = StyleSheet.create({
+    listItemContainer:{
+        backgroundColor: 'white',
+        shadowColor:"#cccccc",
+        shadowOffset: {
+            width:2,
+            height:4,
+        },
+        shadowOpacity:0.8,
+        shadowRadius: 2,
+        elevation:4,
+        borderRadius: 10,
+        padding:8,
+        marginLeft:10,
+        marginRight:10,
+        marginTop:5,
+        marginBottom:5,
+    },
+    listItemView:{ 
+        flexDirection: 'row',
+        alignItems:"center",
+        justifyContent: 'space-between',
+    },
+    listItemInfo: {
+        borderTopWidth:0.5,
+        marginRight:5,
+        marginBottom:5,
+        paddingTop:5,
+        marginTop:7,
+    },
+    listItemText:{
+        width:"80%",
+        fontSize: 20,
+        fontWeight: 'bold',
+    },
+    otherInfo: {
+        paddingTop:5,
+        minHeight:75,
+        paddingBottom:10,
+    },
+    quantity: {
+        fontSize:17,
+        fontWeight:"bold",
+    },
+    changeQuantity: {
+        flexDirection:"row",
+        alignItems:"center",
+        justifyContent:"flex-end",
+    },
+    changeQuantityText: {
+        marginRight:10,
+    },
+    margin: {
+        marginLeft:5,
+    }
+});
 
 export default Cart;

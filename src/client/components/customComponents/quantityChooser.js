@@ -42,31 +42,33 @@ const QuantityChooser = (props) => {
         <View style={styles.container}>
             {props.text == null ? null : 
             <Text style={styles.text}>{props.text}</Text>}
-
+            <TouchableOpacity
+                style={[styles.buttonContainer, styles.minus]}
+                onPress={()=>{
+                    if (props.state > 1) {
+                        props.setState(props.state-1);
+                        props.onPressMinus != null ? props.onPressMinus() : null;
+                    }
+                }}
+            >
+                <AntDesign name="minus" size={25} color="white" />
+            </TouchableOpacity>
+            <View style={styles.inputContainer}>
+                <Text style={styles.input}>{props.state}</Text>
+            </View>
             <TouchableOpacity
                 style={[styles.buttonContainer, styles.plus]}
                 onPress={()=>{
                     if (props.state < 99) {
                         props.setState(props.state+1);
+                        props.onPressPlus != null ? props.onPressPlus() : null;
                     }
                 }
                 }
             >
                 <AntDesign name="plus" size={25} color="white" />
             </TouchableOpacity>
-            <View style={styles.inputContainer}>
-                <Text style={styles.input}>{props.state}</Text>
-            </View>
-            <TouchableOpacity
-                style={[styles.buttonContainer, styles.minus]}
-                onPress={()=>{
-                    if (props.state> 1) {
-                        props.setState(props.state-1)
-                    }
-                }}
-            >
-                <AntDesign name="minus" size={25} color="white" />
-            </TouchableOpacity>
+            
         </View>
     );
 }

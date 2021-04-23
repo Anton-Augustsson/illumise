@@ -62,7 +62,14 @@ const FoodRequestScreen = ({navigation}) => {
                 <MyBottomSheet
                     ref={sheetRef}
                     snapPoints={["65%", 0, 0]}
-                    renderContent={<Cart data={items} deleteItem={deleteItem} onPress={nextScreen}/>}
+                    renderContent={
+                        <Cart data={items} 
+                            data={items} 
+                            setData={setItems} 
+                            deleteItem={deleteItem} 
+                            onPress={nextScreen}
+                        />
+                    }
                 />
 
                 <View style={rs.content}>
