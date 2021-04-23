@@ -49,9 +49,7 @@ const rs = StyleSheet.create({
         marginTop:10,
     },
     usualArticleInnerContainer: {
-        paddingTop:10,
-        paddingLeft:10,
-        paddingRight:10,
+        padding:10,
     },
     usualArticleItemContainer: {
         flexWrap:"wrap",
@@ -65,11 +63,11 @@ const rs = StyleSheet.create({
         borderColor:"#CCCCCC",
         alignSelf:"flex-start",
         alignItems:"center",
-        padding:4,
+        padding:7,
         borderRadius:10,
         minWidth:45,
-        marginLeft:6,
-        marginTop:6,
+        marginLeft:7,
+        marginTop:7,
     },
     usualArticleExpand: {
         backgroundColor:"white",

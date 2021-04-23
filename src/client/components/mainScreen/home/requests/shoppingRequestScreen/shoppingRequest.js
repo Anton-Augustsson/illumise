@@ -18,6 +18,7 @@ import MyBottomSheet from "../../../../customComponents/myBottomSheet";
 
 const UsualArticles = (props) => {
     const [expand, setExpand] = useState(true);
+    const NOT_EXPAND = 10;
 
     return(
         <View style={rs.usualArticleContainer}>
@@ -26,11 +27,15 @@ const UsualArticles = (props) => {
                     <Text style={ms.h4}>{props.category}</Text>
                 </View>
                 <View style={[rs.usualArticleItemContainer, 
-                    expand ? {height:50} : {}
+                   props.data.length < NOT_EXPAND ? {} :expand ? {height:55} : {}
                 ]}>
                 {
                     props.data.map(articles => (
-                        <TouchableOpacity  key={articles.id} style={rs.usualArticle}>
+                        <TouchableOpacity 
+                            onPress={()=>props.onPress(articles.text)} 
+                            key={articles.id} 
+                            style={rs.usualArticle}
+                        >
                                 <Text>{articles.text}</Text>
                         </TouchableOpacity>
                     ))
@@ -38,6 +43,8 @@ const UsualArticles = (props) => {
                     
                 </View>
             </View>
+            {
+                props.data.length < NOT_EXPAND ? null :
             <TouchableOpacity
                 style={rs.usualArticleExpand} 
                 onPress={()=>setExpand(!expand)}>
@@ -48,19 +55,43 @@ const UsualArticles = (props) => {
                     color="white" 
                 />
             </TouchableOpacity>
+            }
         </View>
     );
 }
 
 
 const ShoppingRequestScreen = ({navigation}) => {
-    //TODO ID MÅSTE VARA EN STRÄNG
     const [id, setId] = useState("0");
-
     const [items, setItems] = useState([]);
     const [name, setName] = useState("");
     const [quantity, setQuantity] = useState(1);
     const [otherInfo, setOtherInfo] = useState("");
+
+    const deleteItem = (id) => {
+        setItems(prevItems => {
+            return prevItems.filter(item => item.id != id);
+        })
+    }
+
+    const addItemUsual = (name) => {
+        setItems(prevItems => {
+            setId((parseInt(id)+1).toString());
+            for (let i = 0; i < prevItems.length; i++) {
+                if(prevItems[i].name === name) {
+                    prevItems[i].quantity += 1;
+                    return prevItems;
+                }
+            }
+
+            if(prevItems.length >= 99) {
+                return;
+            }
+
+            return [{id:id, name: name, quantity:1, otherInfo:""},...prevItems]
+        })
+
+    }
 
     const addItem = (name, quantity, otherInfo) => {
         if(name == "") {
@@ -70,7 +101,7 @@ const ShoppingRequestScreen = ({navigation}) => {
         }
 
         setItems(prevItems => {
-            setId((id+1).toString());
+            setId((parseInt(id)+1).toString());
             return [{id:id, name: name, quantity:quantity, otherInfo:otherInfo},...prevItems]
         })
         setName("");
@@ -99,7 +130,7 @@ const ShoppingRequestScreen = ({navigation}) => {
                 <MyBottomSheet
                     ref={sheetRef}
                     snapPoints={["65%", 0, 0]}
-                    renderContent={<Cart data={items} onPress={nextScreen}/>}
+                    renderContent={<Cart data={items} deleteItem={deleteItem} onPress={nextScreen}/>}
                 />
                 <ScrollView contentContainerStyle={{flexGrow:1}}>
                     <View style={rs.content}>
@@ -134,8 +165,16 @@ const ShoppingRequestScreen = ({navigation}) => {
                         <Text style={ms.h3}>
                             {Localization.getText("proposalForArticles")}
                         </Text>
-                        <UsualArticles category={Localization.getText("basicGoods")} data={USUSAL_ARTICLES.basicGoods}/>
-                        <UsualArticles category={Localization.getText("fruits")} data={USUSAL_ARTICLES.fruits}/>
+                        <UsualArticles 
+                            category={Localization.getText("basicGoods")} 
+                            data={USUSAL_ARTICLES.basicGoods}
+                            onPress={addItemUsual}
+                        />
+                        <UsualArticles 
+                            category={Localization.getText("fruits")} 
+                            data={USUSAL_ARTICLES.fruits}
+                            onPress={addItemUsual}
+                        />
                     </View>
                 </ScrollView>
                 <View style={rs.moveOnContainer}>

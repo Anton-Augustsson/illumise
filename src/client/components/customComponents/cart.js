@@ -72,12 +72,6 @@ const CartItem = (props) => {
 
  
 const Cart = (props) => {
-    const deleteItem = (id) => {
-        setItems(prevItems => {
-            return prevItems.filter(item => item.id != id);
-        })
-    }
-
     return(
         <>
             <FlatList
@@ -88,7 +82,7 @@ const Cart = (props) => {
                                     name={item.name} 
                                     quantity={item.quantity} 
                                     otherInfo={item.otherInfo} 
-                                    deleteItem={deleteItem}
+                                    deleteItem={props.deleteItem}
                             />}
                 ListEmptyComponent={()=>
                     <Text style={[ms.h3, {alignSelf:"center"}]}>

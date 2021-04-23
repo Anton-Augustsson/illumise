@@ -21,6 +21,12 @@ const FoodRequestScreen = ({navigation}) => {
     const [location, setLocation] = useState("");
     const [items, setItems] = useState([]);
 
+    const deleteItem = (id) => {
+        setItems(prevItems => {
+            return prevItems.filter(item => item.id != id);
+        })
+    }
+
     const addItem = (dish, amount, other) => {
         if(dish === ""){
             return
@@ -56,18 +62,19 @@ const FoodRequestScreen = ({navigation}) => {
                 <MyBottomSheet
                     ref={sheetRef}
                     snapPoints={["65%", 0, 0]}
-                    renderContent={<Cart data={items} onPress={nextScreen}/>}
+                    renderContent={<Cart data={items} deleteItem={deleteItem} onPress={nextScreen}/>}
                 />
-                <ScrollView contentContainerStyle={{flexGrow:1}}>
-                    <View style={rs.content}>
-                        <Text style={ms.h3}>{Localization.getText("enterRestaurant")}</Text>
-                        <GooglePlaces
-                            placeholder={Localization.getText("restaurant")}
-                            onPress={(data, details = null) => {
-                                // 'details' is provided when fetchDetails = true
-                                setLocation(data.description);
-                            }}
-                        />
+
+                <View style={rs.content}>
+                    <Text style={ms.h3}>{Localization.getText("enterRestaurant")}</Text>
+                    <GooglePlaces
+                        placeholder={Localization.getText("restaurant")}
+                        onPress={(data, details = null) => {
+                            // 'details' is provided when fetchDetails = true
+                            setLocation(data.description);
+                        }}
+                    />
+                    <ScrollView contentContainerStyle={{flexGrow:1}}>
                         <Text style={ms.h3}>Lägg till en maträtt</Text>
                         <FloatingInput onChangeText={(text)=>setDish(text)} 
                             placeholder={Localization.getText("dish")} value={dish}/>
@@ -84,8 +91,8 @@ const FoodRequestScreen = ({navigation}) => {
                             styleText={{fontWeight:"bold"}}
                             onPress={() => addItem(dish, amount, otherInfo)}
                         />
-                    </View>
-                </ScrollView>
+                    </ScrollView>
+                </View>
                 <View style={rs.moveOnContainer}>
                     <CartButton 
                         counter={items.length}

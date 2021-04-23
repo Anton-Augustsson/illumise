@@ -56,11 +56,7 @@ const styles = StyleSheet.create({
         backgroundColor:"#FFFFFF",
         height:"100%",
         paddingTop:5,
-    },
-    bsContentContainer: {
-        backgroundColor:"#FFFFFF",
-        height:"100%",
-        paddingTop:5,
+        zIndex:100000,
     },
     bsHeaderContainer: {
         backgroundColor:"#FFFFFF",
@@ -76,6 +72,7 @@ const styles = StyleSheet.create({
         shadowRadius: 2,
         shadowOpacity: 0.4,
         elevation:10,
+        zIndex:100000,
     },
     bsDrawIndicator: {
         backgroundColor:"grey",
