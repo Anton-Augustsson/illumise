@@ -1,6 +1,11 @@
 import React, {useState} from 'react';
-import { Text, View, TouchableOpacity, StyleSheet} from 'react-native';
+import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
+import { FlatList } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
+import IconButton from './iconButton';
+import ms from "../mainStyles/ms";
+import rs from "../mainScreen/home/requests/requestStyle";
+import {Localization} from "../../modules/localization";
 
 const CartItem = (props) => {
     const [expand, setExpand] = useState(false);
@@ -25,8 +30,7 @@ const CartItem = (props) => {
             marginTop:5,
             marginBottom:5,
         },
-        listItemView:{
-            height:40,
+        listItemView:{ height:40,
             flexDirection: 'row',
             alignItems:"center",
             justifyContent: 'space-between',
@@ -66,6 +70,38 @@ const CartItem = (props) => {
     );
 }
 
+ 
+const Cart = (props) => {
+    const deleteItem = (id) => {
+        setItems(prevItems => {
+            return prevItems.filter(item => item.id != id);
+        })
+    }
 
+    return(
+        <>
+            <FlatList
+                data={props.data}
+                renderItem={({item}) => 
+                                <CartItem 
+                                    id={item.id} 
+                                    name={item.name} 
+                                    quantity={item.quantity} 
+                                    otherInfo={item.otherInfo} 
+                                    deleteItem={deleteItem}
+                            />}
+                ListEmptyComponent={()=>
+                    <Text style={[ms.h3, {alignSelf:"center"}]}>
+                        {Localization.getText("emptyShoppingCartPrompt")}
+                    </Text>}
+                keyExtractor={(item) => item.id}
+            /> 
+            
+            <View style={rs.moveOnContainer}>
+                <IconButton onPress={props.onPress}/>
+            </View>
+        </>
+    );
+}
 
-export default CartItem;
+export default Cart;

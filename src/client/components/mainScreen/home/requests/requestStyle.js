@@ -41,41 +41,6 @@ const rs = StyleSheet.create({
         marginTop:5,
         marginBottom:5,
     },
-    bsContentContainer: {
-        backgroundColor:"#FFFFFF",
-        height:"100%",
-        paddingTop:5,
-    },
-    bsContentContainer: {
-        backgroundColor:"#FFFFFF",
-        height:"100%",
-        paddingTop:5,
-    },
-    bsHeaderContainer: {
-        backgroundColor:"#FFFFFF",
-        height:20,
-        width:"100%",
-        justifyContent:"center",
-        alignItems:"center",
-        flexDirection:"row",
-        borderTopRightRadius:20,
-        borderTopLeftRadius:20,
-        shadowColor: "#333333",
-        shadowOffset: {width:-1, height:-3},
-        shadowRadius: 2,
-        shadowOpacity: 0.4,
-        elevation:10,
-    },
-    bsHeaderCross: {
-        position:"absolute",
-        right:10,
-    },
-    bsDrawIndicator: {
-        backgroundColor:"grey",
-        width:50,
-        height:6,
-        borderRadius:3,
-    },
     usualArticleContainer: {
         overflow:"hidden",
         backgroundColor:"white",
@@ -130,19 +95,7 @@ const rs = StyleSheet.create({
         paddingTop:10,
         paddingBottom:10,
     },
-    overlayOuter: {
-        position:"absolute",
-        height:"100%",
-        width:"100%",
-        top:0,
-        right:0,
-        left:0,
-        bottom:0,
-    },
-    overlayInner: {
-        flex:1,
-        backgroundColor:colors.OVERLAY,
-    },
+    
 });
 
 export default rs;
