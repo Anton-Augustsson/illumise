@@ -12,6 +12,8 @@
  
  // Note: test renderer must be required after react-native.
  import renderer from 'react-test-renderer';
+import io from "socket.io-client";
+let socket;
 
 describe("Testing client communication", () =>
 {
@@ -259,6 +261,13 @@ describe("Testing client communication", () =>
         expect(responseRA1).not.toBeNull();
         let responseRA2 = await account.removeAccount(userID2);
         expect(responseRA2).not.toBeNull();
+
+        // Socket test
+        /*
+        const ENDPOINT = 'http://localhost:3000/';
+        socket = io(ENDPOINT);
+        console.log(socket);
+        */
 
         // invalid request
         let responseError = await chat.sendMessage('antonabcdefg', 'chat123');
