@@ -1,4 +1,3 @@
-.gitignore
 .vscode
 node_modules
 jest
@@ -6,3 +5,5 @@ jest.cmd
 jest.ps1
 .expo
 src/server/package-lock.json
+src/client/package-lock.json
+src/client/yarn.lock
