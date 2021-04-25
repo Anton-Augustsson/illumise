@@ -1,21 +1,24 @@
 require('isomorphic-fetch');
+import communication from './communication';
+const url = communication.url;
+const returnResponse = communication.returnResponse;
 
 /**
  * Managing user chat both for service provider and service requester
  */
 const chat = 
 {
-    chatUrl: 'http://localhost:3000/chat',
+    chatUrl: url + '/chat',
 
     /**
      * sends a message to a person 
      * @param {string} userID - The id of the user that sends a message
      * @param {string} chatID - The id of the chat witch is between the provider and requester
      */
-    sendMessage: async function(userID, chatID)
+    sendMessage: async function(userID, chatID, msg)
     {
         let url = chat.chatUrl + '/sendMessage';
-        let message = {userID: userID, chatID: chatID};
+        let message = {userID: userID, chatID: chatID, msg: msg};
         let response = await fetch(url, {
             method: 'PUT',
             headers: {
@@ -24,8 +27,7 @@ const chat =
             body: JSON.stringify(message)
         });
 
-        let result = await response.text() //should be json
-        console.log(result);
+        return returnResponse(response);
     },
 
     /**
@@ -39,18 +41,18 @@ const chat =
         let url = chat.chatUrl + '/getAllMessages' + params;        
         let response = await fetch(url);
 
-        let result = await response.text(); //should be json
-        console.log(result);
+        return returnResponse(response);
     },
 
     /**
      * setup a new chat for a new service provider
      * @param {string} requestID - The id of the request that is the chat should be created for
+     * @param {[string]} usersID - The an array of two users
      */
-    newChat: async function(requestID)
+    newChat: async function(requestID, usersID)
     {
         let url = chat.chatUrl + '/newChat';
-        let toCreate = {requestID: requestID};
+        let toCreate = {requestID: requestID, usersID: usersID};
         let response = await fetch(url, {
             method: 'PUT',
             headers: {
@@ -59,8 +61,7 @@ const chat =
             body: JSON.stringify(toCreate)
         });
 
-        let result = await response.json(); //should be json
-        console.log("New chat created with ID: " + result);
+        return returnResponse(response);
     },
 
     /**
@@ -79,10 +80,8 @@ const chat =
             body: JSON.stringify(toRemove)
         });
 
-        let result = await response.text() //should be json
-        console.log(result);
+        return returnResponse(response);
     }
-
 };
 
 export default chat;

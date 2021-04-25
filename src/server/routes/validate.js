@@ -4,6 +4,8 @@ const Joi = require('joi');
 
 const validate =
 {
+    idSize: 24,
+
     /**
     * Helping function to send error responce
     * @param {json} body - The resived request from the client
@@ -96,8 +98,9 @@ const validate =
     */
     sendSuccess: function(res, objectResponce)
     {
+
         let o = objectResponce;
-        if(o == undefined) o = console.log(JSON.stringify(undefined));
+        if(o == undefined) o = JSON.stringify({ "successful":"true" });
         else o = JSON.stringify(o);
         res.send(o);
     }
