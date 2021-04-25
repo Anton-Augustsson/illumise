@@ -3,6 +3,16 @@
 const { DBInterface } = require("./db/dbInterface");
 const express = require('express');
 const app = express();
+const http = require('http');
+const cors = require('cors');
+const server = http.createServer(app);
+const socketio = require('socket.io');
+const io = socketio(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+  }
+});
 
 /**
  * Initialze server interface
@@ -21,11 +31,34 @@ async function initDB()
 initDB();
 
 /**
- * Initialize WebSocket
+ * Initialize Rest API
  */
-/** https://www.tutorialspoint.com/socket.io/socket.io_hello_world.htm */
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
+app.use(express.json());
+app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+app.use(cors()); // Maby is enufe for rest api
+/*
+var allowCrossDomain = function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*"); // allow requests from any other server
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE'); // allow these verbs
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Cache-Control");
+};
+app.use(allowCrossDomain); // plumbing it in as middleware
+*/
+// export db
+module.exports = db;
+const request = require('./routes/request');
+app.use('/request', request);
+
+const chat = require('./routes/chat');
+app.use('/chat', chat);
+
+const account = require('./routes/account');
+app.use('/account', account);
+
+/**
+ * Initialize WebSocket
+ * https://www.tutorialspoint.com/socket.io/socket.io_hello_world.htm
+ */
 
 //Whenever someone connects this gets executed
 io.on('connection', function(socket) {
@@ -56,28 +89,8 @@ io.on('connection', function(socket) {
 
 });
 
-/**
- * Initialize Rest API
- */
-app.use(express.json());
-app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
-
-// export db
-module.exports = db;
-const request = require('./routes/request');
-app.use('/request', request);
-
-const chat = require('./routes/chat');
-app.use('/chat', chat);
-
-const account = require('./routes/account');
-app.use('/account', account);
-
 
 /**
  * Listen on port
  */
-//http.listen(300, function() {}
-http.listen(3000, function() {
-   console.log('listening on *:3000');
-});
+server.listen(process.env.PORT || 3000, () => console.log(`Server has started.`));
