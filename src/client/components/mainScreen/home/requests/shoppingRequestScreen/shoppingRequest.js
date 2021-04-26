@@ -1,4 +1,4 @@
-import React, {useState, createRef} from 'react';
+import React, {useState, useRef} from 'react';
 import { Text, View, TouchableOpacity, ScrollView, Dimensions, TouchableWithoutFeedback, TouchableHighlight} from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import CustomButton from "../../../../customComponents/customButton";
@@ -80,6 +80,7 @@ const ShoppingRequestScreen = ({navigation}) => {
             for (let i = 0; i < prevItems.length; i++) {
                 if(prevItems[i].name === name) {
                     prevItems[i].quantity += 1;
+                    cartButton.current.animation();
                     return prevItems;
                 }
             }
@@ -88,9 +89,9 @@ const ShoppingRequestScreen = ({navigation}) => {
                 return;
             }
 
+            cartButton.current.animation();
             return [{id:id, name: name, quantity:1, otherInfo:""},...prevItems]
         })
-
     }
 
     const addItem = (name, quantity, otherInfo) => {
@@ -107,11 +108,18 @@ const ShoppingRequestScreen = ({navigation}) => {
         setName("");
         setQuantity(1);
         setOtherInfo("");
+        inputText.current.initState();
+        inputOtherInfo.current.initState();
+        cartButton.current.animation();
     }
 
 
-    const sheetRef = createRef();
+    const sheetRef = useRef();
     const screenHeight = Dimensions.get('screen').height;
+    const inputText = useRef();
+    const inputOtherInfo = useRef();
+    const cartButton = useRef();
+
 
     const nextScreen = () => {
         navigation.navigate("Deliver", {
@@ -146,10 +154,12 @@ const ShoppingRequestScreen = ({navigation}) => {
                                 {Localization.getText("addOwnArticle")}
                             </Text>
                             <FloatingInput 
+                                ref={inputText}
                                 value={name}
                                 onChangeText={text=>setName(text)} 
                                 placeholder={Localization.getText("name")}/>
                             <FloatingInput 
+                                ref={inputOtherInfo}
                                 value={otherInfo}
                                 onChangeText={text=>setOtherInfo(text)} 
                                 placeholder={Localization.getText("otherInfoShopping")}/>
@@ -186,6 +196,7 @@ const ShoppingRequestScreen = ({navigation}) => {
                 </ScrollView>
                 <View style={rs.moveOnContainer}>
                     <CartButton 
+                        ref={cartButton}
                         counter={items.length}
                         onPress={()=>sheetRef.current.snapTo(0)}
                     />

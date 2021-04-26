@@ -1,4 +1,4 @@
-import React, {useState, createRef} from 'react';
+import React, {useState, useRef} from 'react';
 import { Text, View, TouchableOpacity, StyleSheet, FlatList} from 'react-native';
 import CustomHeader from '../../../../customComponents/customHeader';
 import CustomButton from '../../../../customComponents/customButton';
@@ -39,6 +39,9 @@ const FoodRequestScreen = ({navigation}) => {
         setDish("");
         setAmount(1);
         setOtherInfo("");
+        inputText.current.initState();
+        inputOtherInfo.current.initState();
+        cartButton.current.animation(); 
     }
 
     const nextScreen = () => {
@@ -50,7 +53,10 @@ const FoodRequestScreen = ({navigation}) => {
     }
 
     const [id, setId] = useState("0");
-    const sheetRef = createRef();
+    const sheetRef = useRef();
+    const inputText = useRef();
+    const inputOtherInfo = useRef();
+    const cartButton = useRef();
 
     return (
         <View style={{flex:1}}>
@@ -83,10 +89,14 @@ const FoodRequestScreen = ({navigation}) => {
                     />
                     <ScrollView contentContainerStyle={{flexGrow:1}}>
                         <Text style={ms.h3}>Lägg till en maträtt</Text>
-                        <FloatingInput onChangeText={(text)=>setDish(text)} 
+                        <FloatingInput 
+                            ref={inputText}
+                            onChangeText={(text)=>setDish(text)} 
                             placeholder={Localization.getText("dish")} value={dish}/>
                         
-                        <FloatingInput onChangeText={text=>setOtherInfo(text)} 
+                        <FloatingInput 
+                            ref={inputOtherInfo}
+                            onChangeText={text=>setOtherInfo(text)} 
                             placeholder={Localization.getText("otherInfo")}
                             value={otherInfo}/>
                         <View style={{marginTop:10}}>
@@ -102,6 +112,7 @@ const FoodRequestScreen = ({navigation}) => {
                 </View>
                 <View style={rs.moveOnContainer}>
                     <CartButton 
+                        ref={cartButton}
                         counter={items.length}
                         onPress={()=>sheetRef.current.snapTo(0)}
                     />

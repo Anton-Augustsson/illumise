@@ -1,13 +1,12 @@
 import React, {useState} from 'react';
 import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
-import { FlatList, TextInput } from 'react-native-gesture-handler';
+import { FlatList } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 import IconButton from './iconButton';
 import ms from "../mainStyles/ms";
 import rs from "../mainScreen/home/requests/requestStyle";
 import {Localization} from "../../modules/localization";
 import QuantityChooser from './quantityChooser';
-import FloatingInput from './Inputs/floatingInput';
 
 const Cart = (props) => {
 
@@ -26,7 +25,7 @@ const Cart = (props) => {
                     </Text>
                     <Ionicons 
                         name="close-circle-sharp" 
-                        size={35} 
+                        size={32} 
                         color="red" 
                         onPress={() => deleteItem(item.id)}
                     />

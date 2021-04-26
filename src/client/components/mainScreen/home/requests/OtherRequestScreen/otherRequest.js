@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Text, View, TextInput, StyleSheet} from 'react-native';
+import { Text, View } from 'react-native';
 import CustomHeader from '../../../../customComponents/customHeader';
 import ms from "../../../../mainStyles/ms";
 import rs from "../requestStyle";
