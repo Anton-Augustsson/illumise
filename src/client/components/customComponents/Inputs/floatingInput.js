@@ -1,8 +1,8 @@
-import React, {useState} from 'react';
+import React, {forwardRef, useImperativeHandle, useState} from 'react';
 import {View, TextInput, Text, StyleSheet} from 'react-native';
 import {colors} from "../../mainStyles/colors"
   
-const FloatingInput = ({placeholder, onChangeText, onFocus, onBlur, style, ...props}) => {
+const FloatingInput = forwardRef(({placeholder, onChangeText, onFocus, onBlur, style, ...props}, ref) => {
     const [isFocused, setFocus] = useState(false);
     const [hasText, setHasText] = useState(false); 
     const styles = StyleSheet.create({
@@ -35,6 +35,13 @@ const FloatingInput = ({placeholder, onChangeText, onFocus, onBlur, style, ...pr
         }
     });
 
+    useImperativeHandle(ref, () => ({
+        initState() {
+            setHasText(false);
+            setFocus(false);
+        }
+    }));
+
     return (
         <View style={styles.container}>
             <Text style={styles.placeholder}>
@@ -46,7 +53,6 @@ const FloatingInput = ({placeholder, onChangeText, onFocus, onBlur, style, ...pr
                 onFocus={()=>{setFocus(true); onFocus != null ? onFocus : null;}}
                 onBlur={()=>{setFocus(false); onFocus != null ? onBlur : null;}}
                 onChangeText={(text)=>{
-                    console.log("hej");
                     setHasText(text === "" ? false : true);
                     onChangeText != null ? onChangeText(text) : null;
                 }}
@@ -54,6 +60,6 @@ const FloatingInput = ({placeholder, onChangeText, onFocus, onBlur, style, ...pr
         </View>
     );
 
-}
+});
 
 export default FloatingInput;

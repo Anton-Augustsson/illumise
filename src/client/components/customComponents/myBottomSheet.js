@@ -4,47 +4,44 @@ import BottomSheet from "reanimated-bottom-sheet";
 import {colors} from "../mainStyles/colors";
 
 const MyBottomSheet = forwardRef((props, ref) => {
-    const renderHeader = () => (
-        <View style={{overflow:"hidden", paddingTop:5}}>
-            <View style={styles.bsHeaderContainer}>
-                <View style={styles.bsDrawIndicator}></View>
-            </View>
-        </View>
-    );
 
     const renderContent = () => (
-        <View style={styles.bsContentContainer}>
-            {props.renderContent}
+        <View style={{ overflow:"hidden",paddingTop:5}}>
+            <View style={styles.bsContentContainer}>
+                <View style={styles.bsHeaderContainer}>
+                    <View style={styles.bsDrawIndicator}></View>
+                </View>
+                {props.renderContent}
+            </View>
         </View>
     );
 
     const [overlay, setOverlay] = useState(false);
 
     return (
-        <>
-            <BottomSheet
-                ref={ref}
-                snapPoints={props.snapPoints}
-                initialSnap={1}
-                renderContent={renderContent}
-                renderHeader={renderHeader}
-                enabledContentTapInteraction={false}
-                onOpenStart={()=>setOverlay(true)}
-                onCloseEnd={()=>setOverlay(false)}
+    <>
+        <BottomSheet
+            ref={ref}
+            snapPoints={props.snapPoints}
+            initialSnap={1}
+            renderContent={renderContent}
+            enabledContentTapInteraction={false}
+            onOpenStart={()=>setOverlay(true)}
+            onCloseEnd={()=>setOverlay(false)}
+        />
+
+        <View style={[styles.overlayOuter,{zIndex:overlay ? 10 : -100}]}>
+            <TouchableOpacity
+                activeOpacity={0.7}
+                style={[styles.overlayInner, {display: overlay ? "flex" : "none"}]}
+                onPress={()=>{
+                setOverlay(false);
+                ref.current.snapTo(1);
+                }}
             />
+        </View>
 
-            <View style={[styles.overlayOuter,{zIndex:overlay ? 10 : -100}]}>
-                    <TouchableOpacity
-                        activeOpacity={0.7}
-                        style={[styles.overlayInner, {display: overlay ? "flex" : "none"}]}
-                        onPress={()=>{
-                            setOverlay(false);
-                            ref.current.snapTo(1);
-                        }}
-                    />
-            </View>
-
-        </>
+    </>
     )
 
 })
@@ -55,16 +52,7 @@ const styles = StyleSheet.create({
     bsContentContainer: {
         backgroundColor:"#FFFFFF",
         height:"100%",
-        paddingTop:5,
         zIndex:100000,
-    },
-    bsHeaderContainer: {
-        backgroundColor:"#FFFFFF",
-        height:20,
-        width:"100%",
-        justifyContent:"center",
-        alignItems:"center",
-        flexDirection:"row",
         borderTopRightRadius:20,
         borderTopLeftRadius:20,
         shadowColor: "#333333",
@@ -73,6 +61,12 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.4,
         elevation:10,
         zIndex:100000,
+    },
+    bsHeaderContainer: {
+        height:25,
+        justifyContent:"center",
+        alignItems:"center",
+        flexDirection:"row",
     },
     bsDrawIndicator: {
         backgroundColor:"grey",
