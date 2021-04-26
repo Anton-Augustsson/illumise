@@ -10,6 +10,7 @@ const sendSuccess = validate.sendSuccess;
 const express = require('express');
 const router = express.Router();
 const Joi = require('joi');
+const { idSize } = require("./validate");
 
 
 /**
@@ -19,13 +20,13 @@ const Joi = require('joi');
 router.put('/completeRequest', async (req, res) =>
 {
   const schema = Joi.object({
-    requestID: Joi.string(),
+    requestID: Joi.string().min(idSize).max(idSize),
   });
 
   if(valid(req.body, schema, res))
   {
     let response = await db.requests.setCompleted(req.body.requestID);
-    if(response != null) return sendSuccess(res, response);
+    if(response != false) return sendSuccess(res, response);
     else return sendFailure(res);
   }
 });
@@ -33,17 +34,22 @@ router.put('/completeRequest', async (req, res) =>
 /**
  * get available request in x radius from location.
  * @param {string} geoLocation - The current location of the provider
+ * @param {int} maxDistance - The max sistance of the acceptile location
+ * @param {int} maxRequests - The number of request that the proider whants to se
  */
 router.get('/provider/getNearRequests', async (req, res) =>
 {
   const params = {
     geoLocation: req.param('geoLocation'),
+    maxDistance: req.param('maxDistance'),
+    maxRequests: req.param('maxRequests'),
   };
+
+  console.log(params.maxDistance);
 
   if(validParams(params, res))
   {
-    let distance = 40; // TODO dont hardcode it
-    let response = await db.requests.getNearby(params.geoLocation, distance, undefined);
+    let response = await db.requests.getNearby(params.geoLocation, params.maxDistance, params.maxRequests);
     if(response != null) return sendSuccess(res, response);
     else return sendFailure(res);
   }
@@ -51,35 +57,42 @@ router.get('/provider/getNearRequests', async (req, res) =>
 
 /**
  * select an available request
- * @param {string} providorID - The id of the provider with select a request to performed
  * @param {string} requestID - The id of the request to be selected
+ * @param {string} providerID - The id of the provider with select a request to performed
  */
-router.get('/provider/set', async (req, res) => // TODO: Not get method
+router.put('/provider/set', async (req, res) =>
 {
-  const params = {
-    providorID: req.param('providorID'),
-    requestID: req.param('requestID')
-  };
+  const schema = Joi.object ({
+    requestID: Joi.string().min(idSize).max(idSize),
+    providerID: Joi.string().min(idSize).max(idSize),
+  });
 
-  if(validParams(params, res))
+  let body = req.body;
+
+  console.log(body.requestID + " and " + body.providerID);
+  if(valid(body, schema, res))
   {
-    let response = await db.requests.getNearby(params.geoLocation, distance, undefined);
-    if(response != null) return sendSuccess(res, response);
+    // TODO change from setPovider to somthing else that simply shows the intrest of providing
+    let response = await db.requests.setProvider(body.requestID, body.providorID);
+    console.log(response);
+    if(response != false) return sendSuccess(res, response);
     else return sendFailure(res);
   }
 });
 
 /**
  * Get requests that the provider has set
- * @param {string} providorID - The id of the providers set requests
+ * @param {string} providerID - The id of the providers set requests
  * @param {int} num - The number of how many requests to return starting from most reasont
  */
 router.get('/provider/getUserProviding', async (req, res) =>
 {
   const params = {
-    providorID: req.param('providorID'),
+    providerID: req.param('providerID'),
     num: req.param('num')
   };
+
+  console.log(params.providerID, params.num);
 
   if(validParams(params, res))
   {
@@ -97,15 +110,17 @@ router.get('/provider/getUserProviding', async (req, res) =>
 router.post('/requester/newRequest', async (req, res) =>
 {
   const schema = Joi.object({
-    requestID: Joi.string(),
+    requestID: Joi.string().min(idSize).max(idSize),
+    type: Joi.string(),
     data: Joi.any()
   });
 
-  let data = req.body.data;
+  let body = req.body;
+  let data = body.data;
 
-  if(valid(req.body, schema, res) && validData(data, res))
+  if(valid(body, schema, res) && validData(data, res))
   {
-    let response = await db.requests.add(req.body.requestID, data.header, data.body, data.cost);
+    let response = await db.requests.add(body.requestID, body.type, data);
     if(response != null) return sendSuccess(res, response);
     else return sendFailure(res);
   }
@@ -138,7 +153,7 @@ router.get('/requester/getMyRequest', async (req, res) => // TODO: change getMyR
 router.delete('/requester/removeRequest', async (req, res) =>
 {
   const schema = Joi.object({
-    requestID: Joi.string(),
+    requestID: Joi.string().min(idSize).max(idSize),
   });
 
   if(valid(req.body, schema, res))
@@ -164,7 +179,7 @@ router.put('/requester/reviewProvider', async (req, res) =>
     rating: Joi.number().min(0).max(5)
   });
 
-  if(valid(req.body, schema))
+  if(valid(req.body, schema, res))
   {
     // dont know
     //let response = await db.requests.remove(req.body.requestID); // TODO
@@ -173,22 +188,25 @@ router.put('/requester/reviewProvider', async (req, res) =>
 });
 
 /**
- * accept the provider 
- * @param {string} requestID - The id of the request that accepts the provider
- * @param {string} providorID - The id of the providers witch has set the request 
+ * accept the provider
+ * @param {string} requestID - The id of the request to be selected
+ * @param {string} providerID - The id of the provider with select a request to performed
  */
 router.put('/requester/acceptProvider', async (req, res) =>
 {
-  const schema = Joi.object({
-    requestID: Joi.string(),
-    providorID: Joi.string(),
+  const schema = Joi.object ({
+    requestID: Joi.string().min(idSize).max(idSize),
+    providerID: Joi.string().min(idSize).max(idSize),
   });
 
-  if(valid(req.body, schema, res))
+  let body = req.body;
+
+  console.log(body.requestID + " and " + body.providerID);
+  if(valid(body, schema, res))
   {
-    // bolean
-    let response = await db.requests.setProvider(req.body.requestID, req.body.providorID);
-    if(response != false) return sendSuccess(res);
+    // TODO change from setPovider to somthing else that simply shows the intrest of providing
+    let response = await db.requests.setProvider(body.requestID, body.providorID);
+    if(response != false) return sendSuccess(res, response);
     else return sendFailure(res);
   }
 });
