@@ -21,7 +21,7 @@ describe("Testing client communication", () =>
 
     beforeAll(async () =>
     {
-        renderer.create(<App />);
+        //renderer.create(<App />);
     });
 
     /*

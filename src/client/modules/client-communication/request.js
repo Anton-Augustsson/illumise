@@ -54,7 +54,6 @@ const request =
         set: async function(requestID, providerID)
         {   
             let body = {requestID: requestID, providerID: providerID};
-            console.log(body.requestID + " and " + body.providerID);
             let url = request.serviceUrl + '/provider/set';
             let response = await fetch(url, {
                 method: 'PUT',
@@ -92,7 +91,6 @@ const request =
         newRequest: async function(requestID, type, data)
         {   
             let newReq = {requestID: requestID, type: type, data: data};
-            console.log(newReq);
             let url = request.serviceUrl + '/requester/newRequest';
             let response = await fetch(url, {
                 method: 'POST',
