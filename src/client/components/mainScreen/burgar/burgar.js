@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, Image, FlatList, StyleSheet,TouchableOpacity, Settings} from 'react-native';
+import { Text, View, Image, Button, FlatList, StyleSheet,TouchableOpacity, Settings} from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import {colors} from "../../mainStyles/colors";
 import ms from "../../mainStyles/ms";
@@ -8,6 +8,7 @@ import SettingsScreen from "./settings/settings";
 import ProfileScreen from "./profile/profile";
 import FaqScreen from "./faq/faq";
 import BurgarIcons from "../../customComponents/burgarIcons";
+import account from "../../../modules/client-communication/account.js";
 
 const BURGAR = [
     {
@@ -65,6 +66,19 @@ const FirstScreen = ({navigation}) => {
                 renderItem={({item})=>BurgarItem(item, navigation)}
                 keyExtractor={(item)=>item.id}
             />
+            <Button
+                title="banan"
+                onPress={async ()=>{
+                    let credentials =
+                    {"firstName":"F",
+                    "lastName":"D",
+                    "email":"Aeifneiwnf@mail.test",
+                    "token":"L" };
+                    const response = await account.createAccount(credentials);
+                    console.log(response);
+                }}
+            />
+
         </View>
     );
 }
