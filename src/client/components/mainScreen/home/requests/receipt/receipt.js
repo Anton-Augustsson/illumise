@@ -1,22 +1,21 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Text, View, Image, StyleSheet} from 'react-native';
-import CustomButton from '../../../customComponents/customButton';
-import ms from "../../../mainStyles/ms"
-import {colors} from "../../../mainStyles/colors"
+import CustomButton from '../../../../customComponents/customButton';
+import ms from "../../../../mainStyles/ms"
+import {colors} from "../../../../mainStyles/colors"
 import { FlatList } from 'react-native-gesture-handler';
 
 const SuperReceipt = ({params}) => {
     return (
         <View style={rs.container}>
             <Text style={ms.h4}>Address</Text>
-            <Text>{params.delivAddress}</Text>
 
             <Text style={ms.h4}>Varor</Text>
             <FlatList
-                data={params.shoppingList}
                 renderItem={({item})=><Text>{item.text}</Text>}
                 keyExtractor={(item) => item.id}
             />
+            
         </View>
     );
 }
@@ -40,7 +39,8 @@ const rs = StyleSheet.create({
     }
 }); 
 
-const FoodRequestDoneScreen = ({navigation, route}) => {
+const ReceiptScreen = ({navigation, route}) => {
+    console.log(route.params);
     //VI KAN FÅ UT INFO GENOM route.params.delivAddress
     return (
         <View style={{flex:1}}>
@@ -54,4 +54,4 @@ const FoodRequestDoneScreen = ({navigation, route}) => {
     );
 }
 
-export default FoodRequestDoneScreen;
+export default ReceiptScreen;

@@ -10,7 +10,7 @@ const CustomHeader = (props) => {
             onPress={() => props.nav.goBack()}
         >
             <Ionicons name="chevron-back-sharp" size={22} color="white"/>
-            <Text style={styles.backTitle}>Gå tillbaka</Text>
+            <Text style={styles.backTitle}>Tillbaka</Text>
         </TouchableOpacity>
     
 

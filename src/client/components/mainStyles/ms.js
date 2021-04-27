@@ -16,6 +16,8 @@ const ms = StyleSheet.create({
     h3: {
         fontSize:20,
         fontWeight: "bold",
+        marginTop:10,
+        marginBottom:4,
     },
     h4: {
         fontSize:15,
@@ -46,6 +48,14 @@ const ms = StyleSheet.create({
         height:50,
         borderRadius:15,
         backgroundColor:colors.SAMARIT_GREEN,
+    },
+    cancelButton:{
+        justifyContent:"center",
+        alignItems:"center",
+        minWidth:150,
+        height:50,
+        borderRadius:15,
+        backgroundColor:colors.SAMARIT_CANCEL,
     },
     loginButton: {
         marginTop:5,
