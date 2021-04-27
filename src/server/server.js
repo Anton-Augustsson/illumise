@@ -35,15 +35,8 @@ initDB();
  */
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
-app.use(cors()); // Maby is enufe for rest api
-/*
-var allowCrossDomain = function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*"); // allow requests from any other server
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE'); // allow these verbs
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Cache-Control");
-};
-app.use(allowCrossDomain); // plumbing it in as middleware
-*/
+app.use(cors()); // enable cors for http-requests
+
 // export db
 module.exports = db;
 const request = require('./routes/request');
@@ -59,34 +52,27 @@ app.use('/account', account);
  * Initialize WebSocket
  * https://www.tutorialspoint.com/socket.io/socket.io_hello_world.htm
  */
-
-//Whenever someone connects this gets executed
 io.on('connection', function(socket) {
-    // chat id whill be uses when connecting to listen to incoming msg from that chat group
+    console.log("New connection");
 
-    /** TODO: create connection */
-   console.log('A user connected');
+    socket.on('join', ({ name, room }, callback) => {
+        console.log(name, room);
 
-    /** TODO: Disconect */
-   //Whenever someone disconnects this piece of code executed
-   socket.on('disconnect', function () {
-      console.log('A user disconnected');
+        socket.join(room); // sends all new messages to this socket
 
-   });
+        callback();
+    });
 
-    /** TODO: Handle message */
-   // new message from client
-   socket.on('msg', function(data) {
-      //Send message to everyone
-      io.sockets.emit('newmsg', data);
+    socket.on('sendMsg', ({ name, room }, msg, callback) => {
+        const user = "user";
+        io.to(room).emit('msg', { user: user, text: msg});
+        // save new msg
+        callback();
+    });
 
-       // TODO: who sent it
-       //   A Databse Table for messages and the service provider and service requester
-       // TODO: message only from (service provider -> service requester) (serice requester -> service provider)
-       // TODO: save massage in database (call server function)
-       //
-   });
-
+    socket.on('disconnect', () => {
+        console.log("Lost connection");
+    });
 });
 
 
