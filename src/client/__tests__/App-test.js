@@ -2,16 +2,16 @@
  * @format
  */
 
- import 'react-native';
- import React from 'react';
- import App from '../App';
+import 'react-native';
+import React from 'react';
+import App from '../App';
 
- import request from '../modules/client-communication/request';
- import chat from '../modules/client-communication/chat';
- import account from '../modules/client-communication/account';
+import request from '../modules/client-communication/request';
+import chat from '../modules/client-communication/chat';
+import account from '../modules/client-communication/account';
  
- // Note: test renderer must be required after react-native.
- import renderer from 'react-test-renderer';
+// Note: test renderer must be required after react-native.
+import renderer from 'react-test-renderer';
 import io from "socket.io-client";
 let socket;
 
