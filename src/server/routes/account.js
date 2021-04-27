@@ -27,7 +27,6 @@ router.put('/createAccount', async (req, res) =>
   if(valid(req.body, schema, res) && validCredentials(c, res))
   {
     let response = await db.accounts.add(c.firstName, c.lastName, c.email, "119", c.token);
-    console.log("createAccount: " + response);
     if(response != null) return sendSuccess(res, response);
     else return sendFailure(res);
   }

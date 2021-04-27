@@ -45,8 +45,6 @@ router.get('/provider/getNearRequests', async (req, res) =>
     maxRequests: req.param('maxRequests'),
   };
 
-  console.log(params.maxDistance);
-
   if(validParams(params, res))
   {
     let response = await db.requests.getNearby(params.geoLocation, params.maxDistance, params.maxRequests);
@@ -69,12 +67,10 @@ router.put('/provider/set', async (req, res) =>
 
   let body = req.body;
 
-  console.log(body.requestID + " and " + body.providerID);
   if(valid(body, schema, res))
   {
     // TODO change from setPovider to somthing else that simply shows the intrest of providing
     let response = await db.requests.setProvider(body.requestID, body.providorID);
-    console.log(response);
     if(response != false) return sendSuccess(res, response);
     else return sendFailure(res);
   }
@@ -91,8 +87,6 @@ router.get('/provider/getUserProviding', async (req, res) =>
     providerID: req.param('providerID'),
     num: req.param('num')
   };
-
-  console.log(params.providerID, params.num);
 
   if(validParams(params, res))
   {
@@ -201,7 +195,6 @@ router.put('/requester/acceptProvider', async (req, res) =>
 
   let body = req.body;
 
-  console.log(body.requestID + " and " + body.providerID);
   if(valid(body, schema, res))
   {
     // TODO change from setPovider to somthing else that simply shows the intrest of providing
