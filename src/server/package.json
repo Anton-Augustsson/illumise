@@ -16,7 +16,7 @@
         "socket.io": "^4.0.1"
     },
     "scripts": {
-        "setup": "npm install express joi mongodb socket.io",
+        "setup": "npm install express joi mongodb socket.io cors",
         "test": "jest"
     },
     "author": "",
