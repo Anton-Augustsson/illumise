@@ -1,5 +1,6 @@
 import React from "react";
-import { FontAwesome5, Octicons, MaterialIcons, Entypo, AntDesign} from '@expo/vector-icons';
+import { Image } from 'react-native';
+import { FontAwesome5, Octicons, MaterialIcons, Entypo, AntDesign, MaterialCommunityIcons, Feather} from '@expo/vector-icons';
 
 const RequestIcon = (props) => {
     var name;
@@ -10,8 +11,8 @@ const RequestIcon = (props) => {
             icon = FontAwesome5;
             break;
         case "package":
-            name = "package"
-            icon = Octicons;
+            name = "box"
+            icon = FontAwesome5
             break;
         case "mail": 
             name = "local-post-office"; 
@@ -20,6 +21,10 @@ const RequestIcon = (props) => {
         case "other":
             name = "dots-three-horizontal";
             icon = Entypo;
+            break;
+        case "shopping":
+                name = "shopping-cart";
+                icon = Entypo;
             break;
         case "msg":
             name = "message";

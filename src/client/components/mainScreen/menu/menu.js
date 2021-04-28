@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { View, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity, SafeAreaView} from 'react-native';
 import mms from "./menuStyle";
 import { colors } from "../../mainStyles/colors";
 import { FontAwesome, Ionicons, FontAwesome5 } from '@expo/vector-icons';
@@ -9,8 +9,8 @@ const Menu = (props) => {
     const [colorHome, setColorHome] = useState(colors.MENU_ICON);
     const [colorNotification, setColorNotification] = useState(colors.MENU_ICON);
     const [colorBurgar, setColorBurgar] = useState(colors.MENU_ICON);
-
     return (
+        <SafeAreaView>
         <View style={mms.menuContainer}>
             <View style={mms.menuItemContainer}>
                 <TouchableOpacity onPress={
@@ -90,6 +90,7 @@ const Menu = (props) => {
 
             
         </View>
+        </SafeAreaView>
     );
 }
 

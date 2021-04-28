@@ -1,9 +1,9 @@
 import React from 'react';
-import { Text, View, Image, StyleSheet} from 'react-native';
-import CustomButton from '../../../customComponents/customButton';
-import ms from "../../../mainStyles/ms";
+import { Text, View, StyleSheet} from 'react-native';
+import CustomButton from '../../../../customComponents/customButton';
+import ms from "../../../../mainStyles/ms";
 import { FlatList } from 'react-native-gesture-handler';
-import { Localization } from '../../../../modules/localization';
+import { Localization } from '../../../../../modules/localization';
 
 const SuperReceipt = ({params}) => 
 {
@@ -14,10 +14,10 @@ const SuperReceipt = ({params}) =>
 
             <Text style={ms.h4}>{Localization.getText("goods")}</Text>
             <FlatList
-                data={params.shoppingList}
                 renderItem={({item})=><Text>{item.text}</Text>}
                 keyExtractor={(item) => item.id}
             />
+            
         </View>
     );
 }
@@ -41,7 +41,7 @@ const rs = StyleSheet.create({
     }
 }); 
 
-const FoodRequestDoneScreen = ({navigation, route}) => 
+const ReceiptScreen = ({navigation, route}) => 
 {
     //VI KAN FÅ UT INFO GENOM route.params.delivAddress
     return (
@@ -56,4 +56,4 @@ const FoodRequestDoneScreen = ({navigation, route}) =>
     );
 }
 
-export default FoodRequestDoneScreen;
+export default ReceiptScreen;

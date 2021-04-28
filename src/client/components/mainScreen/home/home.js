@@ -1,32 +1,39 @@
 import React from 'react';
 import { Text, View, FlatList, TouchableOpacity } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
-import FoodRequestScreen from './foodRequestScreen/foodRequest';
-import {colors} from "../../mainStyles/colors";
-import ms from "../../mainStyles/ms";
-import hs from "./homeStyle";
-import FoodRequestDoneScreen from "./foodRequestScreen/foodRequestDone";
-import RequestIcon from "../../customComponents/requestIcon";
-import { Localization } from "../../../modules/localization";
+import FoodRequestScreen from './requests/foodRequestScreen/foodRequest';
+import PostRequestScreen from './requests/postRequestScreen/postRequestScreen';
+import LegitimationScreen from './requests/postRequestScreen/legitimation';
+import ShoppingRequestScreen from "./requests/shoppingRequestScreen/shoppingRequest";
+import {colors} from "../../mainStyles/colors"
+import ms from "../../mainStyles/ms"
+import hs from "./homeStyle"
+import ReceiptScreen from "./requests/receipt/receipt";
+import RequestIcon from "../../customComponents/requestIcon"
+import DeliverScreen from './requests/deliver/deliver';
+import { Localization } from '../../../modules/localization';
+import OtherRequestScreen from './requests/OtherRequestScreen/otherRequest';
+
+
 
 const DATA = [
     {
         id: "1",
         title1: Localization.getText("food"),
-        title2: Localization.getText("package"),
+        title2: Localization.getText("postAndPackage"),
         type1: "food",
         type2: "package",
         des1: "FoodRequest",
-        des2: "FoodRequest",
+        des2: "PostRequest",
     },
     {
         id: "2",
-        title1: Localization.getText("mail"),
+        title1: Localization.getText("shopping"),
         title2: Localization.getText("other"),
-        type1: "mail",
+        type1: "shopping",
         type2: "other",
-        des1: "FoodRequest",
-        des2: "FoodRequest",
+        des1: "ShoppingRequest",
+        des2: "OtherRequest",
     }
 ];
 
@@ -120,8 +127,33 @@ const HomeScreen = (user) => {
             />
 
             <Stack.Screen 
-                name="FoodRequestDone" 
-                component={FoodRequestDoneScreen}
+                name="ShoppingRequest" 
+                component={ShoppingRequestScreen}
+            />
+
+            <Stack.Screen 
+                name="OtherRequest" 
+                component={OtherRequestScreen}
+            />
+
+            <Stack.Screen 
+                name="Legitimation" 
+                component={LegitimationScreen}
+            />
+
+            <Stack.Screen 
+                name="Deliver" 
+                component={DeliverScreen}
+            />
+
+            <Stack.Screen
+                name="PostRequest"
+                component={PostRequestScreen}
+            />
+
+            <Stack.Screen 
+                name="Receipt" 
+                component={ReceiptScreen}
             />
         </Stack.Navigator>
     );

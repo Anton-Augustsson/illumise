@@ -14,7 +14,7 @@
  * @typedef {Object.<string, Object.<string, String>>} TextJSON
  */
 
-const localizationPath = "../resources/localization/";
+const localizationPath = "../resources/localization";
 
 /**
  * The class handling localization
