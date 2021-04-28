@@ -1,9 +1,10 @@
 import React from 'react';
-import { Text, View, Image, TouchableOpacity} from 'react-native';
+import { Text, View, TouchableOpacity} from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import RequestIcon from "../../customComponents/requestIcon";
 import CustomHeader from "../../customComponents/customHeader"
 import ms from "../../mainStyles/ms";
+import { Localization } from '../../../modules/localization';
 
 const ORDERS = [
     {
@@ -35,7 +36,7 @@ const OrderScreen = ({navigation}) => {
 
         <View style={{flex:1}}>
             <CustomHeader 
-                title="Dina beställningar"
+                title={Localization.getText("myOrders")}
                 nav={navigation}
                 goBack={false}
             />

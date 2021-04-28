@@ -48,27 +48,26 @@ class DBChatInterface
      */
     async add(requestID, userIDs)
     {
-        let messageCollection = {};
-        for (let i = 0; i < userIDs.length; i++)
-        {
-            messageCollection[userIDs[i]] = [];
-        }
-
-        let filter =
-        {
-            requestID: requestID
-        }
-        let chat =
-        {
-            requestID: requestID,
-            dateCreated: Date.now(),
-            messageCollection: messageCollection
-        }
-        let update  = { $setOnInsert: chat };
-        let options = { upsert: true };
-
         try
         {
+            let messageCollection = {};
+            for (let i = 0; i < userIDs.length; i++)
+            {
+                messageCollection[userIDs[i]] = [];
+            }
+
+            let filter =
+            {
+                requestID: requestID
+            }
+            let chat =
+            {
+                requestID: requestID,
+                dateCreated: Date.now(),
+                messageCollection: messageCollection
+            }
+            let update  = { $setOnInsert: chat };
+            let options = { upsert: true };
             let result = await this.#collection.updateOne(filter, update, options);
             return result.upsertedId !== null ? result.upsertedId._id : null;
         }
@@ -89,21 +88,20 @@ class DBChatInterface
      */
     async addMessage(chatID, userID, message)
     {
-        let filter = { _id: ObjectID(chatID) };
-        let update = 
-        {
-            $push: 
-            {
-                [`messageCollection.${userID}`]:
-                {
-                    time: Date.now(),
-                    message: message
-                }
-            }
-        }
-
         try
         {
+            let filter = { _id: ObjectID(chatID) };
+            let update = 
+            {
+                $push: 
+                {
+                    [`messageCollection.${userID}`]:
+                    {
+                        time: Date.now(),
+                        message: message
+                    }
+                }
+            }
             let result  = await this.#collection.updateOne(filter, update);
             return result.result.ok == 1 && result.result.nModified == 1;
         }
@@ -122,10 +120,9 @@ class DBChatInterface
      */
     async getMessages(chatID)
     {
-        let filter = { _id: ObjectID(chatID) };
-
         try
         {
+            let filter = { _id: ObjectID(chatID) };
             let result = await this.#collection.findOne(filter);
             return result == null ? null : result.messageCollection;
         }
@@ -145,12 +142,9 @@ class DBChatInterface
      */
     async getMessagesAfter(chatID, time)
     {
-        let filter = { _id: ObjectID(chatID) };
-
         try
         {
-            // TODO: Do this with a db query
-
+            let filter = { _id: ObjectID(chatID) };
             let result = await this.#collection.findOne(filter);
             if (result == null) return null;
 
@@ -181,12 +175,13 @@ class DBChatInterface
      */
     async getMessagesFrom(chatID, userID)
     {
-        let filter = { _id: ObjectID(chatID)};
-
         try
         {
-            let result = await this.#collection.findOne(filter); //TODO: get only the element matching userID in the query somehow
-            return result === null ? null : result.messageCollection[userID];
+            let result = await this.#collection.aggregate([
+                { $match: { _id: ObjectID(chatID) }},
+                { $project: { _id: 0, messages: `$messageCollection.${userID}`}}
+            ]).toArray();
+            return result === null ? null : result[0].messages;
         }
         catch (error)
         {
@@ -203,10 +198,9 @@ class DBChatInterface
      */
     async remove(chatID)
     {
-        let filter = { _id: ObjectID(chatID) };
-
         try
         {
+            let filter = { _id: ObjectID(chatID) };
             let result = await this.#collection.deleteOne(filter);
             return result.result.ok == 1 && result.result.n == 1;
         }
