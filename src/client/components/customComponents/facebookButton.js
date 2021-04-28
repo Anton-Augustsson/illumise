@@ -1,7 +1,7 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import {View, Text, TouchableOpacity, Image} from 'react-native';
+import {Text, TouchableOpacity, Image} from 'react-native';
 import ms from "../mainStyles/ms";
+import { Localization } from '../../modules/localization';
   
 const FacebookButton = (props) => {
     return (
@@ -15,7 +15,7 @@ const FacebookButton = (props) => {
                     source={require("../../assets/f_logo_RGB-White_58.png")} 
                     style={ms.loginButtonIcon}/>
                 <Text style={[ms.loginButtonText, {color:"white"}]}>
-                    Logga in med facebook
+                    {Localization.getText("loginWithFacebook")}
                 </Text>
         </TouchableOpacity>
     );

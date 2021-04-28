@@ -1,6 +1,5 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { Text, View, Image, Button} from 'react-native';
+import { Text, View, Image } from 'react-native';
 import styles from "./styles"
 import ms from '../mainStyles/ms';
 import GoogleButton from "../customComponents/googleButton";
@@ -8,22 +7,21 @@ import FacebookButton from "../customComponents/facebookButton";
 import * as Google from 'expo-auth-session/providers/google';
 import * as Facebook from 'expo-auth-session/providers/facebook';
 import CustomButton from '../customComponents/customButton';
+import { Localization } from '../../modules/localization';
 
-const veryfyUser = async (navigation, token, type) => {
-    //Skriver ut användarens data i konsolen
-    var userInfo;
-    if (type === 'facebook'){ 
-        userInfo = await fetch('https://graph.facebook.com/v2.5/me?fields=email,name,friends&access_token=' +token);
-    }else if(type === 'google'){
-        userInfo = await fetch('https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' +token);
-    }
-    const body = await userInfo.json();
-    //console.log(body);
+const verifyUser = async (navigation, token, type) =>
+{
+    var userInfo = await fetch(type === 'facebook' 
+                 ? 'https://graph.facebook.com/v2.5/me?fields=email,name,friends&access_token=' + token
+                 : 'https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + token);
+    var body = await userInfo.json();
+
     navigation.navigate("Main", {type: type, user: body});
 }
 
-const LoginScreen = ({navigation}) => {
-    //webclient secret key
+const LoginScreen = ({navigation}) => 
+{
+    //web-client secret key
     //i7HPvxf7F1MohxIdHcZaZmI0
     const [request, response, promptAsync] = Google.useAuthRequest({
         expoClientId: '798387138999-f1872j6fqbi2dlcl6mg0rvuscface4ed.apps.googleusercontent.com',
@@ -34,8 +32,9 @@ const LoginScreen = ({navigation}) => {
 
 
     React.useEffect(() => {
-    if (response?.type === 'success') {
-        veryfyUser(navigation, response.authentication.accessToken, 'google'); 
+        if (response?.type === 'success') 
+        {
+            verifyUser(navigation, response.authentication.accessToken, 'google'); 
         }
     }, [response])
 
@@ -45,27 +44,12 @@ const LoginScreen = ({navigation}) => {
         //responseType: ResponseType.Code, 
     });
 
-    React.useEffect( () => {
-        if (responseFB?.type === 'success') {
-            //console.log(JSON.stringify(Facebook.discovery));
-            //console.log(responseFB.authentication);
-            veryfyUser(navigation, responseFB.authentication.accessToken, 'facebook');
+    React.useEffect(() => {
+        if (responseFB?.type === 'success') 
+        {
+            verifyUser(navigation, responseFB.authentication.accessToken, 'facebook');
         }
     }, [responseFB]);
-    //View flex:1
-    //View flex:2 
-    //View flex:3 tre gånger större  än 1
-    //View
-    //justifyContent: vertikalt, alignItems:horizontellt: center, right, left, top, bottom
-    //flexDirection: column: vertikalt row: horizontellt
-    //justify-content css == justifyContent react
-    //Width, Height
-
-    //Container == <View style="flex:1, justifyContent:center, alignItmes:center"> Absolut i mitten
-    //                  <Image
-    //Container == </View>
-
-   
 
     return (
         <View style={styles.loginContainer}>
@@ -74,27 +58,23 @@ const LoginScreen = ({navigation}) => {
                     style={ms.logoLarge}
                     source={require("../../assets/samarit_logo2.png")}
                 />
-                <Text style={ms.h1}>Välkommen till SAMARIT!</Text>
+                <Text style={ms.h1}>{Localization.getText("welcomeBold")}</Text>
             </View>
 
             <GoogleButton
-                onPress={() =>{
-                    promptAsync();
-                }}
+                onPress= { () => { promptAsync() }}
                 disabled={!request}
             />
 
             <FacebookButton
-                onPress={() =>{
-                    promptAsyncFB();
-                }}
+                onPress={ () => { promptAsyncFB() }}
                 disabled={!requestFB}
             />
 
             <CustomButton
-                style={[ms.loginButton,{backgroundColor:"red"}]}
-                styleText={[ms.loginButtonText,{color:"white"}]}
-                title="Gå förbi inloggning"
+                style={[ms.loginButton, { backgroundColor: "red" }]}
+                styleText={[ms.loginButtonText, { color: "white" }]}
+                title={Localization.getText("skipLogin")}
                 onPress={() => navigation.navigate("Main", {type:"google",user:{id:"104735997383881408322",email:"marholdtv@gmail.com",verified_email:true,name:"Marhold Marhold",given_name:"Bengt",family_name:"Olsson",picture:"https://lh3.googleusercontent.com/-ggukNDG0VX8/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucnZ9CX2t6F0LbHJ31docWtx8Eaj3A/s96-c/photo.jpg",locale:"sv"}})}
             />
             

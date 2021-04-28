@@ -8,25 +8,27 @@ import SettingsScreen from "./settings/settings";
 import ProfileScreen from "./profile/profile";
 import FaqScreen from "./faq/faq";
 import BurgarIcons from "../../customComponents/burgarIcons";
+import { Localization } from '../../../modules/localization';
 
 const BURGAR = [
     {
         "id":"1",
-        "title":"Profil",
+        "title": Localization.getText("profile"),
         "des":"Profile",
     },{
         "id":"2",
-        "title":"Inställningar",
+        "title": Localization.getText("options"),
         "des":"Settings",
     },{
         "id":"3",
-        "title":"Hjälp",
+        "title": Localization.getText("help"),
         "des":"Faq",
     }
 ]
 
 
-const BurgarItem = (item, navigation) => {
+const BurgarItem = (item, navigation) => 
+{
     return(
         <TouchableOpacity 
             onPress={()=>{navigation.navigate(item.des)}}
@@ -37,7 +39,8 @@ const BurgarItem = (item, navigation) => {
     );
 }
 
-const ProfilePicture = (props) => {
+const ProfilePicture = (props) => 
+{
     return (
         <View style={bs.profileContainer}>
             <Image
@@ -49,11 +52,12 @@ const ProfilePicture = (props) => {
     );
 }
 
-const FirstScreen = ({navigation}) => {
+const FirstScreen = ({navigation}) => 
+{
     return (
         <View style={{flex:1}}>
             <CustomHeader 
-                title="Övrigt"
+                title={Localization.getText("other")}
                 nav={navigation}
                 goBack ={false}
             />
@@ -71,7 +75,8 @@ const FirstScreen = ({navigation}) => {
 
 const Stack = createStackNavigator();
 
-const BurgarScreen = () => {
+const BurgarScreen = () => 
+{
     return (
         <Stack.Navigator 
             screenOptions={{
