@@ -1,8 +1,9 @@
 import React from 'react';
-import { Text, View, Image, FlatList, StyleSheet,TouchableOpacity} from 'react-native';
+import { Text, View, FlatList, StyleSheet,TouchableOpacity} from 'react-native';
 import RequestIcon from "../../customComponents/requestIcon";
 import CustomHeader from "../../customComponents/customHeader";
 import ms from "../../mainStyles/ms";
+import { Localization } from '../../../modules/localization';
 
 const NOTIFICATIONS = [
     {
@@ -38,7 +39,7 @@ const NotificationScreen = ({navigation}) => {
     return (
         <View style={{flex:1}}>
             <CustomHeader 
-                title="Notifikationer"
+                title={Localization.getText("notifications")}
                 nav={navigation}
                 goBack={false}
             />
@@ -50,9 +51,6 @@ const NotificationScreen = ({navigation}) => {
         </View>
     );
 }
-
-
-
 
 const ns = StyleSheet.create({
     time:{

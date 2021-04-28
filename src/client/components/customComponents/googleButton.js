@@ -1,6 +1,6 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import {View, Text, TouchableOpacity, Image} from 'react-native';
+import {Text, TouchableOpacity, Image} from 'react-native';
+import { Localization } from '../../modules/localization';
 import ms from '../mainStyles/ms';
   
 const GoogleButton = (props) => {
@@ -27,7 +27,7 @@ const GoogleButton = (props) => {
                     source={require("../../assets/btn_google_light_normal.png")} 
                     style={ms.loginButtonIcon}/>
                 <Text style={[ms.loginButtonText,{color:"grey"}]}>
-                    Logga in med Google
+                    {Localization.getText("loginWithGoogle")}
                 </Text>
         </TouchableOpacity>
     );

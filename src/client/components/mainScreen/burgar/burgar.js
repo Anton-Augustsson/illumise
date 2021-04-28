@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, Image, FlatList, StyleSheet,TouchableOpacity, Settings} from 'react-native';
+import { Text, View, Image, Button, FlatList, StyleSheet,TouchableOpacity, Settings} from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import {colors} from "../../mainStyles/colors";
 import ms from "../../mainStyles/ms";
@@ -8,25 +8,29 @@ import SettingsScreen from "./settings/settings";
 import ProfileScreen from "./profile/profile";
 import FaqScreen from "./faq/faq";
 import BurgarIcons from "../../customComponents/burgarIcons";
+import account from "../../../modules/client-communication/account.js";
+import { Localization } from '../../../modules/localization';
+
 
 const BURGAR = [
     {
         "id":"1",
-        "title":"Profil",
+        "title": Localization.getText("profile"),
         "des":"Profile",
     },{
         "id":"2",
-        "title":"Inställningar",
+        "title": Localization.getText("options"),
         "des":"Settings",
     },{
         "id":"3",
-        "title":"Hjälp",
+        "title": Localization.getText("help"),
         "des":"Faq",
     }
 ]
 
 
-const BurgarItem = (item, navigation) => {
+const BurgarItem = (item, navigation) => 
+{
     return(
         <TouchableOpacity 
             onPress={()=>{navigation.navigate(item.des)}}
@@ -37,7 +41,8 @@ const BurgarItem = (item, navigation) => {
     );
 }
 
-const ProfilePicture = (props) => {
+const ProfilePicture = (props) => 
+{
     return (
         <View style={bs.profileContainer}>
             <Image
@@ -49,11 +54,12 @@ const ProfilePicture = (props) => {
     );
 }
 
-const FirstScreen = ({navigation}) => {
+const FirstScreen = ({navigation}) => 
+{
     return (
         <View style={{flex:1}}>
             <CustomHeader 
-                title="Övrigt"
+                title={Localization.getText("other")}
                 nav={navigation}
                 goBack ={false}
             />
@@ -65,13 +71,27 @@ const FirstScreen = ({navigation}) => {
                 renderItem={({item})=>BurgarItem(item, navigation)}
                 keyExtractor={(item)=>item.id}
             />
+            <Button
+                title="banan"
+                onPress={async ()=>{
+                    let credentials =
+                    {"firstName":"F",
+                    "lastName":"D",
+                    "email":"Aeifneiwnf@mail.test",
+                    "token":"L" };
+                    const response = await account.createAccount(credentials);
+                    console.log(response);
+                }}
+            />
+
         </View>
     );
 }
 
 const Stack = createStackNavigator();
 
-const BurgarScreen = () => {
+const BurgarScreen = () => 
+{
     return (
         <Stack.Navigator 
             screenOptions={{

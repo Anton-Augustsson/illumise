@@ -8,7 +8,7 @@ const returnResponse = communication.returnResponse;
  */
 const account =
 {
-    accountUrl: 'http://localhost:3000/account',
+    accountUrl: url + '/account',
 
     /**
      * create new account

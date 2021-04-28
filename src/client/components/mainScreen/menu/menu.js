@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
-import { View, Image, TouchableOpacity, StyleSheet, SafeAreaView} from 'react-native';
+import { View, TouchableOpacity, SafeAreaView} from 'react-native';
 import mms from "./menuStyle";
-import {colors} from "../../mainStyles/colors";
-import {Feather, FontAwesome, Ionicons, FontAwesome5} from '@expo/vector-icons';
+import { colors } from "../../mainStyles/colors";
+import { FontAwesome, Ionicons, FontAwesome5 } from '@expo/vector-icons';
 
 const Menu = (props) => {
     const [colorOrders, setColorOrders] = useState(colors.MENU_ICON);

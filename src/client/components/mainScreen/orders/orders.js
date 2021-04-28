@@ -47,7 +47,6 @@ function generateORDERS(){
             type = "mail";
             text = "Tree";
         }
-        // TODO remove
 
         result[i-1] = createORDER(i.toString(), category, status, type, request, text);
     }
@@ -153,7 +152,7 @@ const FirstScreen = ({navigation}) => {
 
         <View style={{flex:1}}>
             <CustomHeader 
-                title="Dina beställningar"
+                title={Localization.getText("myOrders")}
                 nav={navigation}
                 goBack={false}
             />
@@ -213,4 +212,5 @@ const OrdersScreen = () => {
     );
 }
 
-export default OrdersScreen;
+export default OrderScreen;
+
