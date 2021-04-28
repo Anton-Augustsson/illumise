@@ -47,6 +47,7 @@ function generateORDERS(){
             type = "mail";
             text = "Tree";
         }
+        // TODO remove
 
         result[i-1] = createORDER(i.toString(), category, status, type, request, text);
     }
@@ -212,5 +213,4 @@ const OrdersScreen = () => {
     );
 }
 
-export default OrderScreen;
-
+export default OrdersScreen;
