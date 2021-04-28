@@ -103,7 +103,7 @@ const ms = StyleSheet.create({
         width:"100%",
         height:60,
         backgroundColor:"white",
-        borderBottomWidth:1,
+        borderBottomWidth:0.5,
         borderBottomColor: "grey",
         borderStyle:"solid",
         flexDirection:"row",

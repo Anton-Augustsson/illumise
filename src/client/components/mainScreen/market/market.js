@@ -6,6 +6,8 @@ import CustomHeader from "../../customComponents/customHeader";
 import { createStackNavigator } from '@react-navigation/stack';
 import ms from "../../mainStyles/ms";
 import { colors } from '../../mainStyles/colors';
+import MarketItem from './marketItem';
+import {Localization} from '../../../modules/localization'
 
 const REQUESTS = [
     {
@@ -28,7 +30,9 @@ const REQUESTS = [
             "Wefixit Svenska AB, Fålhagsleden, Uppsala, Sweden",
             "Wefix Trädgård AB, Sandövägen, Vallda, Sweden",
         ],
-        "type": "food"
+        "price":"2000000000",
+        "time": "13:00",
+        "type": "food",
     },
     {
         "id":"2",
@@ -44,6 +48,8 @@ const REQUESTS = [
             "SHAKMAK AB, Moskva, Russia",
             "Wefix Trädgård AB, Sandövägen, Vallda, Sweden",
         ],
+        "time": "13:00",
+        "price":"10",
         "type": "shopping"
     },
     {
@@ -57,46 +63,23 @@ const REQUESTS = [
             "SHAKMAK AB, Moskva, Russia",
             "Wefix Trädgård AB, Sandövägen, Vallda, Sweden",
         ],
+        "time": "13:00",
+        "price":"0.20",
         "type": "post"
     }
 ]
-
-const RequestItem = (item) => {
-
-    return(
-        <TouchableOpacity 
-            style={ms.itemContainer}>
-            <Text numberOfLines={2} style={ms.msg}>{item.msg}</Text>
-        </TouchableOpacity>
-    );
-}
 
 const FilterView = () => {
     const filterItems = [
         {
             "id":"0",
-            "text":"Hje"
+            "text":Localization.getText("price")
         },{
             "id":"1",
-            "text":"Fult"
+            "text":Localization.getText("latest")
         },{
             "id":"2",
-            "text":"TId"
-        },{
-            "id":"3",
-            "text":"TId"
-        },{
-            "id":"4",
-            "text":"TId"
-        },{
-            "id":"5",
-            "text":"TId"
-        },{
-            "id":"6",
-            "text":"TId"
-        },{
-            "id":"7",
-            "text":"TId"
+            "text":Localization.getText("closest")
         },
     ]
 
@@ -132,6 +115,38 @@ const FilterView = () => {
     );
 }
 
+
+const RequestItem = ({nav, item}) => {
+    var text = ''
+    if(item.type === 'food'){
+        text = Localization.getText("foodPrompt")
+    }
+    if(item.type === 'shopping'){
+        text = Localization.getText("shoppingPrompt")
+    }
+    if(item.type === 'post'){
+        text = Localization.getText("postPrompt")
+    }
+
+    const km = "1000";
+
+    return(
+        <TouchableOpacity 
+            onPress={()=>nav.nav.navigate("MarketItem", item)}
+            style={mms.itemContainer}
+        >
+            <Text>{text}</Text>
+            <View style={mms.rightRequestContainer}>
+                <View style={mms.priceContainer}>
+                    <Text style={mms.price} numberOfLines={1}>{item.price}</Text>
+                    <Text style={mms.priceCurrency}>kr</Text>
+                </View>
+                <Text style={mms.distance}>{km} km</Text>
+            </View>
+        </TouchableOpacity>
+    );
+}
+
 const FirstScreen = (nav) => {
     return (
         <View style={{flex:1}}> 
@@ -143,7 +158,7 @@ const FirstScreen = (nav) => {
 
             <FlatList
                 data={REQUESTS}
-                renderItem={({item})=>RequestItem(item)}
+                renderItem={({item})=><RequestItem nav={nav} item={item}/>}
                 keyExtractor={(item)=>item.id}
                 ListHeaderComponent={<FilterView/>}
             />
@@ -166,13 +181,15 @@ const MarketScreen = ({navigation}) => {
                 name="FirstScreen" 
                 children={()=><FirstScreen nav={navigation}/>}
             />
+
+            <Stack.Screen 
+                name="MarketItem" 
+                component={MarketItem}
+            />
            
         </Stack.Navigator> 
     );
 }
-
-
-
 
 const mms = StyleSheet.create({
     filterOuterContainer: {
@@ -201,6 +218,34 @@ const mms = StyleSheet.create({
         width:50,
         alignItems:"center",
         justifyContent:"center",
+    },
+    itemContainer: {
+        width:"100%",
+        height:60,
+        backgroundColor:"white",
+        borderBottomWidth:0.5,
+        borderBottomColor: "grey",
+        borderStyle:"solid",
+        flexDirection:"row",
+        alignItems:"center",
+        paddingLeft:"5%",
+        paddingRight:"5%",
+    },
+    rightRequestContainer: {
+        position:"absolute",
+        right:5,
+        alignItems:"flex-end",
+        width:65,
+    },
+    priceContainer: {
+        flexDirection:"row",
+    },
+    price: {
+        marginRight:5,
+    },
+    priceCurrency: {
+    },
+    distance: {
     }
 });
 

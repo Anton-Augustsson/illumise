@@ -19,7 +19,7 @@ const OtherRequestScreen = ({navigation}) => {
             type: "other",
             stops: [location],
             title: title,
-            info: info,
+            otherInfo: info,
         }
         navigation.navigate("Receipt", result);
     }
