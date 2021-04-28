@@ -5,6 +5,8 @@ import { Text, View, Image, FlatList, StyleSheet,TouchableOpacity} from 'react-n
 import CustomHeader from '../../../customComponents/customHeader';
 import ms from "../../../mainStyles/ms";
 import os from "../order/orderStyle"
+import ChatView from '../../../customComponents/chatView';
+
 const OrderProvidingScreen = ({navigation, route}) => {
     return (
         <View style={{flex:1}}>
@@ -20,10 +22,7 @@ const OrderProvidingScreen = ({navigation, route}) => {
                     <Text style = {os.descriptionText}>Description of request</Text>
                 </View>        
             </View>
-
-            <View> 
-                <Text>Chat window</Text>
-            </View>
+            <ChatView></ChatView>
             
         </View>
     );

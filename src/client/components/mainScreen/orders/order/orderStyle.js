@@ -8,16 +8,7 @@ const os = StyleSheet.create({
         borderWidth: 2,
         borderColor: '#808080',
         borderRadius: 5,
-    },
-
-    chatContainer: {
-        borderWidth: 3,
-        borderColor: "black",
-        borderRadius: 5,
-    }, 
-    
-
-    
+    },    
 });
 
 export default os;

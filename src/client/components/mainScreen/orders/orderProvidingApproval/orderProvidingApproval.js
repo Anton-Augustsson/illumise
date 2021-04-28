@@ -13,7 +13,7 @@ const OrderProvidingApprovalScreen = ({navigation, route}) => {
                 nav={navigation}
             />
             <View> 
-                <h1>Request title</h1>
+                <Text>Request title</Text>
                 <Text>Location: DummyLocation</Text>
                 <Text>Person: DummyPerson</Text>
                 <View style = {os.descriptionContainer}>

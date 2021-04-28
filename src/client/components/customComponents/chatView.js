@@ -1,5 +1,6 @@
 // TODO
 
+<<<<<<< HEAD
 import React, {useState, useEffect} from 'react';
 import { Text, View, Image, FlatList, StyleSheet,TouchableOpacity, TextInput} from 'react-native';
 import ms from "../mainStyles/ms";
@@ -34,6 +35,15 @@ const ChatView = ({name, room}) => {
             recivedMessage({setChat}, numMsg, {setNumMsg}, room, msg.text);
         });
     });
+=======
+import React, {useState} from 'react';
+import { Text, View, Image, FlatList, StyleSheet,TouchableOpacity, TextInput} from 'react-native';
+import ms from "../mainStyles/ms";
+
+let numMsg = 1;
+
+const ChatView = () => {
+    const [chat, setChat] = useState([]);
 
     return (
         <View>
@@ -68,7 +78,7 @@ const MessageInput = ({setChat, numMsg, setNumMsg}) => {
             />
             <TouchableOpacity style = {ms.button} onPress={() => {
                 return sendMsg({setChat}, numMsg, {setNumMsg}, "Morgan", msg)
-            }}> 
+            }}>
                 <Text>Skicka</Text>
             </TouchableOpacity>
         </View>
