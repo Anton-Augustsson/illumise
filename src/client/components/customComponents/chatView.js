@@ -7,10 +7,8 @@ import ms from "../mainStyles/ms";
 let numMsg = 1;
 
 const ChatView = () => {
-
-
     const [chat, setChat] = useState([]);
-
+    //const [numMsg, setNumMsg] = useState(1);
     return (
         <View>
             <View style = {cs.chatContainer}> 
@@ -23,8 +21,6 @@ const ChatView = () => {
             </View>
             <MessageInput setChat={setChat}></MessageInput>
         </View>
-        
-    
     );
 }
 
@@ -45,25 +41,29 @@ const MessageInput = ({setChat}) => {
             defaultValue={msg}
             />
             <TouchableOpacity style = {ms.button} onPress={() => {
-            
-            // addMessage
-            let toInsert = {
-                "id":numMsg.toString(),
-                "sender": "Morgan",
-                "time": null,
-                "msg": ""
-            };
-            toInsert.time = Date.now();
-            toInsert.msg = msg;
-            numMsg += 1;
-            setChat((previousChat) => {
-                return ([...previousChat, toInsert]);
-            });
+                return insertMsg({setChat}, "Morgan", msg)
             }}> 
                 <Text>Skicka</Text>
             </TouchableOpacity>
         </View>
     )
+}
+
+function insertMsg({setChat}, sender, msg){
+    let toInsert = {
+        "id":numMsg.toString(),
+        "sender": "Morgan",
+        "time": Date.now(),
+        "msg": msg
+    };
+    numMsg += 1;
+    setChat((previousChat) => {
+        return ([...previousChat, toInsert]);
+    });
+}
+
+function sendMsg(chatID, msg){
+
 }
 
 
