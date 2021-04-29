@@ -10,7 +10,7 @@ const FloatingInput = forwardRef(({placeholder, onChangeText, onFocus, onBlur, s
 
     const top = topValue.interpolate({
         inputRange: [0, 1],
-        outputRange: [19, 0],
+        outputRange: ["45%", "0%"],
     });
 
     const animation = (initialValue, toValue) => {
@@ -57,7 +57,6 @@ const FloatingInput = forwardRef(({placeholder, onChangeText, onFocus, onBlur, s
             borderStyle:"solid",
             borderColor: !isFocused ? colors.INPUT_BORDER : colors.INPUT_FOCUS,
             borderRadius:20,
-            backgroundColor:"white",
         }
     });
 

@@ -1,9 +1,10 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { Text, View, FlatList, StyleSheet,
-        TouchableOpacity, TextInput} from 'react-native';
+        TouchableOpacity, TextInput, Keyboard} from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import {colors} from "../mainStyles/colors";
 import { Localization } from '../../modules/localization';
+
 
 const EXAMPLE = [
     {
@@ -36,7 +37,7 @@ const EXAMPLE = [
         "senderId": "1923i12093u91238081412904i8",
         "time": null,
         "msg": "i w"
-    },
+    }
 ]
 
 const Chat = (props) => {
@@ -44,7 +45,22 @@ const Chat = (props) => {
     const [msg, setMsg] = useState('');
     const [id, setId] = useState("0");
     const [isFocused, setFocus] = useState(false);
-    //setChat(CHAT);
+
+    const [keyboard, setKeyboard] = useState(false);
+
+    const keyboardShow = () => setKeyboard(true);
+    const keyboardHide = () => setKeyboard(false);
+
+    useEffect(() => {
+        Keyboard.addListener("keyboardDidShow", keyboardShow);
+        Keyboard.addListener("keyboardDidHide", keyboardHide);
+
+        // cleanup function
+        return () => {
+            Keyboard.removeListener("keyboardDidShow", keyboardShow);
+            Keyboard.removeListener("keyboardDidHide", keyboardHide);
+        };
+    }, []);
     
     return (
         <>
@@ -53,16 +69,27 @@ const Chat = (props) => {
                     data={EXAMPLE}
                     renderItem={({item})=><Msg item = {item}/>}
                     keyExtractor={(item)=>item.id}
+                    ListEmptyComponent={
+                        <View style={cs.emptyChatContainer}>
+                            <Text style={[cs.emptyChatMsg, cs.emptyChatMsgAbove]}>
+                                {Localization.getText("emptyChatConversationEmpty")}
+                            </Text>
+                            <Text style={[cs.emptyChatMsg, cs.emptyChatMsgBelow]}>
+                                {Localization.getText("emptyChatMsg")}
+                            </Text>
+                        </View>
+                    }
                 />
             </View>
-            <View style={cs.bottomContainer}>
+            <View style={[cs.bottomContainer, keyboard ? {marginBottom:5} : null]}>
                 <TextInput
-                    style={[cs.msgInput, {borderColor: !isFocused ? colors.INPUT_BORDER : colors.INPUT_FOCUS,}]}
+                    style={[cs.msgInput, {borderColor: !isFocused ? colors.INPUT_BORDER : colors.INPUT_FOCUS}]}
                     onFocus={()=>setFocus(true)}
                     onBlur={()=>setFocus(false)}
                     placeholder={Localization.getText("writeMsg")}
-                    onChangeText={msg => setMsg(msg)}
+                    onChangeText={msg =>{ setMsg(msg);}}
                     defaultValue={msg}
+                    multiline
                 />
                 <TouchableOpacity 
                     style = {cs.sendContainer} 
@@ -96,13 +123,13 @@ const Msg = ({item}) => {
         <View 
             style={[cs.msgOuterContainer,
                 item.senderId === "1923i12093u91238081412904i8" ? 
-                cs.youOuterMsgContainer : cs.otherOuterMsgContainer]}
+                cs.youOuterMsgContainer : cs.themOuterMsgContainer]}
         >
 
             <View 
                 style={[cs.msgContainer,
                 item.senderId === "1923i12093u91238081412904i8" ? 
-                cs.youMsgContainer : cs.otherMsgContainer]}
+                cs.youMsgContainer : cs.themMsgContainer]}
             >
 
                 <Text style={cs.msg}>{item.msg}</Text>
@@ -146,21 +173,21 @@ const cs = StyleSheet.create({
         paddingLeft:14,
     },
     msgContainer: {
-        width:"80%",
+        maxWidth:"80%",
         padding:10,
         borderRadius:10,
     },
     youOuterMsgContainer: {
         alignItems:"flex-end",
     },
-    otherOuterMsgContainer: {
+    themOuterMsgContainer: {
 
     },
     youMsgContainer: {
-        backgroundColor:"lightblue",
+        backgroundColor:colors.YOU_MSG_COLOR,
     },
-    otherMsgContainer: {
-        backgroundColor:"lightgrey",
+    themMsgContainer: {
+        backgroundColor:colors.THEM_MSG_COLOR,
     },
     msg: {
 
@@ -170,6 +197,8 @@ const cs = StyleSheet.create({
         alignItems:"center",
         backgroundColor:colors.SAMARIT_GREEN,
         paddingLeft:5,
+        paddingBottom:2.5,
+        paddingTop:2.5,
     },
     msgInput: {
         flex:1,
@@ -181,6 +210,7 @@ const cs = StyleSheet.create({
         borderStyle:"solid",
         borderRadius:20,
         backgroundColor:"white",
+        maxHeight:100,
     },
     sendContainer: {
         flexDirection:"row",
@@ -194,6 +224,19 @@ const cs = StyleSheet.create({
     },
     sendIcon: {
         color:"white",
+    },
+    emptyChatContainer: {
+        justifyContent:"center",
+        padding:30,
+    },
+    emptyChatMsg: {
+        textAlign:"center",
+    },
+    emptyChatMsgAbove: {
+        fontWeight:"bold",
+        fontSize:16,
+    },
+    emptyChatMsgBelow: {
     }
 });
 

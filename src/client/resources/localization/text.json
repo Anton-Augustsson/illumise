@@ -65,9 +65,11 @@
         "Other": "Other",
         "doYourOwnRequest": "Do your own request",
         "heading":"Heading",
-        "writeMsg":"Write your message...",
+        "writeMsg":"Write a message...",
         "send":"Send",
         "text":"Text",
+        "emptyChatConversationEmpty":"This conversation is empty.",
+        "emptyChatMsg":"This conversation is empty. You can start sending a message by writing something in the input and the clicking on the button \"send\".",
         "Place": "Place"
     },
     "se": 
@@ -137,9 +139,11 @@
         "Other": "Övrigt",
         "heading":"Rubrik",
         "text":"Text",
-        "writeMsg":"Skriv ditt meddelande...",
+        "writeMsg":"Skriv ett meddelande...",
         "send":"Skicka",
         "doYourOwnRequest": "Gör din egna annons",
+        "emptyChatConversationEmpty":"Denna konversation är tom.",
+        "emptyChatMsg":"Du kan start den genom att skriva ett meddelande i inmatningsrutan och sedan skicka det genom att klicka på knappen \"Skicka\".",
         "place": "Plats"
     } 
 }

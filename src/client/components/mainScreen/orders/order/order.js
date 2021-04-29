@@ -23,7 +23,6 @@ const OrderScreen = ({navigation, route}) => {
             
 
             <Chat/>
-
         </View>
     );
 }
