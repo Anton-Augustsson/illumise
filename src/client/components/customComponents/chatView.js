@@ -1,6 +1,5 @@
 // TODO
 
-<<<<<<< HEAD
 import React, {useState, useEffect} from 'react';
 import { Text, View, Image, FlatList, StyleSheet,TouchableOpacity, TextInput} from 'react-native';
 import ms from "../mainStyles/ms";

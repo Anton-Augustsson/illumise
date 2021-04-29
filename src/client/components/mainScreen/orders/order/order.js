@@ -23,7 +23,7 @@ const OrderScreen = ({navigation, route}) => {
                     <Text style = {os.descriptionText}>Description of request</Text>
                 </View>        
             </View>
-            <ChatView></ChatView>
+            <ChatView name={"Morgan"} room={"1"}></ChatView>
           
         </View>
     );
