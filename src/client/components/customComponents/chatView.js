@@ -35,15 +35,6 @@ const ChatView = ({name, room}) => {
             recivedMessage({setChat}, numMsg, {setNumMsg}, room, msg.text);
         });
     });
-=======
-import React, {useState} from 'react';
-import { Text, View, Image, FlatList, StyleSheet,TouchableOpacity, TextInput} from 'react-native';
-import ms from "../mainStyles/ms";
-
-let numMsg = 1;
-
-const ChatView = () => {
-    const [chat, setChat] = useState([]);
 
     return (
         <View>
