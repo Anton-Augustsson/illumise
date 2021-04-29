@@ -68,7 +68,12 @@
         "text":"Text",
         "Place": "Place",
         "price": "Price",
-        "enterPrice": "Enter price"
+        "enterPrice": "Enter price",
+        "closest": "Closest",
+        "latest": "Latest",
+        "foodPromt": "Buy and deliver food",
+        "shoppingPromt": "Buy and deliver goods",
+        "postPromt": "Pick up and deliver post"
     },
     "se": 
     {
@@ -140,6 +145,11 @@
         "doYourOwnRequest": "Gör din egna annons",
         "place": "Plats",
         "price": "Pris",
-        "enterPrice": "Ange pris"
+        "enterPrice": "Ange pris",
+        "closest": "Närmast mig",
+        "latest": "Senaste",
+        "foodPrompt": "Handla och leverera mat",
+        "shoppingPrompt": "Handla och leverera varor",
+        "postPrompt": "Hämta och leverera post/paket"
     } 
 }
