@@ -95,6 +95,7 @@ export default class CustomMap extends Component
         catch (error) 
         {
             console.error(error);
+            Alert.alert(error);
         }
     }
 
@@ -121,6 +122,7 @@ export default class CustomMap extends Component
         catch(error)
         {
             console.log(error);
+            Alert.alert(error);
             return this.state.region;
         }
     }

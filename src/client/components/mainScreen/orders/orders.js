@@ -10,6 +10,7 @@ import OrderScreen from "./order/order";
 import OrderApprovalScreen from "./orderApproval/orderApproval";
 import OrderProvidingScreen from "./orderProviding/orderProviding";
 import OrderProvidingApprovalScreen from "./orderProvidingApproval/orderProvidingApproval";
+import { Localization } from '../../../modules/localization';
 
 function createORDER(id, category, status, type, request, text){
     let result = {
@@ -54,7 +55,8 @@ function generateORDERS(){
     return result;
 }
 
-function generateORDERSPROVIDING(){
+function generateORDERSPROVIDING()
+{
     let numOfRequests = 3;
     let result = [];
     let category = "providing";
@@ -76,7 +78,7 @@ function generateORDERSPROVIDING(){
             text = "QuensRow: post";
         } else {
             type = "mail";
-            text = "Prince Row: lämna post";
+            text = "lämna post";
         }
         // TODO remove
 
@@ -139,7 +141,7 @@ const ORDERSPROVIDING = generateORDERSPROVIDING(); /*[
 const OrderItem = (item, navigation) => {
     return (
         <TouchableOpacity
-          onPress={()=>{navigation.navigate(item.category + item.status, { "id":item.id })}}
+            onPress={()=>{navigation.navigate(item.category + item.status, { "id":item.id })}}
             style={ms.itemContainer}>
             <RequestIcon type={item.type} size={30} color="black"/>
             <Text numberOfLines={2} style={ms.msg}>{item.text}</Text>
@@ -156,14 +158,14 @@ const FirstScreen = ({navigation}) => {
                 nav={navigation}
                 goBack={false}
             />
-          <Text>My requests</Text>
+            <Text>My requests</Text>
             <FlatList
                 data={ORDERS}
                 renderItem={({item})=>OrderItem(item, navigation)}
                 keyExtractor={(item)=>item.id}
             />
-          <Text>Providing</Text>
-          <FlatList
+            <Text>Providing</Text>
+            <FlatList
                 data={ORDERSPROVIDING}
                 renderItem={({item})=>OrderItem(item, navigation)}
                 keyExtractor={(item)=>item.id}
@@ -193,17 +195,17 @@ const OrdersScreen = () => {
                 component={OrderScreen}
             />
 
-          <Stack.Screen
+            <Stack.Screen
                 name="myrequestunapproved" // item.category + item.status
                 component={OrderApprovalScreen}
             />
 
-          <Stack.Screen
+            <Stack.Screen
                 name="providingapproved" // item.category + item.status
                 component={OrderProvidingScreen}
             />
 
-          <Stack.Screen
+            <Stack.Screen
                 name="providingunapproved" // item.category + item.status
                 component={OrderProvidingApprovalScreen}
             />
@@ -212,5 +214,5 @@ const OrdersScreen = () => {
     );
 }
 
-export default OrderScreen;
+export default OrdersScreen;
 
