@@ -60,14 +60,15 @@ io.on('connection', function(socket) {
 
         socket.join(room); // sends all new messages to this socket
 
-        callback();
+        //callback();
     });
 
-    socket.on('sendMsg', ({ name, room }, msg, callback) => {
+    socket.on('sendMsg', ({ name, room, msg }, callback) => {
         const user = "user";
-        io.to(room).emit('msg', { user: user, text: msg});
+        console.log(name, room, msg);
+        io.to(room).emit('msg', { user: name, text: msg});
         // save new msg
-        callback();
+        //callback();
     });
 
     socket.on('disconnect', () => {
