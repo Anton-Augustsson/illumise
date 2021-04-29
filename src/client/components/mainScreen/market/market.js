@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback} from 'react';
 import { Text, View, ScrollView, FlatList, StyleSheet,TouchableOpacity} from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -11,6 +11,7 @@ import {Localization} from '../../../modules/localization'
 import * as Location from 'expo-location';
 import request from '../../../modules/client-communication/request';
 
+/*
 const REQUESTS = [
     {
         "id":"1",
@@ -70,6 +71,7 @@ const REQUESTS = [
         "type": "post"
     }
 ]
+*/
 
 const FilterView = () => {
     const filterItems = [
@@ -84,6 +86,7 @@ const FilterView = () => {
             "text":Localization.getText("closest")
         },
     ]
+
 
     const [expand, setExpand] = useState(false);
 
@@ -121,14 +124,20 @@ const FilterView = () => {
 
 const RequestItem = ({nav, item}) => {
     var text = ''
-    if(item.type === 'food'){
-        text = Localization.getText("foodPrompt")
-    }
-    if(item.type === 'shopping'){
-        text = Localization.getText("shoppingPrompt")
-    }
-    if(item.type === 'post'){
-        text = Localization.getText("postPrompt")
+    switch (item.body.type) {
+        case 'food':
+            text = Localization.getText("foodPrompt")
+            break;
+        case 'shopping':
+            text = Localization.getText("shoppingPrompt")
+            break;
+        case 'post':
+            text = Localization.getText("postPrompt")
+            break;
+        case 'other':
+            text = Localization.getText("otherPrompt")
+            break;
+
     }
 
     const km = "1000";
@@ -141,7 +150,7 @@ const RequestItem = ({nav, item}) => {
             <Text>{text}</Text>
             <View style={mms.rightRequestContainer}>
                 <View style={mms.priceContainer}>
-                    <Text style={mms.price} numberOfLines={1}>{item.price}</Text>
+                    <Text style={mms.price} numberOfLines={1}>{item.cost}</Text>
                     <Text style={mms.priceCurrency}>kr</Text>
                 </View>
                 <Text style={mms.distance}>{km} km</Text>
@@ -162,23 +171,38 @@ const RequestItem = ({nav, item}) => {
 const FirstScreen = (nav) => {
     const [location, setLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
+    const [REQUESTS, setRequests] = useState(null);
+    const [isRefreshing, setIsRefresing] = useState(false);
 
     const getLocation = async () => {
         let { status } = await Location.requestForegroundPermissionsAsync();
         if (status !== 'granted') {
-          setErrorMsg('Denied acces to location');
-          return;
+        setErrorMsg('Denied acces to location');
+        return;
         }
         let location = await Location.getCurrentPositionAsync({});
         setLocation(location);
 
         let pointStart = coordsToGeoJSON([location.coords.longitude, location.coords.latitude]);
 
-        var res = await request.provider.getNearRequests(pointStart, 1000000, 20);
-     }
 
+        const res = await request.provider.getNearRequests(pointStart, 1000000, 10);
+        setIsRefresing(false);
+        return res;
+    }
 
-    return (
+    const refresh = () => {
+        setIsRefresing(true);
+        getLocation().then(data => {
+            setRequests(data.filter(obj => obj != null));
+        }); 
+    }
+
+    useEffect(() => {
+        refresh();
+    }, []);
+
+     return (
         <View style={{flex:1}}> 
             <CustomHeader 
                 title="Market"
@@ -189,9 +213,12 @@ const FirstScreen = (nav) => {
             <FlatList
                 data={REQUESTS}
                 renderItem={({item})=><RequestItem nav={nav} item={item}/>}
-                keyExtractor={(item)=>item.id}
+                keyExtractor={(item)=>item._id}
                 ListHeaderComponent={<FilterView/>}
+                onRefresh={()=>refresh()}
+                refreshing={isRefreshing}
             />
+
         </View>
     );
 }

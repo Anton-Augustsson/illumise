@@ -9,14 +9,40 @@ import FloatingInput from '../../../../customComponents/Inputs/floatingInput';
 import GooglePlaces from "../../../../customComponents/Inputs/googlePlaces";
 import storage from '../../../../../modules/localStorage/localStorage';
 import request from '../../../../../modules/client-communication/request';
-
+import * as Location from 'expo-location';
 const OtherRequestScreen = ({navigation}) => {
     const [location, setLocation] = useState("");
     const [title, setTitle] = useState("");
     const [info, setInfo] = useState("");
     const [price, setPrice] = useState(0);
+    const [geoLocation, setGLocation] = useState("");
+
+
+    /** 
+     * Get a geoJSON representation of a point
+     * @param {[Number]} coordinates [longitude, latitude] coordinates of a point
+     * @returns {{*}} representation of a point with coordinates
+     */
+    function coordsToGeoJSON(coordinates)
+    {
+        return { "type": "Point", "coordinates": coordinates };
+    }
+     
+    const getLocation = async () => {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+            setErrorMsg('Denied acces to location');
+            return;
+        }
+        let loc = await Location.getCurrentPositionAsync({});
+        setGLocation(loc);
+        var geo = coordsToGeoJSON([geoLocation.coords.longitude, geoLocation.coords.latitude]);
+        return geo;
+    }
+
 
     const finishOrder = async() =>{
+        var loc = await getLocation();
         var data = {
             header: "other",
             body: {
@@ -24,8 +50,9 @@ const OtherRequestScreen = ({navigation}) => {
                 stops: [location],
                 title: title,
                 info: info,
-                price: price
+                price: price,
             },
+            geoLocation: loc,
             cost: price
         }
 

@@ -71,9 +71,10 @@
         "enterPrice": "Enter price",
         "closest": "Closest",
         "latest": "Latest",
-        "foodPromt": "Buy and deliver food",
-        "shoppingPromt": "Buy and deliver goods",
-        "postPromt": "Pick up and deliver post"
+        "foodPrompt": "Buy and deliver food",
+        "shoppingPrompt": "Buy and deliver goods",
+        "postPrompt": "Pick up and deliver post",
+        "otherPrompt": "Other"
     },
     "se": 
     {
@@ -150,6 +151,7 @@
         "latest": "Senaste",
         "foodPrompt": "Handla och leverera mat",
         "shoppingPrompt": "Handla och leverera varor",
-        "postPrompt": "Hämta och leverera post/paket"
+        "postPrompt": "Hämta och leverera post/paket",
+        "otherPrompt": "Övrigt"
     } 
 }

@@ -9,10 +9,12 @@ import GooglePlaces from '../../../../customComponents/Inputs/googlePlaces';
 import request from '../../../../../modules/client-communication/request';
 import storage from '../../../../../modules/localStorage/localStorage';
 import FloatingInput from '../../../../customComponents/Inputs/floatingInput';
+import * as Location from 'expo-location';
 
 const DeliverScreen = ({navigation, route}) => {
     //console.log(JSON.stringify(route));
     const [location, setLocation] = useState("");
+    const [geoLocation, setGLocation] = useState("");
     const [price, setPrice] = useState(0);
 
         /** 
@@ -31,10 +33,9 @@ const DeliverScreen = ({navigation, route}) => {
           setErrorMsg('Denied acces to location');
           return;
         }
-        let location = await Location.getCurrentPositionAsync({});
-        setLocation(location);
-
-        let pointStart = coordsToGeoJSON([location.coords.longitude, location.coords.latitude]);
+        let loc = await Location.getCurrentPositionAsync({});
+        setGLocation(loc);
+        return coordsToGeoJSON([geoLocation.coords.longitude, geoLocation.coords.latitude]);
     }
 
     const checkout = async () =>{
@@ -43,11 +44,13 @@ const DeliverScreen = ({navigation, route}) => {
         result.stops.push(location);
         
         const userID = await storage.getDataString("userID");
-        
+        const loc = await getLocation();
+
         var data = {
             header: result.type,
             body: result,
-            cost: price
+            cost: price,
+            geoLocation: loc,
         }
         
         await request.requester.newRequest(userID, result.type, data);

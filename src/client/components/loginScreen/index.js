@@ -38,9 +38,11 @@ const verifyUser = async (navigation, token, type) =>
     
     
 
-    const fakoff = await storage.getDataString("userID");
     const userID = await account.createAccount(credentials);
     if(userID != null) {
+        storage.storeDataString("userID", userID);
+    }else{
+        userID = await account.get(credentials.email, credentials.token);
         storage.storeDataString("userID", userID);
     }
 
