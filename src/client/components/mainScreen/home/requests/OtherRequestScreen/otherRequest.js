@@ -30,8 +30,10 @@ const OtherRequestScreen = ({navigation}) => {
         }
 
         var userID = await storage.getDataString("userID");
+
+        console.log(userID);
         await request.requester.newRequest(userID, data.header, data);
-        navigation.navigate("Receipt", );
+        navigation.navigate("Receipt");
     }
     return (
         <View style={{flex:1}}>

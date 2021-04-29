@@ -8,6 +8,8 @@ import ms from "../../mainStyles/ms";
 import { colors } from '../../mainStyles/colors';
 import MarketItem from './marketItem';
 import {Localization} from '../../../modules/localization'
+import * as Location from 'expo-location';
+import request from '../../../modules/client-communication/request';
 
 const REQUESTS = [
     {
@@ -116,6 +118,7 @@ const FilterView = () => {
 }
 
 
+
 const RequestItem = ({nav, item}) => {
     var text = ''
     if(item.type === 'food'){
@@ -148,6 +151,26 @@ const RequestItem = ({nav, item}) => {
 }
 
 const FirstScreen = (nav) => {
+    const [location, setLocation] = useState(null);
+    const [errorMsg, setErrorMsg] = useState(null);
+
+    const getLocation = async () => {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+          setErrorMsg('Denied acces to location');
+          return;
+        }
+        let location = await Location.getCurrentPositionAsync({});
+        setLocation(location);
+
+        var res = await request.provider.getNearRequests(null, 100, 100);
+        console.log(res);
+     }
+
+    if(location == null){
+        getLocation();
+    }
+
     return (
         <View style={{flex:1}}> 
             <CustomHeader 

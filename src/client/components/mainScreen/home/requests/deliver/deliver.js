@@ -19,8 +19,9 @@ const DeliverScreen = ({navigation, route}) => {
         //TODO: kolla att obligatoriska fält är ifyllda
         var result = Object.assign({}, route.params)
         result.stops.push(location);
+        
         const userID = await storage.getDataString("userID");
-
+        
         var data = {
             header: result.type,
             body: result,
