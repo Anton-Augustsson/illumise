@@ -18,9 +18,6 @@ const ChatView = ({name, room}) => {
 
         socket = io(ENDPOINT);
 
-        let name = "userID";
-        let room = "chatID";
-
         socket.emit('join', {name, room});
 
         /*return () => {
