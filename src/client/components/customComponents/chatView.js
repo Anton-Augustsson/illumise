@@ -17,22 +17,21 @@ const ChatView = ({name, room}) => {
     useEffect(() => {
 
         socket = io(ENDPOINT);
-        console.log(socket);
 
         let name = "userID";
         let room = "chatID";
 
         socket.emit('join', {name, room});
 
-        return () => {
+        /*return () => {
             socket.emit('disconnect');
-        }
+        }*/
     });
 
     useEffect(() => {
-        socket.on('msg', msg => {
-            recivedMessage({setChat}, numMsg, {setNumMsg}, room, msg.text);
-        });
+       // socket.on('msg', msg => {
+//            recivedMessage({setChat}, numMsg, {setNumMsg}, room, msg.text);
+       // });
     });
 
     return (
@@ -90,6 +89,8 @@ function insertMsg({setChat}, numMsg, {setNumMsg}, sender, msg){
 
 function sendMsg({setChat}, numMsg, {setNumMsg}, chatID, msg){
     // TODO: call client client communication
+    let name = "morgan";
+    let room = chatID;
     socket.emit('sendMsg', {name, room, msg});
     return insertMsg({setChat}, numMsg, {setNumMsg}, "Morgan", msg)
 }

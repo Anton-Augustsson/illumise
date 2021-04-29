@@ -5,6 +5,7 @@ import {colors} from "../../mainStyles/colors";
 import ms from "../../mainStyles/ms";
 import CustomHeader from "../../customComponents/customHeader"
 import RequestIcon from "../../customComponents/requestIcon";
+import { Localization } from '../../../modules/localization';
 
 import OrderScreen from "./order/order";
 import OrderApprovalScreen from "./orderApproval/orderApproval";
