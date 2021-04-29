@@ -66,11 +66,9 @@ const validate =
     {
         let d = data;
 
-        let validHeader = d.header != undefined;
         let validBody = d.body != undefined;
-        let validCost = d.cost != undefined;
 
-        if(validHeader && validBody && validCost){
+        if(validBody){
             return true;
         }
 
