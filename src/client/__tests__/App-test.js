@@ -268,9 +268,9 @@ describe("Testing client communication", () =>
         let requestID = await createDummyRequest(userID);
         let chatID = await chat.newChat(requestID, [userID, userID2]);
         expect(chatID).not.toBeNull();
+        let response = await chat.sendMessage(chatID, userID, "hello im here");
+        expect(response).not.toBeNull();
         let responseR = await chat.removeChat(chatID);
-        expect(responseR).not.toBeNull();
-        let response = await chat.sendMessage(userID, chatID, "hello im here");
         expect(responseR).not.toBeNull();
 
         let responseD = await request.requester.removeRequest(requestID);
@@ -294,8 +294,25 @@ describe("Testing client communication", () =>
 
     it("test getAllMessages", async () =>
     {
-
         // TODO: get all mesages
+        let userID = await createDummyUser();
+        let userID2 = await createDummyUser2();
+        let requestID = await createDummyRequest(userID);
+        let chatID = await chat.newChat(requestID, [userID, userID2]);
+        expect(chatID).not.toBeNull();
+        let responseS = await chat.sendMessage(chatID, userID, "hello im here");
+        expect(responseR).not.toBeNull();
+        let response = await chat.getAllMessages(chatID);
+        expect(response).not.toBeNull();
+        let responseR = await chat.removeChat(chatID);
+        expect(responseS).not.toBeNull();
+
+        let responseD = await request.requester.removeRequest(requestID);
+        expect(responseD).not.toBeNull();
+        let responseRA1 = await account.removeAccount(userID);
+        expect(responseRA1).not.toBeNull();
+        let responseRA2 = await account.removeAccount(userID2);
+        expect(responseRA2).not.toBeNull();
 
         // invalid request
         let responseError = await chat.getAllMessages('userid is notvalid', 'not a chat id');

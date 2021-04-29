@@ -15,10 +15,10 @@ const chat =
      * @param {string} userID - The id of the user that sends a message
      * @param {string} chatID - The id of the chat witch is between the provider and requester
      */
-    sendMessage: async function(userID, chatID, msg)
+    sendMessage: async function(chatID, userID, msg)
     {
         let url = chat.chatUrl + '/sendMessage';
-        let message = {userID: userID, chatID: chatID, msg: msg};
+        let message = {chatID: chatID, userID: userID, msg: msg};
         let response = await fetch(url, {
             method: 'PUT',
             headers: {
@@ -35,9 +35,9 @@ const chat =
      * @param {string} userID - The id of the user that sends a message
      * @param {string} chatID - The id of the chat witch is between the provider and requester
      */
-    getAllMessages: async function(userID, chatID)
+    getAllMessages: async function(chatID)
     {
-        let params = '?userID=' + userID + '&chatID=' + chatID;
+        let params = '?chatID=' + chatID;
         let url = chat.chatUrl + '/getAllMessages' + params;        
         let response = await fetch(url);
 

@@ -19,8 +19,8 @@ const Joi = require('joi');
 router.put('/sendMessage', async (req, res) => // post?
 {
   const schema = Joi.object({
-    userID: Joi.string().min(idSize).max(idSize),
     chatID: Joi.string().min(idSize).max(idSize),
+    userID: Joi.string().min(idSize).max(idSize),
     msg: Joi.string()
   });
 
@@ -29,7 +29,7 @@ router.put('/sendMessage', async (req, res) => // post?
   if(valid(b, schema, res))
   {
     // null
-    let response = await db.chat.addMessage(b.userID, b.chatID, b.msg);
+    let response = await db.chat.addMessage(b.chatID, b.userID, b.msg);
     if(response != false) return sendSuccess(res, response);
     else return sendFailure(res);
   }
@@ -43,7 +43,6 @@ router.put('/sendMessage', async (req, res) => // post?
 router.get('/getAllMessages', async (req, res) =>
 {
   const params = {
-    userID: req.param('userID'), //TODO: dont need userID upto client to determen who is who
     chatID: req.param('chatID')
   };
 
