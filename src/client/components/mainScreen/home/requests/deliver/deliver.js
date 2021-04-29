@@ -6,17 +6,32 @@ import ms from "../../../../mainStyles/ms";
 import rs from "../requestStyle";
 import {Localization} from '../../../../../modules/localization'
 import GooglePlaces from '../../../../customComponents/Inputs/googlePlaces';
-
+import request from '../../../../../modules/client-communication/request';
+import storage from '../../../../../modules/localStorage/localStorage';
+import FloatingInput from '../../../../customComponents/Inputs/floatingInput';
 
 const DeliverScreen = ({navigation, route}) => {
     //console.log(JSON.stringify(route));
     const [location, setLocation] = useState("");
-    const checkout = () =>{
+    const [price, setPrice] = useState(0);
+
+    const checkout = async () =>{
         //TODO: kolla att obligatoriska fält är ifyllda
         var result = Object.assign({}, route.params)
         result.stops.push(location);
-        navigation.navigate("Receipt", result); 
+        const userID = await storage.getDataString("userID");
+
+        var data = {
+            header: result.type,
+            body: result,
+            cost: price
+        }
+
+        await request.requester.newRequest(userID, result.type, data);
+        navigation.navigate("Receipt"); 
     }
+    
+
     return (
         <View style={{flex:1}}>
             <CustomHeader
@@ -32,6 +47,11 @@ const DeliverScreen = ({navigation, route}) => {
                         //console.log(data, details);
                         setLocation(data.description);
                         }}
+                    />
+                    <Text style={ms.h3}>{Localization.getText("enterPrice")}</Text>
+                    <FloatingInput 
+                        placeholder={Localization.getText("price")}
+                        onChangeText={(text)=>setPrice(parseInt(text))}
                     />
             </View>
             <View style={rs.moveOnContainer}>

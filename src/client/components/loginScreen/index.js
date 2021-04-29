@@ -40,10 +40,13 @@ const verifyUser = async (navigation, token, type) =>
 
     const fakoff = await storage.getDataString("userID");
     const userID = await account.createAccount(credentials);
+    if(userID != null) {
+        storage.storeDataString("userID", userID);
+    }
+
     //Store response in local database
     //await storage.storeDataString("userID", userID);
-    console.log(fakoff);
-
+    
     navigation.navigate("Main");
 }
 
