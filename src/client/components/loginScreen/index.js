@@ -8,15 +8,43 @@ import * as Google from 'expo-auth-session/providers/google';
 import * as Facebook from 'expo-auth-session/providers/facebook';
 import CustomButton from '../customComponents/customButton';
 import { Localization } from '../../modules/localization';
+import account from "../../modules/client-communication/account";
+import storage from "../../modules/localStorage/localStorage"
 
 const verifyUser = async (navigation, token, type) =>
 {
     var userInfo = await fetch(type === 'facebook' 
-                 ? 'https://graph.facebook.com/v2.5/me?fields=email,name,friends&access_token=' + token
+                 ? 'https://graph.facebook.com/v2.5/me?fields=email,name,first_name,last_name,picture,friends&access_token=' + token
                  : 'https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + token);
     var body = await userInfo.json();
 
-    navigation.navigate("Main", {type: type, user: body});
+    let credentials = 
+        {
+            "firstName":body.given_name,
+            "lastName":body.family_name,
+            "email":body.email,
+            "token":"g"+body.id, 
+        };   
+
+    if(type === "facebook") {
+        credentials =
+            {
+                "firstName":body.first_name,
+                "lastName":body.last_name,
+                "email":body.email,
+                "token":"f"+body.id 
+            };    
+    }
+    
+    
+
+    const fakoff = await storage.getDataString("userID");
+    const userID = await account.createAccount(credentials);
+    //Store response in local database
+    //await storage.storeDataString("userID", userID);
+    console.log(fakoff);
+
+    navigation.navigate("Main");
 }
 
 const LoginScreen = ({navigation}) => 
