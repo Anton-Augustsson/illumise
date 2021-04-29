@@ -102,7 +102,7 @@ class DBRequestsInterface
     {
         try
         {
-            let filter = { creatorID: userID };
+            let filter = { creatorID: ObjectID(userID) };
             let result = await this.#collection.find(filter).toArray();
             if (num !== undefined) result.length = num >= 0 ? num : 0;
             return result;
@@ -125,7 +125,7 @@ class DBRequestsInterface
     {
         try
         {
-            let filter = { providerID: userID };
+            let filter = { providerID: ObjectID(userID) };
             let result = await this.#collection.find(filter).toArray();
             if (num !== undefined) result.length = num >= 0 ? num : 0;
             return result;
@@ -212,7 +212,7 @@ class DBRequestsInterface
         try
         {
             let filter = { _id: ObjectID(requestID) };
-            let update = { $set: { providerID: providerID } };
+            let update = { $set: { providerID: ObjectID(providerID) } };
             let result = await this.#collection.updateOne(filter, update);
             return result.result.ok == 1 && result.result.nModified == 1;
         }
