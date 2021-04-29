@@ -124,10 +124,10 @@ describe("Testing client communication", () =>
         // valid request
         let userID = await createDummyUser();
         let pointStart = coordsToGeoJSON([17.638825          , 59.854004]);
-        let requestID = await request.requester.newRequest(userID, "T1", { "header": "thing", "body": "things", "cost": "allot" }, pointStart);
+        let requestID = await request.requester.newRequest(userID, "T1", { "header": "thing", "body": "things",  "geoLocation": pointStart, "cost": "allot"});
         expect(requestID).not.toBeNull();
         let response = await request.provider.getNearRequests(pointStart, 360, 1);
-        expect(response).not.toBeNull();
+        expect(response[0]).not.toBeNull();
         let responseD = await request.requester.removeRequest(requestID);
         expect(responseD).not.toBeNull();
         let responseR = await account.removeAccount(userID);

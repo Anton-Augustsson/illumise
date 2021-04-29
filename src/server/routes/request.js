@@ -114,7 +114,7 @@ router.post('/requester/newRequest', async (req, res) =>
 
   if(valid(body, schema, res) && validData(data, res))
   {
-    let response = await db.requests.add(body.requestID, body.type, data);
+    let response = await db.requests.add(body.requestID, body.type, data.body, data.geoLocation, data.cost);
     if(response != null) return sendSuccess(res, response);
     else return sendFailure(res);
   }
