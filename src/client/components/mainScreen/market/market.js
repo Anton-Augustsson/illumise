@@ -149,6 +149,15 @@ const RequestItem = ({nav, item}) => {
         </TouchableOpacity>
     );
 }
+/** 
+ * Get a geoJSON representation of a point
+ * @param {[Number]} coordinates [longitude, latitude] coordinates of a point
+ * @returns {{*}} representation of a point with coordinates
+ */
+ function coordsToGeoJSON(coordinates)
+ {
+     return { "type": "Point", "coordinates": coordinates };
+ }
 
 const FirstScreen = (nav) => {
     const [location, setLocation] = useState(null);
@@ -163,13 +172,11 @@ const FirstScreen = (nav) => {
         let location = await Location.getCurrentPositionAsync({});
         setLocation(location);
 
-        var res = await request.provider.getNearRequests(null, 100, 100);
-        console.log(res);
+        let pointStart = coordsToGeoJSON([location.coords.longitude, location.coords.latitude]);
+
+        var res = await request.provider.getNearRequests(pointStart, 1000000, 100);
      }
 
-    if(location == null){
-        getLocation();
-    }
 
     return (
         <View style={{flex:1}}> 
