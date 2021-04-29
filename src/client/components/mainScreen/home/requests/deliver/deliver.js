@@ -4,9 +4,6 @@ import CustomHeader from '../../../../customComponents/customHeader';
 import CustomButton from '../../../../customComponents/customButton';
 import ms from "../../../../mainStyles/ms";
 import rs from "../requestStyle";
-import MapView from 'react-native-maps';
-import * as Location from 'expo-location';
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import {Localization} from '../../../../../modules/localization'
 import GooglePlaces from '../../../../customComponents/Inputs/googlePlaces';
 
@@ -48,13 +45,5 @@ const DeliverScreen = ({navigation, route}) => {
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    map: {
-      width: "100%",
-      height: "70%",
-      marginBottom: 20,
-    },
-  });
 
 export default DeliverScreen;

@@ -9,21 +9,20 @@ import MarketScreen from './market/market';
 
 const Tab = createBottomTabNavigator();
 
-const MainScreen = ({navigation, route}) => {
+const MainScreen = (navigation) => {
     //https://reactnavigation.org/docs/bottom-tab-navigator
     return (
-        <Tab.Navigator 
-            initialRouteName="Home"
-            tabBar={props=><Menu {...props}/>}
-            >
+        <Tab.Navigator initialRouteName="Home"
+                       tabBar={props=><Menu {...props}/>}>
+
             <Tab.Screen 
-            name="Home" 
-            children={()=><HomeScreen user={route.params.user}/>}
+                name="Home" 
+                component={HomeScreen}
             />
 
             <Tab.Screen 
-            name="Orders" 
-            component={OrdersScreen}
+                name="Orders" 
+                component={OrdersScreen}
             />
 
             <Tab.Screen 
@@ -37,13 +36,11 @@ const MainScreen = ({navigation, route}) => {
             />
 
             <Tab.Screen 
-            name="Burgar" 
-            component={BurgarScreen}
+                name="Burgar" 
+                component={BurgarScreen}
             />
         </Tab.Navigator>
     );
 }
-
-
 
 export default MainScreen;

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { View, Image, TouchableOpacity, StyleSheet, SafeAreaView} from 'react-native';
+import { View, TouchableOpacity, SafeAreaView} from 'react-native';
 import mms from "./menuStyle";
 import {colors} from "../../mainStyles/colors";
 import {Feather, FontAwesome, Ionicons, FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';

@@ -1,11 +1,14 @@
 require('isomorphic-fetch');
+import communication from './communication';
+const url = communication.url;
+const returnResponse = communication.returnResponse;
 
 /**
  * Managing user account both for service provider and service requester
  */
 const account =
 {
-    accountUrl: 'http://localhost:3000/account',
+    accountUrl: url + '/account',
 
     /**
      * create new account
@@ -23,8 +26,7 @@ const account =
             body: JSON.stringify(toCreate)
         });
 
-        let result = await response.json(); //should be json
-        console.log("ID of created account: " + result);
+        return returnResponse(response);
     },
 
     /**
@@ -43,8 +45,7 @@ const account =
             body: JSON.stringify(toRemove)
         });
 
-        let result = await response.text(); //should be json
-        console.log(result);
+        return returnResponse(response);
     },
 
     /**
@@ -64,8 +65,7 @@ const account =
             body: JSON.stringify(toUpdate)
         });
 
-        let result = await response.text(); //should be json
-        console.log(result);
+        return returnResponse(response);
     },
 
 };

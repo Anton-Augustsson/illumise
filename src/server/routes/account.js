@@ -26,7 +26,7 @@ router.put('/createAccount', async (req, res) =>
 
   if(valid(req.body, schema, res) && validCredentials(c, res))
   {
-    let response = await db.accounts.add(c.firstName, c.lastName, c.email, c.token);
+    let response = await db.accounts.add(c.firstName, c.lastName, c.email, "119", c.token);
     if(response != null) return sendSuccess(res, response);
     else return sendFailure(res);
   }
@@ -39,7 +39,7 @@ router.put('/createAccount', async (req, res) =>
 router.delete('/removeAccount', async (req, res) =>
 {
   const schema = Joi.object({
-    userID: Joi.string()
+    userID: Joi.string().min(24).max(24)
   });
 
   if(valid(req.body, schema, res))
@@ -58,7 +58,7 @@ router.delete('/removeAccount', async (req, res) =>
 router.post('/changeCredentials', async (req, res) =>
 {
   const schema = Joi.object({
-    userID: Joi.string(),
+    userID: Joi.string().min(24).max(24),
     credentials: Joi.any()
   });
 
@@ -66,7 +66,7 @@ router.post('/changeCredentials', async (req, res) =>
 
   if(valid(req.body, schema, res), validCredentials(c, res))
   {
-    let response = await db.accounts.update(req.body.userID, c.firstName, c.lastName, c.email, c.token);
+    let response = await db.accounts.update(req.body.userID, c.firstName, c.lastName, c.email, "119", c.token);
     if(response != false) return sendSuccess(res);
     else return sendFailure(res);
   }

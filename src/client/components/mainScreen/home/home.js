@@ -1,12 +1,5 @@
 import React from 'react';
-import { 
-    Text, 
-    View, 
-    Image, 
-    FlatList, 
-    useState,
-    TouchableOpacity
-} from 'react-native';
+import { Text, View, FlatList, TouchableOpacity } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import FoodRequestScreen from './requests/foodRequestScreen/foodRequest';
 import PostRequestScreen from './requests/postRequestScreen/postRequestScreen';
@@ -21,11 +14,13 @@ import DeliverScreen from './requests/deliver/deliver';
 import { Localization } from '../../../modules/localization';
 import OtherRequestScreen from './requests/OtherRequestScreen/otherRequest';
 
+
+
 const DATA = [
     {
         id: "1",
-        title1: "Mat",
-        title2: "Paket & Post",
+        title1: Localization.getText("food"),
+        title2: Localization.getText("postAndPackage"),
         type1: "food",
         type2: "package",
         des1: "FoodRequest",
@@ -33,8 +28,8 @@ const DATA = [
     },
     {
         id: "2",
-        title1: "Shopping",
-        title2: "Annat",
+        title1: Localization.getText("shopping"),
+        title2: Localization.getText("other"),
         type1: "shopping",
         type2: "other",
         des1: "ShoppingRequest",
@@ -42,7 +37,8 @@ const DATA = [
     }
 ];
 
-const InnerItem = (props)  => {
+const InnerItem = (props)  => 
+{
     return(
         <TouchableOpacity 
             onPress={()=> {
@@ -73,8 +69,8 @@ const Item = ({item, nav}) => (
     </View>
 );
 
-const renderItem = ({item}, nav) => { 
-
+const renderItem = ({item}, nav) => 
+{ 
     return (
         <Item
             item={item}
@@ -83,22 +79,22 @@ const renderItem = ({item}, nav) => {
     );
 };
 
-const TopWelcome = ({user}) => {
-    
+const TopWelcome = () => 
+{
     return (
         <View style={hs.welcomeContainer}>
-            <Text style={ms.h2}>{Localization.getText("welcome")} {user.user.name}!</Text>
+            <Text style={ms.h2}>{Localization.getText("welcome")}!</Text>
         </View>
     );
 }
 
 
 
-const FirstScreen = ({nav, user}) => {
+const FirstScreen = ({nav}) => {
     return (
         <View style={{flex:1}}>
             
-            <TopWelcome user={user}/>
+            <TopWelcome/>
             <FlatList
                 data={DATA}
                 renderItem={(item) => renderItem(item, nav)}
@@ -111,7 +107,7 @@ const FirstScreen = ({nav, user}) => {
 
 const Stack = createStackNavigator();
 
-const HomeScreen = (user) => {
+const HomeScreen = () => {
     return (
         <Stack.Navigator 
             screenOptions={{
@@ -122,7 +118,7 @@ const HomeScreen = (user) => {
         >
             <Stack.Screen 
                 name="FirstScreen" 
-                children={(navigation)=><FirstScreen nav={navigation} user={user}/>}
+                children={(navigation)=><FirstScreen nav={navigation}/>}
             />
 
             <Stack.Screen 

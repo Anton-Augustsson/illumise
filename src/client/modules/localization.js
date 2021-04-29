@@ -24,8 +24,10 @@ export class Localization
 {
     /** @type {LocalizationData} @private */
     static _localizationData = require(`${localizationPath}/data.json`);
+    
     /** @type {String} @private */
     static _lang = undefined;
+
     /**@type {?TextJSON} @private */
     static _textJSON = require(`${localizationPath}/text.json`);
 
