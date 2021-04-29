@@ -57,6 +57,7 @@ const FloatingInput = forwardRef(({placeholder, onChangeText, onFocus, onBlur, s
             borderStyle:"solid",
             borderColor: !isFocused ? colors.INPUT_BORDER : colors.INPUT_FOCUS,
             borderRadius:20,
+            backgroundColor:"white",
         }
     });
 

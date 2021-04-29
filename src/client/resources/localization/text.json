@@ -65,6 +65,8 @@
         "Other": "Other",
         "doYourOwnRequest": "Do your own request",
         "heading":"Heading",
+        "writeMsg":"Write your message...",
+        "send":"Send",
         "text":"Text",
         "Place": "Place"
     },
@@ -135,6 +137,8 @@
         "Other": "Övrigt",
         "heading":"Rubrik",
         "text":"Text",
+        "writeMsg":"Skriv ditt meddelande...",
+        "send":"Skicka",
         "doYourOwnRequest": "Gör din egna annons",
         "place": "Plats"
     } 
