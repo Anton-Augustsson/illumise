@@ -15,6 +15,28 @@ const DeliverScreen = ({navigation, route}) => {
     const [location, setLocation] = useState("");
     const [price, setPrice] = useState(0);
 
+        /** 
+     * Get a geoJSON representation of a point
+     * @param {[Number]} coordinates [longitude, latitude] coordinates of a point
+     * @returns {{*}} representation of a point with coordinates
+     */
+    function coordsToGeoJSON(coordinates)
+    {
+        return { "type": "Point", "coordinates": coordinates };
+    }
+
+    const getLocation = async () => {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+          setErrorMsg('Denied acces to location');
+          return;
+        }
+        let location = await Location.getCurrentPositionAsync({});
+        setLocation(location);
+
+        let pointStart = coordsToGeoJSON([location.coords.longitude, location.coords.latitude]);
+    }
+
     const checkout = async () =>{
         //TODO: kolla att obligatoriska fält är ifyllda
         var result = Object.assign({}, route.params)
@@ -27,7 +49,7 @@ const DeliverScreen = ({navigation, route}) => {
             body: result,
             cost: price
         }
-
+        
         await request.requester.newRequest(userID, result.type, data);
         navigation.navigate("Receipt"); 
     }

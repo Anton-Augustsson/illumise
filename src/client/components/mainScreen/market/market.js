@@ -174,7 +174,7 @@ const FirstScreen = (nav) => {
 
         let pointStart = coordsToGeoJSON([location.coords.longitude, location.coords.latitude]);
 
-        var res = await request.provider.getNearRequests(pointStart, 1000000, 100);
+        var res = await request.provider.getNearRequests(pointStart, 1000000, 20);
      }
 
 
