@@ -23,12 +23,13 @@ const ChatView = ({name, room}) => {
         /*return () => {
             socket.emit('disconnect');
         }*/
-    });
+    }, [ENDPOINT]);
 
     useEffect(() => {
-       // socket.on('msg', msg => {
-//            recivedMessage({setChat}, numMsg, {setNumMsg}, room, msg.text);
-       // });
+        socket.on('msg', msg => {
+           alert("hello");  
+           recivedMsg({setChat}, numMsg, {setNumMsg}, room, msg.text);
+        });
     });
 
     return (
@@ -63,7 +64,7 @@ const MessageInput = ({setChat, numMsg, setNumMsg}) => {
             defaultValue={msg}
             />
             <TouchableOpacity style = {ms.button} onPress={() => {
-                return sendMsg({setChat}, numMsg, {setNumMsg}, "Morgan", msg)
+                return sendMsg({setChat}, numMsg, {setNumMsg}, '1', msg)
             }}>
                 <Text>Skicka</Text>
             </TouchableOpacity>
@@ -89,11 +90,11 @@ function sendMsg({setChat}, numMsg, {setNumMsg}, chatID, msg){
     let name = "morgan";
     let room = chatID;
     socket.emit('sendMsg', {name, room, msg});
-    return insertMsg({setChat}, numMsg, {setNumMsg}, "Morgan", msg)
+    //return insertMsg({setChat}, numMsg, {setNumMsg}, "Morgan", msg);
 }
 
 function recivedMsg({setChat}, numMsg, {setNumMsg}, chatID, msg){
-    return insertMsg({setChat}, numMsg, {setNumMsg}, "Sombody", msg)
+    return insertMsg({setChat}, numMsg, {setNumMsg}, "Sombody", msg);
 }
 
 const cs = StyleSheet.create({
