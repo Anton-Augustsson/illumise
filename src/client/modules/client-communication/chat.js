@@ -38,7 +38,7 @@ const chat =
     getAllMessages: async function(chatID)
     {
         let params = '?chatID=' + chatID;
-        let url = chat.chatUrl + '/getAllMessages' + params;        
+        let url = chat.chatUrl + '/getAllMessages' + params;
         let response = await fetch(url);
 
         return returnResponse(response);

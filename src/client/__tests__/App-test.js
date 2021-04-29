@@ -63,14 +63,14 @@ describe("Testing client communication", () =>
     it("test get", async () =>
     {
         // valid request
-        let newCredentials = {"firstName":"Ddsfa", "lastName":"sdddwrfa", "email":"jhgr", "token":"dsaf" };
+        let password = "dsaf";
+        let email = "email@google.com";
+        let newCredentials = {"firstName":"Ddsfa", "lastName":"sdddwrfa", "email":email, "token":password };
         let userID = await createDummyUser();
         let response = await account.changeCredentials(userID, newCredentials);
         expect(response).not.toBeNull();
-        /* TODO:
         let responseG = await account.get(email, password);
         expect(responseG).not.toBeNull();
-        */
         let responseR = await account.removeAccount(userID);
         expect(responseR).not.toBeNull();
 
@@ -294,7 +294,6 @@ describe("Testing client communication", () =>
 
     it("test getAllMessages", async () =>
     {
-        // TODO: get all mesages
         let userID = await createDummyUser();
         let userID2 = await createDummyUser2();
         let requestID = await createDummyRequest(userID);
