@@ -66,7 +66,14 @@
         "doYourOwnRequest": "Do your own request",
         "heading":"Heading",
         "text":"Text",
-        "Place": "Place"
+        "Place": "Place",
+        "price": "Price",
+        "enterPrice": "Enter price",
+        "closest": "Closest",
+        "latest": "Latest",
+        "foodPromt": "Buy and deliver food",
+        "shoppingPromt": "Buy and deliver goods",
+        "postPromt": "Pick up and deliver post"
     },
     "se": 
     {
@@ -136,6 +143,13 @@
         "heading":"Rubrik",
         "text":"Text",
         "doYourOwnRequest": "Gör din egna annons",
-        "place": "Plats"
+        "place": "Plats",
+        "price": "Pris",
+        "enterPrice": "Ange pris",
+        "closest": "Närmast mig",
+        "latest": "Senaste",
+        "foodPrompt": "Handla och leverera mat",
+        "shoppingPrompt": "Handla och leverera varor",
+        "postPrompt": "Hämta och leverera post/paket"
     } 
 }

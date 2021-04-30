@@ -68,6 +68,21 @@ const account =
         return returnResponse(response);
     },
 
+    /**
+     * Gets the id of the user with the given email if the password matches
+     * @async
+     * @param {String} email The email of the user
+     * @param {String} password The password of the user
+     * @returns {?User} The id of the user
+     */
+    get: async function(email, password)
+    {
+        let params = '?email=' + email + '&password=' + password;
+        let url = account.accountUrl + '/get' + params;
+        let response = await fetch(url);
+
+        return returnResponse(response);
+    },
 };
 
 export default account;

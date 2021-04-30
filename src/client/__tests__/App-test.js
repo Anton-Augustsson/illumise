@@ -60,6 +60,25 @@ describe("Testing client communication", () =>
     });
 
 
+    it("test get", async () =>
+    {
+        // valid request
+        let password = "dsaf";
+        let email = "email@google.com";
+        let newCredentials = {"firstName":"Ddsfa", "lastName":"sdddwrfa", "email":email, "token":password };
+        let userID = await createDummyUser();
+        let response = await account.changeCredentials(userID, newCredentials);
+        expect(response).not.toBeNull();
+        let responseG = await account.get(email, password);
+        expect(responseG).not.toBeNull();
+        let responseR = await account.removeAccount(userID);
+        expect(responseR).not.toBeNull();
+
+        // invalid request
+        let responseError = await account.changeCredentials(userID, "invalid");
+        expect(responseError).toBeNull();
+    });
+
     /*
      * Tests request
      */
@@ -105,17 +124,17 @@ describe("Testing client communication", () =>
         // valid request
         let userID = await createDummyUser();
         let pointStart = coordsToGeoJSON([17.638825          , 59.854004]);
-        let requestID = await request.requester.newRequest(userID, "T1", { "header": "thing", "body": "things", "cost": "allot" }, pointStart);
+        let requestID = await request.requester.newRequest(userID, "T1", { "header": "thing", "body": "things",  "geoLocation": pointStart, "cost": "allot"});
         expect(requestID).not.toBeNull();
         let response = await request.provider.getNearRequests(pointStart, 360, 1);
-        //expect(response).not.toBeNull();  //FIXME: NULL MAXDISTANCE IS NOT A NUMBER
+        expect(response[0]).not.toBeNull();
         let responseD = await request.requester.removeRequest(requestID);
         expect(responseD).not.toBeNull();
         let responseR = await account.removeAccount(userID);
         expect(responseR).not.toBeNull();
 
         // invalid request
-        let responseError = await request.provider.getNearRequests('not a geolocation');
+        let responseError = await request.provider.getNearRequests('not a geolocation', 231, 1);
         expect(responseError).toBeNull();
     });
 
@@ -125,8 +144,8 @@ describe("Testing client communication", () =>
         let userID = await createDummyUser();
         let userID2 = await createDummyUser2();
         let requestID = await createDummyRequest(userID);
-        // let response = await request.provider.set(requestID, userID2);
-        // expect(response).not.toBeNull(); // FIXME return null
+        let response = await request.provider.set(requestID, userID2);
+        expect(response).not.toBeNull();
         let responseD = await request.requester.removeRequest(requestID);
         expect(responseD).not.toBeNull();
         let responseRA1 = await account.removeAccount(userID);
@@ -142,12 +161,12 @@ describe("Testing client communication", () =>
     it("test acceptProvider", async () =>
     {
         // valid request
-        /* TODO: not implemented in dbInterface */
+        // TODO: not implemented in dbInterface
         let userID = await createDummyUser();
         let userID2 = await createDummyUser2();
         let requestID = await createDummyRequest(userID);
-        //let response = await request.requester.acceptProvider(requestID, userID2);
-        //expect(response).not.toBeNull(); //FIXME not working
+        let response = await request.requester.acceptProvider(requestID, userID2);
+        expect(response).not.toBeNull();
         let responseD = await request.requester.removeRequest(requestID);
         expect(responseD).not.toBeNull();
         let responseRA1 = await account.removeAccount(userID);
@@ -166,10 +185,10 @@ describe("Testing client communication", () =>
         let userID = await createDummyUser();
         let userID2 = await createDummyUser2();
         let requestID = await createDummyRequest(userID);
-        //let responseA = await request.requester.acceptProvider(requestID, userID2);
-        //expect(responseA).not.toBeNull();
-        //let response = await request.provider.getUserProviding(userID2, 1);
-        //expect(response).not.toBeNull(); // FIXME not working
+        let responseA = await request.requester.acceptProvider(requestID, userID2);
+        expect(responseA).not.toBeNull();
+        let response = await request.provider.getUserProviding(userID2, 1);
+        expect(response).not.toBeNull();
         let responseD = await request.requester.removeRequest(requestID);
         expect(responseD).not.toBeNull();
         let responseRA1 = await account.removeAccount(userID);
@@ -178,8 +197,8 @@ describe("Testing client communication", () =>
         expect(responseRA2).not.toBeNull();
 
         // invalid request
-        //let responseError = await request.provider.getUserProviding('not sdafadsfiderID', 1);
-        //expect(responseError[0]).toBeNull(); //FIXME: dosent return null
+        let responseError = await request.provider.getUserProviding('not sdafadsfiderID', 1);
+        expect(responseError).toStrictEqual([null]);
     });
 
     it("test getUserRequest", async () =>
@@ -196,7 +215,7 @@ describe("Testing client communication", () =>
 
         // invalid request
         let responseError = await request.requester.getUserRequest('not requestID', 1);
-        expect(responseError[0]).toBeNull();
+        expect(responseError).toBeNull();
     });
 
 
@@ -233,8 +252,7 @@ describe("Testing client communication", () =>
         expect(responseRA2).not.toBeNull();
 
         // invalid request newChat
-        //let responseErrorN = await chat.newChat('not a requestID', null); //FIXME
-        let responseErrorN = await chat.newChat('not a requestID', "sdaf");
+        let responseErrorN = await chat.newChat('not a requestID', null);
         expect(responseErrorN).toBeNull();
 
         // invalid request removeChat
@@ -250,9 +268,9 @@ describe("Testing client communication", () =>
         let requestID = await createDummyRequest(userID);
         let chatID = await chat.newChat(requestID, [userID, userID2]);
         expect(chatID).not.toBeNull();
+        let response = await chat.sendMessage(chatID, userID, "hello im here");
+        expect(response).not.toBeNull();
         let responseR = await chat.removeChat(chatID);
-        expect(responseR).not.toBeNull();
-        let response = await chat.sendMessage(userID, chatID, "hello im here");
         expect(responseR).not.toBeNull();
 
         let responseD = await request.requester.removeRequest(requestID);
@@ -274,13 +292,30 @@ describe("Testing client communication", () =>
         expect(responseError).toBeNull();
     });
 
-    it("test getAllMessages", async () => //FIXME: 12 bytes error
+    it("test getAllMessages", async () =>
     {
+        let userID = await createDummyUser();
+        let userID2 = await createDummyUser2();
+        let requestID = await createDummyRequest(userID);
+        let chatID = await chat.newChat(requestID, [userID, userID2]);
+        expect(chatID).not.toBeNull();
+        let responseS = await chat.sendMessage(chatID, userID, "hello im here");
+        expect(responseR).not.toBeNull();
+        let response = await chat.getAllMessages(chatID);
+        expect(response).not.toBeNull();
+        let responseR = await chat.removeChat(chatID);
+        expect(responseS).not.toBeNull();
+
+        let responseD = await request.requester.removeRequest(requestID);
+        expect(responseD).not.toBeNull();
+        let responseRA1 = await account.removeAccount(userID);
+        expect(responseRA1).not.toBeNull();
+        let responseRA2 = await account.removeAccount(userID2);
+        expect(responseRA2).not.toBeNull();
+
         // invalid request
-        /*
         let responseError = await chat.getAllMessages('userid is notvalid', 'not a chat id');
         expect(responseError).toBeNull();
-        */
     });
 
     /*
