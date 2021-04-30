@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, View, ScrollView, FlatList, StyleSheet,TouchableOpacity} from 'react-native';
+import { Text, View, ScrollView, FlatList, StyleSheet,TouchableOpacity, Alert} from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import CustomHeader from "../../customComponents/customHeader";
@@ -10,6 +10,7 @@ import MarketItem from './marketItem';
 import {Localization} from '../../../modules/localization'
 import * as Location from 'expo-location';
 import request from '../../../modules/client-communication/request';
+import CustomMap from '../../customComponents/customMap';
 
 const REQUESTS = [
     {
@@ -175,11 +176,11 @@ const FirstScreen = (nav) => {
         let pointStart = coordsToGeoJSON([location.coords.longitude, location.coords.latitude]);
 
         var res = await request.provider.getNearRequests(pointStart, 1000000, 100);
-     }
+    }
 
 
     return (
-        <View style={{flex:1}}> 
+        <View style={{flex: 1}}> 
             <CustomHeader 
                 title="Market"
                 nav={nav}
@@ -187,10 +188,29 @@ const FirstScreen = (nav) => {
             />
 
             <FlatList
+                style={{flex: 1}}
                 data={REQUESTS}
                 renderItem={({item})=><RequestItem nav={nav} item={item}/>}
                 keyExtractor={(item)=>item.id}
                 ListHeaderComponent={<FilterView/>}
+            />
+            <CustomMap
+                style={{flex: 1}}
+                onMount={async (region) => 
+                {
+                    /** @type {[*]} */
+                    let requests = await request.provider.getNearRequests({type: "Point", coordinates: [region.latitude,region.longitude]}, 9999999);
+                    return requests.filter((request) => (request != null && request != undefined)).map((request) => 
+                    {
+                        return {
+                            latitude:    request.geoLocation.coordinates[0],
+                            longitude:   request.geoLocation.coordinates[1],
+                            title:       request.header,
+                            description: request.body,
+                            key:         request._id
+                        };
+                    });
+                }}
             />
         </View>
     );
