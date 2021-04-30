@@ -20,9 +20,11 @@ const ChatView = ({name, room}) => {
 
         socket.emit('join', {name, room});
 
-        /*return () => {
-            socket.emit('disconnect');
-        }*/
+        return () => {
+            socket.disconnect();
+        }
+
+        
     }, [ENDPOINT]);
 
     useEffect(() => {
