@@ -56,7 +56,7 @@ io.on('connection', function(socket) {
     console.log("New connection");
 
     socket.on('join', ({ name, room }, callback) => {
-        console.log(name, room);
+        console.log(name + "joined room " + room);
 
         socket.join(room); // sends all new messages to this socket
 

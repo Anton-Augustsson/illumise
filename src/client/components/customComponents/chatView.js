@@ -26,11 +26,10 @@ const ChatView = ({name, room}) => {
     }, [ENDPOINT]);
 
     useEffect(() => {
-        socket.on('msg', msg => {
-           alert("hello");  
+        socket.on('msg', msg => { 
            recivedMsg({setChat}, numMsg, {setNumMsg}, room, msg.text);
         });
-    });
+    }, [chat]);
 
     return (
         <View>
@@ -87,7 +86,7 @@ function insertMsg({setChat}, numMsg, {setNumMsg}, sender, msg){
 
 function sendMsg({setChat}, numMsg, {setNumMsg}, chatID, msg){
     // TODO: call client client communication
-    let name = "morgan";
+    let name = "Morgan";
     let room = chatID;
     socket.emit('sendMsg', {name, room, msg});
     //return insertMsg({setChat}, numMsg, {setNumMsg}, "Morgan", msg);
