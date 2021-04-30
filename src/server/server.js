@@ -15,7 +15,7 @@ const io = socketio(server, {
 });
 
 /**
- * Initialze server interface
+ * Initialize server interface
  */
 let db;
 let connected;

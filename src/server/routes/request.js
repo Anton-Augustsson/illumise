@@ -1,4 +1,4 @@
-
+/** @type {DBInterface} */
 const db = require("../server");
 const validate = require("./validate");
 const valid = validate.valid;
@@ -11,7 +11,7 @@ const express = require('express');
 const router = express.Router();
 const Joi = require('joi');
 const { idSize } = require("./validate");
-
+const { DBInterface } = require("../db/dbInterface");
 
 /**
  * set payment to done and remove chat (will still be accessible in x time)
@@ -34,23 +34,25 @@ router.put('/completeRequest', async (req, res) =>
 /**
  * get available request in x radius from location.
  * @param {string} geoLocation - The current location of the provider
- * @param {int} maxDistance - The max sistance of the acceptile location
- * @param {int} maxRequests - The number of request that the proider whants to se
+ * @param {int} maxDistance - The max distance from the given location
+ * @param {int} maxRequests - The number of request that the provider wants to se
  */
 router.get('/provider/getNearRequests', async (req, res) =>
 {
-  const params = {
-    geoLocation: JSON.parse(req.param('geoLocation')),
-    maxDistance: req.param('maxDistance'),
-    maxRequests: req.param('maxRequests'),
-  };
-
-  if(validParams(params, res))
-   {
-     let response = await db.requests.getNearby(params.geoLocation, parseFloat(params.maxDistance), parseFloat(params.maxRequests));
-     if(response != null) return sendSuccess(res, response);
-     else return sendFailure(res);
-  }
+    const params = {
+        geoLocation: req.param('geoLocation'),
+        maxDistance: req.param('maxDistance'),
+        maxRequests: req.param('maxRequests'),
+    };
+    if(validParams(params, res))
+    {
+        let geo  = JSON.parse(params.geoLocation);
+        let dist = parseFloat(params.maxDistance);
+        let num  = params.maxRequests === 'undefined' ? undefined : parseInt(params.maxRequests);
+        let response = await db.requests.getNearby(geo, dist, num);
+        if(response != null) return sendSuccess(res, response);
+        else return sendFailure(res);
+    }
 });
 
 /**
@@ -69,8 +71,8 @@ router.put('/provider/set', async (req, res) =>
 
   if(valid(body, schema, res))
   {
-    // TODO change from setPovider to somthing else that simply shows the intrest of providing
-    let response = await db.requests.setProvider(body.requestID, body.providorID);
+    // TODO change from setProvider to something else that simply shows the interest of providing
+    let response = await db.requests.setProvider(body.requestID, body.providerID);
     if(response != false) return sendSuccess(res, response);
     else return sendFailure(res);
   }
@@ -79,7 +81,7 @@ router.put('/provider/set', async (req, res) =>
 /**
  * Get requests that the provider has set
  * @param {string} providerID - The id of the providers set requests
- * @param {int} num - The number of how many requests to return starting from most reasont
+ * @param {int} num - The number of how many requests to return starting from most reascent
  */
 router.get('/provider/getUserProviding', async (req, res) =>
 {
@@ -90,7 +92,7 @@ router.get('/provider/getUserProviding', async (req, res) =>
 
   if(validParams(params, res))
   {
-    let response = await db.requests.getUserProviding(params.providorID, params.num);
+    let response = await db.requests.getUserProviding(params.providerID, params.num);
     if(response != null) return sendSuccess(res, response);
     else return sendFailure(res);
   }
@@ -123,7 +125,7 @@ router.post('/requester/newRequest', async (req, res) =>
 /**
  * Get the users request
  * @param {string} requestID - The user id of the users requests
- * @param {int} num - The number of how many requests to return starting from most reasont
+ * @param {int} num - The number of how many requests to return starting from most reascent
  */
 router.get('/requester/getMyRequest', async (req, res) => // TODO: change getMyRequest to getUserRequest
 {
@@ -161,21 +163,20 @@ router.delete('/requester/removeRequest', async (req, res) =>
 /**
  * give rating on service provider
  * @param {string} requestID - The requester id of the users who review the provider
- * @param {string} providorID - The id of the providers to be reviewed
+ * @param {string} providerID - The id of the providers to be reviewed
  * @param {int} rating - A number between 0 and 5, where 5 is best rating.
  */
-
 router.put('/requester/reviewProvider', async (req, res) =>
 {
   const schema = Joi.object({
     requestID: Joi.string(),
-    providorID: Joi.string(),
+    providerID: Joi.string(),
     rating: Joi.number().min(0).max(5)
   });
 
   if(valid(req.body, schema, res))
   {
-    // dont know
+    // don't know
     //let response = await db.requests.remove(req.body.requestID); // TODO
     return res.send('Received a PUT HTTP method');
   }
@@ -197,8 +198,8 @@ router.put('/requester/acceptProvider', async (req, res) =>
 
   if(valid(body, schema, res))
   {
-    // TODO change from setPovider to somthing else that simply shows the intrest of providing
-    let response = await db.requests.setProvider(body.requestID, body.providorID);
+    // TODO change from setProvider to something else that simply shows the interest of providing
+    let response = await db.requests.setProvider(body.requestID, body.providerID);
     if(response != false) return sendSuccess(res, response);
     else return sendFailure(res);
   }
