@@ -68,7 +68,7 @@ io.on('connection', function(socket) {
         console.log(name, room, msg);
         io.to(room).emit('msg', { user: name, text: msg});
         // save new msg
-        //callback();
+        callback();
     });
 
     socket.on('disconnect', () => {

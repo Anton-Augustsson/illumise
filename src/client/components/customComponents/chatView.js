@@ -8,10 +8,13 @@ import communication from '../../modules/client-communication/communication';
 
 const url = communication.url;
 let socket;
+let numMsg = 1;
+let setNumMsg;
 
 const ChatView = ({name, room}) => {
     const [chat, setChat] = useState([]);
-    const [numMsg, setNumMsg] = useState(1);
+    const [msg, setMsg] = useState('');
+    //const [numMsg, setNumMsg] = useState(1);
 
     const ENDPOINT = url;
     useEffect(() => {
@@ -28,10 +31,12 @@ const ChatView = ({name, room}) => {
     }, [ENDPOINT]);
 
     useEffect(() => {
-        socket.on('msg', msg => { 
-           recivedMsg({setChat}, numMsg, {setNumMsg}, room, msg.text);
+        socket.on('msg', msg => {
+            console.log(numMsg);
+            //console.log(msg);
+            recivedMsg({setChat}, numMsg, {setNumMsg}, msg.user, msg.text);
         });
-    }, [chat]);
+    }, []);
 
     return (
         <View>
@@ -43,7 +48,7 @@ const ChatView = ({name, room}) => {
                     keyExtractor={(item)=>item.id}
                 />
             </View>
-          <MessageInput setChat={setChat} numMsg={numMsg} setNumMsg={setNumMsg}></MessageInput>
+          <MessageInput setChat={setChat} numMsg={numMsg} setNumMsg={setNumMsg} room={room} sender={name} msg={msg} setMsg={setMsg} ></MessageInput>
         </View>
     );
 }
@@ -54,8 +59,8 @@ const ChatItem = ({item}) => {
     );
 }
 
-const MessageInput = ({setChat, numMsg, setNumMsg}) => {
-    const [msg, setMsg] = useState('');
+const MessageInput = ({setChat, numMsg, setNumMsg, room, sender, msg, setMsg}) => {
+    
     return (
         <View>
             <TextInput
@@ -65,7 +70,7 @@ const MessageInput = ({setChat, numMsg, setNumMsg}) => {
             defaultValue={msg}
             />
             <TouchableOpacity style = {ms.button} onPress={() => {
-                return sendMsg({setChat}, numMsg, {setNumMsg}, '1', msg)
+                return sendMsg({setChat}, numMsg, {setNumMsg}, room.toString(), sender, msg, {setMsg});
             }}>
                 <Text>Skicka</Text>
             </TouchableOpacity>
@@ -74,28 +79,35 @@ const MessageInput = ({setChat, numMsg, setNumMsg}) => {
 }
 
 function insertMsg({setChat}, numMsg, {setNumMsg}, sender, msg){
+    
     let toInsert = {
         "id":numMsg.toString(),
         "sender": sender.toString(),
         "time": Date.now(),
         "msg": msg.toString()
     };
-    setNumMsg(numMsg+1);
+    //setNumMsg(numMsg+1);sendMessage
+    numMsg+=1;
+    console.log("89: " + numMsg);
+    //console.log("Message: " + msg);
     setChat((previousChat) => {
+        //console.log(previousChat);
         return ([...previousChat, toInsert]);
     });
 }
 
-function sendMsg({setChat}, numMsg, {setNumMsg}, chatID, msg){
+function sendMsg({setChat}, numMsg, {setNumMsg}, chatID, sender, msg, {setMsg}) {
+//const sendMsg = (event, {setChat}, numMsg, {setNumMsg}, chatID, sender, msg, {setMsg}) => {
     // TODO: call client client communication
-    let name = "Morgan";
+    //event.preventDefault();
+    let name = sender;
     let room = chatID;
-    socket.emit('sendMsg', {name, room, msg});
+    socket.emit('sendMsg', {name, room, msg}, () => setMsg(''));
     //return insertMsg({setChat}, numMsg, {setNumMsg}, "Morgan", msg);
 }
 
-function recivedMsg({setChat}, numMsg, {setNumMsg}, chatID, msg){
-    return insertMsg({setChat}, numMsg, {setNumMsg}, "Sombody", msg);
+function recivedMsg({setChat}, numMsg, {setNumMsg}, sender, msg){
+    return insertMsg({setChat}, numMsg, {setNumMsg}, sender, msg);
 }
 
 const cs = StyleSheet.create({
