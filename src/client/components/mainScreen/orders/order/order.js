@@ -31,7 +31,6 @@ const OrderScreen = ({navigation, route}) => {
     return (
         <View style={{flex:1}}>
             <CustomHeader
-              title={route.params.id}
                 nav={navigation}
             ></CustomHeader>
             <View> 
