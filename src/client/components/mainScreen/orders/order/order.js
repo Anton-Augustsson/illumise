@@ -20,7 +20,6 @@ const OrderScreen = ({navigation, route}) => {
             <CustomHeader
                 nav={navigation}
             ></CustomHeader>
-            
 
             <Chat/>
         </View>

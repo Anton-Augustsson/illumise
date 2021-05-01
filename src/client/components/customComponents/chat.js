@@ -1,9 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import { Text, View, FlatList, StyleSheet,
-        TouchableOpacity, TextInput, Keyboard} from 'react-native';
+        TouchableOpacity, TextInput, Keyboard, KeyboardAvoidingView} from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import {colors} from "../mainStyles/colors";
 import { Localization } from '../../modules/localization';
+import {magicValues} from "../mainStyles/magicValues";
 
 
 const EXAMPLE = [
@@ -47,9 +48,16 @@ const Chat = (props) => {
     const [isFocused, setFocus] = useState(false);
 
     const [keyboard, setKeyboard] = useState(false);
+    const [keyboardHeight, setKeyboardHeight] = useState(0);
 
-    const keyboardShow = () => setKeyboard(true);
-    const keyboardHide = () => setKeyboard(false);
+    const keyboardShow = (event) =>  {
+        setKeyboard(true);
+        setKeyboardHeight(event.endCoordinates.height - magicValues.MENU_HEIGHT);
+    }
+    const keyboardHide = () => {
+        setKeyboard(false);
+        setKeyboardHeight(0);
+    }
 
     useEffect(() => {
         Keyboard.addListener("keyboardDidShow", keyboardShow);
@@ -81,7 +89,7 @@ const Chat = (props) => {
                     }
                 />
             </View>
-            <View style={[cs.bottomContainer, keyboard ? {marginBottom:5} : null]}>
+            <View style={[cs.bottomContainer, {marginBottom: keyboardHeight}]}>
                 <TextInput
                     style={[cs.msgInput, {borderColor: !isFocused ? colors.INPUT_BORDER : colors.INPUT_FOCUS}]}
                     onFocus={()=>setFocus(true)}
