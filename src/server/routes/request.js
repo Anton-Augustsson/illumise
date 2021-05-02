@@ -70,7 +70,7 @@ router.put('/provider/set', async (req, res) =>
   if(valid(body, schema, res))
   {
     // TODO change from setPovider to somthing else that simply shows the intrest of providing
-    let response = await db.requests.setProvider(body.requestID, body.providorID);
+    let response = await db.requests.setProvider(body.requestID, body.providerID);
     if(response != false) return sendSuccess(res, response);
     else return sendFailure(res);
   }
@@ -90,7 +90,7 @@ router.get('/provider/getUserProviding', async (req, res) =>
 
   if(validParams(params, res))
   {
-    let response = await db.requests.getUserProviding(params.providorID, params.num);
+    let response = await db.requests.getUserProviding(params.providerID, parseInt(params.num));
     if(response != null) return sendSuccess(res, response);
     else return sendFailure(res);
   }
@@ -122,19 +122,19 @@ router.post('/requester/newRequest', async (req, res) =>
 
 /**
  * Get the users request
- * @param {string} requestID - The user id of the users requests
+ * @param {string} userID - The user id of the users requests
  * @param {int} num - The number of how many requests to return starting from most reasont
  */
-router.get('/requester/getMyRequest', async (req, res) => // TODO: change getMyRequest to getUserRequest
+router.get('/requester/getUserRequest', async (req, res) =>
 {
   const params = {
-    requestID: req.param('requestID'),
+    userID: req.param('userID'),
     num: req.param('num')
   };
 
   if(validParams(params, res))
   {
-    let response = await db.requests.getUserRequests(params.requestID, params.num);
+    let response = await db.requests.getUserRequests(params.userID, parseInt(params.num));
     if(response != null) return sendSuccess(res, response);
     else return sendFailure(res);
   }
@@ -197,8 +197,7 @@ router.put('/requester/acceptProvider', async (req, res) =>
 
   if(valid(body, schema, res))
   {
-    // TODO change from setPovider to somthing else that simply shows the intrest of providing
-    let response = await db.requests.setProvider(body.requestID, body.providorID);
+    let response = await db.requests.setProvider(body.requestID, body.providerID);
     if(response != false) return sendSuccess(res, response);
     else return sendFailure(res);
   }
