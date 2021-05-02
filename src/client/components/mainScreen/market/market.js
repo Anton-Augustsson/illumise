@@ -10,7 +10,7 @@ import MarketItem from './marketItem';
 import {Localization} from '../../../modules/localization'
 import * as Location from 'expo-location';
 import request from '../../../modules/client-communication/request';
-
+import { getDistance } from 'geolib'
 /*
 const REQUESTS = [
     {

@@ -38,16 +38,18 @@ const verifyUser = async (navigation, token, type) =>
     
     
 
-    const userID = await account.createAccount(credentials);
-    if(userID != null) {
-        storage.storeDataString("userID", userID);
-    }else{
-        userID = await account.get(credentials.email, credentials.token);
-        storage.storeDataString("userID", userID);
-    }
+    account.createAccount(credentials).then(() => {
+        account.get(credentials.email, credentials.token).then((data) => {
+            const id = JSON.stringify(data);
+            storage.storeDataString("userID", id)
+        });
+    });
+    
+    
 
     //Store response in local database
     //await storage.storeDataString("userID", userID);
+    //console.log(storage.getDataString("userID"));
     
     navigation.navigate("Main");
 }
@@ -111,7 +113,17 @@ const LoginScreen = ({navigation}) =>
                 onPress={() => navigation.navigate("Main", {type:"google",user:{id:"104735997383881408322",email:"marholdtv@gmail.com",verified_email:true,name:"Marhold Marhold",given_name:"Bengt",family_name:"Olsson",picture:"https://lh3.googleusercontent.com/-ggukNDG0VX8/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucnZ9CX2t6F0LbHJ31docWtx8Eaj3A/s96-c/photo.jpg",locale:"sv"}})}
             />
             
-            
+            <CustomButton
+                style={[ms.loginButton, { backgroundColor: "red" }]}
+                styleText={[ms.loginButtonText, { color: "white" }]}
+                title={"Review"}
+                onPress={async () => {
+                    global.providerID = "g108222948329932423985";
+                    //TODO: ANGE ETT ID SOM FINNS I DATABASEN OVAN
+                    navigation.navigate("Review");
+                }}
+ 
+            />
         </View>  
     );
 }

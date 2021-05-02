@@ -74,7 +74,11 @@
         "foodPrompt": "Buy and deliver food",
         "shoppingPrompt": "Buy and deliver goods",
         "postPrompt": "Pick up and deliver post",
-        "otherPrompt": "Other"
+        "otherPrompt": "Other",
+        "review": "Review",
+        "send": "Send",
+        "howWasExperience": "How was your experience",
+        "descExperience": "Describe your experience"
     },
     "se": 
     {
@@ -152,6 +156,10 @@
         "foodPrompt": "Handla och leverera mat",
         "shoppingPrompt": "Handla och leverera varor",
         "postPrompt": "Hämta och leverera post/paket",
-        "otherPrompt": "Övrigt"
+        "otherPrompt": "Övrigt",
+        "review": "Återkoppling",
+        "send": "Skicka",
+        "howWasExperience": "Hur var din upplevelse?",
+        "descExperience": "Beskriv din upplevelse"
     } 
 }
