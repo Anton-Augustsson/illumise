@@ -200,6 +200,11 @@ const FirstScreen = (nav) => {
                 {
                     /** @type {[*]} */
                     let requests = await request.provider.getNearRequests({type: "Point", coordinates: [region.latitude,region.longitude]}, 9999999);
+                    if(requests === null) 
+                    {
+                        Alert.alert("Failed reading database", "null was returned");
+                        return [];
+                    }    
                     return requests.filter((request) => (request != null && request != undefined)).map((request) => 
                     {
                         return {

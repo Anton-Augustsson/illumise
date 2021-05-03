@@ -39,7 +39,6 @@ const request =
          */
         getNearRequests: async function(geoLocation, maxDistance, maxRequests = undefined)
         {
-            console.log("GET:");
             let geoLocationJSON = JSON.stringify(geoLocation);
             let params = '?geoLocation=' + geoLocationJSON + '&maxDistance=' + maxDistance + '&maxRequests=' + maxRequests;
             let url = request.serviceUrl + '/provider/getNearRequests' + params;
