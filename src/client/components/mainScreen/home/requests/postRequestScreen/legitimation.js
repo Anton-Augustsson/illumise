@@ -18,8 +18,8 @@ const LegitimationScreen = ({navigation, route}) => {
     const [location, setLocation] = useState("");
     
     const nextScreen = () => {
+        var result = Object.assign({}, route.params);
         if(isEnabled){ 
-            var result = Object.assign({}, route.params);
             result.stops.unshift(location);
         }
         navigation.navigate("Deliver", result);

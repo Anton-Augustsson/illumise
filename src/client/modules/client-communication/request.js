@@ -39,7 +39,8 @@ const request =
          */
         getNearRequests: async function(geoLocation, maxDistance, maxRequests)
         {
-            let params = '?geoLocation=' + geoLocation + '&maxDistance=' + maxDistance + '&maxRequests=' + maxRequests;
+            let geoLocationJSON = JSON.stringify(geoLocation);
+            let params = '?geoLocation=' + geoLocationJSON + '&maxDistance=' + maxDistance + '&maxRequests=' + maxRequests;
             let url = request.serviceUrl + '/provider/getNearRequests' + params;
             let response = await fetch(url);
 
@@ -105,13 +106,13 @@ const request =
 
         /**
          * Get the users request
-         * @param {string} requestID - The user id of the users requests
+         * @param {string} userID - The user id of the users requests
          * @param {int} num - The number of how many requests to return starting from most resent
          */
-        getUserRequest: async function(requestID, num) // num is the number of my requests starting from most recent //async  await
+        getUserRequest: async function(userID, num) // num is the number of my requests starting from most recent //async  await
         {
-            let params = '?requestID=' + requestID + '&num=' + num;
-            let url = request.serviceUrl + '/requester/getMyRequest' + params;        
+            let params = '?userID=' + userID + '&num=' + num;
+            let url = request.serviceUrl + '/requester/getUserRequest' + params;
             let response = await fetch(url);
 
             return returnResponse(response);

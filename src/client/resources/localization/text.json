@@ -70,7 +70,14 @@
         "text":"Text",
         "emptyChatConversationEmpty":"This conversation is empty.",
         "emptyChatMsg":"This conversation is empty. You can start sending a message by writing something in the input and the clicking on the button \"send\".",
-        "Place": "Place"
+        "Place": "Place",
+        "price": "Price",
+        "enterPrice": "Enter price",
+        "closest": "Closest",
+        "latest": "Latest",
+        "foodPromt": "Buy and deliver food",
+        "shoppingPromt": "Buy and deliver goods",
+        "postPromt": "Pick up and deliver post"
     },
     "se": 
     {
@@ -144,6 +151,13 @@
         "doYourOwnRequest": "Gör din egna annons",
         "emptyChatConversationEmpty":"Denna konversation är tom.",
         "emptyChatMsg":"Du kan start den genom att skriva ett meddelande i inmatningsrutan och sedan skicka det genom att klicka på knappen \"Skicka\".",
-        "place": "Plats"
+        "place": "Plats",
+        "price": "Pris",
+        "enterPrice": "Ange pris",
+        "closest": "Närmast mig",
+        "latest": "Senaste",
+        "foodPrompt": "Handla och leverera mat",
+        "shoppingPrompt": "Handla och leverera varor",
+        "postPrompt": "Hämta och leverera post/paket"
     } 
 }

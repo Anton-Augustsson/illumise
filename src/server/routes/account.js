@@ -72,4 +72,26 @@ router.post('/changeCredentials', async (req, res) =>
   }
 });
 
+/**
+ * Gets the id of the user with the given email if the password matches
+ * @async
+ * @param {String} email The email of the user
+ * @param {String} password The password of the user
+ * @returns {?User} The id of the user
+ */
+router.get('/get', async (req, res) =>
+{
+  const params = {
+    email: req.param('email'),
+    password: req.param('password')
+  };
+
+  if(validParams(params, res))
+  {
+    let response = await db.accounts.get(params.email, params.password);
+    if(response != null) return sendSuccess(res, response);
+    else return sendFailure(res);
+  }
+});
+
 module.exports = router;
