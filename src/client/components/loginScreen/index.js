@@ -50,7 +50,10 @@ const verifyUser = async (navigation, token, type) =>
     //await storage.storeDataString("userID", userID);
     //console.log(storage.getDataString("userID"));
     
-    navigation.navigate("Main");
+    navigation.reset({
+        index: 0,
+        routes: [{ name: 'Main' }],
+      });;
 }
 
 const LoginScreen = ({navigation}) => 

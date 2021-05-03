@@ -10,6 +10,9 @@ import FaqScreen from "./faq/faq";
 import BurgarIcons from "../../customComponents/burgarIcons";
 import account from "../../../modules/client-communication/account.js";
 import { Localization } from '../../../modules/localization';
+import storage from '../../../modules/localStorage/localStorage';
+import LoginScreen from '../../loginScreen';
+import App from '../../../App';
 
 
 const BURGAR = [
@@ -25,15 +28,16 @@ const BURGAR = [
         "id":"3",
         "title": Localization.getText("help"),
         "des":"Faq",
-    }
+    },
 ]
 
 
 const BurgarItem = (item, navigation) => 
 {
+    
     return(
         <TouchableOpacity 
-            onPress={()=>{navigation.navigate(item.des)}}
+            onPress={navigation.navigate(item.des)}
             style={ms.itemContainer}>
             <BurgarIcons type={item.des} size={30} color="black"/>
             <Text numberOfLines={2} style={ms.msg}>{item.title}</Text>
@@ -72,16 +76,8 @@ const FirstScreen = ({navigation}) =>
                 keyExtractor={(item)=>item.id}
             />
             <Button
-                title="banan"
-                onPress={async ()=>{
-                    let credentials =
-                    {"firstName":"F",
-                    "lastName":"D",
-                    "email":"Aeifneiwnf@mail.test",
-                    "token":"L" };
-                    const response = await account.createAccount(credentials);
-                    console.log(response);
-                }}
+                title="Logga ut"
+                onPress={() => {}}
             />
 
         </View>
@@ -119,7 +115,10 @@ const BurgarScreen = () =>
                 name="Faq" 
                 component={FaqScreen}
             />
-
+            <Stack.Screen 
+                name="Login"
+                component={LoginScreen}
+            />
         </Stack.Navigator>
     );
 }

@@ -83,7 +83,8 @@
         "removeOrder": "Remove order",
         "yourOrderIsComplete":"Your order is complete",
         "loading...":"Loading...",
-        "myRequests": "My requests"
+        "myRequests": "My requests",
+        "logout": "Logout"
     },
     "se": 
     {
@@ -170,6 +171,7 @@
         "removeOrder": "Ta bort order",
         "yourOrderIsComplete":"Din order är färdig",
         "loading...":"Laddar...",
-        "myRequests": "Mina beställningar"
+        "myRequests": "Mina beställningar",
+        "logout": "Logga ut"
     } 
 }
