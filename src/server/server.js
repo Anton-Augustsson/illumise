@@ -55,17 +55,18 @@ app.use('/account', account);
 io.on('connection', function(socket) {
     console.log("New connection");
 
-    socket.on('join', ({ name, room }, callback) => {
-        console.log(name, room);
+    socket.on('join', ({ senderId, name , room }, callback) => {
+        console.log(senderId + " " + name + " joined room " + room);
 
         socket.join(room); // sends all new messages to this socket
 
         //callback();
     });
 
-    socket.on('sendMsg', ({ name, room }, msg, callback) => {
+    socket.on('sendMsg', ({ senderId, name, room, msg }, callback) => {
         const user = "user";
-        io.to(room).emit('msg', { user: user, text: msg});
+        console.log(senderId, name, room, msg);
+        io.to(room).emit('msg', { user: senderId, name: name, text: msg});
         // save new msg
         callback();
     });

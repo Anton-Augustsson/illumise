@@ -13,7 +13,7 @@ const OrderScreen = ({navigation, route}) => {
             <CustomHeader
                 nav={navigation}
             ></CustomHeader>
-            
+
             <View> 
                 <Text>Request title</Text>
                 <Text>Location: DummyLocation</Text>
@@ -23,7 +23,7 @@ const OrderScreen = ({navigation, route}) => {
                 </View>        
             </View>
 
-            <Chat/>
+            <Chat name={"Morgan"} senderId={"1923i12093u91238081412904i8"} room={"1"}></Chat>
         </View>
     );
 }

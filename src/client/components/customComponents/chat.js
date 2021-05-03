@@ -5,9 +5,13 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import {colors} from "../mainStyles/colors";
 import { Localization } from '../../modules/localization';
 import {magicValues} from "../mainStyles/magicValues";
+import communication from '../../modules/client-communication/communication';
+import io from "socket.io-client";
 
+const url = communication.url;
+let socket;
 
-const EXAMPLE = [
+/*const EXAMPLE = [
     {
         "id":"1",
         "sender": "Banan",
@@ -39,14 +43,62 @@ const EXAMPLE = [
         "time": null,
         "msg": "i w"
     }
-]
+]*/
 
-const Chat = (props) => {
+let id = 0;
+
+const Chat = ({name, senderId, room}) => {
     const [chat, setChat] = useState([]);
     const [msg, setMsg] = useState('');
-    const [id, setId] = useState("0");
+    //const [id, setId] = useState(0);
     const [isFocused, setFocus] = useState(false);
+    const ENDPOINT = url;
 
+    useEffect(() => {
+        socket = io(ENDPOINT);
+        socket.emit('join', {senderId, name, room});
+
+        return () => {
+            socket.disconnect();
+        }  
+    }, [ENDPOINT]);
+
+    useEffect(() => {
+        socket.on('msg', msg => {
+            console.log(id);
+            recivedMsg(msg.user, msg.name, msg.text);
+        });
+    }, []);
+
+    const sendMsg = (event) => {
+        // TODO: call client client communication
+        event.preventDefault();
+        //setMsg is callback for socket.emit below
+        socket.emit('sendMsg', {senderId, name, room, msg}, () => setMsg(''));
+    }    // TODO: call client client communication
+
+    const insertMsg = (sender, name, msg) => {
+        let toInsert = {
+            "id":id.toString(),
+            "sender": name.toString(),
+            "senderId": sender.toString(),
+            "time": Date.now(),
+            "msg": msg.toString()
+        };
+        //var newId = id+1;
+        //setId(newId);
+        id+=1;
+        console.log("60: " + id);
+        setChat((previousChat) => {
+            return ([...previousChat, toInsert]);
+        });
+    }
+
+    const recivedMsg = (sender, name, msg) => {
+        return insertMsg(sender, name, msg);
+    }
+
+    /** Keyboard constants ***/
     const [keyboard, setKeyboard] = useState(false);
     const [keyboardHeight, setKeyboardHeight] = useState(0);
 
@@ -69,13 +121,15 @@ const Chat = (props) => {
             Keyboard.removeListener("keyboardDidHide", keyboardHide);
         };
     }, []);
+
+    
     
     return (
         <>
             <View style = {cs.upperContainer}> 
                 <FlatList
-                    data={EXAMPLE}
-                    renderItem={({item})=><Msg item = {item}/>}
+                    data={chat}
+                    renderItem={({item})=><Msg item = {item} senderId = {senderId}/>}
                     keyExtractor={(item)=>item.id}
                     ListEmptyComponent={
                         <View style={cs.emptyChatContainer}>
@@ -101,22 +155,7 @@ const Chat = (props) => {
                 />
                 <TouchableOpacity 
                     style = {cs.sendContainer} 
-                    onPress={() => {
-                        // addMessage
-                        setId((parseInt(id)+1).toString());
-                        let toInsert = {
-                            "id":id,
-                            "sender": "Morgan",
-                            "time": null,
-                            "msg": ""
-                        };
-                        toInsert.time = Date.now();
-                        toInsert.msg = msg;
-
-                        setChat((previousChat) => {
-                            return ([...previousChat, toInsert]);
-                        });
-                    }}
+                    onPress={sendMsg}
                 > 
                     <Text style={cs.sendMsg}>{Localization.getText("send")}</Text>
                     <MaterialCommunityIcons style={cs.sendIcon} name="send" size={24} color="black" />
@@ -126,17 +165,17 @@ const Chat = (props) => {
     );
 }
 
-const Msg = ({item}) => {
+const Msg = ({item, senderId}) => {
     return (
         <View 
             style={[cs.msgOuterContainer,
-                item.senderId === "1923i12093u91238081412904i8" ? 
+                item.senderId === senderId ? 
                 cs.youOuterMsgContainer : cs.themOuterMsgContainer]}
         >
 
             <View 
                 style={[cs.msgContainer,
-                item.senderId === "1923i12093u91238081412904i8" ? 
+                item.senderId === senderId ? 
                 cs.youMsgContainer : cs.themMsgContainer]}
             >
 
@@ -145,28 +184,6 @@ const Msg = ({item}) => {
             <Text style={cs.sender}>{item.sender}</Text>
         </View>
     );
-}
-
-function insertMessage(sender, msg) {
-    //TODO
-    console.log("inside insertMessage!");
-    let toInsert = {
-        "id":"3",
-        "sender": "Morgan",
-        "msg": "TEST!",
-    };
-    //CHAT.push(toInsert);
-    //Hur renderar jag ett text objekt per meddelande?
-}
-
-function echoMessage(msg) {
-    var sender = "Bob";
-    insertMessage(sender, msg);
-}
-
-function receiveMessage(msg) {
-    var sender = "Alice";
-    insertMessage(sender, msg);
 }
 
 const cs = StyleSheet.create({
