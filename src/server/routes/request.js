@@ -6,6 +6,7 @@ const validParams = validate.validParams;
 const validData = validate.validData;
 const sendFailure = validate.sendFailure;
 const sendSuccess = validate.sendSuccess;
+const { ReviewType }  = require("../db/dbReviewsInterface");
 
 const express = require('express');
 const router = express.Router();
@@ -161,23 +162,29 @@ router.delete('/requester/removeRequest', async (req, res) =>
 /**
  * give rating on service provider
  * @param {string} requestID - The requester id of the users who review the provider
- * @param {string} providorID - The id of the providers to be reviewed
+ * @param {string} providerID - The id of the providers to be reviewed
  * @param {int} rating - A number between 0 and 5, where 5 is best rating.
  */
 
 router.put('/requester/reviewProvider', async (req, res) =>
 {
   const schema = Joi.object({
-    requestID: Joi.string(),
-    providorID: Joi.string(),
-    rating: Joi.number().min(0).max(5)
+    requestID: Joi.string().min(idSize).max(idSize),
+    user1ID: Joi.string().min(idSize).max(idSize),
+    user2ID: Joi.string().min(idSize).max(idSize),
+    message: Joi.string(),
+    rating: Joi.number().min(0).max(5),
+    reviewType: Joi.string()
   });
 
-  if(valid(req.body, schema, res))
+  let b = req.body;
+  let reviewType = ReviewType.Requester; //TODO CHANGE
+
+  if(valid(b, schema, res))
   {
-    // dont know
-    //let response = await db.requests.remove(req.body.requestID); // TODO
-    return res.send('Received a PUT HTTP method');
+    let response = await db.reviews.add(b.user1ID, b.user2ID, b.requestID, b.message, b.rating, reviewType);
+    if(response != false) return sendSuccess(res);
+    else return sendFailure(res);
   }
 });
 
