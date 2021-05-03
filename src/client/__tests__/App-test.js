@@ -9,7 +9,7 @@ import App from '../App';
 import request from '../modules/client-communication/request';
 import chat from '../modules/client-communication/chat';
 import account from '../modules/client-communication/account';
- 
+
 // Note: test renderer must be required after react-native.
 import renderer from 'react-test-renderer';
 import io from "socket.io-client";
@@ -224,6 +224,19 @@ describe("Testing client communication", () =>
     {
         // valid request
         // TODO: review not implemented
+        let user1ID = await createDummyUser();
+        let user2ID = await createDummyUser2();
+        let requestID = await createDummyRequest(user1ID);
+        let message = "very good";
+        let reviewType;
+        let response = await request.requester.reviewProvider(requestID, user1ID, user2ID, message, 3, reviewType);
+        expect(response).not.toBeNull();
+        let responseD = await request.requester.removeRequest(requestID);
+        expect(responseD).not.toBeNull();
+        let responseRA1 = await account.removeAccount(user1ID);
+        expect(responseRA1).not.toBeNull();
+        let responseRA2 = await account.removeAccount(user2ID);
+        expect(responseRA2).not.toBeNull();
 
         // invalid request
         let responseError = await request.requester.reviewProvider('not requestID', 'not providerID', 21);

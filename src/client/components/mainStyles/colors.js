@@ -7,4 +7,8 @@ export const colors = {
     DEFAULT_BACKGROUND:"white",
     MENU_ICON: "#585858",
     OVERLAY: "rgba(0,0,0,0.5)",
+    YOU_MSG_COLOR:"#bedcfa",
+    THEM_MSG_COLOR:"#eeeded",
+    MENU_BACKGROUND:"white",
+    MENU_BORDER:"black",
 }

@@ -144,10 +144,10 @@ const request =
          * @param {string} providerID - The id of the providers to be reviewed
          * @param {int} rating - A number between 0 and 5, where 5 is best rating.
          */
-        reviewProvider: async function(requestID, providerID, rating) 
+        reviewProvider: async function(requestID, user1ID, user2ID, message, rating, reviewType)
         {
             let url = request.serviceUrl + '/requester/reviewProvider';
-            let toRate = {requestID: requestID, providerID: providerID, rating: rating};
+            let toRate = {requestID: requestID, user1ID: user1ID, user2ID: user2ID, message: message, rating: rating, reviewType: reviewType};
             let response = await fetch(url, {
                 method: 'PUT',
                 headers: {
