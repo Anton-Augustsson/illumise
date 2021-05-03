@@ -86,7 +86,8 @@
         "myRequests": "My requests",
         "destinations": "Destinations",
         "shoppingList": "Shopping list",
-        "loggingIn": "Logging in..."
+        "loggingIn": "Logging in...",
+        "logout": "Logout"
     },
     "se": 
     {
@@ -176,6 +177,7 @@
         "myRequests": "Mina beställningar",
         "destinations": "Destinationer",
         "shoppingList": "Inköpslista",
-        "loggingIn": "Loggar in..."
+        "loggingIn": "Loggar in...",
+        "logout": "Logga ut"
     } 
 }

@@ -45,7 +45,10 @@ const verifyUser = async (navigation, token, type) =>
         await account.createAccount(credentials);
         const data = await account.get(credentials.email, credentials.token);
         await storage.storeDataString("userID", data._id);
-        navigation.navigate("Main");
+        navigation.reset({
+            index: 0,
+            routes: [{ name: 'Main' }],
+        });
     } catch(err) {
         console.log("JAJJAJAJJAJJA VI SKA FIXA BÄTTRE ERROR SEN: " +err);
     }
