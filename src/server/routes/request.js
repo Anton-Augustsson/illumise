@@ -92,7 +92,7 @@ router.get('/provider/getUserProviding', async (req, res) =>
 
   if(validParams(params, res))
   {
-    let response = await db.requests.getUserProviding(params.providerID, params.num);
+    let response = await db.requests.getUserProviding(params.providerID, parseInt(params.num));
     if(response != null) return sendSuccess(res, response);
     else return sendFailure(res);
   }
@@ -127,16 +127,16 @@ router.post('/requester/newRequest', async (req, res) =>
  * @param {string} requestID - The user id of the users requests
  * @param {int} num - The number of how many requests to return starting from most reascent
  */
-router.get('/requester/getMyRequest', async (req, res) => // TODO: change getMyRequest to getUserRequest
+router.get('/requester/getUserRequest', async (req, res) =>
 {
   const params = {
-    requestID: req.param('requestID'),
+    userID: req.param('userID'),
     num: req.param('num')
   };
 
   if(validParams(params, res))
   {
-    let response = await db.requests.getUserRequests(params.requestID, params.num);
+    let response = await db.requests.getUserRequests(params.userID, parseInt(params.num));
     if(response != null) return sendSuccess(res, response);
     else return sendFailure(res);
   }

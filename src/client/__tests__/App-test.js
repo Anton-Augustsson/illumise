@@ -188,7 +188,7 @@ describe("Testing client communication", () =>
         let responseA = await request.requester.acceptProvider(requestID, userID2);
         expect(responseA).not.toBeNull();
         let response = await request.provider.getUserProviding(userID2, 1);
-        expect(response).not.toBeNull();
+        expect(response[0]).not.toBeNull(); //FIXME
         let responseD = await request.requester.removeRequest(requestID);
         expect(responseD).not.toBeNull();
         let responseRA1 = await account.removeAccount(userID);
@@ -198,16 +198,17 @@ describe("Testing client communication", () =>
 
         // invalid request
         let responseError = await request.provider.getUserProviding('not sdafadsfiderID', 1);
-        expect(responseError).toStrictEqual([null]);
+        expect(responseError).toBeNull();
     });
 
     it("test getUserRequest", async () =>
     {
         // valid request
         let userID = await createDummyUser();
-        let requestID = await createDummyRequest(userID);
-        let response = await request.requester.getUserRequest(requestID, 1);
-        expect(response).not.toBeNull();
+        let pointStart = coordsToGeoJSON([17.638825          , 59.854004]);
+        let requestID = await request.requester.newRequest(userID, "T1", { "header": "thing", "body": "things",  "geoLocation": pointStart, "cost": "allot"});
+        let response = await request.requester.getUserRequest(userID, 1);
+        expect(response[0]).not.toBeNull();
         let responseD = await request.requester.removeRequest(requestID);
         expect(responseD).not.toBeNull();
         let responseRA1 = await account.removeAccount(userID);

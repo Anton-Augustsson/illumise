@@ -78,7 +78,7 @@ class DBRequestsInterface
                 body: body,
                 cost: cost,
                 isFulfilled: false,
-                creatorID: userID,
+                creatorID: ObjectID(userID),
                 providerID: undefined
             };
             let result = await this.#collection.insertOne(request);
