@@ -8,6 +8,7 @@ const accountCollectionName = "Users";
 
 /**
  * @typedef User
+ * @property {String} _id
  * @property {String} firstName
  * @property {String} lastName
  * @property {String} email
@@ -115,7 +116,7 @@ class DBAccountsInterface
      * @async
      * @param {String} email The email of the user
      * @param {String} password The password of the user
-     * @returns {String|null} The id of the user
+     * @returns {?User} The id of the user
      */
     async get(email, password)
     {
@@ -127,7 +128,7 @@ class DBAccountsInterface
                 password: password
             }
             let result = await this.#collection.findOne(filter);
-            return result._id;
+            return result;
         }
         catch (error)
         {

@@ -13,6 +13,7 @@ import RequestIcon from "../../customComponents/requestIcon"
 import DeliverScreen from './requests/deliver/deliver';
 import { Localization } from '../../../modules/localization';
 import OtherRequestScreen from './requests/OtherRequestScreen/otherRequest';
+import storage from '../../../modules/localStorage/localStorage';
 
 
 
@@ -79,22 +80,23 @@ const renderItem = ({item}, nav) =>
     );
 };
 
-const TopWelcome = ({user}) => 
+const TopWelcome = () => 
 {
     return (
         <View style={hs.welcomeContainer}>
-            <Text style={ms.h2}>{Localization.getText("welcome")} {user.user.name}!</Text>
+            <Text style={ms.h2}>{Localization.getText("welcome")}!</Text>
         </View>
     );
 }
 
 
 
-const FirstScreen = ({nav, user}) => {
+const FirstScreen = ({nav}) => {
+    
     return (
         <View style={{flex:1}}>
             
-            <TopWelcome user={user}/>
+            <TopWelcome/>
             <FlatList
                 data={DATA}
                 renderItem={(item) => renderItem(item, nav)}
@@ -107,7 +109,7 @@ const FirstScreen = ({nav, user}) => {
 
 const Stack = createStackNavigator();
 
-const HomeScreen = (user) => {
+const HomeScreen = () => {
     return (
         <Stack.Navigator 
             screenOptions={{
@@ -118,7 +120,7 @@ const HomeScreen = (user) => {
         >
             <Stack.Screen 
                 name="FirstScreen" 
-                children={(navigation)=><FirstScreen nav={navigation} user={user}/>}
+                children={(navigation)=><FirstScreen nav={navigation}/>}
             />
 
             <Stack.Screen 

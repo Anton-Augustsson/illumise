@@ -4,13 +4,22 @@ import CustomButton from '../../../../customComponents/customButton';
 import ms from "../../../../mainStyles/ms";
 import { FlatList } from 'react-native-gesture-handler';
 import { Localization } from '../../../../../modules/localization';
+import storage from '../../../../../modules/localStorage/localStorage';
+import request from '../../../../../modules/client-communication/request';
 
-const SuperReceipt = ({params}) => 
+const SuperReceipt = () => 
 {
+    const getRequest = async () =>{
+        var userID = await storage.getDataString("userID");
+        const req = await request.requester.getUserRequest("608ae68bdaf97859aba99972", 2);
+        console.log(req);
+    }
+    getRequest();
+    //console.log(params);
     return (
         <View style={rs.container}>
             <Text style={ms.h4}>{Localization.getText("address")}</Text>
-            <Text>{params.delivAddress}</Text>
+            <Text>BYT UT</Text>
 
             <Text style={ms.h4}>{Localization.getText("goods")}</Text>
             <FlatList
@@ -41,12 +50,12 @@ const rs = StyleSheet.create({
     }
 }); 
 
-const ReceiptScreen = ({navigation, route}) => 
+const ReceiptScreen = ({navigation}) => 
 {
     //VI KAN FÅ UT INFO GENOM route.params.delivAddress
     return (
         <View style={{flex:1}}>
-            <SuperReceipt params={route.params}/>
+            <SuperReceipt/>
             <CustomButton
                 style={[ms.button, {marginBottom:20,marginLeft:20,marginRight:20}]}
                 title={Localization.getText("checkYourOrders")}

@@ -40,16 +40,16 @@ router.put('/completeRequest', async (req, res) =>
 router.get('/provider/getNearRequests', async (req, res) =>
 {
   const params = {
-    geoLocation: req.param('geoLocation'),
+    geoLocation: JSON.parse(req.param('geoLocation')),
     maxDistance: req.param('maxDistance'),
     maxRequests: req.param('maxRequests'),
   };
 
   if(validParams(params, res))
-  {
-    let response = await db.requests.getNearby(params.geoLocation, params.maxDistance, params.maxRequests);
-    if(response != null) return sendSuccess(res, response);
-    else return sendFailure(res);
+   {
+     let response = await db.requests.getNearby(params.geoLocation, parseFloat(params.maxDistance), parseFloat(params.maxRequests));
+     if(response != null) return sendSuccess(res, response);
+     else return sendFailure(res);
   }
 });
 
@@ -114,7 +114,7 @@ router.post('/requester/newRequest', async (req, res) =>
 
   if(valid(body, schema, res) && validData(data, res))
   {
-    let response = await db.requests.add(body.requestID, body.type, data);
+    let response = await db.requests.add(body.requestID, body.type, data.body, data.geoLocation, data.cost);
     if(response != null) return sendSuccess(res, response);
     else return sendFailure(res);
   }

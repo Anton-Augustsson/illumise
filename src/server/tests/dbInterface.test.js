@@ -34,8 +34,8 @@ describe("Testing dbInterface", () =>
         expect(user1ID).not.toBe(null);
         expect(user2ID).toBe(null);
 
-        let requestedID = await db.accounts.get(mail, password)
-        expect(requestedID).toStrictEqual(user1ID);
+        let requestedUser = await db.accounts.get(mail, password);
+        expect(requestedUser._id).toStrictEqual(user1ID);
 
         // Remove
         let result1 = await db.accounts.remove(user1ID);

@@ -7,6 +7,7 @@ import LoginScreen from './components/loginScreen';
 import MainScreen from './components/mainScreen/mainScreen';
 import Constants from 'expo-constants';
 import {colors} from "./components/mainStyles/colors"
+import ReviewScreen from './components/mainScreen/orders/review/reviewScreen'
 
 const Stack = createStackNavigator();
 
@@ -33,7 +34,11 @@ const App = () =>
                     component={MainScreen}
                 />
 
-
+                <Stack.Screen
+                    name="Review"
+                    component={ReviewScreen}
+                    />
+                
             </Stack.Navigator>
         </NavigationContainer>
     </>);
