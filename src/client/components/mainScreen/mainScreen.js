@@ -4,6 +4,7 @@ import Menu from "./menu/menu"
 import HomeScreen from './home/home';
 import NotificationScreen from './notification/notification';
 import BurgarScreen from './burgar/burgar';
+import MarketScreen from './market/market';
 import OrderScreen from './orders/orders';
 
 
