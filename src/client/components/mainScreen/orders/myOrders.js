@@ -11,54 +11,6 @@ import {Localization} from '../../../modules/localization'
 import request from '../../../modules/client-communication/request';
 import storage from '../../../modules/localStorage/localStorage';
 
-const FilterView = () => {
-    const filterItems = [
-        {
-            "id":"0",
-            "text":Localization.getText("price")
-        },{
-            "id":"1",
-            "text":Localization.getText("latest")
-        },{
-            "id":"2",
-            "text":Localization.getText("closest")
-        },
-    ]
-
-
-    const [expand, setExpand] = useState(false);
-
-    return (
-        <View style={mms.filterOuterContainer}>
-            <ScrollView horizontal={expand ? false : true}>
-                <View style={mms.filterContainer}>
-                    {filterItems.map(item => (
-                        <TouchableOpacity
-                            key={item.id}
-                            
-                        >
-                            <LinearGradient style={mms.filterItemContainer} colors={['grey', 'black']}>
-                                <Text style={mms.filterItemText}>{item.text}</Text>
-                            </LinearGradient>
-                        </TouchableOpacity>
-                    ))}
-                </View>
-            </ScrollView>
-            <TouchableOpacity
-                style={mms.filterExpandContainer}
-                onPress={()=>setExpand(!expand)}
-            >
-                <MaterialIcons 
-                    name={expand ? "keyboard-arrow-down": "keyboard-arrow-up"} 
-                    size={30} 
-                    color="black" 
-                />
-            </TouchableOpacity>
-        </View>
-    );
-}
-
-
 
 const RequestItem = ({nav, item}) => {
     var text = ''
@@ -105,12 +57,13 @@ const FirstScreen = (nav) => {
     const getRequests = async () => {
         
         if(isRequester){
-            let res = await request.requester.getUserRequest(storage.getDataString("userID"), 1000);
+            const id = await storage.getDataString("userID");
+            const res = await request.requester.getUserRequest(id, 100);
             setIsRefresing(false);
-            console.log(res);
             return res;
         }else{
-            let res = await request.provider.getUserProviding(storage.getDataString("userID"), 1000);
+            const id = await storage.getDataString("userID"); 
+            const res = await request.provider.getUserProviding(id, 100);
             setIsRefresing(false);
             return res; 
         }
@@ -143,7 +96,6 @@ const FirstScreen = (nav) => {
                 data={REQUESTS}
                 renderItem={({item})=><RequestItem nav={nav} item={item}/>}
                 keyExtractor={(item)=>item._id}
-                ListHeaderComponent={<FilterView/>}
                 onRefresh={()=>refresh()}
                 refreshing={isRefreshing}
             />

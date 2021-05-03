@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, ScrollView} from 'react-native';
 import request from '../../../modules/client-communication/request';
@@ -8,11 +7,6 @@ import CustomButton from '../../customComponents/customButton';
 import CustomHeader from "../../customComponents/customHeader";
 import Loading from '../../customComponents/loading';
 import ms from '../../mainStyles/ms';
-=======
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
-import CustomHeader from "../../customComponents/customHeader";
->>>>>>> origin/main
 
 const ShoppingItem = ({item}) => {
     return (
@@ -37,7 +31,8 @@ Plats: swaggatan 13
 Lista med saker
 */
 
-const DoneLoading = ({req}) => {
+const DoneLoading = ({creator,req}) => {
+    console.log(req);
     return (
         <>
             <ScrollView style={mis.content}>
@@ -65,18 +60,18 @@ const DoneLoading = ({req}) => {
                 <Text style={mis.otherInfo}>{req.body.info}</Text>
             </ScrollView>
             <View style={ms.moveOnContainer}>
-                {storage.getDataString("userID") === req.creatorID ? 
+                {creator ?  
                     <CustomButton
-                        style={ms.button}
+                        style={ms.cancelButton}
                         styleText={{fontWeight:"bold", fontSize:15}}
-                        title={Localization.getText("remove")}
+                        title={Localization.getText("removeOrder")}
                         onPress={()=>console.log(req)}
                     /> :
                     <CustomButton
                         style={ms.button}
                         styleText={{fontWeight:"bold", fontSize:15}}
                         title={Localization.getText("letsgo")}
-                        onPress={()=>console.log(req)}
+                        onPress={()=>console.log(req.creatorID)}
                     />
                 }
             </View>
@@ -84,19 +79,26 @@ const DoneLoading = ({req}) => {
     );
 }
 
+const timeout = (ms) => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 const MarketItem = ({navigation, route}) => {
 
     const [loading, setLoading] = useState(true);
     const [req, setReq] = useState(null);
+    const [creator] = useState(route.params.requestId !== null);
 
     const retrieveRequest = async () => {
-        if(route.params.requestId === null) setReq(route.params);
+        if(route.params.requestId === null) {
+            setReq(route.params);
+            setLoading(false);
+            return;
+        } 
+        await timeout(1000);
         const userID = await storage.getDataString("userID");
-        console.log(userID);
         const req = await request.requester.getUserRequest(userID, 1)
-        console.log(req);
-        setReq(req);
+        setReq(req[0]);
         setLoading(false);
     }
 
@@ -107,28 +109,26 @@ const MarketItem = ({navigation, route}) => {
     return (
         <View style={{flex:1}}> 
             <CustomHeader 
+                goBack={creator ? false : true}
+                title={creator && Localization.getText("yourOrderIsComplete")}
                 nav={navigation}
             />
-            {loading ? <Loading/> : <DoneLoading req={req}/>}
+            {loading ? <Loading/> : <DoneLoading creator={creator} req={req}/>}
         </View>
     );
 }
 
 const mis = StyleSheet.create({
-<<<<<<< HEAD
     content: {
         flex:1,
         paddingRight:20,
         paddingLeft:20,
         paddingBottom:20,
     },
-=======
->>>>>>> origin/main
     header:{
 
     },
     shoppingItemContainer: {
-<<<<<<< HEAD
     },
     map:{
         justifyContent:"center",
@@ -139,8 +139,6 @@ const mis = StyleSheet.create({
     },
     mapText: {
         marginTop:5,
-=======
->>>>>>> origin/main
     }
 });
 export default MarketItem;

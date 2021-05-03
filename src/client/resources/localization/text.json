@@ -81,6 +81,8 @@
         "descExperience": "Describe your experience",
         "letsgo": "Take order",
         "removeOrder": "Remove order",
+        "yourOrderIsComplete":"Your order is complete",
+        "loading...":"Loading...",
         "myRequests": "My requests"
     },
     "se": 
@@ -166,6 +168,8 @@
         "descExperience": "Beskriv din upplevelse",
         "letsgo": "Ta order",
         "removeOrder": "Ta bort order",
+        "yourOrderIsComplete":"Din order är färdig",
+        "loading...":"Laddar...",
         "myRequests": "Mina beställningar"
     } 
 }

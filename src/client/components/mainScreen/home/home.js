@@ -14,6 +14,7 @@ import DeliverScreen from './requests/deliver/deliver';
 import { Localization } from '../../../modules/localization';
 import OtherRequestScreen from './requests/OtherRequestScreen/otherRequest';
 import storage from '../../../modules/localStorage/localStorage';
+import MarketItem from '../market/marketItem';
 
 
 

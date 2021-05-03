@@ -56,7 +56,8 @@ const DeliverScreen = ({navigation, route}) => {
 
         const userID = await storage.getDataString("userID");
         const requestID = await request.requester.newRequest(userID, result.type, data);
-        navigation.navigate("Market", {screen: "MarketItem", params:{requestID:requestID}});
+        navigation.setOptions({unmountOnBlur:true});
+        navigation.navigate("Orders",{screen:"MarketItem", params:{requestID:requestID}});
     }
     
 
@@ -67,7 +68,9 @@ const DeliverScreen = ({navigation, route}) => {
                 nav={navigation}
             />
             <View style={rs.content}>
-                    <Text style={ms.h3}>{Localization.getText("enterDelivAddress")}</Text>
+                    <Text style={ms.h3}>{route.params.type === "other" 
+                        ? Localization.getText("place") : Localization.getText("enterDelivAddress")}
+                    </Text>
                     <GooglePlaces
                         placeholder={Localization.getText("deliveryAddress")}
                         onPress={(data, details = null) => {
