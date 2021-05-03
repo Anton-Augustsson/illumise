@@ -83,7 +83,10 @@
         "removeOrder": "Remove order",
         "yourOrderIsComplete":"Your order is complete",
         "loading...":"Loading...",
-        "myRequests": "My requests"
+        "myRequests": "My requests",
+        "destinations": "Destinations",
+        "shoppingList": "Shopping list",
+        "loggingIn": "Logging in..."
     },
     "se": 
     {
@@ -170,6 +173,9 @@
         "removeOrder": "Ta bort order",
         "yourOrderIsComplete":"Din order är färdig",
         "loading...":"Laddar...",
-        "myRequests": "Mina beställningar"
+        "myRequests": "Mina beställningar",
+        "destinations": "Destinationer",
+        "shoppingList": "Inköpslista",
+        "loggingIn": "Loggar in..."
     } 
 }

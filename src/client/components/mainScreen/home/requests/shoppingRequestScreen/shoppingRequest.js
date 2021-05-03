@@ -90,7 +90,7 @@ const ShoppingRequestScreen = ({navigation}) => {
             }
 
             cartButton.current.animation();
-            return [{id:id, name: name, quantity:1, otherInfo:""},...prevItems]
+            return [{id:id, name: name, quantity:1, info:""},...prevItems]
         })
     }
 
@@ -103,7 +103,7 @@ const ShoppingRequestScreen = ({navigation}) => {
 
         setItems(prevItems => {
             setId((parseInt(id)+1).toString());
-            return [{id:id, name: name, quantity:quantity, otherInfo:otherInfo},...prevItems]
+            return [{id:id, name: name, quantity:quantity, info:otherInfo},...prevItems]
         })
         setName("");
         setQuantity(1);
