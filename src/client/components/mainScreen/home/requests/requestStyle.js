@@ -9,12 +9,6 @@ const rs = StyleSheet.create({
         paddingLeft:20,
         paddingBottom:20,
     },
-    moveOnContainer: {
-        paddingTop: 6,
-        paddingBottom: 6,
-        paddingRight:20,
-        paddingLeft:20,
-    },
     moveOnContainer2: {
         paddingTop: 5,
         paddingBottom: 5,

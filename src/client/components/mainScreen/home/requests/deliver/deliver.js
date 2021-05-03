@@ -14,7 +14,6 @@ import * as Location from 'expo-location';
 const DeliverScreen = ({navigation, route}) => {
     //console.log(JSON.stringify(route));
     const [location, setLocation] = useState("");
-    const [geoLocation, setGLocation] = useState("");
     const [price, setPrice] = useState(0);
 
         /** 
@@ -33,9 +32,11 @@ const DeliverScreen = ({navigation, route}) => {
           setErrorMsg('Denied acces to location');
           return;
         }
-        let loc = await Location.getCurrentPositionAsync({});
-        setGLocation(loc);
-        return coordsToGeoJSON([geoLocation.coords.longitude, geoLocation.coords.latitude]);
+        const response = await Location.getCurrentPositionAsync({}).then(loc => {
+            return [loc.coords.longitude, loc.coords.latitude]
+        });
+
+        return response;
     }
 
     const checkout = async () =>{
@@ -43,18 +44,19 @@ const DeliverScreen = ({navigation, route}) => {
         var result = Object.assign({}, route.params)
         result.stops.push(location);
         
-        const userID = await storage.getDataString("userID");
-        const loc = await getLocation();
+        const geo = await getLocation()
 
+        var coords = coordsToGeoJSON(geo);
         var data = {
             header: result.type,
             body: result,
             cost: price,
-            geoLocation: loc,
+            geoLocation: coords,
         }
-        
-        await request.requester.newRequest(userID, result.type, data);
-        navigation.navigate("Receipt"); 
+
+        const userID = await storage.getDataString("userID");
+        const requestID = await request.requester.newRequest(userID, result.type, data);
+        navigation.navigate("Market", {screen: "MarketItem", params:{requestID:requestID}});
     }
     
 
@@ -80,7 +82,7 @@ const DeliverScreen = ({navigation, route}) => {
                         onChangeText={(text)=>setPrice(parseInt(text))}
                     />
             </View>
-            <View style={rs.moveOnContainer}>
+            <View style={ms.moveOnContainer}>
                 <CustomButton
                     style={ms.button}
                     styleText={{fontWeight:"bold"}}

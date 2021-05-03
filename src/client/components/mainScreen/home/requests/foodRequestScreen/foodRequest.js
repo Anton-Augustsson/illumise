@@ -110,7 +110,7 @@ const FoodRequestScreen = ({navigation}) => {
                         />
                     </ScrollView>
                 </View>
-                <View style={rs.moveOnContainer}>
+                <View style={ms.moveOnContainer}>
                     <CartButton 
                         ref={cartButton}
                         counter={items.length}

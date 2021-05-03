@@ -96,7 +96,7 @@ const OtherRequestScreen = ({navigation}) => {
                         onChangeText={(text)=>setPrice(parseInt(text))}
                     />
             </View>
-            <View style={rs.moveOnContainer}>
+            <View style={ms.moveOnContainer}>
                 <IconButton onPress={finishOrder}/>
             </View>
         </View>

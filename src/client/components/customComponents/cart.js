@@ -4,7 +4,6 @@ import { FlatList } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 import IconButton from './iconButton';
 import ms from "../mainStyles/ms";
-import rs from "../mainScreen/home/requests/requestStyle";
 import {Localization} from "../../modules/localization";
 import QuantityChooser from './quantityChooser';
 
@@ -87,7 +86,7 @@ const Cart = (props) => {
                 keyExtractor={(item) => item.id}
             /> 
             
-            <View style={rs.moveOnContainer}>
+            <View style={ms.moveOnContainer}>
                 <IconButton onPress={props.onPress}/>
             </View>
         </>

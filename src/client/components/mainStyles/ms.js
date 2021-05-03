@@ -12,6 +12,8 @@ const ms = StyleSheet.create({
     h2: {
         fontSize:25,
         fontWeight: "bold",
+        marginTop:15,
+        marginBottom:15,
     }, 
     h3: {
         fontSize:20,
@@ -115,7 +117,13 @@ const ms = StyleSheet.create({
         marginLeft:"5%",
         marginRight:60,
         lineHeight:20,
-    }
+    },
+    moveOnContainer: {
+        paddingTop: 6,
+        paddingBottom: 6,
+        paddingRight:20,
+        paddingLeft:20,
+    },
 });
 
 // EXPORTS 

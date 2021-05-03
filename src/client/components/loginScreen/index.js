@@ -40,8 +40,7 @@ const verifyUser = async (navigation, token, type) =>
 
     account.createAccount(credentials).then(() => {
         account.get(credentials.email, credentials.token).then((data) => {
-            const id = JSON.stringify(data);
-            storage.storeDataString("userID", id)
+            storage.storeDataString("userID", data._id);
         });
     });
     

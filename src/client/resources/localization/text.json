@@ -78,7 +78,10 @@
         "review": "Review",
         "send": "Send",
         "howWasExperience": "How was your experience",
-        "descExperience": "Describe your experience"
+        "descExperience": "Describe your experience",
+        "letsgo": "Take order",
+        "removeOrder": "Remove order",
+        "myRequests": "My requests"
     },
     "se": 
     {
@@ -160,6 +163,9 @@
         "review": "Återkoppling",
         "send": "Skicka",
         "howWasExperience": "Hur var din upplevelse?",
-        "descExperience": "Beskriv din upplevelse"
+        "descExperience": "Beskriv din upplevelse",
+        "letsgo": "Ta order",
+        "removeOrder": "Ta bort order",
+        "myRequests": "Mina beställningar"
     } 
 }

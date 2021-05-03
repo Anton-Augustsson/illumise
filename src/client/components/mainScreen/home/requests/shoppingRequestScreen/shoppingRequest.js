@@ -194,7 +194,7 @@ const ShoppingRequestScreen = ({navigation}) => {
                         />
                     </View>
                 </ScrollView>
-                <View style={rs.moveOnContainer}>
+                <View style={ms.moveOnContainer}>
                     <CartButton 
                         ref={cartButton}
                         counter={items.length}

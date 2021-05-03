@@ -6,8 +6,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from './components/loginScreen';
 import MainScreen from './components/mainScreen/mainScreen';
 import Constants from 'expo-constants';
-import {colors} from "./components/mainStyles/colors"
-import ReviewScreen from './components/mainScreen/orders/review/reviewScreen'
+import {colors} from "./components/mainStyles/colors";
+import ReviewScreen from './components/mainScreen/orders/review/reviewScreen';
 
 const Stack = createStackNavigator();
 

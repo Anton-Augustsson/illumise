@@ -61,7 +61,7 @@ const LegitimationScreen = ({navigation, route}) => {
                         />
                 </View>
             </View>
-            <View style={rs.moveOnContainer}>
+            <View style={ms.moveOnContainer}>
                 <IconButton onPress={nextScreen} />
             </View>
         </View>

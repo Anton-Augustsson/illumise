@@ -6,72 +6,10 @@ import CustomHeader from "../../customComponents/customHeader";
 import { createStackNavigator } from '@react-navigation/stack';
 import ms from "../../mainStyles/ms";
 import { colors } from '../../mainStyles/colors';
-import MarketItem from './marketItem';
+import MarketItem from '../market/marketItem';
 import {Localization} from '../../../modules/localization'
-import * as Location from 'expo-location';
 import request from '../../../modules/client-communication/request';
-import { getDistance } from 'geolib'
-/*
-const REQUESTS = [
-    {
-        "id":"1",
-        "shoppingList": [
-        {
-            "id": "0",
-            "name": "Första",
-            "otherInfo": "wef",
-            "quantity": 1,
-        },
-        {
-            "id": "1",
-            "name": "Andra",
-            "otherInfo": "NISSE",
-            "quantity": 1000000,
-        },
-        ],
-        "stops":  [
-            "Wefixit Svenska AB, Fålhagsleden, Uppsala, Sweden",
-            "Wefix Trädgård AB, Sandövägen, Vallda, Sweden",
-        ],
-        "price":"2000000000",
-        "time": "13:00",
-        "type": "food",
-    },
-    {
-        "id":"2",
-        "shoppingList": [
-        {
-            "id": "0",
-            "name": "Banan",
-            "otherInfo": "E väldigt fin banan från helvetet",
-            "quantity": 1,
-        },
-        ],
-        "stops":  [
-            "SHAKMAK AB, Moskva, Russia",
-            "Wefix Trädgård AB, Sandövägen, Vallda, Sweden",
-        ],
-        "time": "13:00",
-        "price":"10",
-        "type": "shopping"
-    },
-    {
-        "id":"3",
-        "postObject": 
-        {
-            "refCode": "DINMAMMA",
-            "otherInfo": "E väldigt fin banan från helvetet",
-        },
-        "stops":  [
-            "SHAKMAK AB, Moskva, Russia",
-            "Wefix Trädgård AB, Sandövägen, Vallda, Sweden",
-        ],
-        "time": "13:00",
-        "price":"0.20",
-        "type": "post"
-    }
-]
-*/
+import storage from '../../../modules/localStorage/localStorage';
 
 const FilterView = () => {
     const filterItems = [
@@ -144,7 +82,7 @@ const RequestItem = ({nav, item}) => {
 
     return(
         <TouchableOpacity 
-            onPress={()=>nav.nav.navigate("MarketItem", {item: item._id})}
+            onPress={()=>nav.nav.navigate("MarketItem", item)}
             style={mms.itemContainer}
         >
             <Text>{text}</Text>
@@ -158,43 +96,34 @@ const RequestItem = ({nav, item}) => {
         </TouchableOpacity>
     );
 }
-/** 
- * Get a geoJSON representation of a point
- * @param {[Number]} coordinates [longitude, latitude] coordinates of a point
- * @returns {{*}} representation of a point with coordinates
- */
- function coordsToGeoJSON(coordinates)
- {
-     return { "type": "Point", "coordinates": coordinates };
- }
 
 const FirstScreen = (nav) => {
-    const [location, setLocation] = useState(null);
-    const [errorMsg, setErrorMsg] = useState(null);
+    const [isRequester, setIsRequester] = useState(true);
     const [REQUESTS, setRequests] = useState(null);
     const [isRefreshing, setIsRefresing] = useState(false);
 
-    const getLocation = async () => {
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
-        setErrorMsg('Denied acces to location');
-        return;
+    const getRequests = async () => {
+        
+        if(isRequester){
+            let res = await request.requester.getUserRequest(storage.getDataString("userID"), 1000);
+            setIsRefresing(false);
+            console.log(res);
+            return res;
+        }else{
+            let res = await request.provider.getUserProviding(storage.getDataString("userID"), 1000);
+            setIsRefresing(false);
+            return res; 
         }
-        let geo = await Location.getCurrentPositionAsync({});
-        setLocation(geo);
-
-        let pointStart = coordsToGeoJSON([geo.coords.longitude, geo.coords.latitude]);
-
-
-        const res = await request.provider.getNearRequests(pointStart, 1000000, 10);
-        setIsRefresing(false);
-        return res;
+        
+        
     }
 
     const refresh = () => {
         setIsRefresing(true);
-        getLocation().then(data => {
-            setRequests(data.filter(obj => obj != null));
+        getRequests().then(data => {
+            if(data != null){ 
+                setRequests(data.filter(obj => obj != null));
+            }
         }); 
     }
 
@@ -205,7 +134,7 @@ const FirstScreen = (nav) => {
      return (
         <View style={{flex:1}}> 
             <CustomHeader 
-                title="Market"
+                title={Localization.getText("myRequests")}
                 nav={nav}
                 goBack={false}
             />
@@ -225,7 +154,7 @@ const FirstScreen = (nav) => {
 
 const Stack = createStackNavigator();
 
-const MarketScreen = ({navigation}) => {
+const MyOrders = ({navigation}) => {
     return (
        <Stack.Navigator 
             screenOptions={{
@@ -306,4 +235,4 @@ const mms = StyleSheet.create({
     }
 });
 
-export default MarketScreen;
+export default MyOrders;

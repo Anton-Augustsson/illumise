@@ -22,7 +22,8 @@ const PostRequestScreen = ({navigation}) => {
         var result = {
             type: "post",
             stops: [location],
-            postObject: {refCode: refCode, otherInfo: otherInfo}
+            refCode: refCode, 
+            info: otherInfo
         }
         setRefCode("");
         setOtherInfo("");
@@ -56,7 +57,7 @@ const PostRequestScreen = ({navigation}) => {
                         onChangeText={(text)=>setOtherInfo(text)}
                     />
             </View>
-            <View style={rs.moveOnContainer}>
+            <View style={ms.moveOnContainer}>
                 <IconButton onPress={nextScreen}/>
             </View>
         </View>
