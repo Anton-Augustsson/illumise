@@ -440,7 +440,6 @@ describe("Testing dbInterface", () =>
 
         await db.reviews.add(user1ID, user2ID, requestID, message, rating, ReviewType.Requester);
         let result = await db.reviews.getRating(user1ID, ReviewType.Requester);
-        console.log(result);
         expect(result.averageRating).toBe(rating)
     });
 

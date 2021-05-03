@@ -37,7 +37,7 @@ const request =
          * @param {int} maxDistance - The max sistance of the acceptile location
          * @param {int} maxRequests - The number of request that the proider whants to se
          */
-        getNearRequests: async function(geoLocation, maxDistance, maxRequests)
+        getNearRequests: async function(geoLocation, maxDistance, maxRequests = undefined)
         {
             let geoLocationJSON = JSON.stringify(geoLocation);
             let params = '?geoLocation=' + geoLocationJSON + '&maxDistance=' + maxDistance + '&maxRequests=' + maxRequests;

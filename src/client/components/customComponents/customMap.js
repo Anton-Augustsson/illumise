@@ -1,8 +1,7 @@
 import React, {Component} from "react";
 import MapView, {Marker} from "react-native-maps";
 import * as Location from "expo-location";
-import { Alert, Button, TouchableOpacity, View } from "react-native";
-import CustomButton from "./customButton";
+import { Alert } from "react-native";
 
 /**
  * @typedef Region
@@ -18,6 +17,7 @@ import CustomButton from "./customButton";
  * @property {Number} longitude
  * @property {String} title
  * @property {String} description
+ * @property {String} key
  */
 
 /**
@@ -35,8 +35,8 @@ import CustomButton from "./customButton";
  * @typedef State
  * @property {Region} region
  * @property {[MarkerStruct]} markers
- * @property {function(Region):[MarkerStruct]} onMount
- * @property {function(Region, [MarkerStruct]):[MarkerStruct]} onUpdate
+ * @property {function(Region):Promise<[MarkerStruct]>} onMount
+ * @property {function(Region, [MarkerStruct]):Promise<[MarkerStruct]>} onUpdate
  */
 
 /**
@@ -74,28 +74,36 @@ export default class CustomMap extends Component
     
     async componentDidMount()
     {
-        let region = await this.getLocalRegion();
-        this.setState({
+        try
+        {
+            let region = await this.getLocalRegion();
+            this.setState({
             region: region,
-            markers: this.state.onMount(region)
-        });
+            markers: await this.state.onMount(region)
+            });
+        }
+        catch(error)
+        {
+            console.error(error);
+            Alert.alert("MountError", error.message);
+        }
     }
 
     /**
      * Called when the viewpoint on the map is moved
      * @param {Region} region Contains the location data of the region
      */
-    onRegionChangeComplete(region)
+    async onRegionChangeComplete(region)
     {
         try 
         {
             this.setState({ region: region, 
-                            markers: this.state.onUpdate(region, this.state.markers)});
+                            markers: await this.state.onUpdate(region, this.state.markers)});
         } 
         catch (error) 
         {
             console.error(error);
-            //Alert.alert(error);
+            Alert.alert("UpdateError", error.message);
         }
     }
 
@@ -122,7 +130,7 @@ export default class CustomMap extends Component
         catch(error)
         {
             console.log(error);
-            //Alert.alert(error);
+            Alert.alert("GetLocalError", error.message);
             return this.state.region;
         }
     }
@@ -130,33 +138,24 @@ export default class CustomMap extends Component
     render() 
     {
         return(
-        <View style = {this.props.style}>
-            <MapView
-                style = {{flex:1, zIndex: -1}}
-                region = {this.state.region}
-                showsUserLocation={true}
-                onRegionChangeComplete={this.onRegionChangeComplete.bind(this)}
-            >
-
-                {this.state.markers.map((marker) => (
-                    <Marker
-                        key={marker.title}
-                        title={marker.title}
-                        description={marker.description}
-                        coordinate={{ longitude: marker.longitude, 
-                                      latitude:  marker.latitude}}
-                    />
-                ))}
-            </MapView>
-            
-            <Button
-                title = "Center on me"
-                onPress = {async () => {
-                    let region = await this.getLocalRegion();
-                    this.onRegionChangeComplete(region);
-                }}
-            />
-        </View>
+        <MapView
+            style  = {[this.props.style,{zIndex: -1}]}
+            region = {this.state.region}
+            showsUserLocation = {true}
+            showsBuildings = {true}
+            showsMyLocationButton = {true}
+            onRegionChangeComplete = {this.onRegionChangeComplete.bind(this)}
+        >
+            {this.state.markers.map((marker) => (
+                <Marker
+                    key={marker.key}
+                    title={marker.title}
+                    description={marker.description}
+                    coordinate={{ longitude: marker.longitude, 
+                                  latitude:  marker.latitude}}
+                />
+            ))}
+        </MapView>
         );
     }
 }

@@ -107,9 +107,9 @@ class DBRequestsInterface
             if (num !== undefined) result.length = num >= 0 ? num : 0;
             return result;
         }
-        catch (error)
+        catch (_)
         {
-            console.error(error);
+            //console.error(error);
             return null;
         }
     }
@@ -130,9 +130,9 @@ class DBRequestsInterface
             if (num !== undefined) result.length = num >= 0 ? num : 0;
             return result;
         }
-        catch (error)
+        catch (_)
         {
-            console.error(error);
+            //console.error(error);
             return null;
         }
     }
@@ -147,7 +147,7 @@ class DBRequestsInterface
      */
      async getNearby(geoLocation, maxDistance, num = undefined)
      {
-        try 
+        try
         {
             await this.#collection.createIndex( { geoLocation: "2dsphere"} );
             let filter = 
@@ -164,9 +164,8 @@ class DBRequestsInterface
             if (num != undefined) result.length = num >= 0 ? num : 0;
             return result;
         }
-        catch (error)
+        catch (_)
         {
-            console.log(error);
             return null;
         }
      }

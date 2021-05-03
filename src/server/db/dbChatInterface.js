@@ -126,9 +126,9 @@ class DBChatInterface
             let result = await this.#collection.findOne(filter);
             return result == null ? null : result.messageCollection;
         }
-        catch (error)
+        catch (_)
         {
-            console.error(error);
+            //console.error(error);
             return null;
         }
     }
