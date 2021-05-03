@@ -11,7 +11,7 @@ const SuperReceipt = () =>
 {
     const getRequest = async () =>{
         var userID = await storage.getDataString("userID");
-        const req = await request.requester.getUserRequest("608ae68bdaf97859aba99972", 2);
+        const req = await request.requester.getUserRequest(userID, 1);
         console.log(req);
     }
     getRequest();

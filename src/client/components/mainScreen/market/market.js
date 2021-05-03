@@ -87,7 +87,6 @@ const FilterView = () => {
         },
     ]
 
-
     const [expand, setExpand] = useState(false);
 
     return (

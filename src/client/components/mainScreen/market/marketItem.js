@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, ScrollView} from 'react-native';
 import request from '../../../modules/client-communication/request';
@@ -7,6 +8,11 @@ import CustomButton from '../../customComponents/customButton';
 import CustomHeader from "../../customComponents/customHeader";
 import Loading from '../../customComponents/loading';
 import ms from '../../mainStyles/ms';
+=======
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
+import CustomHeader from "../../customComponents/customHeader";
+>>>>>>> origin/main
 
 const ShoppingItem = ({item}) => {
     return (
@@ -109,16 +115,20 @@ const MarketItem = ({navigation, route}) => {
 }
 
 const mis = StyleSheet.create({
+<<<<<<< HEAD
     content: {
         flex:1,
         paddingRight:20,
         paddingLeft:20,
         paddingBottom:20,
     },
+=======
+>>>>>>> origin/main
     header:{
 
     },
     shoppingItemContainer: {
+<<<<<<< HEAD
     },
     map:{
         justifyContent:"center",
@@ -129,6 +139,8 @@ const mis = StyleSheet.create({
     },
     mapText: {
         marginTop:5,
+=======
+>>>>>>> origin/main
     }
 });
 export default MarketItem;

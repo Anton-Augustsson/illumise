@@ -1,7 +1,7 @@
 // TODO
 
 import React from 'react';
-import { Text, View, Image, FlatList, StyleSheet,TouchableOpacity} from 'react-native';
+import { Text, View } from 'react-native';
 import CustomHeader from '../../../customComponents/customHeader';
 import ms from "../../../mainStyles/ms";
 import os from "../order/orderStyle"
@@ -13,7 +13,7 @@ const OrderProvidingApprovalScreen = ({navigation, route}) => {
                 nav={navigation}
             />
             <View> 
-                <h1>Request title</h1>
+                <Text h2>Request Title</Text>
                 <Text>Location: DummyLocation</Text>
                 <Text>Person: DummyPerson</Text>
                 <View style = {os.descriptionContainer}>
