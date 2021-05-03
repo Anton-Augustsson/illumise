@@ -5,21 +5,23 @@ import CustomHeader from '../../../customComponents/customHeader';
 import ms from "../../../mainStyles/ms";
 import os from "./orderStyle";
 
-/**<View> 
+/** */
+const OrderScreen = ({navigation, route}) => {
+
+    return (
+        <View style={{flex:1}}>
+            <CustomHeader
+                nav={navigation}
+            ></CustomHeader>
+            
+            <View> 
                 <Text>Request title</Text>
                 <Text>Location: DummyLocation</Text>
                 <Text>Person: DummyPerson</Text>
                 <View style = {os.descriptionContainer}>
                     <Text style = {os.descriptionText}>Description of request</Text>
                 </View>        
-            </View> */
-const OrderScreen = ({navigation, route}) => {
-    //setChat(CHAT);
-    return (
-        <View style={{flex:1}}>
-            <CustomHeader
-                nav={navigation}
-            ></CustomHeader>
+            </View>
 
             <Chat/>
         </View>

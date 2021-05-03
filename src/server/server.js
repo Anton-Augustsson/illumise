@@ -60,7 +60,7 @@ io.on('connection', function(socket) {
 
         socket.join(room); // sends all new messages to this socket
 
-        callback();
+        //callback();
     });
 
     socket.on('sendMsg', ({ name, room }, msg, callback) => {
