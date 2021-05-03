@@ -20,7 +20,7 @@ const MarketItem = ({navigation, route}) => {
                 nav={navigation}
             />
             {
-                route.params.type === "shopping" ?
+                route.params.type === "shopping" || route.params.type === "food" ?
                 <FlatList
                     data={route.params.shoppingList}
                     renderItem={({item})=> <ShoppingItem item={item}/>}
