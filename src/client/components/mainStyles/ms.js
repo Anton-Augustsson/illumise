@@ -86,8 +86,8 @@ const ms = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
     },
-    logoContainerZ: {
-        flex: 3,
+    logoContainerLogin: {
+        justifyContent: "center",
         alignItems: "center",
     },
     logoLarge: { // Start up logo
