@@ -11,6 +11,7 @@ import {Localization} from '../../../modules/localization'
 import * as Location from 'expo-location';
 import request from '../../../modules/client-communication/request';
 import { getDistance } from 'geolib'
+import CustomMap from '../../customComponents/customMap';
 /*
 const REQUESTS = [
     {
@@ -208,7 +209,7 @@ const FirstScreen = (nav) => {
                 nav={nav}
                 goBack={false}
             />
-
+            
             <FlatList
                 data={REQUESTS}
                 renderItem={({item})=><RequestItem nav={nav} item={item}/>}
@@ -302,7 +303,11 @@ const mms = StyleSheet.create({
     priceCurrency: {
     },
     distance: {
-    }
+    },
+    map:{
+        height:"50%",
+        width:"100%",
+    },
 });
 
 export default MarketScreen;

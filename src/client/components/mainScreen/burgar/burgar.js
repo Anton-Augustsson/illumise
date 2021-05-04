@@ -63,9 +63,7 @@ const FirstScreen = ({navigation}) =>
                 nav={navigation}
                 goBack ={false}
             />
-            <ProfilePicture
-                name="STEFFE"
-            />
+            
             <FlatList
                 data={BURGAR}
                 renderItem={({item})=>BurgarItem(item, navigation)}
