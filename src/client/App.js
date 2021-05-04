@@ -19,7 +19,7 @@ const App = () =>
     const [state, dispatch] = useReducer(
         (prevState, action) => {
         switch (action.type) {
-                case "restoreUserId":
+                case "restoreID":
                 return {
                     ...prevState,
                     userID: action.id,
@@ -37,11 +37,6 @@ const App = () =>
                     signOut: true,
                     userID: null,
                 };
-                case "loadingDone": 
-                return {
-                    ...prevState,
-                    loading:false,
-                }
             }
         },
         {
@@ -55,8 +50,7 @@ const App = () =>
         const checkIfUserExists = async () => {
             try {
                 const userID = await storage.getDataString("userID"); 
-                dispatch({type:"signIn", id: userID});
-                dispatch({type:"loadingDone"});
+                dispatch({type:"restoreID", id: userID});
             } catch(err) {
                 console.log(err);
             }

@@ -43,6 +43,8 @@ const DeliverScreen = ({navigation, route}) => {
     }
 
     const checkout = async () =>{
+        if(location === "") return;
+        if(price === 0) return;
         setCheckingOut(true);
         //TODO: kolla att obligatoriska fält är ifyllda
         var result = Object.assign({}, route.params)
