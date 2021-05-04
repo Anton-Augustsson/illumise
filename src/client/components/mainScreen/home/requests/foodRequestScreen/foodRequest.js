@@ -34,7 +34,7 @@ const FoodRequestScreen = ({navigation}) => {
 
         setItems(prevItems => {
             setId((id+1).toString());
-            return [{id:id, name: dish, quantity: amount, otherInfo: other},...prevItems]
+            return [{id:id, name: dish, quantity: amount, info: other},...prevItems]
         })
         setDish("");
         setAmount(1);

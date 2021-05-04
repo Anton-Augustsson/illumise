@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import MapView, {Marker} from "react-native-maps";
 import * as Location from "expo-location";
-import { Alert, Button, TouchableOpacity, View } from "react-native";
+import { Alert, Button, TouchableOpacity, View, StyleSheet } from "react-native";
 import CustomButton from "./customButton";
 
 /**
@@ -148,6 +148,7 @@ export default class CustomMap extends Component
                     />
                 ))}
             </MapView>
+
             
             <Button
                 title = "Center on me"
@@ -160,3 +161,7 @@ export default class CustomMap extends Component
         );
     }
 }
+
+const styles = StyleSheet.create({
+
+});

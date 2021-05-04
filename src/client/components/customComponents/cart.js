@@ -1,11 +1,12 @@
 import React, {useState} from 'react';
-import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
+import { Text, View, TouchableOpacity } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 import IconButton from './iconButton';
 import ms from "../mainStyles/ms";
 import {Localization} from "../../modules/localization";
 import QuantityChooser from './quantityChooser';
+import cs from "../mainStyles/cartStyle";
 
 const Cart = (props) => {
 
@@ -14,12 +15,12 @@ const Cart = (props) => {
         const [quantity, setQuantity] = useState(item.quantity);
     
         return(
-            <TouchableOpacity onPress={()=>setExpand(!expand)} style={styles.listItemContainer}>
-                <View style={[styles.listItemView, styles.margin]}>
-                    <Text numberOfLines={1} style={styles.listItemText}>
+            <TouchableOpacity onPress={()=>setExpand(!expand)} style={cs.listItemContainer}>
+                <View style={[cs.listItemView, cs.margin]}>
+                    <Text numberOfLines={1} style={cs.listItemText}>
                         {item.name}
                     </Text>
-                    <Text style={styles.quantity}>
+                    <Text style={cs.quantity}>
                         {quantity}
                     </Text>
                     <Ionicons 
@@ -29,15 +30,15 @@ const Cart = (props) => {
                         onPress={() => deleteItem(item.id)}
                     />
                 </View>
-                <View style={[styles.listItemInfo, styles.margin, {display: expand ? "flex" : "none"}]}>
-                    <View style={styles.otherInfo}>
+                <View style={[cs.listItemInfo, cs.margin, {display: expand ? "flex" : "none"}]}>
+                    <View style={cs.otherInfo}>
                         <Text style={ms.h4}>{Localization.getText("otherInfo")}</Text>
                         <Text>
-                            {item.otherInfo}
+                            {item.info}
                         </Text>
                     </View>
-                    <View style={styles.changeQuantity}>
-                        <Text style={styles.changeQuantityText}>{Localization.getText("changeQuantity")}</Text>
+                    <View style={cs.changeQuantity}>
+                        <Text style={cs.changeQuantityText}>{Localization.getText("changeQuantity")}</Text>
                         <QuantityChooser
                             state={quantity}
                             setState={setQuantity}
@@ -92,62 +93,5 @@ const Cart = (props) => {
         </>
     );
 }
-
-const styles = StyleSheet.create({
-    listItemContainer:{
-        backgroundColor: 'white',
-        shadowColor:"#cccccc",
-        shadowOffset: {
-            width:2,
-            height:4,
-        },
-        shadowOpacity:0.8,
-        shadowRadius: 2,
-        elevation:4,
-        borderRadius: 10,
-        padding:8,
-        marginLeft:10,
-        marginRight:10,
-        marginTop:5,
-        marginBottom:5,
-    },
-    listItemView:{ 
-        flexDirection: 'row',
-        alignItems:"center",
-        justifyContent: 'space-between',
-    },
-    listItemInfo: {
-        borderTopWidth:0.5,
-        marginRight:5,
-        marginBottom:5,
-        paddingTop:5,
-        marginTop:7,
-    },
-    listItemText:{
-        width:"80%",
-        fontSize: 20,
-        fontWeight: 'bold',
-    },
-    otherInfo: {
-        paddingTop:5,
-        minHeight:75,
-        paddingBottom:10,
-    },
-    quantity: {
-        fontSize:17,
-        fontWeight:"bold",
-    },
-    changeQuantity: {
-        flexDirection:"row",
-        alignItems:"center",
-        justifyContent:"flex-end",
-    },
-    changeQuantityText: {
-        marginRight:10,
-    },
-    margin: {
-        marginLeft:5,
-    }
-});
 
 export default Cart;

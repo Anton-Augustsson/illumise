@@ -143,7 +143,7 @@ const RequestItem = ({nav, item}) => {
 
     return(
         <TouchableOpacity 
-            onPress={()=>nav.nav.navigate("MarketItem", {item: item._id})}
+            onPress={()=>nav.nav.navigate("MarketItem", item)}
             style={mms.itemContainer}
         >
             <Text>{text}</Text>

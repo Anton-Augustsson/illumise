@@ -24,6 +24,7 @@ const ms = StyleSheet.create({
     h4: {
         fontSize:15,
         fontWeight: "bold",
+        marginTop:5,
     },
     h5: {
         fontSize:10,

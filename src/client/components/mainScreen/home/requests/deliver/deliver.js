@@ -55,9 +55,9 @@ const DeliverScreen = ({navigation, route}) => {
         }
 
         const userID = await storage.getDataString("userID");
-        const requestID = await request.requester.newRequest(userID, result.type, data);
+        const requestId = await request.requester.newRequest(userID, result.type, data);
         navigation.setOptions({unmountOnBlur:true});
-        navigation.navigate("Orders",{screen:"MarketItem", params:{requestID:requestID}});
+        navigation.navigate("Orders",{screen:"MarketItem", params:{requestId:requestId}});
     }
     
 

@@ -1,12 +1,29 @@
 import React from 'react';
-import {Text, StyleSheet, View} from 'react-native';
+import {Text, StyleSheet, View, Animated, Easing} from 'react-native';
 import { Localization } from '../../modules/localization';
-import ms from '../mainStyles/ms';
   
-const Loading = (props) => {
+const Loading = ({info}) => {
+    /*
+    const animationValue = useRef(new Animated.Value(0)).current;
+
+    const top = animationValue.interpolate({
+        inputRange: [0, 1],
+        outputRange: ["0deg", "360deg"],
+    });
+
+    const animation = () => {
+        Animated.timing(animationValue, {
+            toValue: toValue,
+            duration: 150,
+            easing: Easing.linear(),
+            useNativeDriver:false,
+        }).start();
+    }
+    */
+
     return (
         <View style={styles.container}>
-            <Text style={styles.text}>{Localization.getText("loading...")}</Text>
+            <Text style={styles.text}>{info === null ? Localization.getText("loading...") : info}</Text>
         </View>
     );
 }

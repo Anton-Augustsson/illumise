@@ -84,6 +84,9 @@
         "yourOrderIsComplete":"Your order is complete",
         "loading...":"Loading...",
         "myRequests": "My requests",
+        "destinations": "Destinations",
+        "shoppingList": "Shopping list",
+        "loggingIn": "Logging in...",
         "logout": "Logout"
     },
     "se": 
@@ -172,6 +175,9 @@
         "yourOrderIsComplete":"Din order är färdig",
         "loading...":"Laddar...",
         "myRequests": "Mina beställningar",
+        "destinations": "Destinationer",
+        "shoppingList": "Inköpslista",
+        "loggingIn": "Loggar in...",
         "logout": "Logga ut"
     } 
 }
