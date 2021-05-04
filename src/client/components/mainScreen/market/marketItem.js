@@ -7,6 +7,7 @@ import CustomButton from '../../customComponents/customButton';
 import CustomHeader from "../../customComponents/customHeader";
 import Loading from '../../customComponents/loading';
 import ms from '../../mainStyles/ms';
+import CustomMap from '../../customComponents/customMap';
 
 const ShoppingItem = ({item}) => {
     return (
@@ -41,7 +42,28 @@ const DoneLoading = ({creator,req}) => {
                 <Text style={ms.h2}>{req.body.title}</Text>
                 
             }
-            <View style={mis.map}><Text>HÄR SKA KARTAN LIGGA</Text></View>
+            <CustomMap
+                style={mis.map}
+                onMount={(region) => 
+                {
+                    /** @type {[*]} */
+                    let stops = req.body.stops;
+                    if(stops === null) 
+                    {
+                        return [];
+                    }    
+                    return stops.map((stop, index) => 
+                    {
+                        return {
+                            latitude:    stop.location.lat,
+                            longitude:   stop.location.lng,
+                            title:       "Stopp " + index+1,
+                            description: stop.location.adress,
+                            key:         index+1
+                        };
+                    });
+                }}
+            />
 
             {
                 req.body.stops.map((place, index) => (
@@ -131,11 +153,8 @@ const mis = StyleSheet.create({
     shoppingItemContainer: {
     },
     map:{
-        justifyContent:"center",
-        alignItems:"center",
         height:200,
         width:"100%",
-        backgroundColor:"yellow",
     },
     mapText: {
         marginTop:5,

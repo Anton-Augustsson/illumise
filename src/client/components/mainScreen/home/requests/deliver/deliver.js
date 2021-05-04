@@ -73,10 +73,10 @@ const DeliverScreen = ({navigation, route}) => {
                     </Text>
                     <GooglePlaces
                         placeholder={Localization.getText("deliveryAddress")}
+                        fetchDetails = {true}
                         onPress={(data, details = null) => {
                         // 'details' is provided when fetchDetails = true
-                        //console.log(data, details);
-                        setLocation(data.description);
+                        setLocation({adress: data.description, location: details.geometry.location});
                         }}
                     />
                     <Text style={ms.h3}>{Localization.getText("enterPrice")}</Text>

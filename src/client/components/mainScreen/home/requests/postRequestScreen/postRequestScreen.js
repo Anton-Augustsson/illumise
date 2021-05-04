@@ -39,9 +39,10 @@ const PostRequestScreen = ({navigation}) => {
                 <Text style={ms.h3}>{Localization.getText("enterPostOffice")}</Text>
                 <GooglePlaces
                     placeholder={Localization.getText("deliveryAddress")}
+                    fetchDetails={true}
                     onPress={(data, details = null) => {
                     // 'details' is provided when fetchDetails = true
-                    setLocation(data.description);
+                    setLocation({adress: data.description, location: details.geometry.location});
                     }}
                 />
 

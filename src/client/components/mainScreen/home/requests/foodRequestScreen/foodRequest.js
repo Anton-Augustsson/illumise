@@ -82,9 +82,10 @@ const FoodRequestScreen = ({navigation}) => {
                     <Text style={ms.h3}>{Localization.getText("enterRestaurant")}</Text>
                     <GooglePlaces
                         placeholder={Localization.getText("restaurant")}
+                        fetchDetails={true}
                         onPress={(data, details = null) => {
                             // 'details' is provided when fetchDetails = true
-                            setLocation(data.description);
+                            setLocation({adress: data.description, location: details.geometry.location});
                         }}
                     />
                     <ScrollView contentContainerStyle={{flexGrow:1}}>

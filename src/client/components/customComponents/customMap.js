@@ -138,9 +138,9 @@ export default class CustomMap extends Component
                 onRegionChangeComplete={this.onRegionChangeComplete.bind(this)}
             >
 
-                {this.state.markers.map((marker) => (
+                {this.state.markers.map((marker, index) => (
                     <Marker
-                        key={marker.title}
+                        key={index}
                         title={marker.title}
                         description={marker.description}
                         coordinate={{ longitude: marker.longitude, 
