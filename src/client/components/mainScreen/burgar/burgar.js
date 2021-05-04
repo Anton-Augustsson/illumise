@@ -8,11 +8,7 @@ import SettingsScreen from "./settings/settings";
 import ProfileScreen from "./profile/profile";
 import FaqScreen from "./faq/faq";
 import BurgarIcons from "../../customComponents/burgarIcons";
-import account from "../../../modules/client-communication/account.js";
 import { Localization } from '../../../modules/localization';
-import storage from '../../../modules/localStorage/localStorage';
-import LoginScreen from '../../loginScreen';
-import App from '../../../App';
 
 
 const BURGAR = [
@@ -37,7 +33,7 @@ const BurgarItem = (item, navigation) =>
     
     return(
         <TouchableOpacity 
-            onPress={navigation.navigate(item.des)}
+            onPress={()=>navigation.navigate(item.des)}
             style={ms.itemContainer}>
             <BurgarIcons type={item.des} size={30} color="black"/>
             <Text numberOfLines={2} style={ms.msg}>{item.title}</Text>
@@ -75,10 +71,6 @@ const FirstScreen = ({navigation}) =>
                 renderItem={({item})=>BurgarItem(item, navigation)}
                 keyExtractor={(item)=>item.id}
             />
-            <Button
-                title="Logga ut"
-                onPress={() => {}}
-            />
 
         </View>
     );
@@ -92,9 +84,9 @@ const BurgarScreen = () =>
         <Stack.Navigator 
             screenOptions={{
                 headerShown:false,
-                cardStyle:{backgroundColor:colors.DEFAULT_BACKGROUND}
+                cardStyle:{backgroundColor:colors.DEFAULT_BACKGROUND},
+                initialRouteName:"FirstScreen"
             }}
-            initialRouteName="FirstScreen"
         >
             <Stack.Screen 
                 name="FirstScreen" 
@@ -115,10 +107,7 @@ const BurgarScreen = () =>
                 name="Faq" 
                 component={FaqScreen}
             />
-            <Stack.Screen 
-                name="Login"
-                component={LoginScreen}
-            />
+            
         </Stack.Navigator>
     );
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useContext} from 'react';
 import { Text, View, Image } from 'react-native';
 import styles from "./styles"
 import ms from '../mainStyles/ms';
@@ -12,8 +12,9 @@ import account from "../../modules/client-communication/account";
 import storage from "../../modules/localStorage/localStorage"
 import { useState } from 'react/cjs/react.development';
 import Loading from '../customComponents/loading';
+import {AppContext} from "../AppContext";
 
-const verifyUser = async (navigation, token, type) =>
+const verifyUser = async (signIn, token, type, setLoggingIn) =>
 {
     try {
         var userInfo = await fetch(type === 'facebook' 
@@ -40,22 +41,18 @@ const verifyUser = async (navigation, token, type) =>
                 };    
         }
         
-        
 
         await account.createAccount(credentials);
         const data = await account.get(credentials.email, credentials.token);
-        await storage.storeDataString("userID", data._id);
-        navigation.reset({
-            index: 0,
-            routes: [{ name: 'Main' }],
-        });
+        signIn(data._id);
     } catch(err) {
-        console.log("JAJJAJAJJAJJA VI SKA FIXA BÄTTRE ERROR SEN: " +err);
+        setLoggingIn(false);
     }
 }
 
-const LoginScreen = ({navigation}) => 
+const LoginScreen = (navigation) => 
 {
+    const { signIn} = useContext(AppContext); 
     //web-client secret key
     //i7HPvxf7F1MohxIdHcZaZmI0
     const [loggingIn, setLoggingIn] = useState(false);
@@ -69,10 +66,10 @@ const LoginScreen = ({navigation}) =>
     });
 
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (response?.type === 'success') 
         {
-            verifyUser(navigation, response.authentication.accessToken, 'google'); 
+            verifyUser(signIn, response.authentication.accessToken, 'google', setLoggingIn); 
         }
     }, [response])
 
@@ -82,12 +79,13 @@ const LoginScreen = ({navigation}) =>
         //responseType: ResponseType.Code, 
     });
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (responseFB?.type === 'success') 
         {
-            verifyUser(navigation, responseFB.authentication.accessToken, 'facebook');
+            verifyUser(signIn, responseFB.authentication.accessToken, 'facebook');
         }
     }, [responseFB]);
+
 
     const login = (type) => {
         try {
@@ -111,10 +109,6 @@ const LoginScreen = ({navigation}) =>
             {loggingIn ? <Loading info={Localization.getText("loggingIn")}/> :
             <>
                 <View style={ms.logoContainer}>
-                    <Image
-                        style={ms.logoLarge}
-                        source={require("../../assets/samarit_logo2.png")}
-                    />
                     <Text style={ms.h1}>{Localization.getText("welcomeBold")}</Text>
                 </View>
 

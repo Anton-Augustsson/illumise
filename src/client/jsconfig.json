@@ -3,5 +3,12 @@
         "include": [
             "jest"
         ]
+    },
+    "compilerOptions": {
+        "baseUrl": "./",
+        "paths": {
+            "@components/*": ["components/*"],
+            "@modules/*": ["modules/*"],
+        }
     }
 }
