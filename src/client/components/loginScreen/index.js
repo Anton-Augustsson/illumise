@@ -122,6 +122,8 @@ const LoginScreen = (navigation) =>
                     onPress= {()=>login("google")}
                     disabled={!request}
                 />
+                <Text>Hej</Text>
+                <Text>Hej</Text>
 
                 <FacebookButton
                     onPress={()=>login("facebook")}

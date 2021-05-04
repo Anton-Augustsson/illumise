@@ -48,7 +48,6 @@ Lista med saker
 */
 
 const Header = ({req}) => {
-    console.log(req);
     return (
         <>
             <View style={mis.padding}>
@@ -126,7 +125,6 @@ const DoneLoading = ({navigation,creator,req}) => {
         <>
 
             <CustomHeader 
-                goBack={creator ? false : true}
                 title={creator && Localization.getText("yourOrderIsComplete")}
                 nav={navigation}
             />
@@ -169,25 +167,23 @@ const timeout = (ms) => {
 }
 
 const MarketItem = ({navigation, route}) => {
-
     const [loading, setLoading] = useState(true);
     const [req, setReq] = useState(null);
     const [creator] = useState(route.params.requestId !== null);
 
-    const retrieveRequest = async () => {
-        if(route.params.requestId === undefined) {
-            setReq(route.params);
-            setLoading(false);
-            return;
-        } 
-        await timeout(1000);
-        const userID = await storage.getDataString("userID");
-        const req = await request.requester.getUserRequest(userID, 1)
-        setReq(req[0]);
-        setLoading(false);
-    }
-
     useEffect(() => {
+        const retrieveRequest = async () => {
+            if(route.params.requestId === undefined) {
+                setReq(route.params);
+                setLoading(false);
+                return;
+            } 
+            await timeout(1000);
+            const userID = await storage.getDataString("userID");
+            const req = await request.requester.getUserRequest(userID, 1)
+            setReq(req[0]);
+            setLoading(false);
+        }
         retrieveRequest();
     }, []);
 

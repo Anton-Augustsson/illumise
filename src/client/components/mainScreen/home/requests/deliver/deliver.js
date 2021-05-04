@@ -10,11 +10,14 @@ import request from '../../../../../modules/client-communication/request';
 import storage from '../../../../../modules/localStorage/localStorage';
 import FloatingInput from '../../../../customComponents/Inputs/floatingInput';
 import * as Location from 'expo-location';
+import {CommonActions} from "@react-navigation/native";
+import Loading from "../../../../customComponents/loading";
 
 const DeliverScreen = ({navigation, route}) => {
     //console.log(JSON.stringify(route));
     const [location, setLocation] = useState("");
     const [price, setPrice] = useState(0);
+    const [checkingOut, setCheckingOut] = useState(false);
 
         /** 
      * Get a geoJSON representation of a point
@@ -40,59 +43,89 @@ const DeliverScreen = ({navigation, route}) => {
     }
 
     const checkout = async () =>{
+        setCheckingOut(true);
         //TODO: kolla att obligatoriska fält är ifyllda
         var result = Object.assign({}, route.params)
         result.stops.push(location);
-        
-        const geo = await getLocation()
+        try {
+            const geo = await getLocation()
 
-        var coords = coordsToGeoJSON(geo);
-        var data = {
-            header: result.type,
-            body: result,
-            cost: price,
-            geoLocation: coords,
+            const coords = coordsToGeoJSON(geo);
+            const data = {
+                header: result.type,
+                body: result,
+                cost: price,
+                geoLocation: coords,
+            }
+
+            const userID = await storage.getDataString("userID");
+            const requestId = await request.requester.newRequest(userID, result.type, data);
+            navigation.dispatch(
+                CommonActions.reset({
+                    routes: [
+                        {
+                            name:"Orders",
+                            state: {
+                                routes: [
+                                    {name:"FirstScreen"},
+                                    {
+                                        name:"MarketItem",
+                                        params:{requestId:requestId},
+                                    },
+                                ]
+                            }, 
+                        },
+                        {
+                            name:"Home",
+                        }
+                    ]
+                })
+            );
         }
-
-        const userID = await storage.getDataString("userID");
-        const requestId = await request.requester.newRequest(userID, result.type, data);
-        navigation.setOptions({unmountOnBlur:true});
-        navigation.navigate("Orders",{screen:"MarketItem", params:{requestId:requestId}});
+        catch (err) {
+            console.log(err);
+            setCheckingOut(false);
+        }
     }
     
 
     return (
         <View style={{flex:1}}>
-            <CustomHeader
-                title={Localization.getText("deliveryInfo")}
-                nav={navigation}
-            />
-            <View style={rs.content}>
-                    <Text style={ms.h3}>{route.params.type === "other" 
-                        ? Localization.getText("place") : Localization.getText("enterDelivAddress")}
-                    </Text>
-                    <GooglePlaces
-                        placeholder={Localization.getText("deliveryAddress")}
-                        fetchDetails = {true}
-                        onPress={(data, details = null) => {
-                        // 'details' is provided when fetchDetails = true
-                        setLocation({adress: data.description, location: details.geometry.location});
-                        }}
-                    />
-                    <Text style={ms.h3}>{Localization.getText("enterPrice")}</Text>
-                    <FloatingInput 
-                        placeholder={Localization.getText("price")}
-                        onChangeText={(text)=>setPrice(parseInt(text))}
-                    />
-            </View>
-            <View style={ms.moveOnContainer}>
-                <CustomButton
-                    style={ms.button}
-                    styleText={{fontWeight:"bold"}}
-                    title={Localization.getText("finishOrder")}
-                    onPress={checkout}
+            {checkingOut ? 
+            <Loading info={Localization.getText("creatingRequest...")}/> :
+            <>
+                <CustomHeader
+                    title={Localization.getText("deliveryInfo")}
+                    nav={navigation}
                 />
-            </View>
+                <View style={rs.content}>
+                        <Text style={ms.h3}>{route.params.type === "other" 
+                            ? Localization.getText("place") : Localization.getText("enterDelivAddress")}
+                        </Text>
+                        <GooglePlaces
+                            placeholder={Localization.getText("deliveryAddress")}
+                            fetchDetails = {true}
+                            onPress={(data, details = null) => {
+                            // 'details' is provided when fetchDetails = true
+                            setLocation({adress: data.description, location: details.geometry.location});
+                            }}
+                        />
+                        <Text style={ms.h3}>{Localization.getText("enterPrice")}</Text>
+                        <FloatingInput 
+                            placeholder={Localization.getText("price")}
+                            onChangeText={(text)=>setPrice(parseInt(text))}
+                        />
+                </View>
+                <View style={ms.moveOnContainer}>
+                    <CustomButton
+                        style={ms.button}
+                        styleText={{fontWeight:"bold"}}
+                        title={Localization.getText("finishOrder")}
+                        onPress={checkout}
+                    />
+                </View>
+            </>
+            }
         </View>
     );
 }
