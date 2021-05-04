@@ -82,11 +82,12 @@ const ms = StyleSheet.create({
         fontWeight:"bold",
     },
     logoContainer: {
+        flex:1,
         justifyContent: "center",
         alignItems: "center",
     },
-    logoContainerZ: {
-        flex: 3,
+    logoContainerLogin: {
+        justifyContent: "center",
         alignItems: "center",
     },
     logoLarge: { // Start up logo
@@ -125,6 +126,10 @@ const ms = StyleSheet.create({
         paddingRight:20,
         paddingLeft:20,
     },
+    container: {
+        flex:1,
+        padding:20,
+    }
 });
 
 // EXPORTS 

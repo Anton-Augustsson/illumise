@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useContext} from 'react';
 import { Text, View, Image } from 'react-native';
 import styles from "./styles"
 import ms from '../mainStyles/ms';
@@ -12,8 +12,9 @@ import account from "../../modules/client-communication/account";
 import storage from "../../modules/localStorage/localStorage"
 import { useState } from 'react/cjs/react.development';
 import Loading from '../customComponents/loading';
+import {AppContext} from "../AppContext";
 
-const verifyUser = async (navigation, token, type) =>
+const verifyUser = async (signIn, token, type, setLoggingIn) =>
 {
     try {
         var userInfo = await fetch(type === 'facebook' 
@@ -40,22 +41,18 @@ const verifyUser = async (navigation, token, type) =>
                 };    
         }
         
-        
 
         await account.createAccount(credentials);
         const data = await account.get(credentials.email, credentials.token);
-        await storage.storeDataString("userID", data._id);
-        navigation.reset({
-            index: 0,
-            routes: [{ name: 'Main' }],
-        });
+        signIn(data._id);
     } catch(err) {
-        console.log("JAJJAJAJJAJJA VI SKA FIXA BÄTTRE ERROR SEN: " +err);
+        setLoggingIn(false);
     }
 }
 
-const LoginScreen = ({navigation}) => 
+const LoginScreen = (navigation) => 
 {
+    const { signIn} = useContext(AppContext); 
     //web-client secret key
     //i7HPvxf7F1MohxIdHcZaZmI0
     const [loggingIn, setLoggingIn] = useState(false);
@@ -69,10 +66,10 @@ const LoginScreen = ({navigation}) =>
     });
 
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (response?.type === 'success') 
         {
-            verifyUser(navigation, response.authentication.accessToken, 'google'); 
+            verifyUser(signIn, response.authentication.accessToken, 'google', setLoggingIn); 
         }
     }, [response])
 
@@ -82,12 +79,13 @@ const LoginScreen = ({navigation}) =>
         //responseType: ResponseType.Code, 
     });
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (responseFB?.type === 'success') 
         {
-            verifyUser(navigation, responseFB.authentication.accessToken, 'facebook');
+            verifyUser(signIn, responseFB.authentication.accessToken, 'facebook');
         }
     }, [responseFB]);
+
 
     const login = (type) => {
         try {
@@ -106,11 +104,13 @@ const LoginScreen = ({navigation}) =>
         }
     }
 
+    //navigation.navigate("Main", {type:"google",user:{id:"",email:"marholdtv@gmail.com",verified_email:true,name:"Marhold Marhold",given_name:"Bengt",family_name:"Olsson",picture:"https://lh3.googleusercontent.com/-ggukNDG0VX8/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucnZ9CX2t6F0LbHJ31docWtx8Eaj3A/s96-c/photo.jpg",locale:"sv"}}
+
     return (
         <View style={styles.loginContainer}>
             {loggingIn ? <Loading info={Localization.getText("loggingIn")}/> :
             <>
-                <View style={ms.logoContainer}>
+                <View style={ms.logoContainerLogin}>
                     <Image
                         style={ms.logoLarge}
                         source={require("../../assets/samarit_logo2.png")}
@@ -132,7 +132,7 @@ const LoginScreen = ({navigation}) =>
                     style={[ms.loginButton, { backgroundColor: "red" }]}
                     styleText={[ms.loginButtonText, { color: "white" }]}
                     title={Localization.getText("skipLogin")}
-                    onPress={() => navigation.navigate("Main", {type:"google",user:{id:"104735997383881408322",email:"marholdtv@gmail.com",verified_email:true,name:"Marhold Marhold",given_name:"Bengt",family_name:"Olsson",picture:"https://lh3.googleusercontent.com/-ggukNDG0VX8/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucnZ9CX2t6F0LbHJ31docWtx8Eaj3A/s96-c/photo.jpg",locale:"sv"}})}
+                    onPress={() => signIn("104735997383881408322")}
                 />
                 
                 <CustomButton
