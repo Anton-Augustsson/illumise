@@ -3,6 +3,7 @@ import { Alert, Button, View } from 'react-native';
 import { Localization } from '../../../../modules/localization';
 import CustomHeader from '../../../customComponents/customHeader';
 import { Restart } from 'fiction-expo-restart';
+import storage from '../../../../modules/localStorage/localStorage';
 
 const SettingsScreen = ({navigation}) => {
     return (
@@ -13,17 +14,17 @@ const SettingsScreen = ({navigation}) => {
             />
             <Button
                 title = {Localization.getText("selectLang")}
-                onPress = {() => 
+                onPress = { () => 
                 {
                     Alert.alert(Localization.getText("selectLang"), 
                     `Current Lang: ${Localization.lang}`,
                     Localization.langs.map((lang) => 
                     {
-                        return { text: lang, onPress: () => 
+                        return { text: lang, onPress: async () => 
                         {
                             if (lang != Localization.lang)
                             {
-                                Localization.lang = lang;
+                                await storage.storeDataObject("lang", lang);
                                 Restart();
                             }
                         }};

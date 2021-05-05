@@ -4,8 +4,6 @@
 //
 // usage: Localization.getText("hello") will get the string tagged "hello" in the corresponding localization
 
-import storage from "./localStorage/localStorage";
-
 /**
  * @typedef LocalizationData
  * @property {String} langDefault
@@ -54,7 +52,6 @@ export class Localization
     static set lang(value)
     {
         this._lang = value;
-        storage.storeDataObject("lang", this._lang);
     }
     
     /**
