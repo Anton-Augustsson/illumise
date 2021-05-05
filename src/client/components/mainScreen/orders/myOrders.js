@@ -53,6 +53,9 @@ const FirstScreen = (nav) => {
     const [isRequester, setIsRequester] = useState(true);
     const [REQUESTS, setRequests] = useState(null);
     const [isRefreshing, setIsRefresing] = useState(false);
+    //const [userName, setUserName] = useState(null); // TODO needed for chat
+    //const [userID, setUserID] = useState(null); // TODO needed for chat
+    //const [chatID, setChatID] = useState(null); // TODO needed for chat
 
     const getRequests = async () => {
         
@@ -112,6 +115,8 @@ const FirstScreen = (nav) => {
 
         </View>
     );
+
+    //<Chat name={"Morgan"} senderId={"1923i12093u91238081412904i8"} room={"1"}></Chat>
 }
 
 const Stack = createStackNavigator();
