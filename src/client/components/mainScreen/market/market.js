@@ -10,8 +10,7 @@ import MarketItem from './marketItem';
 import {Localization} from '../../../modules/localization'
 import * as Location from 'expo-location';
 import request from '../../../modules/client-communication/request';
-import { getDistance } from 'geolib'
-import CustomMap from '../../customComponents/customMap';
+import RequestIcon from "../../customComponents/requestIcon";
 /*
 const REQUESTS = [
     {
@@ -147,7 +146,8 @@ const RequestItem = ({nav, item}) => {
             onPress={()=>nav.nav.navigate("MarketItem", item)}
             style={mms.itemContainer}
         >
-            <Text>{text}</Text>
+            <RequestIcon type={item.header} size={30} color="black"/>
+            <Text style={mms.itemText}>{text}</Text>
             <View style={mms.rightRequestContainer}>
                 <View style={mms.priceContainer}>
                     <Text style={mms.price} numberOfLines={1}>{item.cost}</Text>
@@ -293,6 +293,9 @@ const mms = StyleSheet.create({
         alignItems:"center",
         paddingLeft:"5%",
         paddingRight:"5%",
+    },
+    itemText: {
+        marginLeft:15,
     },
     rightRequestContainer: {
         position:"absolute",

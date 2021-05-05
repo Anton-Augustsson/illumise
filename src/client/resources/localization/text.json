@@ -80,7 +80,6 @@
         "postPrompt": "Pick up and deliver post",
         "otherPrompt": "Other",
         "review": "Review",
-        "send": "Send",
         "howWasExperience": "How was your experience",
         "descExperience": "Describe your experience",
         "letsgo": "Take order",
@@ -93,7 +92,8 @@
         "loggingIn": "Logging in...",
         "logout": "Logout",
         "creatingRequest...": "Creating a request...",
-        "market": "Market"
+        "market": "Market",
+        "showOrder": "Show order"
     },
     "se": 
     {
@@ -177,7 +177,6 @@
         "postPrompt": "Hämta och leverera post/paket",
         "otherPrompt": "Övrigt",
         "review": "Återkoppling",
-        "send": "Skicka",
         "howWasExperience": "Hur var din upplevelse?",
         "descExperience": "Beskriv din upplevelse",
         "letsgo": "Ta order",
@@ -193,6 +192,7 @@
         "youHaveNoOrders":"Du har inga beställningar för tillfället!",
         "youHaveNoOrders2":"Skapa en genom att klicka på handikonen i menyn",
         "market": "Marknad",
-        "marketEmptyMsg": "Marknaden är för tillfället tom!"
+        "marketEmptyMsg": "Marknaden är för tillfället tom!",
+        "showOrder": "Visa beställning"
     } 
 }

@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useCallback} from 'react';
-import { Text, View, ScrollView, FlatList, StyleSheet,TouchableOpacity} from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
+import { Text, View,  FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import CustomHeader from "../../customComponents/customHeader";
 import { createStackNavigator } from '@react-navigation/stack';
 import ms from "../../mainStyles/ms";
@@ -10,6 +8,9 @@ import MarketItem from '../market/marketItem';
 import {Localization} from '../../../modules/localization'
 import request from '../../../modules/client-communication/request';
 import storage from '../../../modules/localStorage/localStorage';
+import RequestIcon from "../../customComponents/requestIcon";
+import ExpandButton from '../../customComponents/expandButton';
+import OrderApprovalScreen from './orderApproval/orderApproval';
 
 
 const RequestItem = ({nav, item}) => {
@@ -30,29 +31,26 @@ const RequestItem = ({nav, item}) => {
 
     }
 
-    const km = "1000";
+    console.log(item);
 
     return(
         <TouchableOpacity 
-            onPress={()=>nav.nav.navigate("MarketItem", item)}
-            style={mms.itemContainer}
-        >
-            <Text>{text}</Text>
-            <View style={mms.rightRequestContainer}>
-                <View style={mms.priceContainer}>
-                    <Text style={mms.price} numberOfLines={1}>{item.cost}</Text>
-                    <Text style={mms.priceCurrency}>kr</Text>
-                </View>
-                <Text style={mms.distance}>{km} km</Text>
-            </View>
+            onPress={()=>nav.nav.navigate("OrderApproval", item)}
+            style={ms.itemContainer}>
+            <RequestIcon type={item.header} size={30} color="black"/>
+            <Text numberOfLines={2} style={ms.msg}>{text}</Text>
+            <Text style={oas.time}>{item.dateCreated}</Text>
         </TouchableOpacity>
     );
 }
+
+
 
 const FirstScreen = (nav) => {
     const [isRequester, setIsRequester] = useState(true);
     const [REQUESTS, setRequests] = useState(null);
     const [isRefreshing, setIsRefresing] = useState(false);
+    const [PROVIDERS, setProviders] = useState(null);
 
     const getRequests = async () => {
         
@@ -84,7 +82,9 @@ const FirstScreen = (nav) => {
         refresh();
     }, []);
 
-     return (
+    const [expand, setExpand] = useState(false);
+
+    return (
         <View style={{flex:1}}> 
             <CustomHeader 
                 title={Localization.getText("myRequests")}
@@ -92,24 +92,52 @@ const FirstScreen = (nav) => {
                 goBack={false}
             />
 
-            <FlatList
-                data={REQUESTS}
-                renderItem={({item})=><RequestItem nav={nav} item={item}/>}
-                keyExtractor={(item)=>item._id}
-                onRefresh={()=>refresh()}
-                refreshing={isRefreshing}
-                ListEmptyComponent={()=>
-                    <View style={ms.emptyContainer}>
-                        <Text style={[ms.emptyMsg, ms.emptyMsgAbove]}>
-                            {Localization.getText("youHaveNoOrders")}
-                        </Text>
-                        <Text style={ms.emptyMsg}>
-                            {Localization.getText("youHaveNoOrders2")}
-                        </Text>
-                    </View>
+            <ExpandButton
+                expand={false}
+                title="Beställningar"
+                content={
+                    <FlatList
+                        data={REQUESTS}
+                        renderItem={({item})=><RequestItem nav={nav} item={item}/>}
+                        keyExtractor={(item)=>item._id}
+                        onRefresh={()=>refresh()}
+                        refreshing={isRefreshing}
+                        ListEmptyComponent={()=>
+                            <View style={ms.emptyContainer}>
+                                <Text style={[ms.emptyMsg, ms.emptyMsgAbove]}>
+                                    {Localization.getText("youHaveNoOrders")}
+                                </Text>
+                                <Text style={ms.emptyMsg}>
+                                    {Localization.getText("youHaveNoOrders2")}
+                                </Text>
+                            </View>
+                        }
+                    />
                 }
             />
-
+            <ExpandButton
+                expand={true}
+                title="Tjänster"
+                content={
+                    <FlatList
+                        data={REQUESTS}
+                        renderItem={({item})=><RequestItem nav={nav} item={item}/>}
+                        keyExtractor={(item)=>item._id}
+                        onRefresh={()=>refresh()}
+                        refreshing={isRefreshing}
+                        ListEmptyComponent={()=>
+                            <View style={ms.emptyContainer}>
+                                <Text style={[ms.emptyMsg, ms.emptyMsgAbove]}>
+                                    {Localization.getText("youHaveNoOrders")}
+                                </Text>
+                                <Text style={ms.emptyMsg}>
+                                    {Localization.getText("youHaveNoOrders2")}
+                                </Text>
+                            </View>
+                        }
+                    />
+                }
+            />
         </View>
     );
 }
@@ -131,6 +159,11 @@ const MyOrders = ({navigation}) => {
             />
 
             <Stack.Screen 
+                name="OrderApproval" 
+                component={OrderApprovalScreen}
+            />
+
+            <Stack.Screen 
                 name="MarketItem" 
                 component={MarketItem}
             />
@@ -139,62 +172,18 @@ const MyOrders = ({navigation}) => {
     );
 }
 
-const mms = StyleSheet.create({
-    filterOuterContainer: {
-        flexDirection:"row",
-    },
-    filterContainer: {
-        flex:1,
-        flexWrap:"wrap",
-        flexDirection:"row",
-        paddingBottom:7,
-        paddingRight:7,
-    },
-    filterItemContainer: {
-        borderRadius:10,
-        minWidth:45,
-        alignSelf:"flex-start",
-        alignItems:"center",
-        padding:7,
-        marginLeft:7,
-        marginTop:7,
-    },
-    filterItemText: {
-        color:"grey",
-    },
-    filterExpandContainer: {
-        width:50,
-        alignItems:"center",
-        justifyContent:"center",
-    },
-    itemContainer: {
-        width:"100%",
-        height:60,
-        backgroundColor:"white",
-        borderBottomWidth:0.5,
-        borderBottomColor: "grey",
-        borderStyle:"solid",
-        flexDirection:"row",
-        alignItems:"center",
-        paddingLeft:"5%",
-        paddingRight:"5%",
-    },
-    rightRequestContainer: {
+const oas = StyleSheet.create({
+    time:{
         position:"absolute",
-        right:5,
-        alignItems:"flex-end",
-        width:65,
-    },
-    priceContainer: {
-        flexDirection:"row",
-    },
-    price: {
+        right:0,
+        top:0,
+        marginTop:5,
         marginRight:5,
-    },
-    priceCurrency: {
-    },
-    distance: {
+        fontWeight:"bold",
+        color:"grey",
     }
+
 });
+
 
 export default MyOrders;
