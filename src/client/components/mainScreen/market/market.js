@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback} from 'react';
-import { Text, View, ScrollView, FlatList, StyleSheet,TouchableOpacity} from 'react-native';
+import { Text, View, ScrollView, FlatList, StyleSheet,TouchableOpacity, Alert} from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import CustomHeader from "../../customComponents/customHeader";
@@ -13,6 +13,8 @@ import request from '../../../modules/client-communication/request';
 import { getDistance } from 'geolib'
 import CustomMap from '../../customComponents/customMap';
 /*
+import CustomMap from '../../customComponents/customMap';
+
 const REQUESTS = [
     {
         "id":"1",
@@ -186,24 +188,17 @@ const FirstScreen = (nav) => {
         let pointStart = coordsToGeoJSON([geo.coords.longitude, geo.coords.latitude]);
 
 
+        var res = await request.provider.getNearRequests(pointStart, 1000000, 100);
+    }
+
         const res = await request.provider.getNearRequests(pointStart, 1000000, 10);
         setIsRefresing(false);
         return res;
     }
 
-    const refresh = () => {
-        setIsRefresing(true);
-        getLocation().then(data => {
-            setRequests(data.filter(obj => obj != null));
-        }); 
-    }
 
-    useEffect(() => {
-        refresh();
-    }, []);
-
-     return (
-        <View style={{flex:1}}> 
+    return (
+        <View style={{flex: 1}}> 
             <CustomHeader 
                 title={Localization.getText("market")} 
                 nav={nav}
@@ -211,6 +206,7 @@ const FirstScreen = (nav) => {
             />
             
             <FlatList
+                style={{flex: 1}}
                 data={REQUESTS}
                 renderItem={({item})=><RequestItem nav={nav} item={item}/>}
                 keyExtractor={(item)=>item._id}
@@ -223,8 +219,6 @@ const FirstScreen = (nav) => {
                         </Text>
                     </View>
                 }
-            />
-
         </View>
     );
 }

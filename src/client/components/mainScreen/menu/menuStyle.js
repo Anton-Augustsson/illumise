@@ -1,19 +1,18 @@
 import {StyleSheet} from 'react-native';
-
-const menuBackground = "white";
-const borderTopBackground = "black"
+import {magicValues} from "../../mainStyles/magicValues";
+import {colors} from "../../mainStyles/colors";
 
 const mms = StyleSheet.create({
     menuContainer: {
-        height:60,
+        height:magicValues.MENU_HEIGHT-1,
         flexDirection:"row",
         justifyContent:"space-between",
         paddingLeft:"5%",
         paddingRight:"5%",
-        borderTopWidth: 1,
+        borderTopWidth: magicValues.MENU_HEIGHT-60,
         borderStyle: "solid",
-        borderTopColor: borderTopBackground, 
-        backgroundColor: menuBackground,
+        borderTopColor: colors.MENU_BORDER, 
+        backgroundColor: colors.MENU_BACKGROUND,
     },
     menuItemContainer: {
         justifyContent:"center",
