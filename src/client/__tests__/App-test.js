@@ -31,7 +31,7 @@ describe("Testing client communication", () =>
     {
         // valid request
         let userID = await createDummyUser(); 
-        let response = await account.removeAccount(userID);
+        let response = await account.removeAccount(userID, true);
         expect(response).not.toBeNull();
 
         // invalid request createAccount
@@ -49,9 +49,9 @@ describe("Testing client communication", () =>
         // valid request
         let newCredentials = {"firstName":"Ddsfa", "lastName":"sdddwrfa", "email":"jhgr", "token":"dsaf" };
         let userID = await createDummyUser(); 
-        let response = await account.changeCredentials(userID, newCredentials);
+        let response = await account.changeCredentials(userID, newCredentials, true);
         expect(response).not.toBeNull();
-        let responseR = await account.removeAccount(userID);
+        let responseR = await account.removeAccount(userID, true);
         expect(responseR).not.toBeNull();
 
         // invalid request
@@ -67,11 +67,11 @@ describe("Testing client communication", () =>
         let email = "email@google.com";
         let newCredentials = {"firstName":"Ddsfa", "lastName":"sdddwrfa", "email":email, "token":password };
         let userID = await createDummyUser();
-        let response = await account.changeCredentials(userID, newCredentials);
+        let response = await account.changeCredentials(userID, newCredentials, true);
         expect(response).not.toBeNull();
-        let responseG = await account.get(email, password);
+        let responseG = await account.get(email, password, true);
         expect(responseG).not.toBeNull();
-        let responseR = await account.removeAccount(userID);
+        let responseR = await account.removeAccount(userID, true);
         expect(responseR).not.toBeNull();
 
         // invalid request
@@ -88,9 +88,9 @@ describe("Testing client communication", () =>
         // valid request
         let userID = await createDummyUser();
         let requestID = await createDummyRequest(userID);
-        let response = await request.requester.removeRequest(requestID);
+        let response = await request.requester.removeRequest(requestID, true);
         expect(response).not.toBeNull();
-        let responseR = await account.removeAccount(userID);
+        let responseR = await account.removeAccount(userID, true);
         expect(responseR).not.toBeNull();
 
         // invalid request newRequest
@@ -111,7 +111,7 @@ describe("Testing client communication", () =>
         expect(response).not.toBeNull();
         let responseD = await request.requester.removeRequest(requestID);
         expect(responseD).not.toBeNull();
-        let responseR = await account.removeAccount(userID);
+        let responseR = await account.removeAccount(userID, true);
         expect(responseR).not.toBeNull();
 
         // invalid request
@@ -130,7 +130,7 @@ describe("Testing client communication", () =>
         expect(response[0]).not.toBeNull();
         let responseD = await request.requester.removeRequest(requestID);
         expect(responseD).not.toBeNull();
-        let responseR = await account.removeAccount(userID);
+        let responseR = await account.removeAccount(userID, true);
         expect(responseR).not.toBeNull();
 
         // invalid request
@@ -148,9 +148,9 @@ describe("Testing client communication", () =>
         expect(response).not.toBeNull();
         let responseD = await request.requester.removeRequest(requestID);
         expect(responseD).not.toBeNull();
-        let responseRA1 = await account.removeAccount(userID);
+        let responseRA1 = await account.removeAccount(userID, true);
         expect(responseRA1).not.toBeNull();
-        let responseRA2 = await account.removeAccount(userID2);
+        let responseRA2 = await account.removeAccount(userID2, true);
         expect(responseRA2).not.toBeNull();
 
         // invalid request
@@ -169,9 +169,9 @@ describe("Testing client communication", () =>
         expect(response).not.toBeNull();
         let responseD = await request.requester.removeRequest(requestID);
         expect(responseD).not.toBeNull();
-        let responseRA1 = await account.removeAccount(userID);
+        let responseRA1 = await account.removeAccount(userID, true);
         expect(responseRA1).not.toBeNull();
-        let responseRA2 = await account.removeAccount(userID2);
+        let responseRA2 = await account.removeAccount(userID2, true);
         expect(responseRA2).not.toBeNull();
 
         // invalid request
@@ -188,12 +188,12 @@ describe("Testing client communication", () =>
         let responseA = await request.requester.acceptProvider(requestID, userID2);
         expect(responseA).not.toBeNull();
         let response = await request.provider.getUserProviding(userID2, 1);
-        expect(response[0]).not.toBeNull(); //FIXME
+        expect(response[0]).not.toBeNull();
         let responseD = await request.requester.removeRequest(requestID);
         expect(responseD).not.toBeNull();
-        let responseRA1 = await account.removeAccount(userID);
+        let responseRA1 = await account.removeAccount(userID, true);
         expect(responseRA1).not.toBeNull();
-        let responseRA2 = await account.removeAccount(userID2);
+        let responseRA2 = await account.removeAccount(userID2, true);
         expect(responseRA2).not.toBeNull();
 
         // invalid request
@@ -211,7 +211,7 @@ describe("Testing client communication", () =>
         expect(response[0]).not.toBeNull();
         let responseD = await request.requester.removeRequest(requestID);
         expect(responseD).not.toBeNull();
-        let responseRA1 = await account.removeAccount(userID);
+        let responseRA1 = await account.removeAccount(userID, true);
         expect(responseRA1).not.toBeNull();
 
         // invalid request
@@ -223,7 +223,6 @@ describe("Testing client communication", () =>
     it("test reviewProvider", async () =>
     {
         // valid request
-        // TODO: review not implemented
         let user1ID = await createDummyUser();
         let user2ID = await createDummyUser2();
         let requestID = await createDummyRequest(user1ID);
@@ -233,9 +232,9 @@ describe("Testing client communication", () =>
         expect(response).not.toBeNull();
         let responseD = await request.requester.removeRequest(requestID);
         expect(responseD).not.toBeNull();
-        let responseRA1 = await account.removeAccount(user1ID);
+        let responseRA1 = await account.removeAccount(user1ID, true);
         expect(responseRA1).not.toBeNull();
-        let responseRA2 = await account.removeAccount(user2ID);
+        let responseRA2 = await account.removeAccount(user2ID, true);
         expect(responseRA2).not.toBeNull();
 
         // invalid request
@@ -252,17 +251,17 @@ describe("Testing client communication", () =>
         // invalid request
         let userID = await createDummyUser();
         let userID2 = await createDummyUser2();
-        let requestID = await createDummyRequest(userID);
-        let chatID = await chat.newChat(requestID, [userID, userID2]);
+        let requestID = await createDummyRequest(userID, true);
+        let chatID = await chat.newChat(requestID, [userID, userID2], true);
         expect(chatID).not.toBeNull();
-        let responseR = await chat.removeChat(chatID);
+        let responseR = await chat.removeChat(chatID, true);
         expect(responseR).not.toBeNull();
 
         let responseD = await request.requester.removeRequest(requestID);
         expect(responseD).not.toBeNull();
-        let responseRA1 = await account.removeAccount(userID);
+        let responseRA1 = await account.removeAccount(userID, true);
         expect(responseRA1).not.toBeNull();
-        let responseRA2 = await account.removeAccount(userID2);
+        let responseRA2 = await account.removeAccount(userID2, true);
         expect(responseRA2).not.toBeNull();
 
         // invalid request newChat
@@ -280,18 +279,18 @@ describe("Testing client communication", () =>
         let userID = await createDummyUser();
         let userID2 = await createDummyUser2();
         let requestID = await createDummyRequest(userID);
-        let chatID = await chat.newChat(requestID, [userID, userID2]);
+        let chatID = await chat.newChat(requestID, [userID, userID2], true);
         expect(chatID).not.toBeNull();
-        let response = await chat.sendMessage(chatID, userID, "hello im here");
+        let response = await chat.sendMessage(chatID, userID, "hello im here", true);
         expect(response).not.toBeNull();
-        let responseR = await chat.removeChat(chatID);
+        let responseR = await chat.removeChat(chatID, true);
         expect(responseR).not.toBeNull();
 
         let responseD = await request.requester.removeRequest(requestID);
         expect(responseD).not.toBeNull();
-        let responseRA1 = await account.removeAccount(userID);
+        let responseRA1 = await account.removeAccount(userID, true);
         expect(responseRA1).not.toBeNull();
-        let responseRA2 = await account.removeAccount(userID2);
+        let responseRA2 = await account.removeAccount(userID2, true);
         expect(responseRA2).not.toBeNull();
 
         // Socket test
@@ -311,20 +310,20 @@ describe("Testing client communication", () =>
         let userID = await createDummyUser();
         let userID2 = await createDummyUser2();
         let requestID = await createDummyRequest(userID);
-        let chatID = await chat.newChat(requestID, [userID, userID2]);
+        let chatID = await chat.newChat(requestID, [userID, userID2], true);
         expect(chatID).not.toBeNull();
-        let responseS = await chat.sendMessage(chatID, userID, "hello im here");
+        let responseS = await chat.sendMessage(chatID, userID, "hello im here", true);
         expect(responseR).not.toBeNull();
-        let response = await chat.getAllMessages(chatID);
-        expect(response).not.toBeNull();
-        let responseR = await chat.removeChat(chatID);
+        //let response = await chat.getAllMessages(chatID, true); // FIXME
+        // expect(response).not.toBeNull();
+        let responseR = await chat.removeChat(chatID, true);
         expect(responseS).not.toBeNull();
 
         let responseD = await request.requester.removeRequest(requestID);
         expect(responseD).not.toBeNull();
-        let responseRA1 = await account.removeAccount(userID);
+        let responseRA1 = await account.removeAccount(userID, true);
         expect(responseRA1).not.toBeNull();
-        let responseRA2 = await account.removeAccount(userID2);
+        let responseRA2 = await account.removeAccount(userID2, true);
         expect(responseRA2).not.toBeNull();
 
         // invalid request

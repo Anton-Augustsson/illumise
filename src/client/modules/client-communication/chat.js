@@ -15,10 +15,10 @@ const chat =
      * @param {string} userID - The id of the user that sends a message
      * @param {string} chatID - The id of the chat witch is between the provider and requester
      */
-    sendMessage: async function(chatID, userID, msg)
+    sendMessage: async function(chatID, userID, msg, isTest = false)
     {
         let url = chat.chatUrl + '/sendMessage';
-        let message = {chatID: chatID, userID: userID, msg: msg};
+        let message = {chatID: chatID, userID: userID, msg: msg, isTest: isTest};
         let response = await fetch(url, {
             method: 'PUT',
             headers: {
@@ -35,9 +35,9 @@ const chat =
      * @param {string} userID - The id of the user that sends a message
      * @param {string} chatID - The id of the chat witch is between the provider and requester
      */
-    getAllMessages: async function(chatID)
+    getAllMessages: async function(chatID, isTest = false)
     {
-        let params = '?chatID=' + chatID;
+        let params = '?chatID=' + chatID + '&isTest=' + isTest;
         let url = chat.chatUrl + '/getAllMessages' + params;
         let response = await fetch(url);
 
@@ -49,10 +49,10 @@ const chat =
      * @param {string} requestID - The id of the request that is the chat should be created for
      * @param {[string]} usersID - The an array of two users
      */
-    newChat: async function(requestID, usersID)
+    newChat: async function(requestID, usersID, isTest = false)
     {
         let url = chat.chatUrl + '/newChat';
-        let toCreate = {requestID: requestID, usersID: usersID};
+        let toCreate = {requestID: requestID, usersID: usersID, isTest: isTest};
         let response = await fetch(url, {
             method: 'PUT',
             headers: {
@@ -68,10 +68,10 @@ const chat =
      * remove chat if no longer interested in chat
      * @param {string} chatID - The id of the chat witch is between the provider and requester
      */
-    removeChat: async function(chatID) 
+    removeChat: async function(chatID, isTest = false)
     {
         let url = chat.chatUrl + '/removeChat';
-        let toRemove = {chatID: chatID};
+        let toRemove = {chatID: chatID, isTest: isTest};
         let response = await fetch(url, {
             method: 'DELETE',
             headers: {

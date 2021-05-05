@@ -1,3 +1,5 @@
+
+const {dbNorm, dbTest} = require("../server");
 const express = require('express');
 const router = express.Router();
 const Joi = require('joi');
@@ -101,6 +103,12 @@ const validate =
         if(o == undefined) o = JSON.stringify({ "successful":"true" });
         else o = JSON.stringify(o);
         res.send(o);
+    },
+
+    getDB: function(isTestDB = false)
+    {
+        if(isTestDB) return dbTest;
+        else return dbNorm;
     }
 };
 

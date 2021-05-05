@@ -6,16 +6,13 @@ const validParams = validate.validParams;
 const validCredentials = validate.validCredentials;
 const sendFailure = validate.sendFailure;
 const sendSuccess = validate.sendSuccess;
+const getDB = validate.getDB;
 
 const express = require('express');
 const router = express.Router();
 const Joi = require('joi');
 
 
-function getDB(isTestDB = false){
-  if(isTestDB) return dbTest;
-  else return dbNorm;
-}
 
 /**
  * create new account
@@ -24,14 +21,15 @@ function getDB(isTestDB = false){
 router.put('/createAccount', async (req, res) =>
 {
   const schema = Joi.object({
-    credentials: Joi.any()
+    credentials: Joi.any(),
+    isTest: Joi.bool()
   });
 
   let c = req.body.credentials;
 
   if(valid(req.body, schema, res) && validCredentials(c, res))
   {
-    let db = getDB(req.body.isTestDB);
+    let db = getDB(req.body.isTest);
     let response = await db.accounts.add(c.firstName, c.lastName, c.email, "119", c.token);
     if(response != null) return sendSuccess(res, response);
     else return sendFailure(res);
@@ -45,12 +43,13 @@ router.put('/createAccount', async (req, res) =>
 router.delete('/removeAccount', async (req, res) =>
 {
   const schema = Joi.object({
-    userID: Joi.string().min(24).max(24)
+    userID: Joi.string().min(24).max(24),
+    isTest: Joi.bool()
   });
 
   if(valid(req.body, schema, res))
   {
-    let db = getDB(req.body.isTestDB);
+    let db = getDB(req.body.isTest);
     let response = await db.accounts.remove(req.body.userID);
     if(response != false) return sendSuccess(res);
     else return sendFailure(res);
@@ -66,14 +65,15 @@ router.post('/changeCredentials', async (req, res) =>
 {
   const schema = Joi.object({
     userID: Joi.string().min(24).max(24),
-    credentials: Joi.any()
+    credentials: Joi.any(),
+    isTest: Joi.bool()
   });
 
   let c = req.body.credentials;
 
   if(valid(req.body, schema, res), validCredentials(c, res))
   {
-    let db = getDB(req.body.isTestDB);
+    let db = getDB(req.body.isTest);
     let response = await db.accounts.update(req.body.userID, c.firstName, c.lastName, c.email, "119", c.token);
     if(response != false) return sendSuccess(res);
     else return sendFailure(res);
@@ -96,7 +96,7 @@ router.get('/get', async (req, res) =>
 
   if(validParams(params, res))
   {
-    let db = getDB(req.body.isTestDB);
+    let db = getDB(req.param('isTest'));
     let response = await db.accounts.get(params.email, params.password);
     if(response != null) return sendSuccess(res, response);
     else return sendFailure(res);

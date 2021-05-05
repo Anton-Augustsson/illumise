@@ -17,7 +17,7 @@ const account =
     createAccount: async function(credentials, isTest = false)
     {
         let url = account.accountUrl + '/createAccount';
-        let toCreate = {credentials: credentials};
+        let toCreate = {credentials: credentials, isTest: isTest};
         let response = await fetch(url, {
             method: 'PUT',
             headers: {
@@ -36,7 +36,7 @@ const account =
     removeAccount: async function(userID, isTest = false)
     {
         let url = account.accountUrl + '/removeAccount';
-        let toRemove = {userID: userID};
+        let toRemove = {userID: userID, isTest: isTest};
         let response = await fetch(url, {
             method: 'DELETE',
             headers: {
@@ -56,7 +56,7 @@ const account =
     changeCredentials: async function(userID, credentials, isTest = false)
     {
         let url = account.accountUrl + '/changeCredentials';
-        let toUpdate = {userID: userID, credentials: credentials};
+        let toUpdate = {userID: userID, credentials: credentials, isTest: isTest};
         let response = await fetch(url, {
             method: 'POST',
             headers: {
@@ -77,7 +77,7 @@ const account =
      */
     get: async function(email, password, isTest = false)
     {
-        let params = '?email=' + email + '&password=' + password;
+        let params = '?email=' + email + '&password=' + password + '&isTest=' + isTest;
         let url = account.accountUrl + '/get' + params;
         let response = await fetch(url);
 
