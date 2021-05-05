@@ -130,36 +130,37 @@ export default class CustomMap extends Component
     render() 
     {
         return(
-        <View style = {this.props.style}>
-            <MapView
-                style = {{flex:1, zIndex: -1}}
-                region = {this.state.region}
-                showsUserLocation={true}
-                onRegionChangeComplete={this.onRegionChangeComplete.bind(this)}
-            >
+            <>
+                <MapView
+                    style = {this.props.style}
+                    region = {this.state.region}
+                    showsUserLocation={true}
+                    onRegionChangeComplete={this.onRegionChangeComplete.bind(this)}
+                >
 
-                {this.state.markers.map((marker, index) => (
-                    <Marker
-                        key={index}
-                        title={marker.title}
-                        description={marker.description}
-                        coordinate={{ longitude: marker.longitude, 
-                                      latitude:  marker.latitude}}
-                    />
-                ))}
-            </MapView>
-
-            
-            <Button
-                title = "Center on me"
-                onPress = {async () => {
-                    let region = await this.getLocalRegion();
-                    this.onRegionChangeComplete(region);
-                }}
-            />
-        </View>
+                    {this.state.markers.map((marker, index) => (
+                        <Marker
+                            key={index}
+                            title={marker.title}
+                            description={marker.description}
+                            coordinate={{ longitude: marker.longitude, 
+                                        latitude:  marker.latitude}}
+                        />
+                    ))}
+                </MapView>
+                <Button
+                    title = "Centrera"
+                    onPress = {async () => {
+                        let region = await this.getLocalRegion();
+                        this.onRegionChangeComplete(region);
+                    }}
+                />
+            </>
         );
     }
+
+            
+            
 }
 
 const styles = StyleSheet.create({

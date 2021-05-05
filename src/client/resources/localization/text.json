@@ -88,7 +88,8 @@
         "shoppingList": "Shopping list",
         "loggingIn": "Logging in...",
         "logout": "Logout",
-        "creatingRequest...": "Creating a request..."
+        "creatingRequest...": "Creating a request...",
+        "market": "Market"
     },
     "se": 
     {
@@ -173,13 +174,17 @@
         "descExperience": "Beskriv din upplevelse",
         "letsgo": "Ta order",
         "removeOrder": "Ta bort order",
-        "yourOrderIsComplete":"Din order är färdig",
+        "yourOrderIsComplete":"Din beställning är färdig",
         "loading...":"Laddar...",
         "myRequests": "Mina beställningar",
         "destinations": "Destinationer",
         "shoppingList": "Inköpslista",
         "loggingIn": "Loggar in...",
         "logout": "Logga ut",
-        "creatingRequest...": "Skapar en order..."
+        "creatingRequest...": "Skapar en beställning...",
+        "youHaveNoOrders":"Du har inga beställningar för tillfället!",
+        "youHaveNoOrders2":"Skapa en genom att klicka på handikonen i menyn",
+        "market": "Marknad",
+        "marketEmptyMsg": "Marknaden är för tillfället tom!"
     } 
 }

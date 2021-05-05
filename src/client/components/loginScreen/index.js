@@ -128,24 +128,7 @@ const LoginScreen = (navigation) =>
                     disabled={!requestFB}
                 />
 
-                <CustomButton
-                    style={[ms.loginButton, { backgroundColor: "red" }]}
-                    styleText={[ms.loginButtonText, { color: "white" }]}
-                    title={Localization.getText("skipLogin")}
-                    onPress={() => signIn("104735997383881408322")}
-                />
-                
-                <CustomButton
-                    style={[ms.loginButton, { backgroundColor: "red" }]}
-                    styleText={[ms.loginButtonText, { color: "white" }]}
-                    title={"Review"}
-                    onPress={async () => {
-                        global.providerID = "g108222948329932423985";
-                        //TODO: ANGE ETT ID SOM FINNS I DATABASEN OVAN
-                        navigation.navigate("Review");
-                    }}
-    
-                />
+               
             </>
             }
         </View>  

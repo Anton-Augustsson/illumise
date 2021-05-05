@@ -98,6 +98,16 @@ const FirstScreen = (nav) => {
                 keyExtractor={(item)=>item._id}
                 onRefresh={()=>refresh()}
                 refreshing={isRefreshing}
+                ListEmptyComponent={()=>
+                    <View style={ms.emptyContainer}>
+                        <Text style={[ms.emptyMsg, ms.emptyMsgAbove]}>
+                            {Localization.getText("youHaveNoOrders")}
+                        </Text>
+                        <Text style={ms.emptyMsg}>
+                            {Localization.getText("youHaveNoOrders2")}
+                        </Text>
+                    </View>
+                }
             />
 
         </View>

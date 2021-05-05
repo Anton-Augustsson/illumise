@@ -129,7 +129,18 @@ const ms = StyleSheet.create({
     container: {
         flex:1,
         padding:20,
-    }
+    },
+    emptyContainer: {
+        justifyContent:"center",
+        padding:30,
+    },
+    emptyMsg: {
+        textAlign:"center",
+    },
+    emptyMsgAbove: {
+        fontWeight:"bold",
+        fontSize:16,
+    },
 });
 
 // EXPORTS 

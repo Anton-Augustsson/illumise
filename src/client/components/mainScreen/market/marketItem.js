@@ -56,6 +56,7 @@ const Header = ({req}) => {
                     <Text style={ms.h2}>{req.body.title}</Text>
                 }
             </View>
+            
             <CustomMap
                 style={mis.map}
                 onMount={(region) => 
@@ -79,6 +80,7 @@ const Header = ({req}) => {
                 }}
             />
             <View style={mis.padding}>
+           
                 <Text style={ms.h4}>{Localization.getText("destinations")}</Text>
                 {
                     req.body.stops.map((place, index) => (
@@ -131,9 +133,9 @@ const DoneLoading = ({navigation,creator,req}) => {
             {req.header === "shopping" || req.header === "food" ?
                 <FlatList 
                     style={mis.content}
-                    ListHeaderComponent={()=><Header req={req}/>}
                     data={req.body.shoppingList}
-                    renderItem={({item})=> <ShoppingItem item={item}/>}
+                    renderItem={({item})=><ShoppingItem item={item}/>}
+                    ListHeaderComponent={()=><Header req={req}/>}
                 />
                 :
                 <FlatList 
@@ -180,8 +182,9 @@ const MarketItem = ({navigation, route}) => {
             } 
             await timeout(1000);
             const userID = await storage.getDataString("userID");
-            const req = await request.requester.getUserRequest(userID, 1)
-            setReq(req[0]);
+            var req2 = await request.requester.getUserRequest(userID, 1000);
+            req2 = req2.filter(obj=>obj);
+            setReq(req2[req2.length-1]);
             setLoading(false);
         }
         retrieveRequest();
@@ -198,16 +201,13 @@ const MarketItem = ({navigation, route}) => {
 const mis = StyleSheet.create({
     content: {
         flex:1,
-        paddingBottom:20,
+  paddingBottom:20,
     },
     shoppingItemContainer: {
     },
     map:{
-        height:"100%",
+        height:250,
         width:"100%",
-    },
-    mapText: {
-        marginTop:5,
     },
     padding: {
         paddingRight:20,

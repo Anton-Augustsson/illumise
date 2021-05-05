@@ -205,7 +205,7 @@ const FirstScreen = (nav) => {
      return (
         <View style={{flex:1}}> 
             <CustomHeader 
-                title="Market"
+                title={Localization.getText("market")} 
                 nav={nav}
                 goBack={false}
             />
@@ -214,9 +214,15 @@ const FirstScreen = (nav) => {
                 data={REQUESTS}
                 renderItem={({item})=><RequestItem nav={nav} item={item}/>}
                 keyExtractor={(item)=>item._id}
-                ListHeaderComponent={<FilterView/>}
                 onRefresh={()=>refresh()}
                 refreshing={isRefreshing}
+                ListEmptyComponent={()=>
+                    <View style={ms.emptyContainer}>
+                        <Text style={[ms.emptyMsg, ms.emptyMsgAbove]}>
+                            {Localization.getText("marketEmptyMsg")}
+                        </Text>
+                    </View>
+                }
             />
 
         </View>

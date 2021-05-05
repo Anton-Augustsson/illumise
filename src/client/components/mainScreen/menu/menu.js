@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity, SafeAreaView } from 'react-native';
 import mms from "./menuStyle";
 import {colors} from "../../mainStyles/colors";
 import { FontAwesome, Ionicons, FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
@@ -35,28 +35,30 @@ const MenuIcon = ({des, name, ...props}) => {
 
 const Menu = ({state, navigation}) => {
     return (
-        <View style={mms.menuContainer}>
-            {
-                state.routes.map((item, index) => {
+        <SafeAreaView>
+            <View style={mms.menuContainer}>
+                {
+                    state.routes.map((item, index) => {
 
-                    const focused = state.index === index;
-                    return (
-                        <View key={index} style={mms.menuItemContainer}>
-                            <TouchableOpacity 
-                                onPress={() => navigation.navigate(item.name)}
-                            >
-                                <MenuIcon
-                                    des={item.name}
-                                    size={40}
-                                    color={focused ? colors.SAMARIT_GREEN : colors.MENU_ICON}
-                                    backgroundColor="white"
-                                />
-                            </TouchableOpacity>
-                        </View>
-                    );
-                })
-           }
-        </View>
+                        const focused = state.index === index;
+                        return (
+                            <View key={index} style={mms.menuItemContainer}>
+                                <TouchableOpacity 
+                                    onPress={() => navigation.navigate(item.name)}
+                                >
+                                    <MenuIcon
+                                        des={item.name}
+                                        size={40}
+                                        color={focused ? colors.SAMARIT_GREEN : colors.MENU_ICON}
+                                        backgroundColor="white"
+                                    />
+                                </TouchableOpacity>
+                            </View>
+                        );
+                    })
+            }
+            </View>
+        </SafeAreaView>
     );
 }
 
