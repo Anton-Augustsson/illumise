@@ -197,10 +197,10 @@ const request =
          * @param {ReviewType} type - The type of review 
          * @returns {Promise<Boolean>} If the review was added
          */
-        reviewProvider: async function(requestID, userIDto, userIDFrom, message, value, type)
+        reviewProvider: async function(requestID, userIDTo, userIDFrom, message, value, type)
         {
             let url = request.serviceUrl + '/requester/reviewProvider';
-            let toRate = {requestID: requestID, userIDto: userIDto, userIDFrom: userIDFrom, message: message, value: value, type: type};
+            let toRate = {requestID: requestID, userIDTo: userIDTo, userIDFrom: userIDFrom, message: message, value: value, type: type};
             let response = await fetch(url, {
                 method: 'PUT',
                 headers: {

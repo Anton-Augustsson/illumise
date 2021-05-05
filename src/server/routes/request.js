@@ -35,11 +35,6 @@ const { DBInterface } = require("../db/dbInterface");
  * @property Provider
  * @property Requester
  */
- const ReviewType = 
- {
-     Provider : 0,
-     Requester: 1
- };
 
 /**
  * set request as complete, payment is set to done and chat is removed (will still be accessible in x time)
@@ -221,8 +216,8 @@ router.put('/requester/reviewProvider', async (req, res) =>
     userIDTo: Joi.string().min(idSize).max(idSize),
     userIDFrom: Joi.string().min(idSize).max(idSize),
     message: Joi.string(),
-    rating: Joi.number().min(0).max(5),
-    reviewType: Joi.string()
+    value: Joi.number().min(0).max(5),
+    type: Joi.string()
   });
 
   let b = req.body;
@@ -230,7 +225,7 @@ router.put('/requester/reviewProvider', async (req, res) =>
 
   if(valid(b, schema, res))
   {
-    let response = await db.reviews.add(b.userIDTo, b.userIDFrom, b.requestID, b.message, b.rating, reviewType);
+    let response = await db.reviews.add(b.userIDTo, b.userIDFrom, b.requestID, b.message, b.value, reviewType);
     if(response != false) return sendSuccess(res);
     else return sendFailure(res);
   }
