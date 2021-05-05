@@ -6,13 +6,11 @@ import GoogleButton from "../customComponents/googleButton";
 import FacebookButton from "../customComponents/facebookButton";
 import * as Google from 'expo-auth-session/providers/google';
 import * as Facebook from 'expo-auth-session/providers/facebook';
-import CustomButton from '../customComponents/customButton';
 import { Localization } from '../../modules/localization';
 import account from "../../modules/client-communication/account";
-import storage from "../../modules/localStorage/localStorage"
 import { useState } from 'react/cjs/react.development';
 import Loading from '../customComponents/loading';
-import {AppContext} from "../AppContext";
+import { AppContext } from "../AppContext";
 
 const verifyUser = async (signIn, token, type, setLoggingIn) =>
 {
