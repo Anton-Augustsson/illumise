@@ -1,3 +1,6 @@
+/**
+ * This file contains REST API: account functions which handles sending/fetching data to/from the database
+ */
 
 const db = require("../server");
 const validate = require("./validate");
@@ -11,10 +14,20 @@ const express = require('express');
 const router = express.Router();
 const Joi = require('joi');
 
+/**
+ * @typedef credentials
+ * @property {String} firstName
+ * @property {String} lastName
+ * @property {String} email
+ * @property {String} phone
+ * @property {String} password
+ */
 
 /**
- * create new account
- * @param {json} credentials - A object of the users credentials.
+ * create new user account
+ * @async
+ * @param {credentials} credentials - (req.body) An object of the users credentials.
+ * @returns {Promise<ObjectID|null>} The id of the created account or null 
  */
 router.put('/createAccount', async (req, res) =>
 {
@@ -33,8 +46,10 @@ router.put('/createAccount', async (req, res) =>
 });
 
 /**
- * remove specified account
- * @param {string} userID - The user id of the account that should be deleted
+ * remove specified user account
+ * @async
+ * @param {string} userID - (req.body) The user id of the account that should be deleted
+ * @returns {Promise<Boolean>} If the operation was successful
  */
 router.delete('/removeAccount', async (req, res) =>
 {
@@ -52,8 +67,10 @@ router.delete('/removeAccount', async (req, res) =>
 
 /**
  * enter key word and the value to be changed. Enter multiple keys and-values will be verified if they are correct keys. Or send an object that a class defines with values.
+ * @async
  * @param {string} userID - The user id of the account that should be changed
- * @param {json} credentials - A object of the users credentials.
+ * @param {credentials} credentials - (req.body) An object of the users credentials.
+ * @returns {Promise<Boolean>} If the operation was successful
  */
 router.post('/changeCredentials', async (req, res) =>
 {
@@ -75,8 +92,8 @@ router.post('/changeCredentials', async (req, res) =>
 /**
  * Gets the id of the user with the given email if the password matches
  * @async
- * @param {String} email The email of the user
- * @param {String} password The password of the user
+ * @param {String} email -  (req.param) The email of the user
+ * @param {String} password - (req.param) The password of the user
  * @returns {?User} The id of the user
  */
 router.get('/get', async (req, res) =>

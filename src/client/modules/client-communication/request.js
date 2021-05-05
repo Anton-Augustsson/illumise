@@ -3,6 +3,11 @@
  * with the rest api
  */
 
+require('isomorphic-fetch');
+import communication from './communication';
+const url = communication.url;
+const returnResponse = communication.returnResponse;
+
 /**
  * @typedef GeoLocation
  * @property {String} type
@@ -25,11 +30,6 @@
      Provider : 0,
      Requester: 1
  };
-
-require('isomorphic-fetch');
-import communication from './communication';
-const url = communication.url;
-const returnResponse = communication.returnResponse;
 
 /**
  * Interface for communicating wih the server
@@ -67,9 +67,9 @@ const request =
         /**
          * get available request in x radius from location.
         * @async
-        * @param {GeoLocation} geoLocation The location to search around
-        * @param {Number} maxDistance The maximum distance in meters to search from geoLocation
-        * @param {Number} maxRequests The number of nearby requests to retrieve
+        * @param {GeoLocation} geoLocation - The location to search around
+        * @param {Number} maxDistance - The maximum distance in meters to search from geoLocation
+        * @param {Number} maxRequests - The number of nearby requests to retrieve
         * @returns {Promise<?[Request]>} The requests BSON objects in a list or null
         */
         getNearRequests: async function(geoLocation, maxDistance, maxRequests = undefined)
@@ -106,8 +106,8 @@ const request =
         /**
          * Gets requests that the user is set as a provider for
          * @async
-         * @param {String} providerID The id of the provider
-         * @param {Number} num The number of requests to get, if not set all will be returned
+         * @param {String} providerID - The id of the provider
+         * @param {Number} num - The number of requests to get, if not set all will be returned
          * @returns {Promise<?[Request]>} The requests BSON objects in a list or null
          */
         getUserProviding: async function(providerID, num)
@@ -151,8 +151,8 @@ const request =
         /**
          * Gets requests created by a user
          * @async
-         * @param {String} userID The id of the user
-         * @param {Number} num The number of requests to get, if not set all will be returned
+         * @param {String} userID - The id of the user
+         * @param {Number} num - The number of requests to get, if not set all will be returned
          * @returns {Promise<?[Request]>} The requests BSON objects in a list or null
          */
         getUserRequest: async function(userID, num) // num is the number of my requests starting from most recent //async  await
@@ -167,7 +167,7 @@ const request =
         /**
          * Removes a request
          * @async
-         * @param {String} requestID The id of the request
+         * @param {String} requestID - The id of the request
          * @returns {Promise<Boolean>} If the operation was successful
          */
         removeRequest: async function(requestID)
@@ -182,25 +182,19 @@ const request =
                 body: JSON.stringify(toRemove)
             });
 
-            return returnResponse(response);        /**
-            * Sets the provider of a request
-            * @async
-            * @param {String} requestID The id of the request to modify
-            * @param {String} providerID The id of the provider
-            * @returns {Promise<Boolean>} If the operation was successful
-            */
+            return returnResponse(response);       
         },
 
 
         /**
          * Adds a review
          * @async
-         * @param {String} requestID The id of the request the review is related to
-         * @param {String} userIDTo The id of the user the review is for
-         * @param {String} userIDFrom The id of the user writing the review
-         * @param {String} message The message on the review
-         * @param {number} value The rated score 0 - 5
-         * @param {ReviewType} type The type of review 
+         * @param {String} requestID - The id of the request the review is related to
+         * @param {String} userIDTo - The id of the user the review is for
+         * @param {String} userIDFrom - The id of the user writing the review
+         * @param {String} message - The message on the review
+         * @param {number} value - The rated score 0 - 5
+         * @param {ReviewType} type - The type of review 
          * @returns {Promise<Boolean>} If the review was added
          */
         reviewProvider: async function(requestID, userIDto, userIDFrom, message, value, type)
@@ -222,8 +216,8 @@ const request =
         /**
          * Accept the provider of a request
          * @async
-         * @param {String} requestID The id of the request to modify
-         * @param {String} providerID The id of the provider
+         * @param {String} requestID - The id of the request to modify
+         * @param {String} providerID - The id of the provider
          * @returns {Promise<Boolean>} If the operation was successful
          */
         acceptProvider: async function(requestID, providerID) 

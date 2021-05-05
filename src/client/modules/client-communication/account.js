@@ -3,6 +3,11 @@
  * with the rest api
  */
 
+require('isomorphic-fetch');
+import communication from './communication';
+const url = communication.url;
+const returnResponse = communication.returnResponse;
+
 /**
  * @typedef credentials
  * @property {String} firstName
@@ -11,11 +16,6 @@
  * @property {String} phone
  * @property {String} password
  */
-
-require('isomorphic-fetch');
-import communication from './communication';
-const url = communication.url;
-const returnResponse = communication.returnResponse;
 
 /**
  * Managing user account both for service provider and service requester
@@ -91,8 +91,8 @@ const account =
     /**
      * Gets the id of the user with the given email if the password matches
      * @async
-     * @param {String} email The email of the user
-     * @param {String} password The password of the user
+     * @param {String} email - The email of the user
+     * @param {String} password - The password of the user
      * @returns {?User} The id of the user
      */
     get: async function(email, password)
