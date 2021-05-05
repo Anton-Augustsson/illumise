@@ -346,7 +346,7 @@ let num = 1;
 async function createDummyUser(){
     let credentials = {"firstName":"F", "lastName":"D", "email":"A" + num + "@mail.test", "token":"L" };
     num += 1;
-    let userID      = await account.createAccount(credentials)
+    let userID      = await account.createAccount(credentials, true)
     expect(userID).not.toBeNull();
     return userID;
 }
@@ -354,7 +354,7 @@ async function createDummyUser(){
 async function createDummyUser2(){
     let credentials = {"firstName":"SDA", "lastName":"BLDID", "email":"A" + num + "@mail.test", "token":"SIODJSAL" };
     num += 1;
-    let userID      = await account.createAccount(credentials)
+    let userID      = await account.createAccount(credentials, true)
     expect(userID).not.toBeNull();
     return userID;
 }

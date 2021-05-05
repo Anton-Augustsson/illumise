@@ -14,7 +14,7 @@ const account =
      * create new account
      * @param {json} credentials - A object of the users credentials.
      */
-    createAccount: async function(credentials)
+    createAccount: async function(credentials, isTest = false)
     {
         let url = account.accountUrl + '/createAccount';
         let toCreate = {credentials: credentials};
@@ -33,7 +33,7 @@ const account =
      * remove specified account
      * @param {string} userID - The user id of the account that should be deleted
      */
-    removeAccount: async function(userID)
+    removeAccount: async function(userID, isTest = false)
     {
         let url = account.accountUrl + '/removeAccount';
         let toRemove = {userID: userID};
@@ -53,7 +53,7 @@ const account =
      * @param {string} userID - The user id of the account that should be changed
      * @param {json} credentials - A object of the users credentials.
      */
-    changeCredentials: async function(userID, credentials)
+    changeCredentials: async function(userID, credentials, isTest = false)
     {
         let url = account.accountUrl + '/changeCredentials';
         let toUpdate = {userID: userID, credentials: credentials};
@@ -75,7 +75,7 @@ const account =
      * @param {String} password The password of the user
      * @returns {?User} The id of the user
      */
-    get: async function(email, password)
+    get: async function(email, password, isTest = false)
     {
         let params = '?email=' + email + '&password=' + password;
         let url = account.accountUrl + '/get' + params;

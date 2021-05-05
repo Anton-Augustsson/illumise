@@ -1,5 +1,5 @@
 /** @type {DBInterface} */
-const db = require("../server");
+const {dbNorm, dbTest} = require("../server");
 const validate = require("./validate");
 const valid = validate.valid;
 const validParams = validate.validParams;
@@ -13,6 +13,8 @@ const router = express.Router();
 const Joi = require('joi');
 const { idSize } = require("./validate");
 const { DBInterface } = require("../db/dbInterface");
+
+let db = dbTest; // TODO remove
 
 /**
  * set payment to done and remove chat (will still be accessible in x time)

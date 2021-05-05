@@ -1,5 +1,5 @@
 
-const db = require("../server");
+const {dbNorm, dbTest} = require("../server");
 const validate = require("./validate");
 const valid = validate.valid;
 const validParams = validate.validParams;
@@ -10,6 +10,8 @@ const idSize      = validate.idSize;
 const express = require('express');
 const router = express.Router();
 const Joi = require('joi');
+
+let db = dbTest; // TODO remove
 
 /**
  * sends a message to a person

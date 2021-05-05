@@ -1,5 +1,5 @@
 
-const db = require("../server");
+const {dbNorm, dbTest} = require("../server");
 const validate = require("./validate");
 const valid = validate.valid;
 const validParams = validate.validParams;
@@ -11,6 +11,11 @@ const express = require('express');
 const router = express.Router();
 const Joi = require('joi');
 
+
+function getDB(isTestDB = false){
+  if(isTestDB) return dbTest;
+  else return dbNorm;
+}
 
 /**
  * create new account
@@ -26,6 +31,7 @@ router.put('/createAccount', async (req, res) =>
 
   if(valid(req.body, schema, res) && validCredentials(c, res))
   {
+    let db = getDB(req.body.isTestDB);
     let response = await db.accounts.add(c.firstName, c.lastName, c.email, "119", c.token);
     if(response != null) return sendSuccess(res, response);
     else return sendFailure(res);
@@ -44,6 +50,7 @@ router.delete('/removeAccount', async (req, res) =>
 
   if(valid(req.body, schema, res))
   {
+    let db = getDB(req.body.isTestDB);
     let response = await db.accounts.remove(req.body.userID);
     if(response != false) return sendSuccess(res);
     else return sendFailure(res);
@@ -66,6 +73,7 @@ router.post('/changeCredentials', async (req, res) =>
 
   if(valid(req.body, schema, res), validCredentials(c, res))
   {
+    let db = getDB(req.body.isTestDB);
     let response = await db.accounts.update(req.body.userID, c.firstName, c.lastName, c.email, "119", c.token);
     if(response != false) return sendSuccess(res);
     else return sendFailure(res);
@@ -88,6 +96,7 @@ router.get('/get', async (req, res) =>
 
   if(validParams(params, res))
   {
+    let db = getDB(req.body.isTestDB);
     let response = await db.accounts.get(params.email, params.password);
     if(response != null) return sendSuccess(res, response);
     else return sendFailure(res);

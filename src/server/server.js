@@ -17,15 +17,17 @@ const io = socketio(server, {
 /**
  * Initialize server interface
  */
-let db;
-let connected;
+let dbNorm;
+let dbTest;
 
 async function initDB()
 {
     let url = "mongodb+srv://admin:123@cluster0.j0bss.mongodb.net/main?retryWrites=true&w=majority";
-    db = new DBInterface(undefined, undefined, url, true);
-    connected = await db.connect();
-    db.clear();
+    dbNorm = new DBInterface(undefined, undefined, url, false);
+    dbTest = new DBInterface(undefined, undefined, url, true);
+    let connected = await dbNorm.connect();
+    let connectedTest = await dbTest.connect();
+    dbTest.clear();
 }
 
 initDB();
@@ -38,7 +40,7 @@ app.use(express.urlencoded({ extended: true })); // for parsing application/x-ww
 app.use(cors()); // enable cors for http-requests
 
 // export db
-module.exports = db;
+module.exports = {dbNorm, dbTest};
 const request = require('./routes/request');
 app.use('/request', request);
 
