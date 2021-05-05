@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import { Text, View, FlatList, TouchableOpacity } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import FoodRequestScreen from './requests/foodRequestScreen/foodRequest';
@@ -14,6 +14,7 @@ import DeliverScreen from './requests/deliver/deliver';
 import { Localization } from '../../../modules/localization';
 import OtherRequestScreen from './requests/OtherRequestScreen/otherRequest';
 import storage from '../../../modules/localStorage/localStorage';
+import MarketItem from '../market/marketItem';
 
 
 
@@ -80,23 +81,12 @@ const renderItem = ({item}, nav) =>
     );
 };
 
-const TopWelcome = () => 
-{
-    return (
-        <View style={hs.welcomeContainer}>
-            <Text style={ms.h2}>{Localization.getText("welcome")}!</Text>
-        </View>
-    );
-}
-
-
-
 const FirstScreen = ({nav}) => {
-    
+
     return (
         <View style={{flex:1}}>
             
-            <TopWelcome/>
+            <Text style={hs.welcome}>{Localization.getText("welcome") + " Jonas Teglund"}</Text>
             <FlatList
                 data={DATA}
                 renderItem={(item) => renderItem(item, nav)}

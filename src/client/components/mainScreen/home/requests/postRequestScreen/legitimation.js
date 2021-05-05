@@ -54,14 +54,15 @@ const LegitimationScreen = ({navigation, route}) => {
                     <Text style={[ms.h3, {marginTop: 50}]}>{Localization.getText("enterPickupLoc")}</Text>
                     <GooglePlaces
                         placeholder={Localization.getText("deliveryAddress")}
+                        fetchDetails={true}
                         onPress={(data, details = null) => {
                         // 'details' is provided when fetchDetails = true
-                        setLocation(data.description);
+                        setLocation({adress: data.description, location: details.geometry.location});
                         }}
                         />
                 </View>
             </View>
-            <View style={rs.moveOnContainer}>
+            <View style={ms.moveOnContainer}>
                 <IconButton onPress={nextScreen} />
             </View>
         </View>

@@ -12,6 +12,8 @@ const ms = StyleSheet.create({
     h2: {
         fontSize:25,
         fontWeight: "bold",
+        marginTop:15,
+        marginBottom:15,
     }, 
     h3: {
         fontSize:20,
@@ -22,6 +24,7 @@ const ms = StyleSheet.create({
     h4: {
         fontSize:15,
         fontWeight: "bold",
+        marginTop:5,
     },
     h5: {
         fontSize:10,
@@ -79,11 +82,12 @@ const ms = StyleSheet.create({
         fontWeight:"bold",
     },
     logoContainer: {
+        flex:1,
         justifyContent: "center",
         alignItems: "center",
     },
-    logoContainerZ: {
-        flex: 3,
+    logoContainerLogin: {
+        justifyContent: "center",
         alignItems: "center",
     },
     logoLarge: { // Start up logo
@@ -115,7 +119,28 @@ const ms = StyleSheet.create({
         marginLeft:"5%",
         marginRight:60,
         lineHeight:20,
-    }
+    },
+    moveOnContainer: {
+        paddingTop: 6,
+        paddingBottom: 6,
+        paddingRight:20,
+        paddingLeft:20,
+    },
+    container: {
+        flex:1,
+        padding:20,
+    },
+    emptyContainer: {
+        justifyContent:"center",
+        padding:30,
+    },
+    emptyMsg: {
+        textAlign:"center",
+    },
+    emptyMsgAbove: {
+        fontWeight:"bold",
+        fontSize:16,
+    },
 });
 
 // EXPORTS 

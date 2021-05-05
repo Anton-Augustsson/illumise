@@ -2,6 +2,7 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Menu from "./menu/menu"
 import HomeScreen from './home/home';
+import MyOrders from './orders/myOrders';
 import NotificationScreen from './notification/notification';
 import BurgarScreen from './burgar/burgar';
 import MarketScreen from './market/market';
@@ -23,7 +24,7 @@ const MainScreen = (navigation) => {
 
             <Tab.Screen 
                 name="Orders" 
-                component={OrderScreen}
+                component={MyOrders}
             />
 
             <Tab.Screen 

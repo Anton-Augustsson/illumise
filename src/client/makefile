@@ -1,4 +1,5 @@
 init: 
+	sudo npm install --global expo-cli
 	expo login
 	sudo npm update
 	sudo npm install 

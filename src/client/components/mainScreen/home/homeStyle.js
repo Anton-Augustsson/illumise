@@ -32,11 +32,13 @@ const hs = StyleSheet.create({
         fontSize:20,
         marginTop:3,
     },
-    welcomeContainer: {
+    welcome: {
         width:"100%",
-        height:75,
-        padding:20,
-        justifyContent:"center",
+        paddingLeft:"8%",
+        fontWeight:"bold",
+        fontSize:25,
+        paddingTop:20,
+        paddingBottom:5,
     }
 });
 

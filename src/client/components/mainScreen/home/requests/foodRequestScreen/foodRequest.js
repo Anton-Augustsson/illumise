@@ -34,7 +34,7 @@ const FoodRequestScreen = ({navigation}) => {
 
         setItems(prevItems => {
             setId((id+1).toString());
-            return [{id:id, name: dish, quantity: amount, otherInfo: other},...prevItems]
+            return [{id:id, name: dish, quantity: amount, info: other},...prevItems]
         })
         setDish("");
         setAmount(1);
@@ -82,9 +82,10 @@ const FoodRequestScreen = ({navigation}) => {
                     <Text style={ms.h3}>{Localization.getText("enterRestaurant")}</Text>
                     <GooglePlaces
                         placeholder={Localization.getText("restaurant")}
+                        fetchDetails={true}
                         onPress={(data, details = null) => {
                             // 'details' is provided when fetchDetails = true
-                            setLocation(data.description);
+                            setLocation({adress: data.description, location: details.geometry.location});
                         }}
                     />
                     <ScrollView contentContainerStyle={{flexGrow:1}}>
@@ -110,7 +111,7 @@ const FoodRequestScreen = ({navigation}) => {
                         />
                     </ScrollView>
                 </View>
-                <View style={rs.moveOnContainer}>
+                <View style={ms.moveOnContainer}>
                     <CartButton 
                         ref={cartButton}
                         counter={items.length}

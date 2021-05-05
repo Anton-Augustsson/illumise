@@ -1,7 +1,8 @@
 import React, {Component} from "react";
 import MapView, {Marker} from "react-native-maps";
 import * as Location from "expo-location";
-import { Alert } from "react-native";
+import { Alert, Button, TouchableOpacity, View, StyleSheet } from "react-native";
+import CustomButton from "./customButton";
 
 /**
  * @typedef Region
@@ -138,24 +139,39 @@ export default class CustomMap extends Component
     render() 
     {
         return(
-        <MapView
-            style  = {[this.props.style,{zIndex: -1}]}
-            region = {this.state.region}
-            showsUserLocation = {true}
-            showsBuildings = {true}
-            showsMyLocationButton = {true}
-            onRegionChangeComplete = {this.onRegionChangeComplete.bind(this)}
-        >
-            {this.state.markers.map((marker) => (
-                <Marker
-                    key={marker.key}
-                    title={marker.title}
-                    description={marker.description}
-                    coordinate={{ longitude: marker.longitude, 
-                                  latitude:  marker.latitude}}
+            <>
+                <MapView
+                    style = {this.props.style}
+                    region = {this.state.region}
+                    showsUserLocation={true}
+                    onRegionChangeComplete={this.onRegionChangeComplete.bind(this)}
+                >
+
+                    {this.state.markers.map((marker, index) => (
+                        <Marker
+                            key={index}
+                            title={marker.title}
+                            description={marker.description}
+                            coordinate={{ longitude: marker.longitude, 
+                                        latitude:  marker.latitude}}
+                        />
+                    ))}
+                </MapView>
+                <Button
+                    title = "Centrera"
+                    onPress = {async () => {
+                        let region = await this.getLocalRegion();
+                        this.onRegionChangeComplete(region);
+                    }}
                 />
-            ))}
-        </MapView>
+            </>
         );
     }
+
+            
+            
 }
+
+const styles = StyleSheet.create({
+
+});
