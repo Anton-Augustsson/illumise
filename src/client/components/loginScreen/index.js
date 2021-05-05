@@ -16,6 +16,7 @@ import {AppContext} from "../AppContext";
 
 const verifyUser = async (signIn, token, type, setLoggingIn) =>
 {
+    setLoggingIn(true);
     try {
         var userInfo = await fetch(type === 'facebook' 
                     ? 'https://graph.facebook.com/v2.5/me?fields=email,name,first_name,last_name,picture,friends&access_token=' + token
@@ -73,7 +74,6 @@ const LoginScreen = (navigation) =>
         }
     }, [response])
 
-
     const [requestFB, responseFB, promptAsyncFB] = Facebook.useAuthRequest({
         clientId: '284019753226391'
         //responseType: ResponseType.Code, 
@@ -85,24 +85,6 @@ const LoginScreen = (navigation) =>
             verifyUser(signIn, responseFB.authentication.accessToken, 'facebook');
         }
     }, [responseFB]);
-
-
-    const login = (type) => {
-        try {
-            setLoggingIn(true);
-            switch(type) {
-                case "facebook":
-                    promptAsyncFB() 
-                    break;
-                case "google":
-                    promptAsync() 
-                    break;
-
-            }
-        } catch(err) {
-            console.log(err)
-        }
-    }
 
     //navigation.navigate("Main", {type:"google",user:{id:"",email:"marholdtv@gmail.com",verified_email:true,name:"Marhold Marhold",given_name:"Bengt",family_name:"Olsson",picture:"https://lh3.googleusercontent.com/-ggukNDG0VX8/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucnZ9CX2t6F0LbHJ31docWtx8Eaj3A/s96-c/photo.jpg",locale:"sv"}}
 
@@ -119,12 +101,12 @@ const LoginScreen = (navigation) =>
                 </View>
 
                 <GoogleButton
-                    onPress= {()=>login("google")}
+                    onPress= {()=>promptAsync()}
                     disabled={!request}
                 />
 
                 <FacebookButton
-                    onPress={()=>login("facebook")}
+                    onPress={()=>promptAsyncFB()}
                     disabled={!requestFB}
                 />
 
