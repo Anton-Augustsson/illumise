@@ -7,38 +7,49 @@ import LoginScreen from './components/loginScreen';
 import MainScreen from './components/mainScreen/mainScreen';
 import Constants from 'expo-constants';
 import {colors} from "./components/mainStyles/colors"
+import { Localization } from './modules/localization';
+import storage from './modules/localStorage/localStorage';
 
 const Stack = createStackNavigator();
 
-const App = () => 
+class App extends React.Component
 {
-    return(
-        <>
-            <View style={styles.statusbar}></View>
-            <NavigationContainer>
-                <Stack.Navigator 
-                    screenOptions={{
-                        headerShown:false,
-                        cardStyle:{backgroundColor:colors.DEFAULT_BACKGROUND}
-                    }}
+    async componentDidMount()
+    {
+        let lang = await storage.getDataObject("lang");
+        Localization.lang = lang !== null ? lang : Localization.lang;
+    }
 
-                    initialRouteName="Login"
-                >
-                    <Stack.Screen 
-                        name = "Login" 
-                        component={LoginScreen}
-                    />
+    render()
+    {
+        return(
+            <>
+                <View style={styles.statusbar} />
+                <NavigationContainer>
+                    <Stack.Navigator 
+                        screenOptions={{
+                            headerShown:false,
+                            cardStyle:{backgroundColor:colors.DEFAULT_BACKGROUND}
+                        }}
 
-                    <Stack.Screen 
-                        name="Main" 
-                        component={MainScreen}
-                    />
+                        initialRouteName="Login"
+                    >
+                        <Stack.Screen 
+                            name = "Login" 
+                            component={LoginScreen}
+                        />
+
+                        <Stack.Screen 
+                            name="Main" 
+                            component={MainScreen}
+                        />
 
 
-                </Stack.Navigator>
-            </NavigationContainer>
-        </>
-    );
+                    </Stack.Navigator>
+                </NavigationContainer>
+            </>
+        );
+    }
 }
 
 const STATUSBAR_HEIGHT = Constants.statusBarHeight;

@@ -4,6 +4,8 @@
 //
 // usage: Localization.getText("hello") will get the string tagged "hello" in the corresponding localization
 
+import storage from "./localStorage/localStorage";
+
 /**
  * @typedef LocalizationData
  * @property {String} langDefault
@@ -19,24 +21,30 @@ const localizationPath = "../resources/localization";
 /**
  * The class handling localization
  * @class
+ * @example 
+ * let text = Localization.getText("test");
+ * 
+ * @example
+ * Localization.lang = "en";
  */
 export class Localization
 {
     /** @type {LocalizationData} @private */
-    static _localizationData = require(`${localizationPath}/data.json`);
+    static _data = require(`${localizationPath}/data.json`);
     
     /** @type {String} @private */
     static _lang = undefined;
 
-    /**@type {?TextJSON} @private */
+    /** @type {TextJSON} @private */
     static _textJSON = require(`${localizationPath}/text.json`);
 
     /**
      * Gets the current localization
-     * @return The current localization
+     * @return {String} The current localization
      */
     static get lang()
     {
+        if (this._lang === undefined) this.lang = this._data.langDefault;
         return this._lang;
     }
 
@@ -46,8 +54,17 @@ export class Localization
     static set lang(value)
     {
         this._lang = value;
+        storage.storeDataObject("lang", this._lang);
     }
     
+    /**
+     * @returns {[String]} A list of all language tags
+     */
+    static get langs()
+    {
+        return this._data.langs;
+    }
+
     /**
      * Gets the localized text tagged 'tag'
      * @param {String} tag The tag the text has 
@@ -57,8 +74,7 @@ export class Localization
     {
         try
         {
-            if (this._lang == undefined) this._lang = this._localizationData.langDefault;
-            return this._textJSON[this._lang][tag];
+            return this._textJSON[this.lang][tag];
         }
         catch (error)
         {

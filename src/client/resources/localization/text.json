@@ -11,7 +11,7 @@
         "options": "Options",
         "help": "Help",
         "other": "Other",
-        "address": "Adress",
+        "address": "Address",
         "goods": "Goods",
         "checkYourOrders":"Check your orders",
         "welcome": "Welcome",
@@ -77,11 +77,12 @@
         "latest": "Latest",
         "foodPromt": "Buy and deliver food",
         "shoppingPromt": "Buy and deliver goods",
-        "postPromt": "Pick up and deliver post"
+        "postPromt": "Pick up and deliver post",
+        "selectLang": "Select Language"
     },
     "se": 
     {
-        "test": "detta var ett test",
+        "test": "Detta var ett test",
         "welcome": "Välkommen",
         "welcomeBold": "Välkommen till SAMARIT!",
         "goBack": "Tillbaka",
@@ -158,6 +159,7 @@
         "latest": "Senaste",
         "foodPrompt": "Handla och leverera mat",
         "shoppingPrompt": "Handla och leverera varor",
-        "postPrompt": "Hämta och leverera post/paket"
+        "postPrompt": "Hämta och leverera post/paket",
+        "selectLang": "Välj Språk"
     } 
 }

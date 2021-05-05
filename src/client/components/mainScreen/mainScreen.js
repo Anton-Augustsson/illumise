@@ -7,41 +7,45 @@ import BurgarScreen from './burgar/burgar';
 import MarketScreen from './market/market';
 import OrderScreen from './orders/orders';
 
-
 const Tab = createBottomTabNavigator();
 
-const MainScreen = (navigation) => {
-    //https://reactnavigation.org/docs/bottom-tab-navigator
-    return (
-        <Tab.Navigator initialRouteName="Home"
-                       tabBar={props=><Menu {...props}/>}>
+class MainScreen extends React.Component
+{
+    render()
+    {
+        return (
+            <Tab.Navigator 
+                initialRouteName="Home"
+                tabBar={props=><Menu {...props}/>}
+            >
 
-            <Tab.Screen 
-                name="Home" 
-                component={HomeScreen}
-            />
+                <Tab.Screen 
+                    name="Home" 
+                    component={HomeScreen}
+                />
 
-            <Tab.Screen 
-                name="Orders" 
-                component={OrderScreen}
-            />
+                <Tab.Screen 
+                    name="Orders" 
+                    component={OrderScreen}
+                />
 
-            <Tab.Screen 
-            name="Market" 
-            component={MarketScreen}
-            />
+                <Tab.Screen 
+                    name="Market" 
+                    component={MarketScreen}
+                />
 
-            <Tab.Screen 
-            name="Notification" 
-            component={NotificationScreen}
-            />
+                <Tab.Screen 
+                    name="Notification" 
+                    component={NotificationScreen}
+                />
 
-            <Tab.Screen 
-                name="Burgar" 
-                component={BurgarScreen}
-            />
-        </Tab.Navigator>
-    );
+                <Tab.Screen 
+                    name="Burgar" 
+                    component={BurgarScreen}
+                />
+            </Tab.Navigator>
+        );
+    }
 }
 
 export default MainScreen;
