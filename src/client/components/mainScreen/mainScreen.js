@@ -28,13 +28,13 @@ const MainScreen = (navigation) => {
             />
 
             <Tab.Screen 
-            name="Market" 
-            component={MarketScreen}
+                name="Market" 
+                component={MarketScreen}
             />
 
             <Tab.Screen 
-            name="Notification" 
-            component={NotificationScreen}
+                name="Notification" 
+                component={NotificationScreen}
             />
 
             <Tab.Screen 

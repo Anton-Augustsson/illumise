@@ -6,15 +6,12 @@ import PostRequestScreen from './requests/postRequestScreen/postRequestScreen';
 import LegitimationScreen from './requests/postRequestScreen/legitimation';
 import ShoppingRequestScreen from "./requests/shoppingRequestScreen/shoppingRequest";
 import {colors} from "../../mainStyles/colors"
-import ms from "../../mainStyles/ms"
 import hs from "./homeStyle"
 import ReceiptScreen from "./requests/receipt/receipt";
 import RequestIcon from "../../customComponents/requestIcon"
 import DeliverScreen from './requests/deliver/deliver';
 import { Localization } from '../../../modules/localization';
 import OtherRequestScreen from './requests/OtherRequestScreen/otherRequest';
-import storage from '../../../modules/localStorage/localStorage';
-import MarketItem from '../market/marketItem';
 
 
 
@@ -83,10 +80,11 @@ const renderItem = ({item}, nav) =>
 
 const FirstScreen = ({nav}) => {
 
+    //TODO: Import user name
     return (
         <View style={{flex:1}}>
             
-            <Text style={hs.welcome}>{Localization.getText("welcome") + " Jonas Teglund"}</Text>
+            <Text style={hs.welcome}>{`${Localization.getText("welcome")} ${"TEMP NAME"}`}</Text>
             <FlatList
                 data={DATA}
                 renderItem={(item) => renderItem(item, nav)}

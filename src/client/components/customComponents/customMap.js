@@ -1,8 +1,7 @@
 import React, {Component} from "react";
 import MapView, {Marker} from "react-native-maps";
 import * as Location from "expo-location";
-import { Alert, Button, TouchableOpacity, View, StyleSheet } from "react-native";
-import CustomButton from "./customButton";
+import { Alert, Button, StyleSheet } from "react-native";
 
 /**
  * @typedef Region
@@ -78,9 +77,10 @@ export default class CustomMap extends Component
         try
         {
             let region = await this.getLocalRegion();
-            this.setState({
-            region: region,
-            markers: await this.state.onMount(region)
+            this.setState(
+            {
+                region: region,
+                markers: await this.state.onMount(region)
             });
         }
         catch(error)
@@ -98,8 +98,11 @@ export default class CustomMap extends Component
     {
         try 
         {
-            this.setState({ region: region, 
-                            markers: await this.state.onUpdate(region, this.state.markers)});
+            this.setState(
+            { 
+                region: region, 
+                markers: await this.state.onUpdate(region, this.state.markers)
+            });
         } 
         catch (error) 
         {

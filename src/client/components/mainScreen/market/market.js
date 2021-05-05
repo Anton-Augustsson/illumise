@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback} from 'react';
+import React, { useState, useEffect } from 'react';
 import { Text, View, ScrollView, FlatList, StyleSheet,TouchableOpacity} from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -10,69 +10,6 @@ import MarketItem from './marketItem';
 import {Localization} from '../../../modules/localization'
 import * as Location from 'expo-location';
 import request from '../../../modules/client-communication/request';
-import { getDistance } from 'geolib'
-import CustomMap from '../../customComponents/customMap';
-/*
-const REQUESTS = [
-    {
-        "id":"1",
-        "shoppingList": [
-        {
-            "id": "0",
-            "name": "Första",
-            "otherInfo": "wef",
-            "quantity": 1,
-        },
-        {
-            "id": "1",
-            "name": "Andra",
-            "otherInfo": "NISSE",
-            "quantity": 1000000,
-        },
-        ],
-        "stops":  [
-            "Wefixit Svenska AB, Fålhagsleden, Uppsala, Sweden",
-            "Wefix Trädgård AB, Sandövägen, Vallda, Sweden",
-        ],
-        "price":"2000000000",
-        "time": "13:00",
-        "type": "food",
-    },
-    {
-        "id":"2",
-        "shoppingList": [
-        {
-            "id": "0",
-            "name": "Banan",
-            "otherInfo": "E väldigt fin banan från helvetet",
-            "quantity": 1,
-        },
-        ],
-        "stops":  [
-            "SHAKMAK AB, Moskva, Russia",
-            "Wefix Trädgård AB, Sandövägen, Vallda, Sweden",
-        ],
-        "time": "13:00",
-        "price":"10",
-        "type": "shopping"
-    },
-    {
-        "id":"3",
-        "postObject": 
-        {
-            "refCode": "DINMAMMA",
-            "otherInfo": "E väldigt fin banan från helvetet",
-        },
-        "stops":  [
-            "SHAKMAK AB, Moskva, Russia",
-            "Wefix Trädgård AB, Sandövägen, Vallda, Sweden",
-        ],
-        "time": "13:00",
-        "price":"0.20",
-        "type": "post"
-    }
-]
-*/
 
 const FilterView = () => {
     const filterItems = [
@@ -97,7 +34,6 @@ const FilterView = () => {
                     {filterItems.map(item => (
                         <TouchableOpacity
                             key={item.id}
-                            
                         >
                             <LinearGradient style={mms.filterItemContainer} colors={['grey', 'black']}>
                                 <Text style={mms.filterItemText}>{item.text}</Text>
@@ -172,7 +108,7 @@ const FirstScreen = (nav) => {
     const [location, setLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
     const [REQUESTS, setRequests] = useState(null);
-    const [isRefreshing, setIsRefresing] = useState(false);
+    const [isRefreshing, setIsRefreshing] = useState(false);
 
     const getLocation = async () => {
         let { status } = await Location.requestForegroundPermissionsAsync();
@@ -186,13 +122,13 @@ const FirstScreen = (nav) => {
         let pointStart = coordsToGeoJSON([geo.coords.longitude, geo.coords.latitude]);
 
 
-        const res = await request.provider.getNearRequests(pointStart, 1000000, 10);
-        setIsRefresing(false);
+        const res = await request.provider.getNearRequests(pointStart, 1000000);
+        setIsRefreshing(false);
         return res;
     }
 
     const refresh = () => {
-        setIsRefresing(true);
+        setIsRefreshing(true);
         getLocation().then(data => {
             setRequests(data.filter(obj => obj != null));
         }); 
