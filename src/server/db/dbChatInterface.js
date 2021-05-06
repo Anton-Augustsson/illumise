@@ -7,13 +7,24 @@ const { Db, ObjectID, Collection } = require("mongodb");
 const chatCollectionName = "Chat";
 
 /**
- * @typedef {Object.<string, [ChatMessage]>} MessageCollection
+ * @typedef Chat
+ * @property {String} _id
+ * @property {String} requestID
+ * @property {Number} dateCreated
+ * @property {MessageCollection} provider
+ * @property {MessageCollection} requester
+ */
+
+/**
+ * @typedef MessageCollection
+ * @property {String} _id
+ * @property {[ChatMessage]} messages
  */
 
 /**
  * @typedef ChatMessage
  * @property {Number} time
- * @property {String} message
+ * @property {String} text
  */
 
 /**
@@ -43,28 +54,31 @@ class DBChatInterface
      * Adds a new chat if no equivalent chat exists
      * @async
      * @param {String} requestID The id of the related request
-     * @param {[String]} userIDs An array containing the ids of all related users 
+     * @param {String} requesterID The id of the requester
+     * @param {String} providerID The id of the provider
      * @returns {Promise<?String>} The id of the chat or null
      */
-    async add(requestID, userIDs)
+    async add(requestID, requesterID, providerID)
     {
         try
         {
-            let messageCollection = {};
-            for (let i = 0; i < userIDs.length; i++)
-            {
-                messageCollection[userIDs[i]] = [];
-            }
-
             let filter =
             {
-                requestID: requestID
+                requestID: ObjectID(requestID),
+                "provider._id": ObjectID(providerID)
             }
             let chat =
             {
-                requestID: requestID,
+                requestID: ObjectID(requestID),
                 dateCreated: Date.now(),
-                messageCollection: messageCollection
+                provider: {
+                    _id: ObjectID(providerID),
+                    messages: []
+                },
+                requester: {
+                    _id: ObjectID(requesterID),
+                    messages: []
+                }
             }
             let update  = { $setOnInsert: chat };
             let options = { upsert: true };
@@ -82,11 +96,11 @@ class DBChatInterface
      * Adds a message to a chat
      * @async
      * @param {String} chatID The id of the chat
-     * @param {String} userID The user id of the sender
      * @param {String} message The message sent
+     * @param {Boolean} isProvider If the sender is a provider (not requester)
      * @returns {Promise<Boolean>} If the message was added successfully 
      */
-    async addMessage(chatID, userID, message)
+    async addMessage(chatID, message, isProvider)
     {
         try
         {
@@ -95,10 +109,10 @@ class DBChatInterface
             {
                 $push: 
                 {
-                    [`messageCollection.${userID}`]:
+                    [`${isProvider ? "provider" : "requester"}.messages`]:
                     {
                         time: Date.now(),
-                        message: message
+                        text: message
                     }
                 }
             }
@@ -107,85 +121,26 @@ class DBChatInterface
         }
         catch (error)
         {
-            console.error(error);
             return false;
         }
     }
 
     /**
-     * Gets all messages in a given chat
+     * Gets all chat data of the chat with the given id
      * @async
      * @param {String} chatID The id of the chat
-     * @returns {Promise<?MessageCollection>} The message collection
+     * @returns {Promise<?Chat>} The chat
      */
-    async getMessages(chatID)
+    async getChat(chatID)
     {
         try
         {
             let filter = { _id: ObjectID(chatID) };
             let result = await this.#collection.findOne(filter);
-            return result == null ? null : result.messageCollection;
+            return result == null ? null : result;
         }
         catch (_)
         {
-            //console.error(error);
-            return null;
-        }
-    }
-
-    /**
-     * Gets messages in a given chat after some specific time
-     * @async
-     * @param {String} chatID The id of the chat
-     * @param {number} time The number of milliseconds elapsed since January 1, 1970 00:00:00 UTC (get from Date.now)
-     * @returns {Promise<?MessageCollection>} The time-filtered message collection 
-     */
-    async getMessagesAfter(chatID, time)
-    {
-        try
-        {
-            let filter = { _id: ObjectID(chatID) };
-            let result = await this.#collection.findOne(filter);
-            if (result == null) return null;
-
-            let values  = Object.values(result.messageCollection);
-            for (let a = 0; a < values.length; a++)
-            {
-                for (let b = 0; b < values[a].length; b++)
-                {
-                    if (values[a][b].time < time) values[a].splice(b, 1);
-                }
-            }
-
-            return result.messageCollection;
-        }
-        catch (error)
-        {
-            console.error(error);
-            return null;
-        }
-    }
-    
-    /**
-     * Get all chat messages from a specific user
-     * @async
-     * @param {String} chatID the chat to get messages from
-     * @param {String} userID the user messages to find
-     * @returns {Promise<?[ChatMessage]>} The message collection
-     */
-    async getMessagesFrom(chatID, userID)
-    {
-        try
-        {
-            let result = await this.#collection.aggregate([
-                { $match: { _id: ObjectID(chatID) }},
-                { $project: { _id: 0, messages: `$messageCollection.${userID}`}}
-            ]).toArray();
-            return result === null ? null : result[0].messages;
-        }
-        catch (error)
-        {
-            console.error(error);
             return null;
         }
     }
