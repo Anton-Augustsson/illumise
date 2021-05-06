@@ -93,7 +93,11 @@
         "loggingIn": "Logging in...",
         "logout": "Logout",
         "creatingRequest...": "Creating a request...",
-        "market": "Market"
+        "market": "Market",
+        "update": "Update info",
+        "foreName": "First name",
+        "afterName": "Last name",
+        "email": "Email"
     },
     "se": 
     {
@@ -193,6 +197,10 @@
         "youHaveNoOrders":"Du har inga beställningar för tillfället!",
         "youHaveNoOrders2":"Skapa en genom att klicka på handikonen i menyn",
         "market": "Marknad",
-        "marketEmptyMsg": "Marknaden är för tillfället tom!"
+        "marketEmptyMsg": "Marknaden är för tillfället tom!",
+        "update": "Uppdatera info",
+        "foreName": "Förnamn",
+        "afterName": "Efternamn",
+        "email": "Epost"
     } 
 }

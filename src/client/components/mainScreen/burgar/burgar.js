@@ -41,18 +41,7 @@ const BurgarItem = (item, navigation) =>
     );
 }
 
-const ProfilePicture = (props) => 
-{
-    return (
-        <View style={bs.profileContainer}>
-            <Image
-                style={bs.profileImg}
-                source={require("../../../assets/steffe.jpg")}
-            />
-            <Text style={bs.profileName}>{props.name}</Text>
-        </View>
-    );
-}
+
 
 const FirstScreen = ({navigation}) => 
 {

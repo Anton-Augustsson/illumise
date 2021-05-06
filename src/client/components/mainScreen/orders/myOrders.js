@@ -30,7 +30,6 @@ const RequestItem = ({nav, item}) => {
 
     }
 
-    const km = "1000";
 
     return(
         <TouchableOpacity 
@@ -43,7 +42,6 @@ const RequestItem = ({nav, item}) => {
                     <Text style={mms.price} numberOfLines={1}>{item.cost}</Text>
                     <Text style={mms.priceCurrency}>kr</Text>
                 </View>
-                <Text style={mms.distance}>{km} km</Text>
             </View>
         </TouchableOpacity>
     );
