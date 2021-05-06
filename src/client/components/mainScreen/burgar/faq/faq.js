@@ -4,6 +4,7 @@ import { Localization } from '../../../../modules/localization';
 import CustomHeader from '../../../customComponents/customHeader';
 import ms from "../../../mainStyles/ms";
 
+
 const QUESTIONS = [
 {
     "id": "1",
@@ -22,6 +23,12 @@ const QUESTIONS = [
     "question": Localization.getText("faqQuestion3"),
     "answer": Localization.getText("faqAnswer3")
 },
+
+{
+    "id": "4",
+    "question": Localization.getText("faqQuestion4"),
+    "answer": Localization.getText("faqAnswer4")
+},
 ]
 
 const FaqScreen = ({navigation}) => {
@@ -38,11 +45,9 @@ const FaqScreen = ({navigation}) => {
                     renderItem={({item})=>faqList(item)}
                     keyExtractor={(item)=>item.id}
                 />
-            <View style={{borderWidth: 2}}>
-                <Text>Finns några övriga frågor?</Text>
-                <Text>Kontakta gärna oss på mail eller telefon: </Text>
-                <Text>Mail: illumise420@gmail.com</Text>
-                <Text>Telefon: 073XXXXXXX</Text>
+            <View style={{borderWidth: 1, padding:10}}>
+                <Text>{Localization.getText("faqText2")}</Text>
+                <Text>{Localization.getText("faqContactInfo")}</Text>
             </View>
         </View>
     );
