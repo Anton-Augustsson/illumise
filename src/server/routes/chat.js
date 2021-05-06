@@ -20,8 +20,8 @@ router.put('/sendMessage', async (req, res) => // post?
 {
   const schema = Joi.object({
     chatID: Joi.string().min(idSize).max(idSize),
-    userID: Joi.string().min(idSize).max(idSize),
-    msg: Joi.string()
+    msg: Joi.string(),
+    isProvider: Joi.boolean()
   });
 
   let b = req.body;
@@ -29,7 +29,7 @@ router.put('/sendMessage', async (req, res) => // post?
   if(valid(b, schema, res))
   {
     // null
-    let response = await db.chat.addMessage(b.chatID, b.userID, b.msg);
+    let response = await db.chat.addMessage(b.chatID, b.msg, b.isProvider);
     if(response != false) return sendSuccess(res, response);
     else return sendFailure(res);
   }
@@ -48,7 +48,7 @@ router.get('/getAllMessages', async (req, res) =>
 
   if(validParams(params, res))
   {
-    let response = await db.chat.getMessages(params.chatID);
+    let response = await db.chat.getChat(params.chatID);
     if(response != null) return sendSuccess(res, response);
     else return sendFailure(res);
   }
@@ -70,7 +70,7 @@ router.put('/newChat', async (req, res) => // POST?
 
   if(valid(b, schema, res))
   {
-    let response = await db.chat.add(b.requestID, b.usersID);
+    let response = await db.chat.add(b.requestID, b.usersID[0], b.usersID[1]);
     if(response != null) return sendSuccess(res, response);
     else return sendFailure(res);
   }
