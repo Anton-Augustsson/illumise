@@ -49,7 +49,7 @@ const account =
      * remove specified user account
      * @async
      * @param {string} userID - The user id of the account that should be deleted
-     * @returns {Promise<Boolean>} If the operation was successful
+     * @returns {Promise<?Boolean>} If the operation was successful
      */
     removeAccount: async function(userID)
     {
@@ -71,7 +71,7 @@ const account =
      * @async
      * @param {string} userID - The user id of the account that should be changed
      * @param {credentials} credentials - An object of the users credentials.
-     * @returns {Promise<Boolean>} If the operation was successful
+     * @returns {Promise<?Boolean>} If the operation was successful
      */
     changeCredentials: async function(userID, credentials)
     {

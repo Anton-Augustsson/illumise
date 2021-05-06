@@ -42,7 +42,7 @@ const request =
      * set request as complete, payment is set to done and chat is removed (will still be accessible in x time)
      * @async
      * @param {string} requestID - The request id of the request to be changed status to complete
-     * @returns {Promise<Boolean>} If the operation was successful
+     * @returns {Promise<?Boolean>} If the operation was successful
      */
     completeRequest: async function(requestID)
     {   
@@ -87,7 +87,7 @@ const request =
          * @async
          * @param {string} requestID - The id of the request to be modified
          * @param {string} providerID - The id of the provider
-         * @returns {Promise<Boolean>} If the operation was successful
+         * @returns {Promise<?Boolean>} If the operation was successful
          */
         set: async function(requestID, providerID)
         {   
@@ -168,7 +168,7 @@ const request =
          * Removes a request
          * @async
          * @param {String} requestID - The id of the request
-         * @returns {Promise<Boolean>} If the operation was successful
+         * @returns {Promise<?Boolean>} If the operation was successful
          */
         removeRequest: async function(requestID)
         {
@@ -195,7 +195,7 @@ const request =
          * @param {String} message - The message on the review
          * @param {number} value - The rated score 0 - 5
          * @param {ReviewType} type - The type of review 
-         * @returns {Promise<Boolean>} If the review was added
+         * @returns {Promise<?Boolean>} If the review was added
          */
         reviewProvider: async function(requestID, userIDTo, userIDFrom, message, value, type)
         {
@@ -218,7 +218,7 @@ const request =
          * @async
          * @param {String} requestID - The id of the request to modify
          * @param {String} providerID - The id of the provider
-         * @returns {Promise<Boolean>} If the operation was successful
+         * @returns {Promise<?Boolean>} If the operation was successful
          */
         acceptProvider: async function(requestID, providerID) 
         {

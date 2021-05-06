@@ -21,7 +21,7 @@ const chat =
      * @param {string} userID - The id of the user that sends a message
      * @param {string} chatID - The id of the chat the user wants to send a message to
      * @param {string} msg - The message the current user wants to send
-     * @returns {Promise<Boolean>} If the message was added successfully to chat
+     * @returns {Promise<?Boolean>} If the message was added successfully to chat
      */
     sendMessage: async function(chatID, userID, msg)
     {
@@ -79,7 +79,7 @@ const chat =
      * removes chat
      * @async
      * @param {string} chatID - The id of the chat to be removed
-     * @returns {Promise<Boolean>} If the operation was successful
+     * @returns {Promise<?Boolean>} If the operation was successful
      */
     removeChat: async function(chatID) 
     {
