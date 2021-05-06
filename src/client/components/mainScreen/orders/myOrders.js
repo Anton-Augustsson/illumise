@@ -32,8 +32,6 @@ const RequestItem = ({nav, item}) => {
 
     }
 
-    console.log(item);
-
     return(
         <TouchableOpacity 
             onPress={()=>nav.nav.navigate("OrderApproval", item)}
@@ -51,46 +49,69 @@ const FirstScreen = (nav) => {
     const [state, setState] = useState({
         userID: null,
         requests: [],
-        isRequestingRefreshing: false,
-        providing: [],
-        isProvidingRefreshing: false
+        isRefreshing: false
     });
 
-    const refresh = (isProviding) => {
+    const [provider, setProvider] = useState({
+        providing: [],
+        isRefreshing: false
+    });
 
-        const init = async () => {
+    const refresh = async () => {
+        setState({...state, isRefreshing:true});
 
-            let newState = { userID: userID };
-
-            if (isProviding)
-            {
-                setState({isProvidingRefreshing: true});
-                const userID = await storage.getDataString("userID");
-                const providing = await request.provider.getUserProviding(userID);
-
-                if (providing.length != 0)
-                {
-                    newState.providing = providing;
-                }
-
-                newState.isProvidingRefreshing = false;
-            }
-            else
-            {
-                setState({isRequestingRefreshing: true});
-                const userID = await storage.getDataString("userID");
-                const requests = await request.requester.getUserRequest(userID);
-            }
-            setState(newState);
+        try {
+            const userID = await storage.getDataString("userID");
+            const requests = await request.requester.getUserRequest(userID);   
+            console.log(requests);
+            setState({
+                userID: userID,
+                requests: requests,
+                isRefreshing: false,
+            });
+        } catch (error) {
+            console.log(error);
         }
-        init();
+        
+    }
+
+    const refreshProvider = async () => {
+        setProvider({...provider, isRefreshing: true});
+        try {
+            const userID = await storage.getDataString("userID");
+            const providing = await request.provider.getUserProviding(userID);
+            setProvider({
+                providing:providing,
+                isRefreshing:false,
+            });
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     useEffect(() => {
         refresh();
+        refreshProvider();
     }, []);
 
-    const [expand, setExpand] = useState(false);
+    const requestContent = 
+                <FlatList
+                    data={state.requests}
+                    renderItem={({item})=><RequestItem nav={nav} item={item}/>}
+                    keyExtractor={(item)=>item._id}
+                    onRefresh={refresh}
+                    refreshing={state.isRefreshing}
+                    ListEmptyComponent={()=>
+                        <View style={ms.emptyContainer}>
+                            <Text style={[ms.emptyMsg, ms.emptyMsgAbove]}>
+                                {Localization.getText("youHaveNoOrders")}
+                            </Text>
+                            <Text style={ms.emptyMsg}>
+                                {Localization.getText("youHaveNoOrders2")}
+                            </Text>
+                        </View>
+                    }
+                />
 
     return (
         <View style={{flex:1}}> 
@@ -100,52 +121,39 @@ const FirstScreen = (nav) => {
                 goBack={false}
             />
 
-            <ExpandButton
-                expand={false}
-                title="Beställningar"
-                content={
-                    <FlatList
-                        data={state.requests}
-                        renderItem={({item})=><RequestItem nav={nav} item={item}/>}
-                        keyExtractor={(item)=>item._id}
-                        onRefresh={()=>refresh()}
-                        refreshing={state.isRefreshingRequest}
-                        ListEmptyComponent={()=>
-                            <View style={ms.emptyContainer}>
-                                <Text style={[ms.emptyMsg, ms.emptyMsgAbove]}>
-                                    {Localization.getText("youHaveNoOrders")}
-                                </Text>
-                                <Text style={ms.emptyMsg}>
-                                    {Localization.getText("youHaveNoOrders2")}
-                                </Text>
-                            </View>
-                        }
-                    />
-                }
-            />
-            <ExpandButton
-                expand={true}
-                title="Tjänster"
-                content={
-                    <FlatList
-                        data={REQUESTS}
-                        renderItem={({item})=><RequestItem nav={nav} item={item}/>}
-                        keyExtractor={(item)=>item._id}
-                        onRefresh={()=>refresh()}
-                        refreshing={isRefreshing}
-                        ListEmptyComponent={()=>
-                            <View style={ms.emptyContainer}>
-                                <Text style={[ms.emptyMsg, ms.emptyMsgAbove]}>
-                                    {Localization.getText("youHaveNoOrders")}
-                                </Text>
-                                <Text style={ms.emptyMsg}>
-                                    {Localization.getText("youHaveNoOrders2")}
-                                </Text>
-                            </View>
-                        }
-                    />
-                }
-            />
+            {provider.providing.length == 0 ? requestContent : 
+                <ExpandButton
+                    expand={false}
+                    title="Beställningar"
+                    content={requestContent}
+                />   
+            }
+            
+            {provider.providing.length == 0 ? null : 
+                <ExpandButton
+                    expand={true}
+                    title="Tjänster"
+                    content={
+                        <FlatList
+                            data={provider.providing}
+                            renderItem={({item})=><RequestItem nav={nav} item={item}/>}
+                            keyExtractor={(item)=>item._id}
+                            onRefresh={refreshProvider}
+                            refreshing={provider.isRefreshing}
+                            ListEmptyComponent={()=>
+                                <View style={ms.emptyContainer}>
+                                    <Text style={[ms.emptyMsg, ms.emptyMsgAbove]}>
+                                        {Localization.getText("youHaveNoOrders")}
+                                    </Text>
+                                    <Text style={ms.emptyMsg}>
+                                        {Localization.getText("youHaveNoOrders2")}
+                                    </Text>
+                                </View>
+                            }
+                        />
+                    }
+                />
+            }
         </View>
     );
 }
