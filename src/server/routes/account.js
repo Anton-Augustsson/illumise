@@ -94,4 +94,23 @@ router.get('/get', async (req, res) =>
   }
 });
 
+/**
+ * Gets the user with the given id
+ * @async
+ * @param {String} userID The email of the user
+ * @returns {?User} The id of the user
+ */
+router.get('/getFromID', async (req, res) =>
+{
+    const params = { userID: req.param('userID') };
+
+    if(validParams(params, res))
+    {
+        let response = await db.accounts.getFromID(params.userID);
+        console.log(response);
+        if(response != null) return sendSuccess(res, response);
+        else return sendFailure(res);
+    }
+});
+
 module.exports = router;

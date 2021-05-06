@@ -11,6 +11,7 @@ import storage from '../../../modules/localStorage/localStorage';
 import RequestIcon from "../../customComponents/requestIcon";
 import ExpandButton from '../../customComponents/expandButton';
 import OrderApprovalScreen from './orderApproval/orderApproval';
+import { OrderChatScreen } from './chat/orderChat';
 
 
 const RequestItem = ({nav, item}) => {
@@ -47,35 +48,42 @@ const RequestItem = ({nav, item}) => {
 
 
 const FirstScreen = (nav) => {
-    const [isRequester, setIsRequester] = useState(true);
-    const [REQUESTS, setRequests] = useState(null);
-    const [isRefreshing, setIsRefresing] = useState(false);
-    const [PROVIDERS, setProviders] = useState(null);
+    const [state, setState] = useState({
+        userID: null,
+        requests: [],
+        isRequestingRefreshing: false,
+        providing: [],
+        isProvidingRefreshing: false
+    });
 
-    const getRequests = async () => {
-        
-        if(isRequester){
-            const id = await storage.getDataString("userID");
-            const res = await request.requester.getUserRequest(id, 100);
-            setIsRefresing(false);
-            return res;
-        }else{
-            const id = await storage.getDataString("userID"); 
-            const res = await request.provider.getUserProviding(id, 100);
-            setIsRefresing(false);
-            return res; 
-        }
-        
-        
-    }
+    const refresh = (isProviding) => {
 
-    const refresh = () => {
-        setIsRefresing(true);
-        getRequests().then(data => {
-            if(data != null){ 
-                setRequests(data.filter(obj => obj != null));
+        const init = async () => {
+
+            let newState = { userID: userID };
+
+            if (isProviding)
+            {
+                setState({isProvidingRefreshing: true});
+                const userID = await storage.getDataString("userID");
+                const providing = await request.provider.getUserProviding(userID);
+
+                if (providing.length != 0)
+                {
+                    newState.providing = providing;
+                }
+
+                newState.isProvidingRefreshing = false;
             }
-        }); 
+            else
+            {
+                setState({isRequestingRefreshing: true});
+                const userID = await storage.getDataString("userID");
+                const requests = await request.requester.getUserRequest(userID);
+            }
+            setState(newState);
+        }
+        init();
     }
 
     useEffect(() => {
@@ -97,11 +105,11 @@ const FirstScreen = (nav) => {
                 title="Beställningar"
                 content={
                     <FlatList
-                        data={REQUESTS}
+                        data={state.requests}
                         renderItem={({item})=><RequestItem nav={nav} item={item}/>}
                         keyExtractor={(item)=>item._id}
                         onRefresh={()=>refresh()}
-                        refreshing={isRefreshing}
+                        refreshing={state.isRefreshingRequest}
                         ListEmptyComponent={()=>
                             <View style={ms.emptyContainer}>
                                 <Text style={[ms.emptyMsg, ms.emptyMsgAbove]}>
@@ -161,6 +169,11 @@ const MyOrders = ({navigation}) => {
             <Stack.Screen 
                 name="OrderApproval" 
                 component={OrderApprovalScreen}
+            />
+
+            <Stack.Screen 
+                name="OrderChat" 
+                component={OrderChatScreen}
             />
 
             <Stack.Screen 

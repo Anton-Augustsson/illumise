@@ -112,7 +112,7 @@ class DBAccountsInterface
     }
 
     /**
-     * Gets the id of the user with the given email if the password matches
+     * Gets the user with the given email if the password matches
      * @async
      * @param {String} email The email of the user
      * @param {String} password The password of the user
@@ -126,7 +126,28 @@ class DBAccountsInterface
             {
                 email: email,
                 password: password
-            }
+            };
+            let result = await this.#collection.findOne(filter);
+            return result;
+        }
+        catch (error)
+        {
+            console.error(error);
+            return null;
+        }
+    }
+
+    /**
+     * Gets the user with the given id
+     * @async
+     * @param {String} userID The email of the user
+     * @returns {?User} The id of the user
+     */
+    async getFromID(userID)
+    {
+        try
+        {
+            let filter = { _id: ObjectID(userID) };
             let result = await this.#collection.findOne(filter);
             return result;
         }

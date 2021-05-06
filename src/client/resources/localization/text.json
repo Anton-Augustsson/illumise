@@ -93,7 +93,9 @@
         "logout": "Logout",
         "creatingRequest...": "Creating a request...",
         "market": "Market",
-        "showOrder": "Show order"
+        "showOrder": "Show order",
+        "acceptProvider": "Accept provider",
+        "me": "Me"
     },
     "se": 
     {
@@ -193,6 +195,8 @@
         "youHaveNoOrders2":"Skapa en genom att klicka på handikonen i menyn",
         "market": "Marknad",
         "marketEmptyMsg": "Marknaden är för tillfället tom!",
-        "showOrder": "Visa beställning"
+        "showOrder": "Visa beställning",
+        "acceptProvider": "Acceptera leveratör",
+        "me": "Jag"
     } 
 }

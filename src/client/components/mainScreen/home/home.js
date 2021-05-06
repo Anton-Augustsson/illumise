@@ -15,6 +15,8 @@ import { Localization } from '../../../modules/localization';
 import OtherRequestScreen from './requests/OtherRequestScreen/otherRequest';
 import storage from '../../../modules/localStorage/localStorage';
 import MarketItem from '../market/marketItem';
+import { AppContext } from '../../AppContext';
+import useUser from '../../customComponents/useUser';
 
 
 
@@ -83,10 +85,28 @@ const renderItem = ({item}, nav) =>
 
 const FirstScreen = ({nav}) => {
 
+    const { getUser } = useContext(AppContext);
+    const [state, setState] = useState({user: {}});
+
+    useEffect(() => {
+        
+        const init = async () => {
+            try 
+            {
+                setState({user: await getUser()});
+            } 
+            catch(error) 
+            {
+                console.log(error);
+            }
+        }
+        init();
+    },[]);
+
     return (
         <View style={{flex:1}}>
             
-            <Text style={hs.welcome}>{Localization.getText("welcome") + " Jonas Teglund"}</Text>
+            <Text style={hs.welcome}>{`${Localization.getText("welcome")} ${state.user.firstName} ${state.user.lastName}`}</Text>
             <FlatList
                 data={DATA}
                 renderItem={(item) => renderItem(item, nav)}

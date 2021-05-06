@@ -4,6 +4,27 @@ const url = communication.url;
 const returnResponse = communication.returnResponse;
 
 /**
+ * @typedef Chat
+ * @property {String} _id
+ * @property {String} requestID
+ * @property {Number} dateCreated
+ * @property {MessageCollection} provider
+ * @property {MessageCollection} requester
+ */
+
+/**
+ * @typedef MessageCollection
+ * @property {String} _id
+ * @property {[ChatMessage]} messages
+ */
+
+/**
+ * @typedef ChatMessage
+ * @property {Number} time
+ * @property {String} text
+ */
+
+/**
  * Managing user chat both for service provider and service requester
  */
 const chat = 
@@ -31,14 +52,17 @@ const chat =
     },
 
     /**
-     * get all messages from a specific chat
-     * @param {string} userID - The id of the user that sends a message
-     * @param {string} chatID - The id of the chat witch is between the provider and requester
+     * Gets all chat data of the chat with the given id
+     * @async
+     * @param {String} requestID The id of the request
+     * @param {String} userID The id of the user
+     * @param {Boolean} isProvider If the user is a provider
+     * @returns {Promise<?Chat>} The chat
      */
-    getAllMessages: async function(chatID)
+    getChat: async function(requestID, userID, isProvider)
     {
-        let params = '?chatID=' + chatID;
-        let url = chat.chatUrl + '/getAllMessages' + params;
+        let params = `?requestID=${requestID}&userID=${userID}isProvider=${isProvider}`;
+        let url = chat.chatUrl + '/getChat' + params;
         let response = await fetch(url);
 
         return returnResponse(response);

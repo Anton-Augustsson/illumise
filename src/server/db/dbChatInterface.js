@@ -128,14 +128,20 @@ class DBChatInterface
     /**
      * Gets all chat data of the chat with the given id
      * @async
-     * @param {String} chatID The id of the chat
+     * @param {String} requestID The id of the request
+     * @param {String} userID The id of the user
+     * @param {Boolean} isProvider If the user is a provider
      * @returns {Promise<?Chat>} The chat
      */
-    async getChat(chatID)
+    async getChat(requestID, userID, isProvider)
     {
         try
         {
-            let filter = { _id: ObjectID(chatID) };
+            let filter = 
+            { 
+                requestID: ObjectID(requestID),
+                [`${isProvider ? "provider" : "requester" }._id`]: ObjectID(userID)
+            };
             let result = await this.#collection.findOne(filter);
             return result == null ? null : result;
         }

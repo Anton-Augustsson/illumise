@@ -1,21 +1,16 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { Text, View, FlatList, StyleSheet,TouchableOpacity} from 'react-native';
 import CustomHeader from '../../../customComponents/customHeader';
 import ms from "../../../mainStyles/ms";
 import SamaritButton from '../../../customComponents/samaritButton';
 import { Localization } from '../../../../modules/localization';
 
-const CHAT_ROOMS= [
-    {
-        "id":"1",
-    },
-]
 
 const ChatRoomItem = ({nav, item}) => {
     return (
         <TouchableOpacity 
             style={oas.chatRoomContainer}
-            onPress={()=>nav.nav.navigate("FirstScreen")}
+            onPress={()=>nav.navigate("OrderChat")}
         >
             <Text style={oas.chatRoomTitle}>Bengt vill ta din order</Text>
         </TouchableOpacity>
@@ -23,6 +18,25 @@ const ChatRoomItem = ({nav, item}) => {
 }
 
 const OrderApprovalScreen = ({navigation, route}) => {
+
+    const [state, setState] = useState(null);
+
+    useEffect(() => {
+        const init = async () => {
+            try 
+            {
+                setState(await getUser());
+
+                console.log(state.firstName);
+            } 
+            catch(error) 
+            {
+                console.log(error);
+            }
+        }
+        init();
+    },[]);
+
     return (
         <View style={{flex:1}}>
             <CustomHeader
@@ -61,13 +75,29 @@ const OrderApprovalScreen = ({navigation, route}) => {
 
 const oas = StyleSheet.create({
     chatRoomContainer: {
-        backgroundColor:"red",
+        backgroundColor: "white",
+        shadowColor:"#cccccc",
+        shadowOffset: {
+            width:2,
+            height:4,
+        },
+        shadowOpacity:0.8,
+        shadowRadius: 2,
+        elevation:5,
+        marginLeft:10,
+        marginRight:10,
+        marginTop:10,
+        marginBottom:10,
         flexDirection:"row",
         alignItems:"center",
-        padding:20,
+        paddingTop:20,
+        paddingBottom:20,
+        paddingLeft:25,
+        paddingRight:25,
+        borderRadius: 50,
     },
     chatRoomTitle: {
-
+        fontSize:15,
     }
 });
 

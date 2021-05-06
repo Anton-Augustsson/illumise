@@ -71,7 +71,7 @@ const request =
          * @param {string} providerID - The id of the providers set requests 
          * @param {int} num - The number of how many requests to return starting from most reasont
          */
-        getUserProviding: async function(providerID, num)
+        getUserProviding: async function(providerID, num = undefined)
         {
             let params = '?providerID=' + providerID + '&num=' + num;
             let url = request.serviceUrl + '/provider/getUserProviding' + params;
@@ -109,7 +109,7 @@ const request =
          * @param {string} userID - The user id of the users requests
          * @param {int} num - The number of how many requests to return starting from most resent
          */
-        getUserRequest: async function(userID, num) // num is the number of my requests starting from most recent //async  await
+        getUserRequest: async function(userID, num = undefined) // num is the number of my requests starting from most recent //async  await
         {
             let params = '?userID=' + userID + '&num=' + num;
             let url = request.serviceUrl + '/requester/getUserRequest' + params;

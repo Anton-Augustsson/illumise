@@ -11,6 +11,7 @@ import ReviewScreen from './components/mainScreen/orders/review/reviewScreen';
 import storage from "./modules/localStorage/localStorage";
 import {AppContext} from "./components/AppContext";
 import SplashScreen from "./components/customComponents/splashScreen";
+import account from './modules/client-communication/account';
 
 const Stack = createStackNavigator();
 
@@ -28,57 +29,79 @@ const App = () =>
                 case "signIn":
                 return {
                     ...prevState,
-                    signOut: false,
                     userID: action.id,
                 };
                 case "signOut":
                 return {
                     ...prevState,
-                    signOut: true,
                     userID: null,
                 };
             }
         },
         {
             loading: true,
-            signOut: false,
             userID: null,
         }
     );
 
     useEffect(() => {
-        const checkIfUserExists = async () => {
-            try {
+        const init = async () => {
+            try 
+            {
+                await storage.removeValue("userID");
                 const userID = await storage.getDataString("userID"); 
                 dispatch({type:"restoreID", id: userID});
-            } catch(err) {
-                console.log(err);
+            } 
+            catch(error) 
+            {
+                console.log(error);
             }
         }
-        checkIfUserExists();
+        init();
     },[]);
 
 
-    const appContext = React.useMemo(
-        () => ({
-            signIn: async (id) => {
-                try {
-                    await storage.storeDataString("userID", id);
-                    dispatch({ type: "signIn", id: id});
-                } catch (err) {
-                    console.log(err);
-                }
-            },
-            signOut: async () => {
-                try {
-                    await storage.removeValue("userID");
-                    dispatch({ type: "signOut" });
-                } catch (err) {
-                    console.log(err)
-                }
-            },
-        }),[]
-    );
+    const appContext = 
+    {
+        signIn: async (id) => 
+        {
+            try 
+            {
+                await storage.storeDataString("userID", id);
+                dispatch({ type: "signIn", id: id});
+            } 
+            catch (error) 
+            {
+                console.error(error);
+            }
+        },
+        signOut: async () => 
+        {
+            try 
+            {
+                await storage.removeValue("userID");
+                dispatch({ type: "signOut" });
+            } 
+            catch (error) 
+            {
+                console.error(error)
+            }
+        },
+        /** @returns {Promise<User>} User*/
+        getUser: async () => 
+        {
+            try 
+            {
+                let user = await account.getFromID(state.userID);
+                console.log("hej"+user);
+                return user;
+            } 
+            catch (error) 
+            {
+                console.error(error);
+            }
+        }
+    }
 
     return(
 
