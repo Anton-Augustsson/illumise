@@ -168,7 +168,7 @@ const FirstScreen = (nav) => {
             <FlatList
                 data={REQUESTS}
                 renderItem={({item})=><RequestItem nav={nav} item={item}/>}
-                keyExtractor={(item)=>item._id}
+                keyExtractor={(item)=>item.request._id}
                 onRefresh={()=>refresh()}
                 refreshing={isRefreshing}
                 ListEmptyComponent={()=>
