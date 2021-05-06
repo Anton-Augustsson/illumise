@@ -6,6 +6,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import Chat from '../../../customComponents/chat';
 import CustomButton from '../../../customComponents/customButton';
 import CustomHeader from '../../../customComponents/customHeader';
+import request from '../../../../modules/client-communication/request';
 
 export const OrderChatScreen = ({navigation}) => 
 {
@@ -38,7 +39,14 @@ export const OrderChatScreen = ({navigation}) =>
             />
             <View style={{flex:1}}>
                 <View style={ocs.topContainer}>
-                    <TouchableOpacity style={ocs.providerContainer}>
+                    <TouchableOpacity 
+                        onPress={async () => {
+                            //TODO add ids
+                            await request.requester.acceptProvider();
+                            navigation.navigate("");
+                        }}
+                        style={ocs.providerContainer}
+                    >
                         <Text>FintNamn</Text>
                         <View style={ocs.providerStarsContainer}>
                             {
