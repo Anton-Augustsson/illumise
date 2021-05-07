@@ -51,43 +51,35 @@ Lista med saker
 
 const Header = ({req}) => {
     return (
-        <>
-            <View style={mis.padding}>
-                {
-                    req.header === "other" &&
-                    <Text style={ms.h2}>{req.body.title}</Text>
-                }
-            </View>
-            
-            <View style={mis.padding}>
+        <View style={mis.padding}>
+            {req.header === "other" &&
+                <Text style={ms.h2}>{req.body.title}</Text>
+            }
         
-                <Text style={ms.h4}>{Localization.getText("destinations")}</Text>
-                {
-                    req.body.stops.map((place, index) => (
-                        <Text key={index} style={mis.mapText}>{index+1 + ". " + place.adress}</Text>
-                    ))
-                }
-                    {req.header === "shopping" || req.header === "food" ? 
-                    <Text style={ms.h3}>{Localization.getText("shoppingList")}</Text>
-                    :
-                    <>
-                        <Text style={ms.h3}>{Localization.getText("otherInfo")}</Text>
-                        <Text style={mis.otherInfo}>{req.body.info}</Text>
-                    </>
-                }
-            </View>
-            
-        </>
+            <Text style={ms.h4}>{Localization.getText("destinations")}</Text>
+            {
+                req.body.stops.map((place, index) => (
+                    <Text key={index} style={mis.mapText}>{index+1 + ". " + place.adress}</Text>
+                ))
+            }
+                {req.header === "shopping" || req.header === "food" ? 
+                <Text style={ms.h3}>{Localization.getText("shoppingList")}</Text>
+                :
+                <>
+                    <Text style={ms.h3}>{Localization.getText("otherInfo")}</Text>
+                    <Text style={mis.otherInfo}>{req.body.info}</Text>
+                </>
+            }
+        </View>
     );
 }
 
 
 
-const BottomSheetContent = (req) => (
+const BottomSheetContent = ({req}) => (
     <>
         {req.header === "shopping" || req.header === "food" ?
             <FlatList 
-                style={mis.content}
                 data={req.body.shoppingList}
                 renderItem={({item})=><ShoppingItem item={item}/>}
                 ListHeaderComponent={()=><Header req={req}/>}
@@ -144,7 +136,7 @@ const DoneLoading = ({navigation, creator, req, getState}) => {
                 ref={sheetRef}
                 snapPoints={["70%", "20%", 40]}
                 overlay={false}
-                renderContent={BottomSheetContent(req)}
+                renderContent={<BottomSheetContent req={req}/>}
             />
 
             <CustomHeader 
@@ -220,11 +212,6 @@ const MarketItem = ({navigation, route}) => {
 }
 
 const mis = StyleSheet.create({
-    content: {
-        flex:1,
-        paddingTop: 50,
-        paddingBottom: 20
-    },
     shoppingItemContainer: {
     },
     map:{

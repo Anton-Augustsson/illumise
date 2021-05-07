@@ -38,7 +38,7 @@ const MyBottomSheet = forwardRef(({renderContent, snapPoints,
                     activeOpacity={0.7}
                     style={[styles.overlayInner, {display: overlayState ? "flex" : "none"}]}
                     onPress={()=>{
-                    setOverlay(false);
+                    setOverlayState(false);
                     ref.current.snapTo(1);
                     }}
                 />

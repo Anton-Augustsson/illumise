@@ -63,7 +63,7 @@ const FirstScreen = (nav) => {
     });
 
     const refresh = async () => {
-        
+
         setState({...state, isRefreshing:true});
 
         try 

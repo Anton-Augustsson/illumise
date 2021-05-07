@@ -31,7 +31,7 @@ const RequestIcon = (props) => {
             icon = MaterialIcons;
             break;
         default:
-            name = "unkownfile1";
+            name = "unknowfile1";
             icon = AntDesign;
             break;
     }
