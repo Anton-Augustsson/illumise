@@ -282,7 +282,7 @@ describe("Testing client communication", () =>
         let requestID = await createDummyRequest(userID);
         let chatID = await chat.newChat(requestID, [userID, userID2]);
         expect(chatID).not.toBeNull();
-        let response = await chat.sendMessage(chatID, userID, "hello im here");
+        let response = await chat.sendMessage(chatID, "hello im here", true);
         expect(response).not.toBeNull();
         let responseR = await chat.removeChat(chatID);
         expect(responseR).not.toBeNull();
@@ -313,9 +313,9 @@ describe("Testing client communication", () =>
         let requestID = await createDummyRequest(userID);
         let chatID = await chat.newChat(requestID, [userID, userID2]);
         expect(chatID).not.toBeNull();
-        let responseS = await chat.sendMessage(chatID, userID, "hello im here");
+        let responseS = await chat.sendMessage(chatID, "hello im here", true);
         expect(responseR).not.toBeNull();
-        let response = await chat.getAllMessages(chatID);
+        let response = await chat.getChat(chatID);
         expect(response).not.toBeNull();
         let responseR = await chat.removeChat(chatID);
         expect(responseS).not.toBeNull();
@@ -328,7 +328,7 @@ describe("Testing client communication", () =>
         expect(responseRA2).not.toBeNull();
 
         // invalid request
-        let responseError = await chat.getAllMessages('userid is notvalid', 'not a chat id');
+        let responseError = await chat.getChat('userid is notvalid', 'not a chat id');
         expect(responseError).toBeNull();
     });
 

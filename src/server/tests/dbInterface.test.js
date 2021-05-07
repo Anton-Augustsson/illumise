@@ -153,7 +153,7 @@ describe("Testing dbInterface", () =>
         let user1ID   = await db.accounts.add("A10", "A10", "A10@mail", "+46123456789", "*");
         let user2ID   = await db.accounts.add("A11", "A11", "A11@mail", "+46123456789", "*");
         let requestID = await db.requests.add(user1ID, "T8", "this is a test");
-        let chatID    = await db.chat.add(requestID, [user1ID, user2ID]);
+        let chatID    = await db.chat.add(requestID, user1ID, user2ID);
         expect(chatID).not.toBe(null);
         // Remove
         let result    = await db.chat.remove(chatID);
@@ -167,66 +167,18 @@ describe("Testing dbInterface", () =>
         let user1ID   = await db.accounts.add("A12", "A12", "A12@mail", "+46123456789", "*");
         let user2ID   = await db.accounts.add("A13", "A13", "A13@mail", "+46123456789", "*");
         let requestID = await db.requests.add(user1ID, "T9", "this is a test");
-        let chatID    = await db.chat.add(requestID, [user1ID, user2ID]);
+        let chatID    = await db.chat.add(requestID, user1ID, user2ID);
         
         let message   = "msg1";
-        let result    = await db.chat.addMessage(chatID, user1ID, message);
+        let result    = await db.chat.addMessage(chatID, message, true);
         expect(result).toBe(true);
 
-        let messages  = await db.chat.getMessages(chatID);
-        expect(messages[user1ID].length).toBe(1);
-        expect(messages[user2ID].length).toBe(0);
-        expect(messages[user1ID][0].message).toBe(message);
-    });
-
-    it("Get messages After", async () => 
-    {
-        if (!connected) fail();
-
-        let user1ID   = await db.accounts.add("A14", "A14", "A14@mail", "+46123456789", "*");
-        let user2ID   = await db.accounts.add("A15", "A15", "A15@mail", "+46123456789", "*");
-        let requestID = await db.requests.add(user1ID, "T10", "this is a test");
-        let chatID    = await db.chat.add(requestID, [user1ID, user2ID]);
-        let time1 = Date.now();
-        let message = "msg2";
-        await db.chat.addMessage(chatID, user1ID, message);
-        
-        let result1 = await db.chat.getMessagesAfter(chatID, time1);
-        expect(result1[user1ID].length).toBe(1);
-        expect(result1[user2ID].length).toBe(0);
-        expect(result1[user1ID][0].message).toBe(message);
-
-        let result2 = await db.chat.getMessagesAfter(chatID, Date.now());
-        expect(result2[user1ID].length).toBe(0);
-    });
-    
-    it("Get user messages from specific chat", async () => 
-    {
-        if (!connected) fail();
-
-        // Add
-        let user1ID   = await db.accounts.add("A16", "A16", "A16@mail", "+46123456789", "*");
-        let user2ID   = await db.accounts.add("A17", "A17", "A17@mail", "+46123456789", "*");
-        let requestID = await db.requests.add(user1ID, "T11", "this is a test");
-        let chatID    = await db.chat.add(requestID, [user1ID, user2ID]);
-        
-        // Add messages to the chat
-        let result = await db.chat.addMessage(chatID, user1ID, "msg1");
-        expect(result).toBe(true);
-        result = await db.chat.addMessage(chatID, user2ID, "response1");
-        expect(result).toBe(true)
-        result = await db.chat.addMessage(chatID, user1ID, "msg2");
-        expect(result).toBe(true)
-        result = await db.chat.addMessage(chatID, user2ID, "response2");
-        expect(result).toBe(true)
-        result = await db.chat.addMessage(chatID, user1ID, "msg3");
-        expect(result).toBe(true);
-
-        let messages = await db.chat.getMessagesFrom(chatID, user1ID);
-        expect(messages).toHaveLength(3);
-
-        messages = await db.chat.getMessagesFrom(chatID, user2ID);
-        expect(messages).toHaveLength(2);
+        let chat = await db.chat.getChat(chatID);
+        expect(chat._id).toStrictEqual(chatID);
+        expect(chat.provider._id).toStrictEqual(user2ID);
+        expect(chat.requester._id).toStrictEqual(user1ID);
+        expect(chat.provider.messages.length).toBe(1);
+        expect(chat.requester.messages.length).toBe(0);
     });
 
     it("Get nearby requests", async () => 

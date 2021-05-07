@@ -20,8 +20,8 @@ router.put('/sendMessage', async (req, res) => // post?
 {
   const schema = Joi.object({
     chatID: Joi.string().min(idSize).max(idSize),
-    userID: Joi.string().min(idSize).max(idSize),
-    msg: Joi.string()
+    msg: Joi.string(),
+    isProvider: Joi.boolean()
   });
 
   let b = req.body;
@@ -29,7 +29,7 @@ router.put('/sendMessage', async (req, res) => // post?
   if(valid(b, schema, res))
   {
     // null
-    let response = await db.chat.addMessage(b.chatID, b.userID, b.msg);
+    let response = await db.chat.addMessage(b.chatID, b.msg, b.isProvider);
     if(response != false) return sendSuccess(res, response);
     else return sendFailure(res);
   }
@@ -40,15 +40,17 @@ router.put('/sendMessage', async (req, res) => // post?
  * @param {string} userID - The id of the user that sends a message
  * @param {string} chatID - The id of the chat witch is between the provider and requester
  */
-router.get('/getAllMessages', async (req, res) =>
+router.get('/getChat', async (req, res) =>
 {
   const params = {
-    chatID: req.param('chatID')
+    requestID: req.param('requestID'),
+    userID: req.param('userID'),
+    isProvider: req.param('isProvider'))
   };
 
   if(validParams(params, res))
   {
-    let response = await db.chat.getMessages(params.chatID);
+    let response = await db.chat.getChat(params.requestID, params.userID, params.isProvider);
     if(response != null) return sendSuccess(res, response);
     else return sendFailure(res);
   }
@@ -70,7 +72,7 @@ router.put('/newChat', async (req, res) => // POST?
 
   if(valid(b, schema, res))
   {
-    let response = await db.chat.add(b.requestID, b.usersID);
+    let response = await db.chat.add(b.requestID, b.usersID[0], b.usersID[1]);
     if(response != null) return sendSuccess(res, response);
     else return sendFailure(res);
   }

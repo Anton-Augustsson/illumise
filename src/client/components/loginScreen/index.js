@@ -16,6 +16,7 @@ import {AppContext} from "../AppContext";
 
 const verifyUser = async (signIn, token, type, setLoggingIn) =>
 {
+    setLoggingIn(true);
     try {
         var userInfo = await fetch(type === 'facebook' 
                     ? 'https://graph.facebook.com/v2.5/me?fields=email,name,first_name,last_name,picture,friends&access_token=' + token
@@ -45,24 +46,24 @@ const verifyUser = async (signIn, token, type, setLoggingIn) =>
         await account.createAccount(credentials);
         const data = await account.get(credentials.email, credentials.token);
         signIn(data._id);
-    } catch(err) {
+    } 
+    catch(err) 
+    {
         setLoggingIn(false);
     }
 }
 
 const LoginScreen = (navigation) => 
 {
-    const { signIn} = useContext(AppContext); 
-    //web-client secret key
-    //i7HPvxf7F1MohxIdHcZaZmI0
+    const { signIn } = useContext(AppContext);
     const [loggingIn, setLoggingIn] = useState(false);
 
 
     const [request, response, promptAsync] = Google.useAuthRequest({
-        expoClientId: '798387138999-f1872j6fqbi2dlcl6mg0rvuscface4ed.apps.googleusercontent.com',
-        iosClientId: 'GOOGLE_GUID.apps.googleusercontent.com',
+        expoClientId:    '798387138999-f1872j6fqbi2dlcl6mg0rvuscface4ed.apps.googleusercontent.com',
+        iosClientId:     'GOOGLE_GUID.apps.googleusercontent.com',
         androidClientId: 'GOOGLE_GUID.apps.googleusercontent.com',
-        webClientId: '798387138999-jfpq5oc79qol6puinlfo3uckk5dlf6fa.apps.googleusercontent.com'
+        webClientId:     '798387138999-jfpq5oc79qol6puinlfo3uckk5dlf6fa.apps.googleusercontent.com'
     });
 
 
@@ -73,10 +74,8 @@ const LoginScreen = (navigation) =>
         }
     }, [response])
 
-
     const [requestFB, responseFB, promptAsyncFB] = Facebook.useAuthRequest({
         clientId: '284019753226391'
-        //responseType: ResponseType.Code, 
     });
 
     useEffect(() => {
@@ -85,26 +84,6 @@ const LoginScreen = (navigation) =>
             verifyUser(signIn, responseFB.authentication.accessToken, 'facebook');
         }
     }, [responseFB]);
-
-
-    const login = (type) => {
-        try {
-            setLoggingIn(true);
-            switch(type) {
-                case "facebook":
-                    promptAsyncFB() 
-                    break;
-                case "google":
-                    promptAsync() 
-                    break;
-
-            }
-        } catch(err) {
-            console.log(err)
-        }
-    }
-
-    //navigation.navigate("Main", {type:"google",user:{id:"",email:"marholdtv@gmail.com",verified_email:true,name:"Marhold Marhold",given_name:"Bengt",family_name:"Olsson",picture:"https://lh3.googleusercontent.com/-ggukNDG0VX8/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucnZ9CX2t6F0LbHJ31docWtx8Eaj3A/s96-c/photo.jpg",locale:"sv"}}
 
     return (
         <View style={styles.loginContainer}>
@@ -119,12 +98,12 @@ const LoginScreen = (navigation) =>
                 </View>
 
                 <GoogleButton
-                    onPress= {()=>login("google")}
+                    onPress= {()=>promptAsync()}
                     disabled={!request}
                 />
 
                 <FacebookButton
-                    onPress={()=>login("facebook")}
+                    onPress={()=>promptAsyncFB()}
                     disabled={!requestFB}
                 />
 

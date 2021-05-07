@@ -4,6 +4,17 @@ const url = communication.url;
 const returnResponse = communication.returnResponse;
 
 /**
+ * @typedef User
+ * @property {String} _id
+ * @property {String} firstName
+ * @property {String} lastName
+ * @property {String} email
+ * @property {String} password
+ * @property {String} phone
+ * @property {number} dateCreated
+ */
+
+/**
  * Managing user account both for service provider and service requester
  */
 const account =
@@ -79,6 +90,21 @@ const account =
     {
         let params = '?email=' + email + '&password=' + password;
         let url = account.accountUrl + '/get' + params;
+        let response = await fetch(url);
+
+        return returnResponse(response);
+    },
+
+    /**
+     * Gets the user with the given id
+     * @async
+     * @param {String} userID The email of the user
+     * @returns {?User} The id of the user
+     */
+    getFromID: async function(userID)
+    {
+        let params = '?userID=' + userID;
+        let url = account.accountUrl + '/getFromID' + params;
         let response = await fetch(url);
 
         return returnResponse(response);
