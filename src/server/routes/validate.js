@@ -53,12 +53,13 @@ const validate =
         let validLastName = c.lastName != undefined;
         let validEmail = c.email != undefined;
         let validToken = c.token != undefined;
+        let validPicture = c.picture != undefined;
 
-        if(validFirstName && validLastName && validEmail && validToken){
+        if(validFirstName && validLastName && validEmail && validToken && validPicture){
             return true;
         }
 
-        res.status(404).send("invalid credentials, should be: firtsName, lastName, email, token ");
+        res.status(404).send("invalid credentials, should be: firtsName, lastName, email, token, picture ");
         return false;
     },
 

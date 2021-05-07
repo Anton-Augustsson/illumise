@@ -11,13 +11,8 @@ import {Localization} from '../../../modules/localization'
 import * as Location from 'expo-location';
 import request from '../../../modules/client-communication/request';
 import RequestIcon from "../../customComponents/requestIcon";
-<<<<<<< HEAD
 import { AppContext } from '../../AppContext';
-=======
-import { getDistance } from 'geolib'
-import CustomMap from '../../customComponents/customMap';
-
->>>>>>> 097e2a9d4a323eee4aaef25d382ba57f05453615
+import {getDistance} from "geolib";
 /*
     { latitude: 51.5103, longitude: 7.49347 },
     
@@ -71,9 +66,9 @@ const FilterView = () => {
 
 
 
-const RequestItem = ({nav, item}) => {
+const RequestItem = ({nav, item, pointStart}) => {
     var text = ''
-    switch (item.request.body.type) {
+    switch (item.body.type) {
         case 'food':
             text = Localization.getText("foodPrompt")
             break;
@@ -90,8 +85,9 @@ const RequestItem = ({nav, item}) => {
     }
 
     //{ latitude: 51.5103, longitude: 7.49347 },
-    const start = {latitude: item.loc.coordinates[1], longitude: item.loc.coordinates[0]};
-    const stop = {latitude: item.request.body.stops[0].location.lat, longitude: item.request.body.stops[0].location.lng};
+    console.log(pointStart);
+    const start = {latitude: pointStart.coordinates[1], longitude: pointStart.coordinates[0]};
+    const stop = {latitude: item.body.stops[0].location.lat, longitude: item.body.stops[0].location.lng};
     const dist = getDistance(start, stop);
     const distKM = Math.round(dist/1000);
 
@@ -100,11 +96,11 @@ const RequestItem = ({nav, item}) => {
             onPress={()=>nav.nav.navigate("MarketItem", item)}
             style={mms.itemContainer}
         >
-            <RequestIcon type={item.header} size={30} color="black"/>
+            <RequestIcon type={item.body.type} size={30} color="black"/>
             <Text style={mms.itemText}>{text}</Text>
             <View style={mms.rightRequestContainer}>
                 <View style={mms.priceContainer}>
-                    <Text style={mms.price} numberOfLines={1}>{item.request.cost}</Text>
+                    <Text style={mms.price} numberOfLines={1}>{item.cost}</Text>
                     <Text style={mms.priceCurrency}>kr</Text>
                 </View>
                 <Text style={mms.distance}>{distKM} km</Text>
@@ -126,6 +122,7 @@ const FirstScreen = (nav) => {
     const {getState} = useContext(AppContext)
     const [REQUESTS, setRequests] = useState(null);
     const [isRefreshing, setIsRefresing] = useState(false);
+    const [pointStart, setPointStart] = useState([]);
 
     const getNearRequests = async () => 
     {
@@ -139,6 +136,7 @@ const FirstScreen = (nav) => {
                 let geo = await Location.getCurrentPositionAsync();
 
                 let pointStart = coordsToGeoJSON([geo.coords.longitude, geo.coords.latitude]);
+                setPointStart(pointStart);
 
                 result = await request.provider.getNearRequests(pointStart, 1000000, 10);
             }
@@ -153,16 +151,16 @@ const FirstScreen = (nav) => {
         }
         finally
         {
-            setIsRefresing(false);
             return result.filter(result => result != null && result.creatorID !== getState().userID);
         }
     }
 
     const refresh = () => {
         setIsRefresing(true);
-        getLocation().then(data => {
+        getNearRequests().then(data => {
             setRequests(data);
         }); 
+        setIsRefresing(false);
     }
 
     useEffect(() => {
@@ -179,8 +177,8 @@ const FirstScreen = (nav) => {
             
             <FlatList
                 data={REQUESTS}
-                renderItem={({item})=><RequestItem nav={nav} item={item}/>}
-                keyExtractor={(item)=>item.request._id}
+                renderItem={({item})=><RequestItem pointStart={pointStart} nav={nav} item={item}/>}
+                keyExtractor={(item)=>item._id}
                 onRefresh={()=>refresh()}
                 refreshing={isRefreshing}
                 ListEmptyComponent={()=>

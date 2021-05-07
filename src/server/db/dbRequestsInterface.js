@@ -92,6 +92,27 @@ class DBRequestsInterface
     }
 
     /**
+     * Gets the request with the given id
+     * @async
+     * @param {String} requestID The id of the request
+     * @returns {Promise<?Request>} The requests BSON objects in a list or null
+     */
+    async get(requestID)
+    {
+        try
+        {
+            let filter = { _id: ObjectID(requestID) };
+            let result = await this.#collection.findOne(filter);
+            return result;
+        }
+        catch (_)
+        {
+            //console.error(error);
+            return null;
+        }
+    }
+
+    /**
      * Gets requests created by a user
      * @async
      * @param {String} userID The id of the user

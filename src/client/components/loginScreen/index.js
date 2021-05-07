@@ -30,6 +30,7 @@ const verifyUser = async (signIn, token, type, setLoggingIn) =>
                 "lastName":body.family_name,
                 "email":body.email,
                 "token":"g"+body.id, 
+                "picture":body.picture
             };   
 
         if(type === "facebook") {
@@ -38,9 +39,11 @@ const verifyUser = async (signIn, token, type, setLoggingIn) =>
                     "firstName":body.first_name,
                     "lastName":body.last_name,
                     "email":body.email,
-                    "token":"f"+body.id 
+                    "token":"f"+body.id,
+                    "picture": body.picture
                 };    
         }
+        console.log(body);
         
 
         await account.createAccount(credentials);

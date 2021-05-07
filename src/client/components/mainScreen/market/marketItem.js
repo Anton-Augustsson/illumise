@@ -50,60 +50,29 @@ Lista med saker
 */
 
 const Header = ({req}) => {
-    var request;
-    if(req.request == null){
-        request = req;
-    }else {
-        request = req.request;
-    }
     return (
         <>
             <View style={mis.padding}>
                 {
-                    request.header === "other" &&
-                    <Text style={ms.h2}>{request.body.title}</Text>
+                    req.header === "other" &&
+                    <Text style={ms.h2}>{req.body.title}</Text>
                 }
             </View>
             
-<<<<<<< HEAD
-=======
-            <CustomMap
-                style={mis.map}
-                onMount={(region) => 
-                {
-                    /** @type {[*]} */
-                    let stops = request.body.stops;
-                    if(stops === null) 
-                    {
-                        return [];
-                    }    
-                    return stops.map((stop, index) => 
-                    {
-                        return {
-                            latitude:    stop.location.lat,
-                            longitude:   stop.location.lng,
-                            title:       "Stopp " + (parseInt(index)+1),
-                            description: stop.location.adress,
-                            key:         (parseInt(index)+1)
-                        };
-                    });
-                }}
-            />
->>>>>>> 097e2a9d4a323eee4aaef25d382ba57f05453615
             <View style={mis.padding}>
         
                 <Text style={ms.h4}>{Localization.getText("destinations")}</Text>
                 {
-                    request.body.stops.map((place, index) => (
+                    req.body.stops.map((place, index) => (
                         <Text key={index} style={mis.mapText}>{index+1 + ". " + place.adress}</Text>
                     ))
                 }
-                    {request.header === "shopping" || request.header === "food" ? 
+                    {req.header === "shopping" || req.header === "food" ? 
                     <Text style={ms.h3}>{Localization.getText("shoppingList")}</Text>
                     :
                     <>
                         <Text style={ms.h3}>{Localization.getText("otherInfo")}</Text>
-                        <Text style={mis.otherInfo}>{request.body.info}</Text>
+                        <Text style={mis.otherInfo}>{req.body.info}</Text>
                     </>
                 }
             </View>
@@ -157,8 +126,7 @@ const DoneLoading = ({navigation, creator, req, getState}) => {
     const claim = async (navigation, req) => {
         try 
         {
-            const id = await storage.getDataString("userID");
-            await request.provider.set(req._id, id);
+            await request.provider.set(req._id, getState().user._id);
         } 
         catch(error) 
         {
@@ -225,9 +193,10 @@ const MarketItem = ({navigation, route}) => {
     const { getState } = useContext(AppContext);
     const [loading, setLoading] = useState(true);
     const [req, setReq] = useState(null);
-    const [creator] = useState(route.params.requestId === getState().user._id);
+    const [creator, setCreator] = useState(false);
 
     useEffect(() => {
+
         const retrieveRequest = async () => {
             if(route.params.requestId === undefined) {
                 setReq(route.params);
@@ -236,8 +205,8 @@ const MarketItem = ({navigation, route}) => {
             } 
             await timeout(1000);
             var req2 = await request.requester.getUserRequest(getState().user._id);
-            console.log("Req2: " + req2 + ", ID: " + getState().user._id);
             setReq(req2[req2.length-1]);
+            setCreator(getState()._id === route.params.requestId);
             setLoading(false);
         }
         retrieveRequest();

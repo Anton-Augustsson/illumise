@@ -47,9 +47,10 @@ class DBAccountsInterface
      * @param {String} email The email of the user
      * @param {String} phone The phone number of the user
      * @param {String} password The password of the user
+     * @param {String} picture The picture of the user
      * @returns {Promise<ObjectID|null>} The id of the created account or null 
      */
-    async add(firstName, lastName, email, phone, password)
+    async add(firstName, lastName, email, phone, password, picture)
     {
         try
         {
@@ -63,6 +64,7 @@ class DBAccountsInterface
                     email: email,
                     phone: phone,
                     password: password,
+                    picture: picture,
                     dateCreated: Date.now()
                 } 
             };
@@ -86,10 +88,11 @@ class DBAccountsInterface
      * @param {String} email The new email
      * @param {String} phone The phone number of the user
      * @param {String} password The new password
+     * @param {String} picture The new picture 
      * @returns {Promise<Boolean>} If the operation was successful
      */
     async update(userID, firstName = undefined, lastName = undefined, 
-                 email = undefined, phone = undefined, password = undefined)
+                 email = undefined, phone = undefined, password = undefined, picture = undefined)
     {
         try
         {
@@ -100,6 +103,7 @@ class DBAccountsInterface
             if (email     !== undefined) newValues.$set.email     = email;
             if (phone     !== undefined) newValues.$set.phone     = phone;
             if (password  !== undefined) newValues.$set.password  = password;
+            if (picture   !== undefined) newValues.$set.picture = picture ;
             
             let result = await this.#collection.updateOne(filter, newValues);
             return result.result.ok == 1 && result.result.nModified == 1;

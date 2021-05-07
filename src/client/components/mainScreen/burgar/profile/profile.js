@@ -1,24 +1,23 @@
 import { AppContext } from '../../../AppContext';
 import CustomButton from '../../../customComponents/customButton';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { View, StyleSheet, Image, Text, ScrollView} from 'react-native';
 import { Localization } from '../../../../modules/localization';
 import CustomHeader from '../../../customComponents/customHeader';
 import ms from '../../../mainStyles/ms';
 import FloatingInput from '../../../customComponents/Inputs/floatingInput';
-import { useState } from 'react/cjs/react.development';
 import account from '../../../../modules/client-communication/account';
 import storage from '../../../../modules/localStorage/localStorage';
 import colors from '../../../../components/mainStyles/colors'
 
 
-const ProfilePicture = (props) => 
+const ProfilePicture = ({getState}) => 
 {
     return (
         <View style={bs.profileContainer}>
             <Image
                 style={bs.profileImg}
-                source={require("../../../../assets/steffe.jpg")}
+                source={{uri: getState().user.picture}}
             />
         </View>
     );
@@ -39,7 +38,7 @@ const updateProfile = async (firstName, lastName, email) =>{
 
 const ProfileScreen = ({navigation}) => 
 {
-    const { signOut } = useContext(AppContext); 
+    const { getState, signOut } = useContext(AppContext); 
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
@@ -53,9 +52,7 @@ const ProfileScreen = ({navigation}) =>
         
         <ScrollView style={{flex:1}}>
             
-
-            
-            <ProfilePicture/>
+            <ProfilePicture getState={getState}/>
 
             <Text style={bs.profileName}>Steffe</Text>
             <Text style={bs.profileMail}>steffson@gmail.com</Text>

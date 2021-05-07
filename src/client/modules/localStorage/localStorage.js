@@ -4,9 +4,9 @@ const storage =
 {
 
     /**
-     * create new account
-     * @param {json} credentials - A object of the users credentials.
-     * @param {json} credentials - A object of the users credentials.
+     * Store a string in local storage
+     * @param {String} key - The key to get the data back
+     * @param {String} value - The value to store
      */
     storeDataString: async (key,value) => {
         try {
@@ -17,9 +17,11 @@ const storage =
         }
     },
 
+    
     /**
-     * create new account
-     * @param {json} credentials - A object of the users credentials.
+     * Store a object in local storage
+     * @param {String} key - The key to get the data back
+     * @param {json} value - The object to store
      */
     storeDataObject: async (key, value) => {
         try {
@@ -31,9 +33,11 @@ const storage =
         }
     },
 
+    
     /**
-     * create new account
-     * @param {json} credentials - A object of the users credentials.
+     * Get string from local storage 
+     * @param {String} key - The key to get the data 
+     * @returns {Promise<?String>} The data that is stored 
      */
     getDataString: async (key) => {
         try {
@@ -47,8 +51,9 @@ const storage =
     },
   
     /**
-     * create new account
-     * @param {json} credentials - A object of the users credentials.
+     * Get object from local storage 
+     * @param {String} key - The key to get the data 
+     * @returns {Promise<?json>} The data that is stored 
      */
     getDataObject: async (key) => {
         try {
@@ -61,8 +66,8 @@ const storage =
     },
   
     /**
-     * create new account
-     * @param {json} credentials - A object of the users credentials.
+     * Remove data from local storage 
+     * @param {String} key - The key to remove the data 
      */
     removeValue: async (key) => {
         try {

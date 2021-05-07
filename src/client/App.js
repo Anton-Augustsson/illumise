@@ -20,7 +20,7 @@ const App = () =>
     const [state, dispatch] = useReducer(
         (prevState, action) => {
         switch (action.type) {
-                case "restoreID":
+                case "restoreUser":
                 return {
                     ...prevState,
                     user: action.user,
@@ -54,7 +54,7 @@ const App = () =>
                 const user = await account.getFromID(userID);
                 if (user !== null)
                 {
-                    dispatch({type: "restoreID", user: user});
+                    dispatch({type: "restoreUser", user: user});
                 }
                 else
                 {
@@ -97,7 +97,8 @@ const App = () =>
                 console.error(error)
             }
         },
-        getState: () => state
+        getState: () => state,
+        setState: (user) => dispatch({type:"restoreUser", user: user})
     }
 
     return(
@@ -119,7 +120,8 @@ const App = () =>
                             {state.user === null ?
                                 <Stack.Screen 
                                     name = "Login" 
-                                    component={LoginScreen}                            />
+                                    component={LoginScreen}                            
+                                />
                                 :
                                 <Stack.Screen 
                                     name="Main" 

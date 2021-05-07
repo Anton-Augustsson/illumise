@@ -81,6 +81,25 @@ const request =
         },
 
         /**
+         * Gets the request with the given id
+         * @param {string} requestID - The id of the request to find
+         * @returns {Promise<?Request>}
+         */
+        get: async function(requestID)
+        {   
+            let body = { requestID: requestID };
+            let url = request.serviceUrl + '/provider/get';
+            let response = await fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8'
+                },
+                body: JSON.stringify(body)
+            });
+            return returnResponse(response);
+        },
+
+        /**
          * Get requests that the provider has set
          * @param {string} providerID - The id of the providers set requests 
          * @param {int} num - The number of how many requests to return starting from most reasont

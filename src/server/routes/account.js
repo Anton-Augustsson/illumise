@@ -26,7 +26,7 @@ router.put('/createAccount', async (req, res) =>
 
   if(valid(req.body, schema, res) && validCredentials(c, res))
   {
-    let response = await db.accounts.add(c.firstName, c.lastName, c.email, "119", c.token);
+    let response = await db.accounts.add(c.firstName, c.lastName, c.email, "119", c.token, c.picture);
     if(response != null) return sendSuccess(res, response);
     else return sendFailure(res);
   }
@@ -66,7 +66,7 @@ router.post('/changeCredentials', async (req, res) =>
 
   if(valid(req.body, schema, res), validCredentials(c, res))
   {
-    let response = await db.accounts.update(req.body.userID, c.firstName, c.lastName, c.email, "119", c.token);
+    let response = await db.accounts.update(req.body.userID, c.firstName, c.lastName, c.email, "119", c.token, c.picture);
     if(response != false) return sendSuccess(res);
     else return sendFailure(res);
   }
