@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback} from 'react';
+import React, { useState, useEffect, useContext} from 'react';
 import { Text, View, ScrollView, FlatList, StyleSheet,TouchableOpacity} from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -11,6 +11,7 @@ import {Localization} from '../../../modules/localization'
 import * as Location from 'expo-location';
 import request from '../../../modules/client-communication/request';
 import RequestIcon from "../../customComponents/requestIcon";
+import { AppContext } from '../../AppContext';
 /*
 const REQUESTS = [
     {
@@ -163,37 +164,50 @@ const RequestItem = ({nav, item}) => {
  * @param {[Number]} coordinates [longitude, latitude] coordinates of a point
  * @returns {{*}} representation of a point with coordinates
  */
- function coordsToGeoJSON(coordinates)
- {
-     return { "type": "Point", "coordinates": coordinates };
- }
+function coordsToGeoJSON(coordinates)
+{
+    return { "type": "Point", "coordinates": coordinates };
+}
 
 const FirstScreen = (nav) => {
-    const [location, setLocation] = useState(null);
-    const [errorMsg, setErrorMsg] = useState(null);
+    const {getState} = useContext(AppContext)
     const [REQUESTS, setRequests] = useState(null);
     const [isRefreshing, setIsRefresing] = useState(false);
 
-    const getLocation = async () => {
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
-        setErrorMsg('Denied acces to location');
-        return;
+    const getNearRequests = async () => 
+    {
+        /** @type {[Request]} */
+        let result = [];
+        try 
+        {
+            let response = await Location.requestForegroundPermissionsAsync();
+            if (response.granted) 
+            {
+                let geo = await Location.getCurrentPositionAsync();
+
+                let pointStart = coordsToGeoJSON([geo.coords.longitude, geo.coords.latitude]);
+
+                result = await request.provider.getNearRequests(pointStart, 1000000, 10);
+            }
+            else
+            {
+                setErrorMsg('Denied acces to location');
+            }
+        } 
+        catch (error) 
+        {
+            console.warn(error);
         }
-        let geo = await Location.getCurrentPositionAsync({});
-        setLocation(geo);
-
-        let pointStart = coordsToGeoJSON([geo.coords.longitude, geo.coords.latitude]);
-
-
-        const res = await request.provider.getNearRequests(pointStart, 1000000, 10);
-        setIsRefresing(false);
-        return res;
+        finally
+        {
+            setIsRefresing(false);
+            return result.filter(result => result != null && result.creatorID !== getState().userID);
+        }
     }
 
     const refresh = () => {
         setIsRefresing(true);
-        getLocation().then(data => {
+        getNearRequests().then(data => {
             setRequests(data.filter(obj => obj != null));
         }); 
     }

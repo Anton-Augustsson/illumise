@@ -45,7 +45,7 @@ router.get('/getChat', async (req, res) =>
   const params = {
     requestID: req.param('requestID'),
     userID: req.param('userID'),
-    isProvider: req.param('isProvider'))
+    isProvider: req.param('isProvider')
   };
 
   if(validParams(params, res))

@@ -99,7 +99,7 @@ const account =
      * Gets the user with the given id
      * @async
      * @param {String} userID The email of the user
-     * @returns {?User} The id of the user
+     * @returns {Promise<?User>} The id of the user
      */
     getFromID: async function(userID)
     {

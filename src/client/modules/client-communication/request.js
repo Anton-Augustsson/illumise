@@ -4,6 +4,19 @@ const url = communication.url;
 const returnResponse = communication.returnResponse;
 
 /**
+ * @typedef Request
+ * @property {number} dateCreated
+ * @property {number} dateCompleted
+ * @property {GeoLocation} geoLocation
+ * @property {String} header
+ * @property {String} body
+ * @property {Number} const
+ * @property {Boolean} isFulFilled
+ * @property {String} creatorID
+ * @property {String} providerID
+ */
+
+/**
  * Interface for communicating wih the server
  */
 const request =
@@ -36,6 +49,7 @@ const request =
          * @param {string} geoLocation - The current location of the provider
          * @param {int} maxDistance - The max sistance of the acceptile location
          * @param {int} maxRequests - The number of request that the proider whants to se
+         * @returns {Promise<?[Request]>} The requests BSON objects in a list or null
          */
         getNearRequests: async function(geoLocation, maxDistance, maxRequests = undefined)
         {

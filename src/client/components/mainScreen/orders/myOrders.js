@@ -32,13 +32,18 @@ const RequestItem = ({nav, item}) => {
 
     }
 
+    const timeToLocalizaedString = (time) => {
+        let date = new Date(item.dateCreated);
+        return 
+    }
+
     return(
         <TouchableOpacity 
             onPress={()=>nav.nav.navigate("OrderApproval", item)}
             style={ms.itemContainer}>
             <RequestIcon type={item.header} size={30} color="black"/>
             <Text numberOfLines={2} style={ms.msg}>{text}</Text>
-            <Text style={oas.time}>{item.dateCreated}</Text>
+            <Text style={oas.time}>{new Date(item.dateCreated).toDateString()}</Text>
         </TouchableOpacity>
     );
 }
@@ -58,18 +63,21 @@ const FirstScreen = (nav) => {
     });
 
     const refresh = async () => {
+        
         setState({...state, isRefreshing:true});
 
-        try {
+        try 
+        {
             const userID = await storage.getDataString("userID");
             const requests = await request.requester.getUserRequest(userID);   
-            console.log(requests);
             setState({
                 userID: userID,
                 requests: requests,
                 isRefreshing: false,
             });
-        } catch (error) {
+        } 
+        catch (error) 
+        {
             console.log(error);
         }
         
@@ -81,7 +89,7 @@ const FirstScreen = (nav) => {
             const userID = await storage.getDataString("userID");
             const providing = await request.provider.getUserProviding(userID);
             setProvider({
-                providing:providing,
+                providing: providing,
                 isRefreshing:false,
             });
         } catch (error) {

@@ -12,7 +12,6 @@ import OrderScreen from './orders/orders';
 const Tab = createBottomTabNavigator();
 
 const MainScreen = (navigation) => {
-    //https://reactnavigation.org/docs/bottom-tab-navigator
     return (
         <Tab.Navigator initialRouteName="Home"
                        tabBar={props=><Menu {...props}/>}>

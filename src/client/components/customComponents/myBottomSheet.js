@@ -3,43 +3,47 @@ import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import BottomSheet from "reanimated-bottom-sheet";
 import {colors} from "../mainStyles/colors";
 
-const MyBottomSheet = forwardRef((props, ref) => {
+const MyBottomSheet = forwardRef(({renderContent, snapPoints, 
+    overlay = true, initialSnap = 1, ...props}, ref) => {
 
-    const renderContent = () => (
+    const renderContentFunc = () => (
         <View style={{ overflow:"hidden",paddingTop:5}}>
             <View style={styles.bsContentContainer}>
                 <View style={styles.bsHeaderContainer}>
                     <View style={styles.bsDrawIndicator}></View>
                 </View>
-                {props.renderContent}
+                {renderContent}
             </View>
         </View>
     );
 
-    const [overlay, setOverlay] = useState(false);
+    const [overlayState, setOverlayState] = useState(false);
 
     return (
     <>
         <BottomSheet
             ref={ref}
-            snapPoints={props.snapPoints}
-            initialSnap={1}
-            renderContent={renderContent}
+            snapPoints={snapPoints}
+            initialSnap={initialSnap}
+            renderContent={renderContentFunc}
             enabledContentTapInteraction={false}
-            onOpenStart={()=>setOverlay(true)}
-            onCloseEnd={()=>setOverlay(false)}
+            onOpenStart={()=>setOverlayState(true)}
+            onCloseEnd={()=>setOverlayState(false)}
+            {...props}
         />
 
-        <View style={[styles.overlayOuter,{zIndex:overlay ? 10 : -100}]}>
-            <TouchableOpacity
-                activeOpacity={0.7}
-                style={[styles.overlayInner, {display: overlay ? "flex" : "none"}]}
-                onPress={()=>{
-                setOverlay(false);
-                ref.current.snapTo(1);
-                }}
-            />
-        </View>
+        {!overlay ? null :
+            <View style={[styles.overlayOuter,{zIndex:overlayState ? 10 : -100}]}>
+                <TouchableOpacity
+                    activeOpacity={0.7}
+                    style={[styles.overlayInner, {display: overlayState ? "flex" : "none"}]}
+                    onPress={()=>{
+                    setOverlay(false);
+                    ref.current.snapTo(1);
+                    }}
+                />
+            </View>
+        }
 
     </>
     )

@@ -23,24 +23,26 @@ const App = () =>
                 case "restoreID":
                 return {
                     ...prevState,
-                    userID: action.id,
-                    loading: false,
+                    user: action.user,
+                    loading: false
                 };
                 case "signIn":
                 return {
                     ...prevState,
-                    userID: action.id,
+                    loading: false,
+                    user: action.user
                 };
                 case "signOut":
                 return {
                     ...prevState,
-                    userID: null,
+                    loading: false,
+                    user: null,
                 };
             }
         },
         {
             loading: true,
-            userID: null,
+            user: null,
         }
     );
 
@@ -48,9 +50,16 @@ const App = () =>
         const init = async () => {
             try 
             {
-                await storage.removeValue("userID");
-                const userID = await storage.getDataString("userID"); 
-                dispatch({type:"restoreID", id: userID});
+                const userID = await storage.getDataString("userID");
+                const user = await account.getFromID(userID);
+                if (user !== null)
+                {
+                    dispatch({type: "restoreID", user: user});
+                }
+                else
+                {
+                    dispatch({type: "signOut"});
+                }
             } 
             catch(error) 
             {
@@ -68,7 +77,8 @@ const App = () =>
             try 
             {
                 await storage.storeDataString("userID", id);
-                dispatch({ type: "signIn", id: id});
+                const user = await account.getFromID(id);
+                dispatch({type: "signIn", user: user });
             } 
             catch (error) 
             {
@@ -87,20 +97,7 @@ const App = () =>
                 console.error(error)
             }
         },
-        /** @returns {Promise<User>} User*/
-        getUser: async () => 
-        {
-            try 
-            {
-                let user = await account.getFromID(state.userID);
-                console.log("hej"+user);
-                return user;
-            } 
-            catch (error) 
-            {
-                console.error(error);
-            }
-        }
+        getState: () => state
     }
 
     return(
@@ -119,7 +116,7 @@ const App = () =>
                             }}
                         >
                             
-                            {state.userID === null ?
+                            {state.user === null ?
                                 <Stack.Screen 
                                     name = "Login" 
                                     component={LoginScreen}                            />

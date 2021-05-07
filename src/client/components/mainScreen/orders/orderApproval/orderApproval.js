@@ -6,6 +6,12 @@ import SamaritButton from '../../../customComponents/samaritButton';
 import { Localization } from '../../../../modules/localization';
 
 
+const CHAT_ROOMS = [
+    {
+        "id":"1"
+    }
+]
+
 const ChatRoomItem = ({nav, item}) => {
     return (
         <TouchableOpacity 

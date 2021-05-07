@@ -144,6 +144,8 @@ export default class CustomMap extends Component
                     style = {this.props.style}
                     region = {this.state.region}
                     showsUserLocation={true}
+                    showsMyLocationButton={true}
+                    showsPointsOfInterest={true}
                     onRegionChangeComplete={this.onRegionChangeComplete.bind(this)}
                 >
 
@@ -157,13 +159,6 @@ export default class CustomMap extends Component
                         />
                     ))}
                 </MapView>
-                <Button
-                    title = "Centrera"
-                    onPress = {async () => {
-                        let region = await this.getLocalRegion();
-                        this.onRegionChangeComplete(region);
-                    }}
-                />
             </>
         );
     }

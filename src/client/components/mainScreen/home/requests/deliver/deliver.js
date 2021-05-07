@@ -101,22 +101,22 @@ const DeliverScreen = ({navigation, route}) => {
                     nav={navigation}
                 />
                 <View style={rs.content}>
-                        <Text style={ms.h3}>{route.params.type === "other" 
-                            ? Localization.getText("place") : Localization.getText("enterDelivAddress")}
-                        </Text>
-                        <GooglePlaces
-                            placeholder={Localization.getText("deliveryAddress")}
-                            fetchDetails = {true}
-                            onPress={(data, details = null) => {
-                            // 'details' is provided when fetchDetails = true
-                            setLocation({adress: data.description, location: details.geometry.location});
-                            }}
-                        />
-                        <Text style={ms.h3}>{Localization.getText("enterPrice")}</Text>
-                        <FloatingInput 
-                            placeholder={Localization.getText("price")}
-                            onChangeText={(text)=>setPrice(parseInt(text))}
-                        />
+                    <Text style={ms.h3}>{route.params.type === "other" 
+                        ? Localization.getText("place") : Localization.getText("enterDelivAddress")}
+                    </Text>
+                    <GooglePlaces
+                        placeholder={Localization.getText("deliveryAddress")}
+                        fetchDetails = {true}
+                        onPress={(data, details = null) => {
+                        // 'details' is provided when fetchDetails = true
+                        setLocation({adress: data.description, location: details.geometry.location});
+                        }}
+                    />
+                    <Text style={ms.h3}>{Localization.getText("enterPrice")}</Text>
+                    <FloatingInput 
+                        placeholder={Localization.getText("price")}
+                        onChangeText={(text)=>setPrice(parseInt(text))}
+                    />
                 </View>
                 <View style={ms.moveOnContainer}>
                     <CustomButton

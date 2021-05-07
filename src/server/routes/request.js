@@ -93,7 +93,7 @@ router.get('/provider/getUserProviding', async (req, res) =>
 
   if(validParams(params, res))
   {
-    let response = await db.requests.getUserProviding(params.providerID, parseInt(params.num));
+    let response = await db.requests.getUserProviding(params.providerID, params.num === "undefined" ? undefined : parseInt(params.num));
     if(response != null) return sendSuccess(res, response);
     else return sendFailure(res);
   }
@@ -106,21 +106,21 @@ router.get('/provider/getUserProviding', async (req, res) =>
  */
 router.post('/requester/newRequest', async (req, res) =>
 {
-  const schema = Joi.object({
-    requestID: Joi.string().min(idSize).max(idSize),
-    type: Joi.string(),
-    data: Joi.any()
-  });
+    const schema = Joi.object({
+        requestID: Joi.string().min(idSize).max(idSize),
+        type: Joi.string(),
+        data: Joi.any()
+    });
 
-  let body = req.body;
-  let data = body.data;
+    let body = req.body;
+    let data = body.data;
 
-  if(valid(body, schema, res) && validData(data, res))
-  {
-    let response = await db.requests.add(body.requestID, body.type, data.body, data.geoLocation, data.cost);
-    if(response != null) return sendSuccess(res, response);
-    else return sendFailure(res);
-  }
+    if(valid(body, schema, res) && validData(data, res))
+    {
+        let response = await db.requests.add(body.requestID, body.type, data.body, data.geoLocation, data.cost);
+        if(response != null) return sendSuccess(res, response);
+        else return sendFailure(res);
+    }
 });
 
 /**
@@ -130,17 +130,17 @@ router.post('/requester/newRequest', async (req, res) =>
  */
 router.get('/requester/getUserRequest', async (req, res) =>
 {
-  const params = {
-    userID: req.param('userID'),
-    num: req.param('num')
-  };
+    const params = {
+        userID: req.param('userID'),
+        num: req.param('num')
+    };
 
-  if(validParams(params, res))
-  {
-    let response = await db.requests.getUserRequests(params.userID, parseInt(params.num));
-    if(response != null) return sendSuccess(res, response);
-    else return sendFailure(res);
-  }
+    if(validParams(params, res))
+    {
+        let response = await db.requests.getUserRequests(params.userID, params.num === "undefined" ? undefined : parseInt(params.num));
+        if(response != null) return sendSuccess(res, response);
+        else return sendFailure(res);
+    }
 });
 
 /**
@@ -149,16 +149,16 @@ router.get('/requester/getUserRequest', async (req, res) =>
  */
 router.delete('/requester/removeRequest', async (req, res) =>
 {
-  const schema = Joi.object({
-    requestID: Joi.string().min(idSize).max(idSize),
-  });
+    const schema = Joi.object({
+        requestID: Joi.string().min(idSize).max(idSize),
+    });
 
-  if(valid(req.body, schema, res))
-  {
-    let response = await db.requests.remove(req.body.requestID);
-    if(response != false) return sendSuccess(res);
-    else return sendFailure(res);
-  }
+    if(valid(req.body, schema, res))
+    {
+        let response = await db.requests.remove(req.body.requestID);
+        if(response != false) return sendSuccess(res);
+        else return sendFailure(res);
+    }
 });
 
 /**
@@ -169,24 +169,24 @@ router.delete('/requester/removeRequest', async (req, res) =>
  */
 router.put('/requester/reviewProvider', async (req, res) =>
 {
-  const schema = Joi.object({
-    requestID: Joi.string().min(idSize).max(idSize),
-    user1ID: Joi.string().min(idSize).max(idSize),
-    user2ID: Joi.string().min(idSize).max(idSize),
-    message: Joi.string(),
-    rating: Joi.number().min(0).max(5),
-    reviewType: Joi.string()
-  });
+    const schema = Joi.object({
+        requestID: Joi.string().min(idSize).max(idSize),
+        user1ID: Joi.string().min(idSize).max(idSize),
+        user2ID: Joi.string().min(idSize).max(idSize),
+        message: Joi.string(),
+        rating: Joi.number().min(0).max(5),
+        reviewType: Joi.string()
+    });
 
-  let b = req.body;
-  let reviewType = ReviewType.Requester; //TODO CHANGE
+    let b = req.body;
+    let reviewType = ReviewType.Requester; //TODO CHANGE
 
-  if(valid(b, schema, res))
-  {
-    let response = await db.reviews.add(b.user1ID, b.user2ID, b.requestID, b.message, b.rating, reviewType);
-    if(response != false) return sendSuccess(res);
-    else return sendFailure(res);
-  }
+    if(valid(b, schema, res))
+    {
+        let response = await db.reviews.add(b.user1ID, b.user2ID, b.requestID, b.message, b.rating, reviewType);
+        if(response != false) return sendSuccess(res);
+        else return sendFailure(res);
+    }
 });
 
 /**
@@ -196,20 +196,20 @@ router.put('/requester/reviewProvider', async (req, res) =>
  */
 router.put('/requester/acceptProvider', async (req, res) =>
 {
-  const schema = Joi.object ({
-    requestID: Joi.string().min(idSize).max(idSize),
-    providerID: Joi.string().min(idSize).max(idSize),
-  });
+    const schema = Joi.object ({
+        requestID: Joi.string().min(idSize).max(idSize),
+        providerID: Joi.string().min(idSize).max(idSize),
+    });
 
-  let body = req.body;
+    let body = req.body;
 
-  if(valid(body, schema, res))
-  {
-    // TODO change from setProvider to something else that simply shows the interest of providing
-    let response = await db.requests.setProvider(body.requestID, body.providerID);
-    if(response != false) return sendSuccess(res, response);
-    else return sendFailure(res);
-  }
+    if(valid(body, schema, res))
+    {
+        // TODO change from setProvider to something else that simply shows the interest of providing
+        let response = await db.requests.setProvider(body.requestID, body.providerID);
+        if(response != false) return sendSuccess(res, response);
+        else return sendFailure(res);
+    }
 });
 
 module.exports = router;
