@@ -25,7 +25,7 @@ const ProfilePicture = (props) =>
     );
 }
 
-const updateProfile = async (firstName, lastName, email, user, incrementUpdate) =>{
+const updateProfile = async (firstName, lastName, user, refresh) =>{
     //TODO: kolla om något fält är tomt och isåfall ta det gamla värdet
     
     let credentials = {
@@ -41,12 +41,9 @@ const updateProfile = async (firstName, lastName, email, user, incrementUpdate) 
     if(lastName != ""){
         credentials.lastName = lastName;
     }
-    if(email != ""){
-        credentials.email = email;
-    }
     
     await account.changeCredentials(user._id, credentials);
-    incrementUpdate();
+    refresh();
 }
 
 
@@ -56,10 +53,11 @@ const ProfileScreen = ({navigation}) =>
     const { signOut, getUser } = useContext(AppContext); 
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
-    const [email, setEmail] = useState("");
     const [user, setUser] = useState();
     const [hasUpdated, setUpdated] = useState(0);
-    const incrementUpdate = () =>{
+    const refresh = () =>{
+        setFirstName("");
+        setLastName("");
         setUpdated(hasUpdated+1);
     }
 
@@ -111,18 +109,13 @@ const ProfileScreen = ({navigation}) =>
                     onChangeText={text => {setLastName(text)}}
                     value={lastName}
                     />
-                <FloatingInput 
-                    placeholder={Localization.getText("email")}
-                    onChangeText={text => {setEmail(text)}}
-                    value={email}
-                    />
             </View>
 
             <View style={ms.container}>
                 <CustomButton
                     style={ms.button}
                     title={Localization.getText("update")}
-                    onPress={()=>updateProfile(firstName, lastName, email, user, incrementUpdate)}
+                    onPress={()=>updateProfile(firstName, lastName, user, refresh)}
                 />
             </View>
 
