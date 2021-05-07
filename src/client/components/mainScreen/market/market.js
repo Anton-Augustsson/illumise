@@ -90,13 +90,13 @@ const RequestItem = ({nav, item}) => {
     const stop = {latitude: item.request.body.stops[0].location.lat, longitude: item.request.body.stops[0].location.lng};
     const dist = getDistance(start, stop);
     const distKM = Math.round(dist/1000);
-
+    console.log(item.request.header);
     return(
         <TouchableOpacity 
             onPress={()=>nav.nav.navigate("MarketItem", item)}
             style={mms.itemContainer}
         >
-            <RequestIcon type={item.header} size={30} color="black"/>
+            <RequestIcon type={item.request.header} size={30} color="black"/>
             <Text style={mms.itemText}>{text}</Text>
             <View style={mms.rightRequestContainer}>
                 <View style={mms.priceContainer}>

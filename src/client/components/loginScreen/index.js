@@ -81,7 +81,7 @@ const LoginScreen = (navigation) =>
     useEffect(() => {
         if (responseFB?.type === 'success') 
         {
-            verifyUser(signIn, responseFB.authentication.accessToken, 'facebook');
+            verifyUser(signIn, responseFB.authentication.accessToken, 'facebook', setLoggingIn);
         }
     }, [responseFB]);
 

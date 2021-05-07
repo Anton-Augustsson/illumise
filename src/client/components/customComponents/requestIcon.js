@@ -14,7 +14,7 @@ const RequestIcon = (props) => {
             name = "box"
             icon = FontAwesome5
             break;
-        case "mail": 
+        case "post": 
             name = "local-post-office"; 
             icon = MaterialIcons;
             break;
