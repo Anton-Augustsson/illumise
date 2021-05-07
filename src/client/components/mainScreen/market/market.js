@@ -11,68 +11,14 @@ import {Localization} from '../../../modules/localization'
 import * as Location from 'expo-location';
 import request from '../../../modules/client-communication/request';
 import RequestIcon from "../../customComponents/requestIcon";
-/*
-const REQUESTS = [
-    {
-        "id":"1",
-        "shoppingList": [
-        {
-            "id": "0",
-            "name": "Första",
-            "otherInfo": "wef",
-            "quantity": 1,
-        },
-        {
-            "id": "1",
-            "name": "Andra",
-            "otherInfo": "NISSE",
-            "quantity": 1000000,
-        },
-        ],
-        "stops":  [
-            "Wefixit Svenska AB, Fålhagsleden, Uppsala, Sweden",
-            "Wefix Trädgård AB, Sandövägen, Vallda, Sweden",
-        ],
-        "price":"2000000000",
-        "time": "13:00",
-        "type": "food",
-    },
-    {
-        "id":"2",
-        "shoppingList": [
-        {
-            "id": "0",
-            "name": "Banan",
-            "otherInfo": "E väldigt fin banan från helvetet",
-            "quantity": 1,
-        },
-        ],
-        "stops":  [
-            "SHAKMAK AB, Moskva, Russia",
-            "Wefix Trädgård AB, Sandövägen, Vallda, Sweden",
-        ],
-        "time": "13:00",
-        "price":"10",
-        "type": "shopping"
-    },
-    {
-        "id":"3",
-        "postObject": 
-        {
-            "refCode": "DINMAMMA",
-            "otherInfo": "E väldigt fin banan från helvetet",
-        },
-        "stops":  [
-            "SHAKMAK AB, Moskva, Russia",
-            "Wefix Trädgård AB, Sandövägen, Vallda, Sweden",
-        ],
-        "time": "13:00",
-        "price":"0.20",
-        "type": "post"
-    }
-]
-*/
+import { getDistance } from 'geolib'
+import CustomMap from '../../customComponents/customMap';
 
+/*
+    { latitude: 51.5103, longitude: 7.49347 },
+    
+    { latitude: "51° 31' N", longitude: "7° 28' E" }
+*/
 const FilterView = () => {
     const filterItems = [
         {
@@ -123,7 +69,7 @@ const FilterView = () => {
 
 const RequestItem = ({nav, item}) => {
     var text = ''
-    switch (item.body.type) {
+    switch (item.request.body.type) {
         case 'food':
             text = Localization.getText("foodPrompt")
             break;
@@ -139,7 +85,11 @@ const RequestItem = ({nav, item}) => {
 
     }
 
-    const km = "1000";
+    //{ latitude: 51.5103, longitude: 7.49347 },
+    const start = {latitude: item.loc.coordinates[1], longitude: item.loc.coordinates[0]};
+    const stop = {latitude: item.request.body.stops[0].location.lat, longitude: item.request.body.stops[0].location.lng};
+    const dist = getDistance(start, stop);
+    const distKM = Math.round(dist/1000);
 
     return(
         <TouchableOpacity 
@@ -150,10 +100,10 @@ const RequestItem = ({nav, item}) => {
             <Text style={mms.itemText}>{text}</Text>
             <View style={mms.rightRequestContainer}>
                 <View style={mms.priceContainer}>
-                    <Text style={mms.price} numberOfLines={1}>{item.cost}</Text>
+                    <Text style={mms.price} numberOfLines={1}>{item.request.cost}</Text>
                     <Text style={mms.priceCurrency}>kr</Text>
                 </View>
-                <Text style={mms.distance}>{km} km</Text>
+                <Text style={mms.distance}>{distKM} km</Text>
             </View>
         </TouchableOpacity>
     );
@@ -186,15 +136,22 @@ const FirstScreen = (nav) => {
         let pointStart = coordsToGeoJSON([geo.coords.longitude, geo.coords.latitude]);
 
 
-        const res = await request.provider.getNearRequests(pointStart, 1000000, 10);
+        const req = await request.provider.getNearRequests(pointStart, 1000000, 10);
+        const reqFiltered = req.filter(obj => obj != null);
+        var result = []
+        reqFiltered.forEach((r, index) => {
+            var tmp = {request: r, loc: pointStart};
+            result.push(tmp);
+        });
+            
         setIsRefresing(false);
-        return res;
+        return result;
     }
 
     const refresh = () => {
         setIsRefresing(true);
         getLocation().then(data => {
-            setRequests(data.filter(obj => obj != null));
+            setRequests(data);
         }); 
     }
 
@@ -213,7 +170,7 @@ const FirstScreen = (nav) => {
             <FlatList
                 data={REQUESTS}
                 renderItem={({item})=><RequestItem nav={nav} item={item}/>}
-                keyExtractor={(item)=>item._id}
+                keyExtractor={(item)=>item.request._id}
                 onRefresh={()=>refresh()}
                 refreshing={isRefreshing}
                 ListEmptyComponent={()=>

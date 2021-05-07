@@ -48,12 +48,18 @@ Lista med saker
 */
 
 const Header = ({req}) => {
+    var request;
+    if(req.request == null){
+        request = req;
+    }else {
+        request = req.request;
+    }
     return (
         <>
             <View style={mis.padding}>
                 {
-                    req.header === "other" &&
-                    <Text style={ms.h2}>{req.body.title}</Text>
+                    request.header === "other" &&
+                    <Text style={ms.h2}>{request.body.title}</Text>
                 }
             </View>
             
@@ -62,7 +68,7 @@ const Header = ({req}) => {
                 onMount={(region) => 
                 {
                     /** @type {[*]} */
-                    let stops = req.body.stops;
+                    let stops = request.body.stops;
                     if(stops === null) 
                     {
                         return [];
@@ -83,16 +89,16 @@ const Header = ({req}) => {
            
                 <Text style={ms.h4}>{Localization.getText("destinations")}</Text>
                 {
-                    req.body.stops.map((place, index) => (
+                    request.body.stops.map((place, index) => (
                         <Text key={index} style={mis.mapText}>{index+1 + ". " + place.adress}</Text>
                     ))
                 }
-                    {req.header === "shopping" || req.header === "food" ? 
+                    {request.header === "shopping" || request.header === "food" ? 
                     <Text style={ms.h3}>{Localization.getText("shoppingList")}</Text>
                     :
                     <>
                         <Text style={ms.h3}>{Localization.getText("otherInfo")}</Text>
-                        <Text style={mis.otherInfo}>{req.body.info}</Text>
+                        <Text style={mis.otherInfo}>{request.body.info}</Text>
                     </>
                 }
             </View>

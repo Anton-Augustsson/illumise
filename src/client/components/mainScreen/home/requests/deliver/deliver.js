@@ -50,16 +50,14 @@ const DeliverScreen = ({navigation, route}) => {
         var result = Object.assign({}, route.params)
         result.stops.push(location);
         try {
-            const geo = await getLocation()
-
-            const coords = coordsToGeoJSON(geo);
+            const coords = coordsToGeoJSON([result.stops[0].location.lng, result.stops[0].location.lat]);
             const data = {
                 header: result.type,
                 body: result,
                 cost: price,
                 geoLocation: coords,
             }
-
+            
             const userID = await storage.getDataString("userID");
             const requestId = await request.requester.newRequest(userID, result.type, data);
             navigation.dispatch(

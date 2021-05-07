@@ -95,7 +95,11 @@
         "market": "Market",
         "showOrder": "Show order",
         "acceptProvider": "Accept provider",
-        "me": "Me"
+        "me": "Me",
+        "update": "Update info",
+        "foreName": "First name",
+        "afterName": "Last name",
+        "email": "Email"
     },
     "se": 
     {
@@ -197,6 +201,10 @@
         "marketEmptyMsg": "Marknaden är för tillfället tom!",
         "showOrder": "Visa beställning",
         "acceptProvider": "Acceptera leveratör",
-        "me": "Jag"
+        "me": "Jag",
+        "update": "Uppdatera info",
+        "foreName": "Förnamn",
+        "afterName": "Efternamn",
+        "email": "Epost"
     } 
 }
