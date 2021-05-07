@@ -2,7 +2,6 @@ import React, { useEffect, useContext, useState, useRef } from 'react';
 import { View, Text, StyleSheet,FlatList, TouchableOpacity, Dimensions} from 'react-native';
 import request from '../../../modules/client-communication/request';
 import { Localization } from '../../../modules/localization';
-import storage from '../../../modules/localStorage/localStorage';
 import CustomHeader from "../../customComponents/customHeader";
 import Loading from '../../customComponents/loading';
 import ms from '../../mainStyles/ms';
@@ -11,6 +10,7 @@ import cs from "../../mainStyles/cartStyle";
 import MyBottomSheet from '../../customComponents/myBottomSheet';
 import { AppContext } from '../../AppContext';
 import AcceptHeader from '../../customComponents/acceptHeader';
+import account from '../../../modules/client-communication/account';
 
 const ShoppingItem = ({item}) => {
     const [expand, setExpand] = useState(item.info !== "");
@@ -61,8 +61,6 @@ const Header = ({req}) => {
     );
 }
 
-
-
 const BottomSheetContent = ({req}) => (
     <>
         {req.header === "shopping" || req.header === "food" ?
@@ -80,10 +78,7 @@ const BottomSheetContent = ({req}) => (
     </>
 )
 
-
-
-
-const DoneLoading = ({navigation, creator, req, getState}) => {
+const DoneLoading = ({navigation, getState, creator, req, setReq, other}) => {
 
     const sheetRef = useRef();
 
@@ -94,7 +89,7 @@ const DoneLoading = ({navigation, creator, req, getState}) => {
             navigation.reset({
                 index: 0,
                 routes: [{ name: 'Orders' }],
-            });;
+            });
         } 
         catch(error) 
         {
@@ -102,21 +97,26 @@ const DoneLoading = ({navigation, creator, req, getState}) => {
         }
     }
 
-    const claim = async (navigation, req) => {
+    const claim = async (_, req) => {
         try 
         {
             await request.provider.set(req._id, getState().user._id);
+            setReq(await request.get(req._id));
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'Orders' }],
+            });
         } 
         catch(error) 
         {
             console.log(error);
         }
-        
     }
 
-    const bottomSheetHeight = Dimensions.get("window").height;
-    console.log("creator ", creator)
-
+    useEffect(() => {
+        console.log("other: " + JSON.stringify(other, null, 2));
+    }, []);
+    
     return (
         <>
             <MyBottomSheet
@@ -132,11 +132,22 @@ const DoneLoading = ({navigation, creator, req, getState}) => {
             />
             
             <AcceptHeader
-                userName={`${getState().user.firstName} ${getState().user.lastName}`}
+                userName={`${other.firstName} ${other.lastName}`}
                 acceptTitle={creator ? "Remove" : "Claim"}
-                onButtonPress={async () => await remove(navigation, req)}
+                onButtonPress={async () => {
+                    if (creator)
+                    {
+                        await remove(navigation, req);
+                    }
+                    else
+                    {
+                        await claim(navigation, req);
+                    }
+                }}
                 stars={5}
                 zIndex={-1}
+                buttonStyle={creator ? {backgroundColor: "#ff4d4d"} : undefined}
+                buttonDisabled={req.providerID === getState().user._id}
             />
 
             <CustomMap
@@ -165,15 +176,12 @@ const DoneLoading = ({navigation, creator, req, getState}) => {
     );
 }
 
-const timeout = (ms) => {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 const MarketItem = ({navigation, route}) => {
     const { getState } = useContext(AppContext);
     const [loading, setLoading] = useState(true);
     const [req, setReq] = useState(null);
     const [creator, setCreator] = useState(false);
+    const [other, setOther] = useState(null);
 
     useEffect(() => {
 
@@ -182,17 +190,22 @@ const MarketItem = ({navigation, route}) => {
             let userID = getState().user._id;
             if(route.params.requestId === undefined) 
             {
+                let isCreator = route.params.creatorID === userID;
                 setReq(route.params);
-                setCreator(route.params.creatorID === userID);
+                setCreator(isCreator);
+                let otherID = isCreator? route.params.providerID : route.params.creatorID;
+                setOther(await account.getFromID(otherID));
             }
             else
             {
                 let result = await request.requester.getUserRequest(userID);
-                let item = result[result.length-1];
+                let item = result[result.length-1]; 
+                let isCreator = item._id === route.params.requestId;
                 setReq(item);
-                setCreator(item._id === route.params.requestId);
+                setCreator(isCreator);
+                let otherID = isCreator? item.providerID : item.creatorID;
+                setOther(await account.getFromID(otherID));
             }
-            
             
             setLoading(false);
         }
@@ -201,7 +214,15 @@ const MarketItem = ({navigation, route}) => {
 
     return (
         <View style={{flex:1}}> 
-            {loading ? <Loading/> : <DoneLoading navigation={navigation} getState={getState} creator={creator} req={req}/>}
+            {loading ? <Loading/> : 
+            <DoneLoading 
+                navigation={navigation} 
+                getState={getState} 
+                creator={creator} 
+                req={req} 
+                setReq={setReq}
+                other={other}
+            />}
         </View>
     );
 }

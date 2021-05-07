@@ -3,7 +3,10 @@ import { View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import CustomButton from "../customComponents/customButton";
 
-const AcceptHeader = ({onPress, userName, stars, zIndex = 1, acceptTitle, onButtonPress}) => {
+const AcceptHeader = ({onPress, userName, stars, zIndex = 1, acceptTitle, 
+                       onButtonPress, buttonStyle, buttonDisabled}) => {
+
+    const disabled = buttonDisabled !== undefined ? buttonDisabled : false;
     return(
         <View style={[styles.topContainer, {zIndex:zIndex}]}>
             <TouchableOpacity 
@@ -21,9 +24,10 @@ const AcceptHeader = ({onPress, userName, stars, zIndex = 1, acceptTitle, onButt
             </TouchableOpacity>
             <CustomButton
                 title={acceptTitle}
-                style={styles.button}
+                style={[disabled ? styles.buttonDisabled : styles.button, buttonStyle]}
                 styleText={styles.buttonText}
                 onPress={onButtonPress}
+                disabled={disabled}
             />
         </View>
     )
@@ -50,11 +54,16 @@ const styles = StyleSheet.create({
     },
     button: {
         padding:8,
-        backgroundColor:"#cccccc",
+        backgroundColor:"#00CC00",
         borderRadius:10,
     },
     buttonText: {
         color:"black",
+    },
+    buttonDisabled: {
+        padding:8,
+        backgroundColor:"#cccccc",
+        borderRadius:10,
     },
     providerContainer: {
         justifyContent:"flex-start",

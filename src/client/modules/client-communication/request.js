@@ -42,6 +42,25 @@ const request =
         return returnResponse(response);
     },
 
+    /**
+     * Gets the request with the given id
+     * @param {string} requestID - The id of the request to find
+     * @returns {Promise<?Request>}
+     */
+    get: async function(requestID)
+    {   
+        let body = { requestID: requestID };
+        let url = request.serviceUrl + '/get';
+        let response = await fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(body)
+        });
+        return returnResponse(response);
+    },
+
     provider:
     {
         /**
@@ -70,25 +89,6 @@ const request =
         {   
             let body = {requestID: requestID, providerID: providerID};
             let url = request.serviceUrl + '/provider/set';
-            let response = await fetch(url, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json;charset=utf-8'
-                },
-                body: JSON.stringify(body)
-            });
-            return returnResponse(response);
-        },
-
-        /**
-         * Gets the request with the given id
-         * @param {string} requestID - The id of the request to find
-         * @returns {Promise<?Request>}
-         */
-        get: async function(requestID)
-        {   
-            let body = { requestID: requestID };
-            let url = request.serviceUrl + '/provider/get';
             let response = await fetch(url, {
                 method: 'PUT',
                 headers: {
