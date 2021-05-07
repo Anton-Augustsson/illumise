@@ -151,7 +151,8 @@ const FirstScreen = (nav) => {
         finally
         {
             return result.filter(result => result != null 
-                              && result.creatorID !== getState().user._id);
+                              && result.creatorID !== getState().user._id
+                              && result.body.stops != undefined);
         }
     }
 
@@ -163,9 +164,7 @@ const FirstScreen = (nav) => {
         });
     }
 
-    useEffect(() => {
-        refresh();
-    }, []);
+    useEffect(refresh, []);
 
      return (
         <View style={{flex:1}}> 
@@ -179,7 +178,7 @@ const FirstScreen = (nav) => {
                 data={REQUESTS}
                 renderItem={({item})=><RequestItem pointStart={pointStart} nav={nav} item={item}/>}
                 keyExtractor={(item)=>item._id}
-                onRefresh={()=>refresh()}
+                onRefresh={refresh}
                 refreshing={isRefreshing}
                 ListEmptyComponent={()=>
                     <View style={ms.emptyContainer}>

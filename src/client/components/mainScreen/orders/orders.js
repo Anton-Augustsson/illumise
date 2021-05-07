@@ -88,55 +88,8 @@ function generateORDERSPROVIDING()
     return result;
 }
 
-const ORDERS = generateORDERS();/*[
-    {
-        "id":"1",
-        "category":"myrequest",
-        "status":"approved",
-        "type":"food",
-        "request":"json",
-        "text":"Banan",
-    },{
-        "id":"2",
-        "category":"myrequest",
-        "status":"approved",
-        "type":"package",
-        "request":"json",
-        "text":"Apple",
-    },{
-        "id":"3",
-        "category":"myrequest",
-        "status":"unapproved",
-        "type":"mail",
-        "request":"json",
-        "text":"Tree",
-    }
-]*/
-
-const ORDERSPROVIDING = generateORDERSPROVIDING(); /*[
-    {
-        "id":"1",
-        "category":"providing",
-        "status":"approved",
-        "type":"food",
-        "request":"json",
-        "text":"Kingsrow: mat",
-    },{
-        "id":"2",
-        "category":"providing",
-        "status":"approved",
-        "type":"package",
-        "request":"json",
-        "text":"QuensRow: post",
-    },{
-        "id":"3",
-        "category":"providing",
-        "status":"unapproved",
-        "type":"mail",
-        "request":"json",
-        "text":"Prince Row: lämna post",
-    }
-]*/
+const ORDERS = generateORDERS();
+const ORDERSPROVIDING = generateORDERSPROVIDING();
 
 const OrderItem = (item, navigation) => {
     return (

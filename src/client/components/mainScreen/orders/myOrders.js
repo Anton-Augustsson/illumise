@@ -13,7 +13,6 @@ import ExpandButton from '../../customComponents/expandButton';
 import OrderApprovalScreen from './orderApproval/orderApproval';
 import { OrderChatScreen } from './chat/orderChat';
 
-
 const RequestItem = ({nav, item}) => {
     var text = ''
     switch (item.body.type) {
@@ -43,8 +42,6 @@ const RequestItem = ({nav, item}) => {
     );
 }
 
-
-
 const FirstScreen = (nav) => {
     const [state, setState] = useState({
         userID: null,
@@ -57,7 +54,7 @@ const FirstScreen = (nav) => {
         isRefreshing: false
     });
 
-    const refresh = async () => {
+    const refreshRequest = async () => {
 
         setState({...state, isRefreshing:true});
 
@@ -93,28 +90,47 @@ const FirstScreen = (nav) => {
     }
 
     useEffect(() => {
-        refresh();
+        refreshRequest();
         refreshProvider();
     }, []);
 
     const requestContent = 
-                <FlatList
-                    data={state.requests}
-                    renderItem={({item})=><RequestItem nav={nav} item={item}/>}
-                    keyExtractor={(item)=>item._id}
-                    onRefresh={refresh}
-                    refreshing={state.isRefreshing}
-                    ListEmptyComponent={()=>
-                        <View style={ms.emptyContainer}>
-                            <Text style={[ms.emptyMsg, ms.emptyMsgAbove]}>
-                                {Localization.getText("youHaveNoOrders")}
-                            </Text>
-                            <Text style={ms.emptyMsg}>
-                                {Localization.getText("youHaveNoOrders2")}
-                            </Text>
-                        </View>
-                    }
-                />
+        <FlatList
+            data={state.requests}
+            renderItem={({item})=><RequestItem nav={nav} item={item}/>}
+            keyExtractor={(item)=>item._id}
+            onRefresh={refreshRequest}
+            refreshing={state.isRefreshing}
+            ListEmptyComponent={()=>
+                <View style={ms.emptyContainer}>
+                    <Text style={[ms.emptyMsg, ms.emptyMsgAbove]}>
+                        {Localization.getText("youHaveNoOrders")}
+                    </Text>
+                    <Text style={ms.emptyMsg}>
+                        {Localization.getText("youHaveNoOrders2")}
+                    </Text>
+                </View>
+            }
+        />
+
+    const providingContent = 
+        <FlatList
+            data={provider.providing}
+            renderItem={({item})=><RequestItem nav={nav} item={item}/>}
+            keyExtractor={(item)=>item._id}
+            onRefresh={refreshProvider}
+            refreshing={provider.isRefreshing}
+            ListEmptyComponent={()=>
+                <View style={ms.emptyContainer}>
+                    <Text style={[ms.emptyMsg, ms.emptyMsgAbove]}>
+                        {Localization.getText("youHaveNoOrders")}
+                    </Text>
+                    <Text style={ms.emptyMsg}>
+                        {Localization.getText("youHaveNoOrders2")}
+                    </Text>
+                </View>
+            }
+        />
 
     return (
         <View style={{flex:1}}> 
@@ -136,25 +152,7 @@ const FirstScreen = (nav) => {
                 <ExpandButton
                     expand={true}
                     title="Tjänster"
-                    content={
-                        <FlatList
-                            data={provider.providing}
-                            renderItem={({item})=><RequestItem nav={nav} item={item}/>}
-                            keyExtractor={(item)=>item._id}
-                            onRefresh={refreshProvider}
-                            refreshing={provider.isRefreshing}
-                            ListEmptyComponent={()=>
-                                <View style={ms.emptyContainer}>
-                                    <Text style={[ms.emptyMsg, ms.emptyMsgAbove]}>
-                                        {Localization.getText("youHaveNoOrders")}
-                                    </Text>
-                                    <Text style={ms.emptyMsg}>
-                                        {Localization.getText("youHaveNoOrders2")}
-                                    </Text>
-                                </View>
-                            }
-                        />
-                    }
+                    content={providingContent}
                 />
             }
         </View>
@@ -197,7 +195,7 @@ const MyOrders = ({navigation}) => {
 }
 
 const oas = StyleSheet.create({
-    time:{
+    time: {
         position:"absolute",
         right:0,
         top:0,
@@ -206,7 +204,6 @@ const oas = StyleSheet.create({
         fontWeight:"bold",
         color:"grey",
     }
-
 });
 
 

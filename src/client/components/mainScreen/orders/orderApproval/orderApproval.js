@@ -1,16 +1,11 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import { Text, View, FlatList, StyleSheet,TouchableOpacity} from 'react-native';
 import CustomHeader from '../../../customComponents/customHeader';
 import ms from "../../../mainStyles/ms";
 import SamaritButton from '../../../customComponents/samaritButton';
 import { Localization } from '../../../../modules/localization';
-
-
-const CHAT_ROOMS = [
-    {
-        "id":"1"
-    }
-]
+import { useState } from 'react';
+import chat from '../../../../modules/client-communication/chat';
 
 const ChatRoomItem = ({nav, item}) => {
     return (
@@ -25,20 +20,11 @@ const ChatRoomItem = ({nav, item}) => {
 
 const OrderApprovalScreen = ({navigation, route}) => {
 
-    const [state, setState] = useState(null);
+    const [chats, setChats] = useState([]);
 
     useEffect(() => {
         const init = async () => {
-            try 
-            {
-                setState(await getUser());
-
-                console.log(state.firstName);
-            } 
-            catch(error) 
-            {
-                console.log(error);
-            }
+            setChats(await chat.getChats(route.params._id));
         }
         init();
     },[]);
@@ -52,7 +38,7 @@ const OrderApprovalScreen = ({navigation, route}) => {
 
             <View style={{flex:1}}>
             <FlatList
-                data={CHAT_ROOMS}
+                data={chats.length > 0 ? chats : undefined}
                 renderItem={({item})=><ChatRoomItem nav={navigation} item={item}/>}
                 keyExtractor={(item)=>item.id}
                 ListEmptyComponent={()=>

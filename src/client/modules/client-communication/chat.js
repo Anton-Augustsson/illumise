@@ -69,6 +69,22 @@ const chat =
     },
 
     /**
+     * Gets all chat data of the chat with the given id
+     * @async
+     * @param {String} requestID The id of the request
+     * @param {Number} num The number of chats
+     * @returns {Promise<?Chat>} The chat
+     */
+    getChats: async function(requestID, num = undefined)
+    {
+        let params = `?requestID=${requestID}&num=${num}`;
+        let url = chat.chatUrl + '/getChats' + params;
+        let response = await fetch(url);
+
+        return returnResponse(response);
+    },
+
+    /**
      * setup a new chat for a new service provider
      * @param {string} requestID - The id of the request that is the chat should be created for
      * @param {[string]} usersID - The an array of two users

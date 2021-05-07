@@ -12,6 +12,13 @@ import OrderScreen from './orders/orders';
 const Tab = createBottomTabNavigator();
 
 const MainScreen = (navigation) => {
+    /*
+        <Tab.Screen
+            name="Notification" 
+            component={NotificationScreen}
+        />
+    */
+
     return (
         <Tab.Navigator initialRouteName="Home"
                        tabBar={props=><Menu {...props}/>}>
@@ -27,13 +34,8 @@ const MainScreen = (navigation) => {
             />
 
             <Tab.Screen 
-            name="Market" 
-            component={MarketScreen}
-            />
-
-            <Tab.Screen 
-            name="Notification" 
-            component={NotificationScreen}
+                name="Market" 
+                component={MarketScreen}
             />
 
             <Tab.Screen 

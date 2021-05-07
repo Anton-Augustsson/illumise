@@ -132,7 +132,8 @@ const DoneLoading = ({navigation, getState, creator, req, setReq, other}) => {
             />
             
             <AcceptHeader
-                userName={`${other.firstName} ${other.lastName}`}
+                userName={creator ? `${getState().user.firstName} ${getState().user.lastName}`
+                                  : `${other.firstName} ${other.lastName}`}
                 acceptTitle={creator ? "Remove" : "Claim"}
                 onButtonPress={async () => {
                     if (creator)
