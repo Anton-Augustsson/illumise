@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import CustomButton from "../customComponents/customButton";
 
-const AcceptHeader = ({onPress, userName, stars, zIndex = 1,acceptTitle}) => {
+const AcceptHeader = ({onPress, userName, stars, zIndex = 1, acceptTitle, onButtonPress}) => {
     return(
         <View style={[styles.topContainer, {zIndex:zIndex}]}>
             <TouchableOpacity 
@@ -23,6 +23,7 @@ const AcceptHeader = ({onPress, userName, stars, zIndex = 1,acceptTitle}) => {
                 title={acceptTitle}
                 style={styles.button}
                 styleText={styles.buttonText}
+                onPress={onButtonPress}
             />
         </View>
     )

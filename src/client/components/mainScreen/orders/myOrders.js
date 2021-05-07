@@ -31,12 +31,7 @@ const RequestItem = ({nav, item}) => {
             break;
 
     }
-
-    const timeToLocalizaedString = (time) => {
-        let date = new Date(item.dateCreated);
-        return 
-    }
-
+    
     return(
         <TouchableOpacity 
             onPress={()=>nav.nav.navigate("OrderApproval", item)}

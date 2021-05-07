@@ -32,7 +32,7 @@ const DeliverScreen = ({navigation, route}) => {
     const getLocation = async () => {
         let { status } = await Location.requestForegroundPermissionsAsync();
         if (status !== 'granted') {
-          setErrorMsg('Denied acces to location');
+          setErrorMsg('Denied access to location');
           return;
         }
         const response = await Location.getCurrentPositionAsync({}).then(loc => {
@@ -46,7 +46,8 @@ const DeliverScreen = ({navigation, route}) => {
         if(location === "") return;
         if(price === 0) return;
         setCheckingOut(true);
-        //TODO: kolla att obligatoriska fält är ifyllda
+
+        //TODO: check if fields are valid
         var result = Object.assign({}, route.params)
         result.stops.push(location);
         try {
@@ -58,8 +59,8 @@ const DeliverScreen = ({navigation, route}) => {
                 geoLocation: coords,
             }
             
-            const userID = await storage.getDataString("userID");
-            const requestId = await request.requester.newRequest(userID, result.type, data);
+            const userID    = await storage.getDataString("userID");
+            const requestID = await request.requester.newRequest(userID, result.type, data);
             navigation.dispatch(
                 CommonActions.reset({
                     routes: [
@@ -70,7 +71,7 @@ const DeliverScreen = ({navigation, route}) => {
                                     {name:"FirstScreen"},
                                     {
                                         name:"MarketItem",
-                                        params:{requestId:requestId},
+                                        params:{requestId: requestID},
                                     },
                                 ]
                             }, 
@@ -106,8 +107,7 @@ const DeliverScreen = ({navigation, route}) => {
                         placeholder={Localization.getText("deliveryAddress")}
                         fetchDetails = {true}
                         onPress={(data, details = null) => {
-                        // 'details' is provided when fetchDetails = true
-                        setLocation({adress: data.description, location: details.geometry.location});
+                            setLocation({address: data.description, location: details.geometry.location});
                         }}
                     />
                     <Text style={ms.h3}>{Localization.getText("enterPrice")}</Text>

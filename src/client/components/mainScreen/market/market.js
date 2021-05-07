@@ -120,8 +120,8 @@ function coordsToGeoJSON(coordinates)
 
 const FirstScreen = (nav) => {
     const {getState} = useContext(AppContext)
-    const [REQUESTS, setRequests] = useState(null);
-    const [isRefreshing, setIsRefresing] = useState(false);
+    const [REQUESTS, setRequests] = useState([]);
+    const [isRefreshing, setIsRefreshing] = useState(false);
     const [pointStart, setPointStart] = useState([]);
 
     const getNearRequests = async () => 
@@ -134,7 +134,6 @@ const FirstScreen = (nav) => {
             if (response.granted) 
             {
                 let geo = await Location.getCurrentPositionAsync();
-
                 let pointStart = coordsToGeoJSON([geo.coords.longitude, geo.coords.latitude]);
                 setPointStart(pointStart);
 
@@ -142,7 +141,7 @@ const FirstScreen = (nav) => {
             }
             else
             {
-                setErrorMsg('Denied acces to location');
+                setErrorMsg('Denied access to location');
             }
         } 
         catch (error) 
@@ -151,16 +150,17 @@ const FirstScreen = (nav) => {
         }
         finally
         {
-            return result.filter(result => result != null && result.creatorID !== getState().userID);
+            return result.filter(result => result != null 
+                              && result.creatorID !== getState().user._id);
         }
     }
 
     const refresh = () => {
-        setIsRefresing(true);
+        setIsRefreshing(true);
         getNearRequests().then(data => {
             setRequests(data);
-        }); 
-        setIsRefresing(false);
+            setIsRefreshing(false);
+        });
     }
 
     useEffect(() => {

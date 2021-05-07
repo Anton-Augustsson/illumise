@@ -36,19 +36,6 @@ const ShoppingItem = ({item}) => {
     );
 }
 
-/*
-Din mamma - 69kr
----------
-| KARTA |
----------
-1
-2
-3
-Plats: swaggatan 13
------
-Lista med saker
-*/
-
 const Header = ({req}) => {
     return (
         <View style={mis.padding}>
@@ -59,7 +46,7 @@ const Header = ({req}) => {
             <Text style={ms.h4}>{Localization.getText("destinations")}</Text>
             {
                 req.body.stops.map((place, index) => (
-                    <Text key={index} style={mis.mapText}>{index+1 + ". " + place.adress}</Text>
+                    <Text key={index} style={mis.mapText}>{index+1 + ". " + place.address}</Text>
                 ))
             }
                 {req.header === "shopping" || req.header === "food" ? 
@@ -147,6 +134,7 @@ const DoneLoading = ({navigation, creator, req, getState}) => {
             <AcceptHeader
                 userName={`${getState().user.firstName} ${getState().user.lastName}`}
                 acceptTitle={creator ? "Remove" : "Claim"}
+                onButtonPress={async () => await remove(navigation, req)}
                 stars={5}
                 zIndex={-1}
             />
@@ -166,8 +154,8 @@ const DoneLoading = ({navigation, creator, req, getState}) => {
                         return {
                             latitude:    stop.location.lat,
                             longitude:   stop.location.lng,
-                            title:       "Stopp " + (parseInt(index)+1),
-                            description: stop.location.adress,
+                            title:       "Stop " + (parseInt(index)+1),
+                            description: stop.location.address,
                             key:         (parseInt(index)+1)
                         };
                     });
@@ -189,16 +177,23 @@ const MarketItem = ({navigation, route}) => {
 
     useEffect(() => {
 
-        const retrieveRequest = async () => {
-            if(route.params.requestId === undefined) {
+        const retrieveRequest = async () =>
+        {
+            let userID = getState().user._id;
+            if(route.params.requestId === undefined) 
+            {
                 setReq(route.params);
-                setLoading(false);
-                return;
-            } 
-            await timeout(1000);
-            var req2 = await request.requester.getUserRequest(getState().user._id);
-            setReq(req2[req2.length-1]);
-            setCreator(getState()._id === route.params.requestId);
+                setCreator(route.params.creatorID === userID);
+            }
+            else
+            {
+                let result = await request.requester.getUserRequest(userID);
+                let item = result[result.length-1];
+                setReq(item);
+                setCreator(item._id === route.params.requestId);
+            }
+            
+            
             setLoading(false);
         }
         retrieveRequest();

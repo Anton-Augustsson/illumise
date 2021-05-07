@@ -47,8 +47,8 @@ const request =
         /**
          * get available request in x radius from location.
          * @param {string} geoLocation - The current location of the provider
-         * @param {int} maxDistance - The max sistance of the acceptile location
-         * @param {int} maxRequests - The number of request that the proider whants to se
+         * @param {int} maxDistance - The max distance to a location
+         * @param {int} maxRequests - The number of request to send to send
          * @returns {Promise<?[Request]>} The requests BSON objects in a list or null
          */
         getNearRequests: async function(geoLocation, maxDistance, maxRequests = undefined)
@@ -102,7 +102,7 @@ const request =
         /**
          * Get requests that the provider has set
          * @param {string} providerID - The id of the providers set requests 
-         * @param {int} num - The number of how many requests to return starting from most reasont
+         * @param {int} num - The number of how many requests to return starting from most resent
          */
         getUserProviding: async function(providerID, num = undefined)
         {
@@ -141,6 +141,7 @@ const request =
          * Get the users request
          * @param {string} userID - The user id of the users requests
          * @param {int} num - The number of how many requests to return starting from most resent
+         * @returns {Promise<[Request]>}
          */
         getUserRequest: async function(userID, num = undefined) // num is the number of my requests starting from most recent //async  await
         {
