@@ -2,26 +2,34 @@ import React, {useState, useContext, useEffect} from 'react';
 import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import { Localization } from '../../../../modules/localization';
 import { AppContext } from '../../../AppContext';
-import { FontAwesome } from '@expo/vector-icons'; 
 import Chat from '../../../customComponents/chat';
-import CustomButton from '../../../customComponents/customButton';
 import CustomHeader from '../../../customComponents/customHeader';
 import request from '../../../../modules/client-communication/request';
 import AcceptHeader from '../../../customComponents/acceptHeader';
+import account from '../../../../modules/client-communication/account';
+import chat from '../../../../modules/client-communication/chat';
 
-export const OrderChatScreen = ({navigation}) => 
+export const OrderChatScreen = ({navigation, route}) => 
 {
-    const { getUser } = useContext(AppContext);
-    const [state, setState] = useState({user: {firstName: ""}});
+    const { getState } = useContext(AppContext);
+    const [otherObject, setOther] = useState(route.params.other);
+    const [chatObject, setChat] = useState(route.params.chat);
 
-    /*
     useEffect(() => {
         
         const init = async () => {
             try 
             {
-                setState({user: await getUser()});
-                console.log(state.user.firstName);
+                console.log("\n----");
+                console.log(JSON.stringify(route.params, null, 2));
+                if (otherObject === undefined)
+                {
+                    setOther(await account.getFromID(route.params.request.creatorID))
+                }
+                if (chatObject === undefined)
+                {
+                    setChat(await chat.getChat(route.params.request._id, getState().user._id, !route.params.isCreator));
+                }
             } 
             catch(error) 
             {
@@ -30,7 +38,6 @@ export const OrderChatScreen = ({navigation}) =>
         }
         init();
     },[]);
-    */
 
     return (
         <View style={{flex:1}}>
@@ -40,9 +47,14 @@ export const OrderChatScreen = ({navigation}) =>
             />
             <View style={{flex:1}}>
                 <AcceptHeader
-                    userName="Linda"
+                    userName={otherObject != undefined ? `${otherObject.firstName} ${otherObject.lastName}` : ""}
                     acceptTitle={Localization.getText("acceptProvider")}
-                    stars={3}
+                    stars={5}
+                    buttonDisabled={!route.params.isCreator}
+                    onButtonPress={async () => 
+                    {
+                        await request.provider.set(route.params)
+                    }}
                 />
                 <Chat name={Localization.getText("me")} senderId={"1"} room={"1"}/>
             </View>

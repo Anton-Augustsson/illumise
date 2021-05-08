@@ -6,10 +6,7 @@ import rs from "../requestStyle";
 import {Localization} from '../../../../../modules/localization';
 import IconButton from "../../../../customComponents/iconButton";
 import FloatingInput from '../../../../customComponents/Inputs/floatingInput';
-import GooglePlaces from "../../../../customComponents/Inputs/googlePlaces";
-import storage from '../../../../../modules/localStorage/localStorage';
-import request from '../../../../../modules/client-communication/request';
-import * as Location from 'expo-location';
+
 const OtherRequestScreen = ({navigation}) => {
     const [title, setTitle] = useState("");
     const [info, setInfo] = useState("");

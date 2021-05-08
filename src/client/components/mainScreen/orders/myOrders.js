@@ -13,7 +13,7 @@ import ExpandButton from '../../customComponents/expandButton';
 import OrderApprovalScreen from './orderApproval/orderApproval';
 import { OrderChatScreen } from './chat/orderChat';
 
-const RequestItem = ({nav, item}) => {
+const RequestItem = ({nav, item, isCreator}) => {
     var text = ''
     switch (item.body.type) {
         case 'food':
@@ -33,7 +33,9 @@ const RequestItem = ({nav, item}) => {
     
     return(
         <TouchableOpacity 
-            onPress={()=>nav.nav.navigate("OrderApproval", item)}
+            onPress={() => nav.nav.navigate(isCreator ? "OrderApproval"
+                                                      : "OrderChat",
+                                            { request: item, isCreator: isCreator })}
             style={ms.itemContainer}>
             <RequestIcon type={item.header} size={30} color="black"/>
             <Text numberOfLines={2} style={ms.msg}>{text}</Text>
@@ -77,14 +79,17 @@ const FirstScreen = (nav) => {
 
     const refreshProvider = async () => {
         setProvider({...provider, isRefreshing: true});
-        try {
+        try 
+        {
             const userID = await storage.getDataString("userID");
             const providing = await request.provider.getUserProviding(userID);
             setProvider({
                 providing: providing,
-                isRefreshing:false,
+                isRefreshing: false,
             });
-        } catch (error) {
+        } 
+        catch (error) 
+        {
             console.log(error);
         }
     }
@@ -97,7 +102,7 @@ const FirstScreen = (nav) => {
     const requestContent = 
         <FlatList
             data={state.requests}
-            renderItem={({item})=><RequestItem nav={nav} item={item}/>}
+            renderItem={({item})=><RequestItem nav={nav} item={item} isCreator={true}/>}
             keyExtractor={(item)=>item._id}
             onRefresh={refreshRequest}
             refreshing={state.isRefreshing}
@@ -116,7 +121,7 @@ const FirstScreen = (nav) => {
     const providingContent = 
         <FlatList
             data={provider.providing}
-            renderItem={({item})=><RequestItem nav={nav} item={item}/>}
+            renderItem={({item})=><RequestItem nav={nav} item={item} isCreator={false}/>}
             keyExtractor={(item)=>item._id}
             onRefresh={refreshProvider}
             refreshing={provider.isRefreshing}

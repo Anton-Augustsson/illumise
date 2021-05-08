@@ -6,14 +6,31 @@ import SamaritButton from '../../../customComponents/samaritButton';
 import { Localization } from '../../../../modules/localization';
 import { useState } from 'react';
 import chat from '../../../../modules/client-communication/chat';
+import account from '../../../../modules/client-communication/account';
 
-const ChatRoomItem = ({nav, item}) => {
+const ChatRoomItem = ({nav, item, params}) => {
+
+    const [other, setOther] = useState(null);
+
+    useEffect(() => 
+    {
+        const init = async () => 
+        {
+            let provider = await account.getFromID(item.provider._id);
+            setOther(provider);
+        }
+        init();
+    },[]);
+
     return (
         <TouchableOpacity 
             style={oas.chatRoomContainer}
-            onPress={()=>nav.navigate("OrderChat")}
+            onPress={()=>nav.navigate("OrderChat", { ...params, chat: item, other: other})}
         >
-            <Text style={oas.chatRoomTitle}>Bengt vill ta din order</Text>
+            <Text style={oas.chatRoomTitle}>
+                {other != null ? `${other.firstName} ${other.lastName} vill ta din order`
+                               : ""}
+            </Text>
         </TouchableOpacity>
     );
 }
@@ -24,8 +41,8 @@ const OrderApprovalScreen = ({navigation, route}) => {
 
     useEffect(() => {
         const init = async () => {
-            setChats(await chat.getChats(route.params._id));
-            console.log(chats);
+            let result = await chat.getChats(route.params.request._id);
+            if (result !== null) setChats(result);
         }
         init();
     },[]);
@@ -33,14 +50,14 @@ const OrderApprovalScreen = ({navigation, route}) => {
     return (
         <View style={{flex:1}}>
             <CustomHeader
-                title={route.params.header}
+                title={route.params.request.header}
                 nav={navigation}
             />
 
             <View style={{flex:1}}>
             <FlatList
                 data={chats.length > 0 ? chats : undefined}
-                renderItem={({item})=><ChatRoomItem nav={navigation} item={item}/>}
+                renderItem={({item})=><ChatRoomItem nav={navigation} item={item} params={route.params}/>}
                 keyExtractor={(item)=>item._id}
                 ListEmptyComponent={()=>
                     <View style={ms.emptyContainer}>

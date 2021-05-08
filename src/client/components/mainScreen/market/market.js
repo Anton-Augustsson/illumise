@@ -152,6 +152,7 @@ const FirstScreen = (nav) => {
         {
             return result.filter(result => result != null 
                               && result.creatorID !== getState().user._id
+                              && result.providerID == null
                               && result.body.stops != undefined);
         }
     }

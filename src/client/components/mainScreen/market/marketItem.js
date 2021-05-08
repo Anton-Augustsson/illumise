@@ -13,8 +13,10 @@ import AcceptHeader from '../../customComponents/acceptHeader';
 import account from '../../../modules/client-communication/account';
 import chat from '../../../modules/client-communication/chat';
 
-const ShoppingItem = ({item}) => {
+const ShoppingItem = ({item}) => 
+{
     const [expand, setExpand] = useState(item.info !== "");
+
     return (
         <TouchableOpacity onPress={()=>setExpand(!expand)} style={cs.listItemContainer}>
             <View style={[cs.listItemView, cs.margin]}>
@@ -37,7 +39,8 @@ const ShoppingItem = ({item}) => {
     );
 }
 
-const Header = ({req}) => {
+const Header = ({req}) => 
+{
     return (
         <View style={mis.padding}>
             {req.header === "other" &&
@@ -101,7 +104,6 @@ const DoneLoading = ({navigation, getState, creator, req, setReq, other}) => {
     const claim = async (_, req) => {
         try 
         {
-            await request.provider.set(req._id, getState().user._id);
             let id = await chat.newChat(req._id, other._id, getState().user._id);
             console.log(id);
             setReq(await request.get(req._id));
@@ -193,12 +195,15 @@ const MarketItem = ({navigation, route}) => {
         const retrieveRequest = async () =>
         {
             let userID = getState().user._id;
+            
             if(route.params.requestId === undefined) 
             {
-                let isCreator = route.params.creatorID === userID;
-                setReq(route.params);
+                let request = route.params.request;
+                let isCreator = request.creatorID === userID;
+                setReq(request);
                 setCreator(isCreator);
-                let otherID = isCreator? route.params.providerID : route.params.creatorID;
+                let otherID = isCreator ? request.providerID 
+                                        : request.creatorID;
                 setOther(await account.getFromID(otherID));
             }
             else
