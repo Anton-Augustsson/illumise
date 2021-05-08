@@ -11,12 +11,12 @@ const chatCollectionName = "Chat";
  * @property {String} _id
  * @property {String} requestID
  * @property {Number} dateCreated
- * @property {MessageCollection} provider
- * @property {MessageCollection} requester
+ * @property {UserMessages} provider
+ * @property {UserMessages} requester
  */
 
 /**
- * @typedef MessageCollection
+ * @typedef UserMessages
  * @property {String} _id
  * @property {[ChatMessage]} messages
  */
@@ -118,6 +118,26 @@ class DBChatInterface
             }
             let result  = await this.#collection.updateOne(filter, update);
             return result.result.ok == 1 && result.result.nModified == 1;
+        }
+        catch (error)
+        {
+            return false;
+        }
+    }
+
+    /**
+     * Adds a message to a chat
+     * @async
+     * @param {String} chatID The id of the chat
+     * @returns {Promise<?Chat>} If the message was added successfully 
+     */
+    async getFromID(chatID)
+    {
+        try
+        {
+            let filter = { _id: ObjectID(chatID) };
+            let result  = await this.#collection.findOne(filter);
+            return result;
         }
         catch (error)
         {

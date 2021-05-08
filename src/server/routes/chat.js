@@ -56,11 +56,6 @@ router.get('/getChat', async (req, res) =>
     }
 });
 
-/**
- * get all messages from a specific chat
- * @param {string} userID - The id of the user that sends a message
- * @param {string} chatID - The id of the chat witch is between the provider and requester
- */
 router.get('/getChats', async (req, res) =>
 {
     const params = {
@@ -71,6 +66,18 @@ router.get('/getChats', async (req, res) =>
     if(validParams(params, res))
     {
         let response = await db.chat.getChats(params.requestID, params.num === "undefined" ? undefined : parseInt(params.num));
+        if(response != null) return sendSuccess(res, response);
+        else return sendFailure(res);
+    }
+});
+
+router.get('/getChatFromID', async (req, res) =>
+{
+    const params = { chatID: req.param('requestID') };
+
+    if(validParams(params, res))
+    {
+        let response = await db.chat.getFromID(params.chatID);
         if(response != null) return sendSuccess(res, response);
         else return sendFailure(res);
     }
