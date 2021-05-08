@@ -25,7 +25,7 @@ async function initDB()
     let url = "mongodb+srv://admin:123@cluster0.j0bss.mongodb.net/main?retryWrites=true&w=majority";
     db = new DBInterface(undefined, undefined, url, true);
     connected = await db.connect();
-    db.clear();
+    //db.clear();
 }
 
 initDB();

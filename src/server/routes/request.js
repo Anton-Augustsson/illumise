@@ -85,7 +85,7 @@ router.put('/provider/set', async (req, res) =>
  * @param {String} requestID The id of the request
  * @returns {Promise<?Request>} The requests BSON objects in a list or null
  */
-router.put('/provider/get', async (req, res) =>
+router.put('/get', async (req, res) =>
 {
     const schema = Joi.object({
         requestID: Joi.string().min(idSize).max(idSize)

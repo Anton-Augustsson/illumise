@@ -9,12 +9,12 @@ describe("Testing dbInterface", () =>
 {
     let url = "mongodb+srv://admin:123@cluster0.j0bss.mongodb.net/main?retryWrites=true&w=majority";
     let db = new DBInterface(undefined, undefined, url, true);
-    let connected;
+    let connected = false;
 
     beforeAll(async () =>
     {
-        connected = await db.connect();
-        await db.clear();
+        //await db.connect();
+        //await db.clear();
     });
 
     it("Connect to server", async () => 
@@ -173,7 +173,7 @@ describe("Testing dbInterface", () =>
         let result    = await db.chat.addMessage(chatID, message, true);
         expect(result).toBe(true);
 
-        let chat = await db.chat.getChat(chatID);
+        let chat = await db.chat.getChat(requestID, user1ID, false);
         expect(chat._id).toStrictEqual(chatID);
         expect(chat.provider._id).toStrictEqual(user2ID);
         expect(chat.requester._id).toStrictEqual(user1ID);

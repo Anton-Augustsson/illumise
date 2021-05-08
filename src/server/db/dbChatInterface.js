@@ -129,6 +129,28 @@ class DBChatInterface
      * Gets all chat data of the chat with the given id
      * @async
      * @param {String} requestID The id of the request
+     * @returns {Promise<?[Chat]>} The chat
+     */
+    async getChats(requestID, num = undefined)
+    {
+        try
+        {
+            let filter = { requestID: ObjectID(requestID) };
+            let result = await this.#collection.find(filter).toArray();
+            if (num !== undefined) result.length = num >= 0 ? num : 0;
+            return result;
+        }
+        catch (error)
+        {
+            console.log(error);
+            return null;
+        }
+    }
+
+    /**
+     * Gets all chat data of the chat with the given id
+     * @async
+     * @param {String} requestID The id of the request
      * @param {String} userID The id of the user
      * @param {Boolean} isProvider If the user is a provider
      * @returns {Promise<?Chat>} The chat

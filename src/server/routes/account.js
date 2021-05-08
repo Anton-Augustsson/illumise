@@ -107,7 +107,6 @@ router.get('/getFromID', async (req, res) =>
     if(validParams(params, res))
     {
         let response = await db.accounts.getFromID(params.userID);
-        console.log(response);
         if(response != null) return sendSuccess(res, response);
         else return sendFailure(res);
     }
