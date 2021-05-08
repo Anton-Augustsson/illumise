@@ -245,7 +245,7 @@ describe("Testing client communication", () =>
         let userID = await createDummyUser();
         let userID2 = await createDummyUser2();
         let requestID = await createDummyRequest(userID);
-        let chatID = await chat.newChat(requestID, [userID, userID2]);
+        let chatID = await chat.newChat(requestID, userID, userID2);
         expect(chatID).not.toBeNull();
         let responseR = await chat.removeChat(chatID);
         expect(responseR).not.toBeNull();
@@ -272,7 +272,7 @@ describe("Testing client communication", () =>
         let userID = await createDummyUser();
         let userID2 = await createDummyUser2();
         let requestID = await createDummyRequest(userID);
-        let chatID = await chat.newChat(requestID, [userID, userID2]);
+        let chatID = await chat.newChat(requestID, userID, userID2);
         expect(chatID).not.toBeNull();
         let response = await chat.sendMessage(chatID, "hello im here", true);
         expect(response).not.toBeNull();
@@ -303,7 +303,7 @@ describe("Testing client communication", () =>
         let userID = await createDummyUser();
         let userID2 = await createDummyUser2();
         let requestID = await createDummyRequest(userID);
-        let chatID = await chat.newChat(requestID, [userID, userID2]);
+        let chatID = await chat.newChat(requestID, userID, userID2);
         expect(chatID).not.toBeNull();
         let responseS = await chat.sendMessage(chatID, "hello im here", true);
         expect(responseR).not.toBeNull();
@@ -338,7 +338,7 @@ let num = 1;
 async function createDummyUser(){
     let credentials = {"firstName":"F", "lastName":"D", "email":"A" + num + "@mail.test", "token":"L" };
     num += 1;
-    let userID      = await account.createAccount(credentials)
+    let userID      = await account.createAccount(credentials);
     expect(userID).not.toBeNull();
     return userID;
 }
@@ -346,7 +346,7 @@ async function createDummyUser(){
 async function createDummyUser2(){
     let credentials = {"firstName":"SDA", "lastName":"BLDID", "email":"A" + num + "@mail.test", "token":"SIODJSAL" };
     num += 1;
-    let userID      = await account.createAccount(credentials)
+    let userID      = await account.createAccount(credentials);
     expect(userID).not.toBeNull();
     return userID;
 }

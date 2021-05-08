@@ -85,14 +85,17 @@ const chat =
     },
 
     /**
-     * setup a new chat for a new service provider
-     * @param {string} requestID - The id of the request that is the chat should be created for
-     * @param {[string]} usersID - The an array of two users
+     * Adds a new chat if no equivalent chat exists
+     * @async
+     * @param {String} requestID The id of the related request
+     * @param {String} requesterID The id of the requester
+     * @param {String} providerID The id of the provider
+     * @returns {Promise<?String>} The id of the chat or null
      */
-    newChat: async function(requestID, usersID)
+    newChat: async function(requestID, requesterID, providerID)
     {
         let url = chat.chatUrl + '/newChat';
-        let toCreate = {requestID: requestID, usersID: usersID};
+        let toCreate = {requestID: requestID, requesterID: requesterID, providerID: providerID};
         let response = await fetch(url, {
             method: 'PUT',
             headers: {

@@ -142,7 +142,7 @@ const FirstScreen = (nav) => {
 
             {provider.providing.length == 0 ? requestContent : 
                 <ExpandButton
-                    expand={false}
+                    expand={true}
                     title="Beställningar"
                     content={requestContent}
                 />   

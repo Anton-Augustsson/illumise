@@ -11,6 +11,7 @@ import MyBottomSheet from '../../customComponents/myBottomSheet';
 import { AppContext } from '../../AppContext';
 import AcceptHeader from '../../customComponents/acceptHeader';
 import account from '../../../modules/client-communication/account';
+import chat from '../../../modules/client-communication/chat';
 
 const ShoppingItem = ({item}) => {
     const [expand, setExpand] = useState(item.info !== "");
@@ -101,6 +102,8 @@ const DoneLoading = ({navigation, getState, creator, req, setReq, other}) => {
         try 
         {
             await request.provider.set(req._id, getState().user._id);
+            let id = await chat.newChat(req._id, other._id, getState().user._id);
+            console.log(id);
             setReq(await request.get(req._id));
             navigation.reset({
                 index: 0,
@@ -115,6 +118,7 @@ const DoneLoading = ({navigation, getState, creator, req, setReq, other}) => {
 
     useEffect(() => {
         console.log("other: " + JSON.stringify(other, null, 2));
+        console.log(req);
     }, []);
     
     return (

@@ -25,6 +25,7 @@ const OrderApprovalScreen = ({navigation, route}) => {
     useEffect(() => {
         const init = async () => {
             setChats(await chat.getChats(route.params._id));
+            console.log(chats);
         }
         init();
     },[]);
@@ -40,7 +41,7 @@ const OrderApprovalScreen = ({navigation, route}) => {
             <FlatList
                 data={chats.length > 0 ? chats : undefined}
                 renderItem={({item})=><ChatRoomItem nav={navigation} item={item}/>}
-                keyExtractor={(item)=>item.id}
+                keyExtractor={(item)=>item._id}
                 ListEmptyComponent={()=>
                     <View style={ms.emptyContainer}>
                         <Text style={[ms.emptyMsg, ms.emptyMsgAbove]}>
