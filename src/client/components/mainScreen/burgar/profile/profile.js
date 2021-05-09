@@ -1,7 +1,7 @@
 import { AppContext } from '../../../AppContext';
 import CustomButton from '../../../customComponents/customButton';
-import React, { useContext, useState } from 'react';
-import { View, StyleSheet, Image, Text, ScrollView} from 'react-native';
+import React, { useContext, useState, useEffect} from 'react';
+import { View, StyleSheet, Image, Text, ScrollView } from 'react-native';
 import { Localization } from '../../../../modules/localization';
 import CustomHeader from '../../../customComponents/customHeader';
 import ms from '../../../mainStyles/ms';
@@ -13,6 +13,7 @@ import colors from '../../../../components/mainStyles/colors'
 
 const ProfilePicture = ({getState}) => 
 {
+    //TODO: Ej anpassat för facebook. Kommer få error
     return (
         <View style={bs.profileContainer}>
             <Image
@@ -23,26 +24,59 @@ const ProfilePicture = ({getState}) =>
     );
 }
 
-const updateProfile = async (firstName, lastName, email) =>{
-    const userID = await storage.getDataString("userID");
-    console.log(userID);
-    //TODO: kolla om något fält är tomt och isåfall ta det gamla värdet
-    const credentials = {
-            "firstName":firstName,
-            "lastName":lastName,
-            "email":email,
-            "token":"Nej" //<- Token ska inte ändras
+const updateProfile = async (firstName, lastName, getState, refresh, setState) =>{    
+    let credentials = {
+            "firstName":getState().user.firstName,
+            "lastName":getState().user.lastName,
+            "email":getState().user.email,
+            "token":getState().user.password
+    };
+    var newUser = getState().user;
+    if(firstName != ""){
+        credentials.firstName = firstName;
+        newUser.firstName = firstName;
     }
-    account.changeCredentials(userID, credentials);
+    if(lastName != ""){
+        credentials.lastName = lastName;
+        newUser.lastName = lastName;
+    }
+    setState(newUser);
+    
+    await account.changeCredentials(getState().user._id, credentials);
+    refresh();
 }
 
 const ProfileScreen = ({navigation}) => 
 {
-    const { getState, signOut } = useContext(AppContext); 
+    const { getState, signOut, setState} = useContext(AppContext); 
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
-    const [email, setEmail] = useState("");
-       
+    const [user, setUser] = useState();
+    const [hasUpdated, setUpdated] = useState(0);
+
+    
+
+    const refresh = () =>{
+        setFirstName("");
+        setLastName("");
+        setUpdated(hasUpdated+1);
+    }
+
+    useEffect(() => {
+        const init = async () => {
+            try 
+            {
+                setUser(getState().user);
+            } 
+            catch(error) 
+            {
+                console.log(error);
+            }
+        }
+        init();
+    },[hasUpdated]);
+
+
     return (
         <>
         <CustomHeader
@@ -54,9 +88,15 @@ const ProfileScreen = ({navigation}) =>
             
             <ProfilePicture getState={getState}/>
 
-            <Text style={bs.profileName}>Steffe</Text>
-            <Text style={bs.profileMail}>steffson@gmail.com</Text>
-            <Text style={[ms.h2, {marginTop:40, marginLeft: 20}]}>Uppdatera profil:</Text>
+            {user == null ? <Text>{Localization.getText("loading")}</Text> 
+            : 
+            <>
+                <Text style ={bs.profileName}>{user.firstName + " " + user.lastName}</Text>
+                <Text style={bs.profileMail}>{user.email}</Text>
+            </>
+            }
+            
+            <Text style={[ms.h2, {marginTop:40, marginLeft: 20}]}>{Localization.getText("update")}</Text>
             <View style={bs.input}>
                 <FloatingInput 
                     placeholder={Localization.getText("foreName")}
@@ -68,18 +108,13 @@ const ProfileScreen = ({navigation}) =>
                     onChangeText={text => {setLastName(text)}}
                     value={lastName}
                     />
-                <FloatingInput 
-                    placeholder={Localization.getText("email")}
-                    onChangeText={text => {setEmail(text)}}
-                    value={email}
-                    />
             </View>
 
             <View style={ms.container}>
                 <CustomButton
                     style={ms.button}
                     title={Localization.getText("update")}
-                    onPress={()=>updateProfile(firstName, lastName, email)}
+                    onPress={()=>updateProfile(firstName, lastName, getState, refresh, setState)}
                 />
             </View>
 
@@ -143,7 +178,6 @@ const bs = StyleSheet.create({
         height:50,
         borderRadius:15,
         backgroundColor:'red',
-        marginTop:'10%'
     },
 });
 
