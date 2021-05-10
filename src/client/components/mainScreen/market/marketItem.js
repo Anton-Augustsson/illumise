@@ -82,9 +82,10 @@ const BottomSheetContent = ({req}) => (
     </>
 )
 
-const DoneLoading = ({navigation, getState, creator, req, setReq, other}) => {
+const DoneLoading = ({navigation, creator, isCreator, req }) => {
 
     const sheetRef = useRef();
+    const { getState } = useContext(AppContext);
 
     const remove = async (navigation, req) => {
         try 
@@ -104,9 +105,7 @@ const DoneLoading = ({navigation, getState, creator, req, setReq, other}) => {
     const claim = async (_, req) => {
         try 
         {
-            let id = await chat.newChat(req._id, other._id, getState().user._id);
-            console.log(id);
-            setReq(await request.get(req._id));
+            await chat.newChat(req._id, creator._id, getState().user._id);
             navigation.reset({
                 index: 0,
                 routes: [{ name: 'Orders' }],
@@ -117,11 +116,6 @@ const DoneLoading = ({navigation, getState, creator, req, setReq, other}) => {
             console.log(error);
         }
     }
-
-    useEffect(() => {
-        console.log("other: " + JSON.stringify(other, null, 2));
-        console.log(req);
-    }, []);
     
     return (
         <>
@@ -138,11 +132,11 @@ const DoneLoading = ({navigation, getState, creator, req, setReq, other}) => {
             />
             
             <AcceptHeader
-                userName={creator ? `${getState().user.firstName} ${getState().user.lastName}`
-                                  : `${other.firstName} ${other.lastName}`}
-                acceptTitle={creator ? "Remove" : "Claim"}
+                userName={`${creator.firstName} ${creator.lastName}`}
+                acceptTitle={isCreator ? Localization.getText("remove") : 
+                                         Localization.getText("claim")}
                 onButtonPress={async () => {
-                    if (creator)
+                    if (isCreator)
                     {
                         await remove(navigation, req);
                     }
@@ -153,8 +147,8 @@ const DoneLoading = ({navigation, getState, creator, req, setReq, other}) => {
                 }}
                 stars={5}
                 zIndex={-1}
-                buttonStyle={creator ? {backgroundColor: "#ff4d4d"} : undefined}
-                buttonDisabled={req.providerID === getState().user._id}
+                buttonStyle={isCreator ? {backgroundColor: "#ff4d4d"} : undefined}
+                buttonDisabled={!isCreator && req.providerID != null}
             />
 
             <CustomMap
@@ -184,39 +178,16 @@ const DoneLoading = ({navigation, getState, creator, req, setReq, other}) => {
 }
 
 const MarketItem = ({navigation, route}) => {
-    const { getState } = useContext(AppContext);
     const [loading, setLoading] = useState(true);
-    const [req, setReq] = useState(null);
-    const [creator, setCreator] = useState(false);
-    const [other, setOther] = useState(null);
+    const [creator, setCreator] = useState(null);
+
+    const isCreator = route.params.isCreator !== undefined && route.params.isCreator;
 
     useEffect(() => {
 
         const retrieveRequest = async () =>
         {
-            let userID = getState().user._id;
-            
-            if(route.params.requestId === undefined) 
-            {
-                let request = route.params.request;
-                let isCreator = request.creatorID === userID;
-                setReq(request);
-                setCreator(isCreator);
-                let otherID = isCreator ? request.providerID 
-                                        : request.creatorID;
-                setOther(await account.getFromID(otherID));
-            }
-            else
-            {
-                let result = await request.requester.getUserRequest(userID);
-                let item = result[result.length-1]; 
-                let isCreator = item._id === route.params.requestId;
-                setReq(item);
-                setCreator(isCreator);
-                let otherID = isCreator? item.providerID : item.creatorID;
-                setOther(await account.getFromID(otherID));
-            }
-            
+            setCreator(await account.getFromID(route.params.creatorID));
             setLoading(false);
         }
         retrieveRequest();
@@ -227,11 +198,9 @@ const MarketItem = ({navigation, route}) => {
             {loading ? <Loading/> : 
             <DoneLoading 
                 navigation={navigation} 
-                getState={getState} 
-                creator={creator} 
-                req={req} 
-                setReq={setReq}
-                other={other}
+                creator={creator}
+                isCreator={isCreator}
+                req={route.params} 
             />}
         </View>
     );

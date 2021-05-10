@@ -1,22 +1,18 @@
-import React, {useContext, useState, useEffect} from 'react';
+import React, {useContext } from 'react';
 import { Text, View, FlatList, TouchableOpacity } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import FoodRequestScreen from './requests/foodRequestScreen/foodRequest';
 import PostRequestScreen from './requests/postRequestScreen/postRequestScreen';
 import LegitimationScreen from './requests/postRequestScreen/legitimation';
 import ShoppingRequestScreen from "./requests/shoppingRequestScreen/shoppingRequest";
-import {colors} from "../../mainStyles/colors"
-import ms from "../../mainStyles/ms"
-import hs from "./homeStyle"
+import {colors} from "../../mainStyles/colors";
+import hs from "./homeStyle";
 import ReceiptScreen from "./requests/receipt/receipt";
 import RequestIcon from "../../customComponents/requestIcon"
 import DeliverScreen from './requests/deliver/deliver';
 import { Localization } from '../../../modules/localization';
 import OtherRequestScreen from './requests/OtherRequestScreen/otherRequest';
-import storage from '../../../modules/localStorage/localStorage';
-import MarketItem from '../market/marketItem';
 import { AppContext } from '../../AppContext';
-import useUser from '../../customComponents/useUser';
 
 
 

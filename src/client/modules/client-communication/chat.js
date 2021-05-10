@@ -54,6 +54,23 @@ const chat =
     /**
      * Gets all chat data of the chat with the given id
      * @async
+     * @param {String} userID The id of the user
+     * @param {Boolean} isProvider If the user is a provider
+     * @param {Number} num
+     * @returns {Promise<?[Chat]>} The chat
+     */
+    getChatsFrom: async function(userID, isProvider, num = undefined)
+    {
+        let params = `?userID=${userID}&isProvider=${isProvider}&num=${num}`;
+        let url = chat.chatUrl + '/getChatsFrom' + params;
+        let response = await fetch(url);
+
+        return returnResponse(response);
+    },
+
+    /**
+     * Gets all chat data of the chat with the given id
+     * @async
      * @param {String} requestID The id of the request
      * @param {String} userID The id of the user
      * @param {Boolean} isProvider If the user is a provider
@@ -61,10 +78,10 @@ const chat =
      */
     getChat: async function(requestID, userID, isProvider)
     {
-        let params = `?requestID=${requestID}&userID=${userID}isProvider=${isProvider}`;
+        let params = `?requestID=${requestID}&userID=${userID}&isProvider=${isProvider}`;
         let url = chat.chatUrl + '/getChat' + params;
         let response = await fetch(url);
-
+        
         return returnResponse(response);
     },
 

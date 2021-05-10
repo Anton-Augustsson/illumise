@@ -48,16 +48,11 @@ const request =
      * @returns {Promise<?Request>}
      */
     get: async function(requestID)
-    {   
-        let body = { requestID: requestID };
-        let url = request.serviceUrl + '/get';
-        let response = await fetch(url, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json;charset=utf-8'
-            },
-            body: JSON.stringify(body)
-        });
+    {
+        let params = `?requestID=${requestID}`;
+        let url = request.serviceUrl + '/get' + params;
+        let response = await fetch(url);
+
         return returnResponse(response);
     },
 

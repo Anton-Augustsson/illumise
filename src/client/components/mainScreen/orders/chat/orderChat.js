@@ -17,23 +17,16 @@ export const OrderChatScreen = ({navigation, route}) =>
 
     useEffect(() => {
         
-        const init = async () => {
-            try 
+        console.log("Params", route.params);
+        const init = async () => 
+        {
+            if (otherObject === undefined)
             {
-                console.log("\n----");
-                console.log(JSON.stringify(route.params, null, 2));
-                if (otherObject === undefined)
-                {
-                    setOther(await account.getFromID(route.params.request.creatorID))
-                }
-                if (chatObject === undefined)
-                {
-                    setChat(await chat.getChat(route.params.request._id, getState().user._id, !route.params.isCreator));
-                }
-            } 
-            catch(error) 
+                setOther(await account.getFromID(route.params.request.creatorID))
+            }
+            if (chatObject === undefined)
             {
-                console.log(error);
+                setChat(await chat.getChat(route.params.request._id, getState().user._id, !route.params.isCreator));
             }
         }
         init();
@@ -46,16 +39,30 @@ export const OrderChatScreen = ({navigation, route}) =>
                 nav={navigation}
             />
             <View style={{flex:1}}>
-                <AcceptHeader
-                    userName={otherObject != undefined ? `${otherObject.firstName} ${otherObject.lastName}` : ""}
-                    acceptTitle={Localization.getText("acceptProvider")}
-                    stars={5}
-                    buttonDisabled={!route.params.isCreator}
-                    onButtonPress={async () => 
-                    {
-                        await request.provider.set(route.params)
-                    }}
-                />
+
+                {route.params.isCreator ? 
+                    <AcceptHeader
+                        userName={otherObject != undefined ? `${otherObject.firstName} ${otherObject.lastName}` : ""}
+                        acceptTitle={Localization.getText("acceptProvider")}
+                        stars={5}
+                        onButtonPress={async () => 
+                        {
+                            await request.provider.set(route.params)
+                        }}
+                    />
+                    :
+                    <AcceptHeader
+                        userName={otherObject != undefined ? `${otherObject.firstName} ${otherObject.lastName}` : ""}
+                        acceptTitle={Localization.getText("cancelRequest")}
+                        buttonStyle={{backgroundColor: "#ff4d4d"}}
+                        stars={5}
+                        onButtonPress={async () => 
+                        {
+                            await chat.removeChat(chatObject._id);
+                            navigation.goBack();
+                        }}
+                    />
+                }
                 <Chat name={Localization.getText("me")} senderId={"1"} room={"1"}/>
             </View>
         </View>

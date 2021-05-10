@@ -99,7 +99,14 @@
         "update": "Update info",
         "foreName": "First name",
         "afterName": "Last name",
-        "email": "Email"
+        "email": "Email",
+        "orders": "Orders",
+        "services": "Services",
+        "noOneHasTakenYourOrder": "None has taken your order yet!",
+        "youHaveNoServices":"You have none services at the moment!",
+        "cancelRequest":"Cancel request",
+        "claim":"claim",
+        "remove":"remove"
     },
     "se": 
     {
@@ -205,6 +212,13 @@
         "update": "Uppdatera info",
         "foreName": "Förnamn",
         "afterName": "Efternamn",
-        "email": "Epost"
+        "email": "Epost",
+        "orders": "Beställningar",
+        "services": "Tjänster",
+        "noOneHasTakenYourOrder": "Ingen har tagit din beställning än!",
+        "youHaveNoServices":"Du har inga tjänster för tillfället!",
+        "cancelRequest":"Avsluta tjänst",
+        "claim":"Ta beställning",
+        "remove":"Ta bort"
     } 
 }

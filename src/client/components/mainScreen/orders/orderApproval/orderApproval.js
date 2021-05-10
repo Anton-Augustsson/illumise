@@ -8,7 +8,7 @@ import { useState } from 'react';
 import chat from '../../../../modules/client-communication/chat';
 import account from '../../../../modules/client-communication/account';
 
-const ChatRoomItem = ({nav, item, params}) => {
+const ChatRoomItem = ({nav, item, request}) => {
 
     const [other, setOther] = useState(null);
 
@@ -25,7 +25,7 @@ const ChatRoomItem = ({nav, item, params}) => {
     return (
         <TouchableOpacity 
             style={oas.chatRoomContainer}
-            onPress={()=>nav.navigate("OrderChat", { ...params, chat: item, other: other})}
+            onPress={() => nav.navigate("OrderChat", { request: request, chat: item, other: other})}
         >
             <Text style={oas.chatRoomTitle}>
                 {other != null ? `${other.firstName} ${other.lastName} vill ta din order`
@@ -40,8 +40,9 @@ const OrderApprovalScreen = ({navigation, route}) => {
     const [chats, setChats] = useState([]);
 
     useEffect(() => {
+
         const init = async () => {
-            let result = await chat.getChats(route.params.request._id);
+            let result = await chat.getChats(route.params._id);
             if (result !== null) setChats(result);
         }
         init();
@@ -50,22 +51,19 @@ const OrderApprovalScreen = ({navigation, route}) => {
     return (
         <View style={{flex:1}}>
             <CustomHeader
-                title={route.params.request.header}
+                title={route.params.header}
                 nav={navigation}
             />
 
             <View style={{flex:1}}>
             <FlatList
                 data={chats.length > 0 ? chats : undefined}
-                renderItem={({item})=><ChatRoomItem nav={navigation} item={item} params={route.params}/>}
+                renderItem={({item})=><ChatRoomItem nav={navigation} item={item} request={route.params}/>}
                 keyExtractor={(item)=>item._id}
                 ListEmptyComponent={()=>
                     <View style={ms.emptyContainer}>
                         <Text style={[ms.emptyMsg, ms.emptyMsgAbove]}>
-                            {Localization.getText("youHaveNoOrders")}
-                        </Text>
-                        <Text style={ms.emptyMsg}>
-                            {Localization.getText("youHaveNoOrders2")}
+                            {Localization.getText("noOneHasTakenYourOrder")}
                         </Text>
                     </View>
                 }
@@ -75,7 +73,7 @@ const OrderApprovalScreen = ({navigation, route}) => {
             <View style={ms.moveOnContainer}>
                <SamaritButton
                     title={Localization.getText("showOrder")}
-                    onPress={()=>navigation.navigate("MarketItem", route.params)}
+                    onPress={()=>navigation.navigate("MarketItem", {...route.params, isCreator: true})}
                />
             </View>
         </View>

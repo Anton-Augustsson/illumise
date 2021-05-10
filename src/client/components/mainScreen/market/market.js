@@ -84,8 +84,6 @@ const RequestItem = ({nav, item, pointStart}) => {
 
     }
 
-    //{ latitude: 51.5103, longitude: 7.49347 },
-    console.log(pointStart);
     const start = {latitude: pointStart.coordinates[1], longitude: pointStart.coordinates[0]};
     const stop = {latitude: item.body.stops[0].location.lat, longitude: item.body.stops[0].location.lng};
     const dist = getDistance(start, stop);

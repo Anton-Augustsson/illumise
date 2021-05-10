@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback} from 'react';
+import React, { useState, useEffect, useContext} from 'react';
 import { Text, View,  FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import CustomHeader from "../../customComponents/customHeader";
 import { createStackNavigator } from '@react-navigation/stack';
@@ -7,37 +7,46 @@ import { colors } from '../../mainStyles/colors';
 import MarketItem from '../market/marketItem';
 import {Localization} from '../../../modules/localization'
 import request from '../../../modules/client-communication/request';
-import storage from '../../../modules/localStorage/localStorage';
 import RequestIcon from "../../customComponents/requestIcon";
 import ExpandButton from '../../customComponents/expandButton';
 import OrderApprovalScreen from './orderApproval/orderApproval';
 import { OrderChatScreen } from './chat/orderChat';
+import chat from '../../../modules/client-communication/chat';
+import { AppContext } from '../../AppContext';
 
 const RequestItem = ({nav, item, isCreator}) => {
-    var text = ''
+
+    let text = "";
     switch (item.body.type) {
         case 'food':
-            text = Localization.getText("foodPrompt")
+            text = Localization.getText("foodPrompt");
             break;
         case 'shopping':
-            text = Localization.getText("shoppingPrompt")
+            text = Localization.getText("shoppingPrompt");
             break;
         case 'post':
-            text = Localization.getText("postPrompt")
+            text = Localization.getText("postPrompt");
             break;
         case 'other':
-            text = Localization.getText("otherPrompt")
+            text = Localization.getText("otherPrompt");
             break;
-
     }
-    
+
     return(
         <TouchableOpacity 
-            onPress={() => nav.nav.navigate(isCreator ? "OrderApproval"
-                                                      : "OrderChat",
-                                            { request: item, isCreator: isCreator })}
+            onPress={() => 
+            {
+                if (isCreator)
+                {
+                    nav.nav.navigate("OrderApproval", item);
+                }
+                else
+                {
+                    nav.nav.navigate("OrderChat", { request: item, isCreator: isCreator });
+                }
+            }}
             style={ms.itemContainer}>
-            <RequestIcon type={item.header} size={30} color="black"/>
+            <RequestIcon type={item.body != undefined ? item.body.type : ""} size={30} color="black"/>
             <Text numberOfLines={2} style={ms.msg}>{text}</Text>
             <Text style={oas.time}>{new Date(item.dateCreated).toDateString()}</Text>
         </TouchableOpacity>
@@ -45,8 +54,10 @@ const RequestItem = ({nav, item, isCreator}) => {
 }
 
 const FirstScreen = (nav) => {
+
+    const {getState} = useContext(AppContext);
+    
     const [state, setState] = useState({
-        userID: null,
         requests: [],
         isRefreshing: false
     });
@@ -62,10 +73,8 @@ const FirstScreen = (nav) => {
 
         try 
         {
-            const userID = await storage.getDataString("userID");
-            const requests = await request.requester.getUserRequest(userID);   
+            const requests = await request.requester.getUserRequest(getState().user._id);
             setState({
-                userID: userID,
                 requests: requests,
                 isRefreshing: false,
             });
@@ -81,10 +90,16 @@ const FirstScreen = (nav) => {
         setProvider({...provider, isRefreshing: true});
         try 
         {
-            const userID = await storage.getDataString("userID");
-            const providing = await request.provider.getUserProviding(userID);
+            let providing = await chat.getChatsFrom(getState().user._id, true);
+            providing = await Promise.all(providing.map(async (item) => 
+            {
+                let req = await request.get(item.requestID);
+                if (req === null) await chat.removeChat(item._id);
+                return req;
+            }));
+
             setProvider({
-                providing: providing,
+                providing: providing.filter(item => item !== null),
                 isRefreshing: false,
             });
         } 
@@ -128,10 +143,7 @@ const FirstScreen = (nav) => {
             ListEmptyComponent={()=>
                 <View style={ms.emptyContainer}>
                     <Text style={[ms.emptyMsg, ms.emptyMsgAbove]}>
-                        {Localization.getText("youHaveNoOrders")}
-                    </Text>
-                    <Text style={ms.emptyMsg}>
-                        {Localization.getText("youHaveNoOrders2")}
+                        {Localization.getText("youHaveNoServices")}
                     </Text>
                 </View>
             }
@@ -148,7 +160,7 @@ const FirstScreen = (nav) => {
             {provider.providing.length == 0 ? requestContent : 
                 <ExpandButton
                     expand={true}
-                    title="Beställningar"
+                    title={Localization.getText("orders")}
                     content={requestContent}
                 />   
             }
@@ -156,7 +168,7 @@ const FirstScreen = (nav) => {
             {provider.providing.length == 0 ? null : 
                 <ExpandButton
                     expand={true}
-                    title="Tjänster"
+                    title={Localization.getText("services")}
                     content={providingContent}
                 />
             }
