@@ -66,8 +66,7 @@ const ProfileScreen = ({navigation}) =>
     const [lastName, setLastName] = useState("");
     const [user, setUser] = useState();
     const [hasUpdated, setUpdated] = useState(0);
-
-    
+    const [disabled, setDisabled] = useState(true);
 
     const refresh = () =>{
         setFirstName("");
@@ -114,12 +113,27 @@ const ProfileScreen = ({navigation}) =>
             <View style={bs.input}>
                 <FloatingInput 
                     placeholder={Localization.getText("foreName")}
-                    onChangeText={text => {setFirstName(text)}}
+                    onChangeText={
+                        text => {
+                            setFirstName(text);
+                            if(firstName === "" && lastName === ""){
+                                setDisabled(true);
+                            }else{
+                                setDisabled(false);
+                            }
+                        }}
                     value={firstName}
                     />
                 <FloatingInput 
                     placeholder={Localization.getText("afterName")}
-                    onChangeText={text => {setLastName(text)}}
+                    onChangeText={text => {
+                        setLastName(text);
+                        if(firstName === "" && lastName === ""){
+                            setDisabled(true);
+                        }else{
+                            setDisabled(false);
+                        }
+                    }}
                     value={lastName}
                     />
             </View>
@@ -129,6 +143,7 @@ const ProfileScreen = ({navigation}) =>
                     style={ms.button}
                     title={Localization.getText("update")}
                     onPress={()=>updateProfile(firstName, lastName, getState, refresh, setState)}
+                    disabled={disabled}
                 />
             </View>
 
