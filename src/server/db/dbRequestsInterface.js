@@ -101,13 +101,14 @@ class DBRequestsInterface
     {
         try
         {
+            console.warn("RequestID", requestID);
             let filter = { _id: ObjectID(requestID) };
             let result = await this.#collection.findOne(filter);
+            console.warn("Result", result);
             return result;
         }
         catch (_)
         {
-            //console.error(error);
             return null;
         }
     }

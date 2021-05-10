@@ -74,7 +74,7 @@ class DBAccountsInterface
         }
         catch (error)
         {
-            console.log(error);
+            console.error(error);
             return null;
         }
     }
@@ -152,7 +152,8 @@ class DBAccountsInterface
         try
         {
             let filter = { _id: ObjectID(userID) };
-            let result = await this.#collection.findOne(filter);
+            let options = { password: 0 }
+            let result = await this.#collection.findOne(filter, options);
             return result;
         }
         catch (error)

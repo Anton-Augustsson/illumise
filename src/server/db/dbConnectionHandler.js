@@ -113,46 +113,6 @@ class DBConnectionHandler
     }
 }
 
-/**
- * Function used to test database
- */
-async function testDatabaseAsync()
-{
-    var _databaseHandler;
-    try
-    {
-        _databaseHandler = new DBConnectionHandler();
-        var client = await _databaseHandler.connectAsync();
-
-        console.log("Database Connected");
-
-        var database = client.db("testDB");
-        var collection = database.collection("test");
-
-        var item = 
-        {
-            "name"  : "itemA",
-            "value" : 1
-        };
-        
-        let dropResult = await collection.deleteMany({"name": "itemA"});
-        console.log(dropResult.result);
-        let insertResult = await collection.insertOne(item);
-        console.log(insertResult.result);
-        let document = await collection.findOne({"name": "itemA"});
-        console.log(document);
-    }
-    catch(error)
-    {
-        console.error(error);
-    }
-    finally
-    {
-        console.log("Database Closing");
-        await _databaseHandler.close();
-    }
-}
-
 module.exports =
 {
     DBConnectionHandler

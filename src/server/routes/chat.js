@@ -28,9 +28,29 @@ router.put('/sendMessage', async (req, res) => // post?
 
     if(valid(b, schema, res))
     {
-        // null
         let response = await db.chat.addMessage(b.chatID, b.msg, b.isProvider);
         if(response != false) return sendSuccess(res, response);
+        else return sendFailure(res);
+    }
+});
+
+/**
+ * get all messages from a specific chat
+ * @param {string} userID - The id of the user that sends a message
+ * @param {string} chatID - The id of the chat witch is between the provider and requester
+ */
+router.get('/getChatsFrom', async (req, res) =>
+{
+    const params = {
+        userID: req.param('userID'),
+        isProvider: req.param('isProvider'),
+        num: req.param('num')
+    };
+
+    if(validParams(params, res))
+    {
+        let response = await db.chat.getChatsFrom(params.userID, params.isProvider, params.num === "undefined" ? undefined : parseInt(params.num));
+        if(response != null) return sendSuccess(res, response);
         else return sendFailure(res);
     }
 });
@@ -105,11 +125,9 @@ router.put('/newChat', async (req, res) => // POST?
         providerID: Joi.string().min(idSize).max(idSize)
     });
 
-    console.log(req.body);
     if(valid(req.body, schema, res))
     {
         let response = await db.chat.add(req.body.requestID, req.body.requesterID, req.body.providerID);
-        console.log(response);
         if(response != null) return sendSuccess(res, response);
         else return sendFailure(res);
     }

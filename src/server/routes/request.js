@@ -85,18 +85,15 @@ router.put('/provider/set', async (req, res) =>
  * @param {String} requestID The id of the request
  * @returns {Promise<?Request>} The requests BSON objects in a list or null
  */
-router.put('/get', async (req, res) =>
+router.get('/get', async (req, res) =>
 {
-    const schema = Joi.object({
-        requestID: Joi.string().min(idSize).max(idSize)
-    });
-
-    let body = req.body;
-
-    if(valid(body, schema, res))
+    const params = { requestID: req.param('requestID')};
+    console.log(params);
+    if(validParams(params, res))
     {
-        let response = await db.requests.get(body.requestID);
-        if(response != false) return sendSuccess(res, response);
+        let response = await db.requests.get(params.requestID);
+        console.log(response);
+        if(response != null) return sendSuccess(res, response);
         else return sendFailure(res);
     }
 });
@@ -108,17 +105,17 @@ router.put('/get', async (req, res) =>
  */
 router.get('/provider/getUserProviding', async (req, res) =>
 {
-  const params = {
-    providerID: req.param('providerID'),
-    num: req.param('num')
-  };
+    const params = {
+        providerID: req.param('providerID'),
+        num: req.param('num')
+    };
 
-  if(validParams(params, res))
-  {
-    let response = await db.requests.getUserProviding(params.providerID, params.num === "undefined" ? undefined : parseInt(params.num));
-    if(response != null) return sendSuccess(res, response);
-    else return sendFailure(res);
-  }
+    if(validParams(params, res))
+    {
+        let response = await db.requests.getUserProviding(params.providerID, params.num === "undefined" ? undefined : parseInt(params.num));
+        if(response != null) return sendSuccess(res, response);
+        else return sendFailure(res);
+    }
 });
 
 /**

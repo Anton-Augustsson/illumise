@@ -148,6 +148,30 @@ class DBChatInterface
     /**
      * Gets all chat data of the chat with the given id
      * @async
+     * @param {String} userID The id of the request
+     * @param {Boolean} isProvider If the user given is the provider
+     * @param {Number} num The number of results to return
+     * @returns {Promise<?[Chat]>} The chat
+     */
+    async getChatsFrom(userID, isProvider, num = undefined)
+    {
+        try
+        {
+            let filter = { [`${isProvider ? "provider" : "requester"}._id`]: ObjectID(userID) };
+            let result = await this.#collection.find(filter).toArray();
+            if (num !== undefined) result.length = num >= 0 ? num : 0;
+            return result;
+        }
+        catch (error)
+        {
+            console.error(error);
+            return null;
+        }
+    }
+
+    /**
+     * Gets all chat data of the chat with the given id
+     * @async
      * @param {String} requestID The id of the request
      * @returns {Promise<?[Chat]>} The chat
      */
@@ -162,7 +186,7 @@ class DBChatInterface
         }
         catch (error)
         {
-            console.log(error);
+            console.error(error);
             return null;
         }
     }
@@ -179,13 +203,15 @@ class DBChatInterface
     {
         try
         {
+            console.log("Result1", isProvider, userID, requestID);
             let filter = 
             { 
                 requestID: ObjectID(requestID),
                 [`${isProvider ? "provider" : "requester" }._id`]: ObjectID(userID)
             };
             let result = await this.#collection.findOne(filter);
-            return result == null ? null : result;
+            console.log("Result2", result);
+            return result;
         }
         catch (_)
         {
