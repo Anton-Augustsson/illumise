@@ -23,25 +23,28 @@ const App = () =>
                 case "restoreUser":
                 return {
                     ...prevState,
+                    loading: false,
+                    signOut: false,
                     user: action.user,
-                    loading: false
                 };
                 case "signIn":
                 return {
                     ...prevState,
                     loading: false,
-                    user: action.user
+                    signOut: false,
+                    user: action.user,
                 };
                 case "signOut":
                 return {
                     ...prevState,
                     loading: false,
-                    user: null,
+                    signOut: true,
                 };
             }
         },
         {
             loading: true,
+            signOut: true,
             user: null,
         }
     );
@@ -117,7 +120,7 @@ const App = () =>
                             }}
                         >
                             
-                            {state.user === null ?
+                            {state.signOut ?
                                 <Stack.Screen 
                                     name = "Login" 
                                     component={LoginScreen}                            

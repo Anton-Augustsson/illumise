@@ -9,19 +9,32 @@ import FloatingInput from '../../../customComponents/Inputs/floatingInput';
 import account from '../../../../modules/client-communication/account';
 import storage from '../../../../modules/localStorage/localStorage';
 import colors from '../../../../components/mainStyles/colors'
+import { UserInterfaceIdiom } from 'expo-constants';
 
 
-const ProfilePicture = ({getState}) => 
+const ProfilePicture = ({user}) => 
 {
-    //TODO: Ej anpassat för facebook. Kommer få error
+    //TODO: Ej anpassat för facebook. Facebooks länk är knas
+    console.log(user.picture);
+    if(user.password[0] === 'f'){
+        return (
+            <View style={bs.profileContainer}>
+                <Image
+                    style={bs.profileImg}
+                    source={{uri: user.picture.url}}
+                />
+            </View>
+        );
+    }
     return (
         <View style={bs.profileContainer}>
             <Image
                 style={bs.profileImg}
-                source={{uri: getState().user.picture}}
+                source={{uri: user.picture}}
             />
         </View>
-    );
+    ); 
+    
 }
 
 const updateProfile = async (firstName, lastName, getState, refresh, setState) =>{    
@@ -86,11 +99,12 @@ const ProfileScreen = ({navigation}) =>
         
         <ScrollView style={{flex:1}}>
             
-            <ProfilePicture getState={getState}/>
+            
 
             {user == null ? <Text>{Localization.getText("loading")}</Text> 
             : 
             <>
+                <ProfilePicture user={user}/>
                 <Text style ={bs.profileName}>{user.firstName + " " + user.lastName}</Text>
                 <Text style={bs.profileMail}>{user.email}</Text>
             </>
