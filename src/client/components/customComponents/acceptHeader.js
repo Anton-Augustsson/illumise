@@ -1,26 +1,22 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet} from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
 import CustomButton from "../customComponents/customButton";
+import ReviewStars from './reviewStars';
 
-const AcceptHeader = ({onPress, userName, stars, zIndex = 1, acceptTitle, 
+const AcceptHeader = ({navigation, userName, stars, zIndex = 1, acceptTitle, 
                        onButtonPress, buttonStyle, buttonDisabled}) => {
 
     const disabled = buttonDisabled !== undefined ? buttonDisabled : false;
     return(
         <View style={[styles.topContainer, {zIndex:zIndex}]}>
             <TouchableOpacity 
-                onPress={onPress}
+                onPress={()=>{
+                    navigation.navigate("SeeReviews");
+                }}
                 style={styles.providerContainer}
             >
                 <Text>{userName}</Text>
-                <View style={styles.providerStarsContainer}>
-                    {
-                        [...new Array(stars)].map((_, index) => (
-                            <FontAwesome key={index} name="star" size={10} style={styles.star}/>
-                        ))
-                    }
-                </View>
+                <ReviewStars stars="5"/>
             </TouchableOpacity>
             <CustomButton
                 title={acceptTitle}
@@ -67,12 +63,5 @@ const styles = StyleSheet.create({
     },
     providerContainer: {
         justifyContent:"flex-start",
-    },
-    providerStarsContainer: {
-        flexDirection:"row",
-    },
-    star: {
-        color:"orange",
-        marginRight:3,
     }
 });

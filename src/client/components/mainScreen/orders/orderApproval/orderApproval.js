@@ -25,7 +25,7 @@ const ChatRoomItem = ({nav, item, request}) => {
     return (
         <TouchableOpacity 
             style={oas.chatRoomContainer}
-            onPress={() => nav.navigate("OrderChat", { request: request, chat: item, other: other})}
+            onPress={() => nav.navigate("OrderChat", { request: request, chat: item, other: other, isCreator: true})}
         >
             <Text style={oas.chatRoomTitle}>
                 {other != null ? `${other.firstName} ${other.lastName} vill ta din order`

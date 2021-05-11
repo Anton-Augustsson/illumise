@@ -17,7 +17,6 @@ export const OrderChatScreen = ({navigation, route}) =>
 
     useEffect(() => {
         
-        console.log("Params", route.params);
         const init = async () => 
         {
             if (otherObject === undefined)
@@ -45,9 +44,10 @@ export const OrderChatScreen = ({navigation, route}) =>
                         userName={otherObject != undefined ? `${otherObject.firstName} ${otherObject.lastName}` : ""}
                         acceptTitle={Localization.getText("acceptProvider")}
                         stars={5}
+                        navigation={navigation}
                         onButtonPress={async () => 
                         {
-                            await request.provider.set(route.params)
+                            await request.provider.set(route.params);
                         }}
                     />
                     :
@@ -56,6 +56,7 @@ export const OrderChatScreen = ({navigation, route}) =>
                         acceptTitle={Localization.getText("cancelRequest")}
                         buttonStyle={{backgroundColor: "#ff4d4d"}}
                         stars={5}
+                        navigation={navigation}
                         onButtonPress={async () => 
                         {
                             await chat.removeChat(chatObject._id);

@@ -13,6 +13,7 @@ import OrderApprovalScreen from './orderApproval/orderApproval';
 import { OrderChatScreen } from './chat/orderChat';
 import chat from '../../../modules/client-communication/chat';
 import { AppContext } from '../../AppContext';
+import SeeReviews from '../../customComponents/seeReviews';
 
 const RequestItem = ({nav, item, isCreator}) => {
 
@@ -200,6 +201,11 @@ const MyOrders = ({navigation}) => {
             <Stack.Screen 
                 name="OrderChat" 
                 component={OrderChatScreen}
+            />
+
+            <Stack.Screen 
+                name="SeeReviews" 
+                component={SeeReviews}
             />
 
             <Stack.Screen 

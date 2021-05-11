@@ -106,7 +106,10 @@
         "youHaveNoServices":"You have none services at the moment!",
         "cancelRequest":"Cancel request",
         "claim":"claim",
-        "remove":"remove"
+        "remove":"remove",
+        "noReviewsAvailable":"No review of this person yet!",
+        "reviews":"Reviews",
+        "allReviews":"All reviews"
     },
     "se": 
     {
@@ -219,6 +222,9 @@
         "youHaveNoServices":"Du har inga tjänster för tillfället!",
         "cancelRequest":"Avsluta tjänst",
         "claim":"Ta beställning",
-        "remove":"Ta bort"
+        "remove":"Ta bort",
+        "noReviewsAvailable":"Finns ingen recension om personen än!",
+        "reviews":"Recensioner",
+        "allReviews":"Alla recensioner"
     } 
 }
