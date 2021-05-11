@@ -203,14 +203,12 @@ class DBChatInterface
     {
         try
         {
-            console.log("Result1", isProvider, userID, requestID);
             let filter = 
             { 
                 requestID: ObjectID(requestID),
-                [`${isProvider ? "provider" : "requester" }._id`]: ObjectID(userID)
+                [`${isProvider? "provider" : "requester" }._id`]: ObjectID(userID)
             };
             let result = await this.#collection.findOne(filter);
-            console.log("Result2", result);
             return result;
         }
         catch (_)

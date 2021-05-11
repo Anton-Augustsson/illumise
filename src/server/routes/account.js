@@ -18,18 +18,18 @@ const Joi = require('joi');
  */
 router.put('/createAccount', async (req, res) =>
 {
-  const schema = Joi.object({
-    credentials: Joi.any()
-  });
+    const schema = Joi.object({
+        credentials: Joi.any()
+    });
 
-  let c = req.body.credentials;
+    let c = req.body.credentials;
 
-  if(valid(req.body, schema, res) && validCredentials(c, res))
-  {
-    let response = await db.accounts.add(c.firstName, c.lastName, c.email, "119", c.token, c.picture);
-    if(response != null) return sendSuccess(res, response);
-    else return sendFailure(res);
-  }
+    if(valid(req.body, schema, res) && validCredentials(c, res))
+    {
+        let response = await db.accounts.add(c.firstName, c.lastName, c.email, "119", c.token, c.picture);
+        if(response != null) return sendSuccess(res, response);
+        else return sendFailure(res);
+    }
 });
 
 /**
@@ -38,16 +38,16 @@ router.put('/createAccount', async (req, res) =>
  */
 router.delete('/removeAccount', async (req, res) =>
 {
-  const schema = Joi.object({
-    userID: Joi.string().min(24).max(24)
-  });
+    const schema = Joi.object({
+        userID: Joi.string().min(24).max(24)
+    });
 
-  if(valid(req.body, schema, res))
-  {
-    let response = await db.accounts.remove(req.body.userID);
-    if(response != false) return sendSuccess(res);
-    else return sendFailure(res);
-  }
+    if(valid(req.body, schema, res))
+    {
+        let response = await db.accounts.remove(req.body.userID);
+        if(response != false) return sendSuccess(res);
+        else return sendFailure(res);
+    }
 });
 
 /**
@@ -57,19 +57,19 @@ router.delete('/removeAccount', async (req, res) =>
  */
 router.post('/changeCredentials', async (req, res) =>
 {
-  const schema = Joi.object({
-    userID: Joi.string().min(24).max(24),
-    credentials: Joi.any()
-  });
+    const schema = Joi.object({
+        userID: Joi.string().min(24).max(24),
+        credentials: Joi.any()
+    });
 
-  let c = req.body.credentials;
+    let c = req.body.credentials;
 
-  if(valid(req.body, schema, res), validCredentials(c, res))
-  {
-    let response = await db.accounts.update(req.body.userID, c.firstName, c.lastName, c.email, "119", c.token, c.picture);
-    if(response != false) return sendSuccess(res);
-    else return sendFailure(res);
-  }
+    if(valid(req.body, schema, res), validCredentials(c, res))
+    {
+        let response = await db.accounts.update(req.body.userID, c.firstName, c.lastName, c.email, "119", c.token, c.picture);
+        if(response != false) return sendSuccess(res);
+        else return sendFailure(res);
+    }
 });
 
 /**
@@ -81,17 +81,17 @@ router.post('/changeCredentials', async (req, res) =>
  */
 router.get('/get', async (req, res) =>
 {
-  const params = {
-    email: req.param('email'),
-    password: req.param('password')
-  };
+    const params = {
+        email: req.param('email'),
+        password: req.param('password')
+    };
 
-  if(validParams(params, res))
-  {
-    let response = await db.accounts.get(params.email, params.password);
-    if(response != null) return sendSuccess(res, response);
-    else return sendFailure(res);
-  }
+    if(validParams(params, res))
+    {
+        let response = await db.accounts.get(params.email, params.password);
+        if(response != null) return sendSuccess(res, response);
+        else return sendFailure(res);
+    }
 });
 
 /**

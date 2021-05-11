@@ -49,7 +49,7 @@ router.get('/getChatsFrom', async (req, res) =>
 
     if(validParams(params, res))
     {
-        let response = await db.chat.getChatsFrom(params.userID, params.isProvider, params.num === "undefined" ? undefined : parseInt(params.num));
+        let response = await db.chat.getChatsFrom(params.userID, params.isProvider === "true", params.num === "undefined" ? undefined : parseInt(params.num));
         if(response != null) return sendSuccess(res, response);
         else return sendFailure(res);
     }
@@ -67,10 +67,10 @@ router.get('/getChat', async (req, res) =>
         userID: req.param('userID'),
         isProvider: req.param('isProvider')
     };
-
+    console.log("params", params);
     if(validParams(params, res))
     {
-        let response = await db.chat.getChat(params.requestID, params.userID, params.isProvider);
+        let response = await db.chat.getChat(params.requestID, params.userID, params.isProvider === "true");
         if(response != null) return sendSuccess(res, response);
         else return sendFailure(res);
     }

@@ -212,7 +212,7 @@ class DBReviewsInterface
      * @async
      * @param {String} userID The user that has the reviews
      * @param {ReviewType} type The type of review data to get
-     * @returns {?RatingData} The rating data or null
+     * @returns {Promise<?RatingData>} The rating data or null
      */
     async getRating(userID, type)
     {
