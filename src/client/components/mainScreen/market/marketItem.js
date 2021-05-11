@@ -82,10 +82,9 @@ const BottomSheetContent = ({req}) => (
     </>
 )
 
-const DoneLoading = ({navigation, creator, isCreator, req }) => {
+const DoneLoading = ({navigation, creator, isCreator, req, getState }) => {
 
     const sheetRef = useRef();
-    const { getState } = useContext(AppContext);
 
     const remove = async (navigation, req) => {
         try 
@@ -105,6 +104,7 @@ const DoneLoading = ({navigation, creator, isCreator, req }) => {
     const claim = async (_, req) => {
         try 
         {
+            console.log(creator._id, getState().user._id);
             await chat.newChat(req._id, creator._id, getState().user._id);
             navigation.reset({
                 index: 0,
@@ -178,8 +178,10 @@ const DoneLoading = ({navigation, creator, isCreator, req }) => {
 }
 
 const MarketItem = ({navigation, route}) => {
+    const { getState } = useContext(AppContext);
     const [loading, setLoading] = useState(true);
     const [creator, setCreator] = useState(null);
+    const [req, setReq] = useState(null);
 
     const isCreator = route.params.isCreator !== undefined && route.params.isCreator;
 
@@ -187,7 +189,16 @@ const MarketItem = ({navigation, route}) => {
 
         const retrieveRequest = async () =>
         {
-            setCreator(await account.getFromID(route.params.creatorID));
+            let res;
+            setReq(res = await request.get(route.params.requestID));
+
+            //Dont need to fetch information about creator if we are it. 
+            //if information is old we should update AppContext instead.
+            if(isCreator) {
+                setCreator(getState().user)
+            } else {
+                setCreator(await account.getFromID(res.creatorID));
+            } 
             setLoading(false);
         }
         retrieveRequest();
@@ -200,7 +211,8 @@ const MarketItem = ({navigation, route}) => {
                 navigation={navigation} 
                 creator={creator}
                 isCreator={isCreator}
-                req={route.params} 
+                req={req} 
+                getState={getState}
             />}
         </View>
     );

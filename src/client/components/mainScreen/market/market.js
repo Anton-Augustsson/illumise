@@ -91,7 +91,7 @@ const RequestItem = ({nav, item, pointStart}) => {
 
     return(
         <TouchableOpacity 
-            onPress={()=>nav.nav.navigate("MarketItem", item)}
+            onPress={()=>nav.nav.navigate("MarketItem", {requestID:item._id})}
             style={mms.itemContainer}
         >
             <RequestIcon type={item.body.type} size={30} color="black"/>

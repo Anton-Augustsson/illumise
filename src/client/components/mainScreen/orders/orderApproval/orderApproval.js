@@ -73,7 +73,7 @@ const OrderApprovalScreen = ({navigation, route}) => {
             <View style={ms.moveOnContainer}>
                <SamaritButton
                     title={Localization.getText("showOrder")}
-                    onPress={()=>navigation.navigate("MarketItem", {...route.params, isCreator: true})}
+                    onPress={()=>navigation.navigate("MarketItem", {requestID:route.params._id, isCreator: true})}
                />
             </View>
         </View>

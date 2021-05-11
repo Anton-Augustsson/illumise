@@ -71,7 +71,7 @@ const DeliverScreen = ({navigation, route}) => {
                                     {name:"FirstScreen"},
                                     {
                                         name:"MarketItem",
-                                        params:{requestId: requestID},
+                                        params:{requestID: requestID, isCreator: true},
                                     },
                                 ]
                             }, 
