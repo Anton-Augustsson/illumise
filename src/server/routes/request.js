@@ -181,10 +181,14 @@ router.delete('/requester/removeRequest', async (req, res) =>
 });
 
 /**
- * give rating on service provider
- * @param {string} requestID - The requester id of the users who review the provider
- * @param {string} providerID - The id of the providers to be reviewed
- * @param {int} rating - A number between 0 and 5, where 5 is best rating.
+ * Adds a review
+ * @async
+ * @param {String} userIDTo The id of the user the review is for
+ * @param {String} userIDFrom The id of the user writing the review
+ * @param {String} requestID The id of the request the review is related to
+ * @param {String} message The message on the review
+ * @param {number} value The rated score 0 - 5
+ * @returns {Promise<Boolean>} If the review was added
  */
 router.put('/requester/reviewProvider', async (req, res) =>
 {
@@ -194,11 +198,10 @@ router.put('/requester/reviewProvider', async (req, res) =>
         user2ID: Joi.string().min(idSize).max(idSize),
         message: Joi.string(),
         rating: Joi.number().min(0).max(5),
-        reviewType: Joi.string()
     });
 
     let b = req.body;
-    let reviewType = ReviewType.Requester; //TODO CHANGE
+    let reviewType = ReviewType.Requester;
 
     if(valid(b, schema, res))
     {
@@ -207,6 +210,180 @@ router.put('/requester/reviewProvider', async (req, res) =>
         else return sendFailure(res);
     }
 });
+
+/**
+ * Adds a review
+ * @async
+ * @param {String} userIDTo The id of the user the review is for
+ * @param {String} userIDFrom The id of the user writing the review
+ * @param {String} requestID The id of the request the review is related to
+ * @param {String} message The message on the review
+ * @param {number} value The rated score 0 - 5
+ * @returns {Promise<Boolean>} If the review was added
+ */
+router.put('/provider/reviewProvider', async (req, res) =>
+{
+    const schema = Joi.object({
+        requestID: Joi.string().min(idSize).max(idSize),
+        user1ID: Joi.string().min(idSize).max(idSize),
+        user2ID: Joi.string().min(idSize).max(idSize),
+        message: Joi.string(),
+        rating: Joi.number().min(0).max(5),
+    });
+
+    let b = req.body;
+    let reviewType = ReviewType.Provider;
+
+    if(valid(b, schema, res))
+    {
+        let response = await db.reviews.add(b.user1ID, b.user2ID, b.requestID, b.message, b.rating, reviewType);
+        if(response != false) return sendSuccess(res);
+        else return sendFailure(res);
+    }
+});
+
+/**
+ * Gets the rating data from a user
+ * @async
+ * @param {String} userID The user that has the reviews
+ * @param {ReviewType} type The type of review data to get
+ * @returns {?RatingData} The rating data or null
+ */
+router.get('/requester/getRating', async (req, res) =>
+{
+    const params = {
+        userID: req.param('userID'),
+    };
+
+    let reviewType = ReviewType.Requester;
+
+    if(validParams(params, res))
+    {
+        let response = await db.reviews.getRating(params.userID, reviewType);
+        if(response != null) return sendSuccess(res, response);
+        else return sendFailure(res);
+    }
+}
+
+/**
+ * Gets the rating data from a user
+ * @async
+ * @param {String} userID The user that has the reviews
+ * @param {ReviewType} type The type of review data to get
+ * @returns {?RatingData} The rating data or null
+ */
+router.get('/provider/getRating', async (req, res) =>
+{
+    const params = {
+        userID: req.param('userID'),
+    };
+
+    let reviewType = ReviewType.Provider;
+
+    if(validParams(params, res))
+    {
+        let response = await db.reviews.getRating(params.userID, reviewType);
+        if(response != null) return sendSuccess(res, response);
+        else return sendFailure(res);
+    }
+}
+
+/**
+ * Gets a specific review to a user
+ * @async
+ * @param {String} userID The id of the user that has the review
+ * @param {String} requestID The id of the request related to the review
+ * @param {ReviewType} type The type of review
+ * @returns {Promise<?Review>} The review or null
+ */
+router.get('/provider/getSpecificToUser', async (req, res) =>
+{
+    const params = {
+        userID: req.param('userID'),
+        requestID: req.param('requestID'),
+    };
+
+    let reviewType = ReviewType.Provider;
+
+    if(validParams(params, res))
+    {
+        let response = await db.reviews.getSpecificToUser(params.userID, params.requestID, reviewType);
+        if(response != null) return sendSuccess(res, response);
+        else return sendFailure(res);
+    }
+}
+
+/**
+ * Gets a specific review to a user
+ * @async
+ * @param {String} userID The id of the user that has the review
+ * @param {String} requestID The id of the request related to the review
+ * @param {ReviewType} type The type of review
+ * @returns {Promise<?Review>} The review or null
+ */
+router.get('/requester/getSpecificToUser', async (req, res) =>
+{
+    const params = {
+        userID: req.param('userID'),
+        requestID: req.param('requestID'),
+    };
+
+    let reviewType = ReviewType.Requester;
+
+    if(validParams(params, res))
+    {
+        let response = await db.reviews.getSpecificToUser(params.userID, params.requestID, reviewType);
+        if(response != null) return sendSuccess(res, response);
+        else return sendFailure(res);
+    }
+}
+
+/**
+ * Gets all reviews to a user
+ * @async
+ * @param {String} userID The id of the user that has the review
+ * @param {ReviewType} type The type of review
+ * @returns {Promise<?[Review]>} An array of all reviews or null
+ */
+router.get('/requester/getAllToUser', async (req, res) =>
+{
+    const params = {
+        userID: req.param('userID'),
+    };
+
+    let reviewType = ReviewType.Requester;
+
+    if(validParams(params, res))
+    {
+        let response = await db.reviews.getAllToUser(params.userID, params.requestID, reviewType);
+        if(response != null) return sendSuccess(res, response);
+        else return sendFailure(res);
+    }
+}
+
+/**
+ * Gets all reviews to a user
+ * @async
+ * @param {String} userID The id of the user that has the review
+ * @param {ReviewType} type The type of review
+ * @returns {Promise<?[Review]>} An array of all reviews or null
+ */
+router.get('/provider/getAllToUser', async (req, res) =>
+{
+    const params = {
+        userID: req.param('userID'),
+    };
+
+    let reviewType = ReviewType.Provider;
+
+    if(validParams(params, res))
+    {
+        let response = await db.reviews.getAllToUser(params.userID, params.requestID, reviewType);
+        if(response != null) return sendSuccess(res, response);
+        else return sendFailure(res);
+    }
+}
+
 
 /**
  * accept the provider

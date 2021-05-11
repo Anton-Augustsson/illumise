@@ -106,7 +106,79 @@ const request =
             let response = await fetch(url);
 
             return returnResponse(response);
-        }
+        },
+
+        /**
+         * Adds a review
+         * @async
+         * @param {String} userIDTo The id of the user the review is for
+         * @param {String} userIDFrom The id of the user writing the review
+         * @param {String} requestID The id of the request the review is related to
+         * @param {String} message The message on the review
+         * @param {number} value The rated score 0 - 5
+         * @returns {Promise<?Boolean>} If the review was added
+         */
+        reviewProvider: async function(userIDTo, userIDFrom, requestID, message, value)
+        {
+            let body = {requestID: requestID, user1ID: userIDTo, user2ID: userIDFrom, message: message, rating: value};
+            let url = request.serviceUrl + '/provider/reviewProvider';
+            let response = await fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8'
+                },
+                body: JSON.stringify(body)
+            });
+            return returnResponse(response);
+        },
+
+        /**
+         * Gets the rating data from a user
+         * @async
+         * @param {String} userID The user that has the reviews
+         * @returns {?RatingData} The rating data or null
+         */
+        getRating: async function(userID)
+        {
+            let params = '?userID=' + userID;
+            let url = request.serviceUrl + '/provider/getRating' + params;
+            let response = await fetch(url);
+
+            return returnResponse(response);
+        },
+
+
+        /**
+         * Gets a specific review to a user
+         * @async
+         * @param {String} userID The id of the user that has the review
+         * @param {String} requestID The id of the request related to the review
+         * @returns {Promise<?Review>} The review or null
+         */
+        getSpecificToUser: async function(userID, requestID)
+        {
+            let params = '?userID=' + userID + '&requestID=' + requestID;
+            let url = request.serviceUrl + '/provider/getSpecificToUser' + params;
+            let response = await fetch(url);
+
+            return returnResponse(response);
+        },
+
+        /**
+         * Gets all reviews to a user
+         * @async
+         * @param {String} userID The id of the user that has the review
+         * @returns {Promise<?[Review]>} An array of all reviews or null
+         */
+        getAllToUser: async function(userID)
+        {
+            let params = '?userID=' + userID;
+            let url = request.serviceUrl + '/provider/getAllToUser' + params;
+            let response = await fetch(url);
+
+            return returnResponse(response);
+        },
+
     },
 
     requester:
@@ -167,27 +239,6 @@ const request =
         },
 
         /**
-         * give rating on service provider
-         * @param {string} requestID - The requester id of the users who review the provider
-         * @param {string} providerID - The id of the providers to be reviewed
-         * @param {int} rating - A number between 0 and 5, where 5 is best rating.
-         */
-        reviewProvider: async function(requestID, user1ID, user2ID, message, rating, reviewType)
-        {
-            let url = request.serviceUrl + '/requester/reviewProvider';
-            let toRate = {requestID: requestID, user1ID: user1ID, user2ID: user2ID, message: message, rating: rating, reviewType: reviewType};
-            let response = await fetch(url, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json;charset=utf-8'
-                },
-                body: JSON.stringify(toRate)
-            });
-
-            return returnResponse(response);
-        },
-
-        /**
          * accept the provider 
          * @param {string} requestID - The id of the request that accepts the provider
          * @param {string} providerID - The id of the providers witch has set the request 
@@ -205,8 +256,79 @@ const request =
             });
 
             return returnResponse(response);
-
         }
+
+        /**
+         * Adds a review
+         * @async
+         * @param {String} userIDTo The id of the user the review is for
+         * @param {String} userIDFrom The id of the user writing the review
+         * @param {String} requestID The id of the request the review is related to
+         * @param {String} message The message on the review
+         * @param {number} value The rated score 0 - 5
+         * @returns {Promise<?Boolean>} If the review was added
+         */
+        reviewProvider: async function(userIDTo, userIDFrom, requestID, message, value)
+        {
+            let body = {requestID: requestID, user1ID: userIDTo, user2ID: userIDFrom, message: message, rating: value};
+            let url = request.serviceUrl + '/requester/reviewProvider';
+            let response = await fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8'
+                },
+                body: JSON.stringify(body)
+            });
+            return returnResponse(response);
+        },
+
+        /**
+         * Gets the rating data from a user
+         * @async
+         * @param {String} userID The user that has the reviews
+         * @returns {?RatingData} The rating data or null
+         */
+        getRating: async function(userID)
+        {
+            let params = '?userID=' + userID;
+            let url = request.serviceUrl + '/requester/getRating' + params;
+            let response = await fetch(url);
+
+            return returnResponse(response);
+        },
+
+
+        /**
+         * Gets a specific review to a user
+         * @async
+         * @param {String} userID The id of the user that has the review
+         * @param {String} requestID The id of the request related to the review
+         * @returns {Promise<?Review>} The review or null
+         */
+        getSpecificToUser: async function(userID, requestID)
+        {
+            let params = '?userID=' + userID + '&requestID=' + requestID;
+            let url = request.serviceUrl + '/requester/getSpecificToUser' + params;
+            let response = await fetch(url);
+
+            return returnResponse(response);
+        },
+
+        /**
+         * Gets all reviews to a user
+         * @async
+         * @param {String} userID The id of the user that has the review
+         * @returns {Promise<?[Review]>} An array of all reviews or null
+         */
+        getAllToUser: async function(userID)
+        {
+            let params = '?userID=' + userID;
+            let url = request.serviceUrl + '/requester/getAllToUser' + params;
+            let response = await fetch(url);
+
+            return returnResponse(response);
+        },
+
     }
 };
 
