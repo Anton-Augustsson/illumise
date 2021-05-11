@@ -14,7 +14,6 @@ import {CommonActions} from "@react-navigation/native";
 import Loading from "../../../../customComponents/loading";
 
 const DeliverScreen = ({navigation, route}) => {
-    //console.log(JSON.stringify(route));
     const [location, setLocation] = useState("");
     const [price, setPrice] = useState(0);
     const [checkingOut, setCheckingOut] = useState(false);
@@ -114,6 +113,7 @@ const DeliverScreen = ({navigation, route}) => {
                     <FloatingInput 
                         placeholder={Localization.getText("price")}
                         onChangeText={(text)=>setPrice(parseInt(text))}
+                        keyboardType="number-pad"
                     />
                 </View>
                 <View style={ms.moveOnContainer}>

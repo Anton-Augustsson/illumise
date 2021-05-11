@@ -49,6 +49,9 @@ app.use('/chat', chat);
 const account = require('./routes/account');
 app.use('/account', account);
 
+const review = require('./routes/review');
+app.use('/review', review);
+
 /**
  * Initialize WebSocket
  * https://www.tutorialspoint.com/socket.io/socket.io_hello_world.htm

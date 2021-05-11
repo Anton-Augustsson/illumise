@@ -14,6 +14,7 @@ import { OrderChatScreen } from './chat/orderChat';
 import chat from '../../../modules/client-communication/chat';
 import { AppContext } from '../../AppContext';
 import SeeReviews from '../../customComponents/seeReviews';
+import { useFocusEffect } from '@react-navigation/core';
 
 const RequestItem = ({nav, item, isCreator}) => {
 
@@ -39,11 +40,11 @@ const RequestItem = ({nav, item, isCreator}) => {
             {
                 if (isCreator && item.providerID === null)
                 {
-                    nav.nav.navigate("OrderApproval", item);
+                    nav.navigate("OrderApproval", item);
                 }
                 else
                 {
-                    nav.nav.navigate("OrderChat", { request: item, isCreator: isCreator });
+                    nav.navigate("OrderChat", { request: item, isCreator: isCreator });
                 }
             }}
             style={ms.itemContainer}>
@@ -54,7 +55,7 @@ const RequestItem = ({nav, item, isCreator}) => {
     );
 }
 
-const FirstScreen = (nav) => {
+const FirstScreen = ({nav}) => {
 
     const {getState} = useContext(AppContext);
     
@@ -67,6 +68,11 @@ const FirstScreen = (nav) => {
         providing: [],
         isRefreshing: false
     });
+
+    const refresh = async () => 
+    {
+        await Promise.all(refreshRequest(),refreshProvider());
+    }
 
     const refreshRequest = async () => {
 
@@ -110,9 +116,13 @@ const FirstScreen = (nav) => {
         }
     }
 
-    useEffect(() => {
-        refreshRequest();
-        refreshProvider();
+    useEffect(() => 
+    {
+        const listen = nav.addListener("focus", () => 
+        {
+            refresh()
+        });
+        return listen;
     }, []);
 
     const requestContent = 

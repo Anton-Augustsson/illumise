@@ -1,5 +1,5 @@
 import React, {useState, useContext, useEffect} from 'react';
-import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Alert } from 'react-native';
 import { Localization } from '../../../../modules/localization';
 import { AppContext } from '../../../AppContext';
 import Chat from '../../../customComponents/chat';
@@ -38,7 +38,6 @@ export const OrderChatScreen = ({navigation, route}) =>
                     setOther(await account.getFromID(requestObject.creatorID));
                 }
             }
-            console.log(otherObject);
             setLoading(false);
         }
         init();
@@ -54,7 +53,7 @@ export const OrderChatScreen = ({navigation, route}) =>
 
                 {route.params.isCreator ? requestObject.providerID === null ?
                     <AcceptHeader
-                        userObject={otherObject}
+                        userObject={{...otherObject, getProvider: route.params.isCreator}}
                         acceptTitle={Localization.getText("acceptProvider")}
                         navigation={navigation}
                         onButtonPress={async () => 
@@ -66,7 +65,7 @@ export const OrderChatScreen = ({navigation, route}) =>
                     />
                     :
                     <AcceptHeader
-                        userObject={otherObject}
+                        userObject={{...otherObject, getProvider: route.params.isCreator}}
                         acceptTitle={Localization.getText("completeRequest")}
                         navigation={navigation}
                         onButtonPress={async () => 
@@ -79,13 +78,30 @@ export const OrderChatScreen = ({navigation, route}) =>
                     />
                     :
                     <AcceptHeader
-                        userObject={otherObject}
+                        userObject={{...otherObject, getProvider: route.params.isCreator}}
+                        acceptTitle={Localization.getText("cancelRequest")}
                         buttonStyle={{backgroundColor: "#ff4d4d"}}
                         navigation={navigation}
                         onButtonPress={async () => 
                         {
-                            await chat.removeChat(chatObject._id);
-                            navigation.goBack();
+                            if (requestObject.providerID)
+                            {
+                                let result = await request.provider.set(requestObject._id, null);
+                                if (result)
+                                {
+                                    await chat.removeChat(chatObject._id);
+                                    navigation.goBack();
+                                }
+                                else
+                                {
+                                    Alert.alert("Error", "Something went wrong");
+                                }
+                            }
+                            else
+                            {
+                                await chat.removeChat(chatObject._id);
+                                navigation.goBack();
+                            }
                         }}
                     />
                 }

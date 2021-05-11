@@ -17,7 +17,6 @@ const PostRequestScreen = ({navigation}) => {
     const [refCode, setRefCode] = useState("");
     const [otherInfo, setOtherInfo] = useState("");
 
-
     const nextScreen = () =>{
         var result = {
             type: "post",
@@ -29,6 +28,7 @@ const PostRequestScreen = ({navigation}) => {
         setOtherInfo("");
         navigation.navigate("Legitimation", result);
     }
+
     return (
         <View style={{flex:1}}>
             <CustomHeader
@@ -50,6 +50,7 @@ const PostRequestScreen = ({navigation}) => {
                     <FloatingInput 
                         placeholder={Localization.getText("refCode")}
                         onChangeText={(text)=>setRefCode(text)}
+                        keyboardType="number-pad"
                     />
     
                     <Text style={ms.h3}>{Localization.getText("otherInfo")}</Text>

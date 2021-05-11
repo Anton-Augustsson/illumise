@@ -1,12 +1,25 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import review from '../../modules/client-communication/review';
 import CustomButton from "../customComponents/customButton";
 import ReviewStars from './reviewStars';
 
 const AcceptHeader = ({navigation, userObject, zIndex = 1, acceptTitle, 
                        onButtonPress, buttonStyle, buttonDisabled}) => {
+    
+    const [rating, setRating] = useState({averageRating: 0, numRatings: 0});
+    useEffect(() => {
+        console.log("userObject", userObject);
+        const init = async () => 
+        {
+            let ratings = await review.getRating(userObject._id, userObject.getProvider);
+            console.log(ratings);
+            if (ratings !== null) setRating(ratings);
+        }
+        init();
+    },[]);
 
-    const disabled = buttonDisabled !== undefined ? buttonDisabled : false;
+    const disabled = buttonDisabled ? buttonDisabled : false;
     return(
         <View style={[styles.topContainer, {zIndex:zIndex}]}>
             <TouchableOpacity 
@@ -15,8 +28,8 @@ const AcceptHeader = ({navigation, userObject, zIndex = 1, acceptTitle,
                 }}
                 style={styles.providerContainer}
             >
-                <Text>{userObject? `${userObject.firstName} ${userObject.lastName}` : ""}</Text>
-                <ReviewStars stars="5"/>
+                <Text>{userObject.firstName? `${userObject.firstName} ${userObject.lastName}` : ""}</Text>
+                <ReviewStars stars={rating.averageRating}/>
             </TouchableOpacity>
             <CustomButton
                 title={acceptTitle}

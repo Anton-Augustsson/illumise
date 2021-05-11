@@ -1,4 +1,3 @@
-/** @type {DBInterface} */
 const db = require("../server");
 const validate = require("./validate");
 const valid = validate.valid;
@@ -12,7 +11,6 @@ const express = require('express');
 const router = express.Router();
 const Joi = require('joi');
 const { idSize } = require("./validate");
-const { DBInterface } = require("../db/dbInterface");
 
 /**
  * set payment to done and remove chat (will still be accessible in x time)
@@ -243,52 +241,6 @@ router.put('/provider/reviewProvider', async (req, res) =>
 });
 
 /**
- * Gets the rating data from a user
- * @async
- * @param {String} userID The user that has the reviews
- * @param {ReviewType} type The type of review data to get
- * @returns {?RatingData} The rating data or null
- */
-router.get('/requester/getRating', async (req, res) =>
-{
-    const params = {
-        userID: req.param('userID'),
-    };
-
-    let reviewType = ReviewType.Requester;
-
-    if(validParams(params, res))
-    {
-        let response = await db.reviews.getRating(params.userID, reviewType);
-        if(response != null) return sendSuccess(res, response);
-        else return sendFailure(res);
-    }
-}
-
-/**
- * Gets the rating data from a user
- * @async
- * @param {String} userID The user that has the reviews
- * @param {ReviewType} type The type of review data to get
- * @returns {?RatingData} The rating data or null
- */
-router.get('/provider/getRating', async (req, res) =>
-{
-    const params = {
-        userID: req.param('userID'),
-    };
-
-    let reviewType = ReviewType.Provider;
-
-    if(validParams(params, res))
-    {
-        let response = await db.reviews.getRating(params.userID, reviewType);
-        if(response != null) return sendSuccess(res, response);
-        else return sendFailure(res);
-    }
-}
-
-/**
  * Gets a specific review to a user
  * @async
  * @param {String} userID The id of the user that has the review
@@ -311,7 +263,7 @@ router.get('/provider/getSpecificToUser', async (req, res) =>
         if(response != null) return sendSuccess(res, response);
         else return sendFailure(res);
     }
-}
+});
 
 /**
  * Gets a specific review to a user
@@ -336,7 +288,7 @@ router.get('/requester/getSpecificToUser', async (req, res) =>
         if(response != null) return sendSuccess(res, response);
         else return sendFailure(res);
     }
-}
+});
 
 /**
  * Gets all reviews to a user
@@ -359,7 +311,7 @@ router.get('/requester/getAllToUser', async (req, res) =>
         if(response != null) return sendSuccess(res, response);
         else return sendFailure(res);
     }
-}
+});
 
 /**
  * Gets all reviews to a user
@@ -382,7 +334,7 @@ router.get('/provider/getAllToUser', async (req, res) =>
         if(response != null) return sendSuccess(res, response);
         else return sendFailure(res);
     }
-}
+});
 
 
 /**

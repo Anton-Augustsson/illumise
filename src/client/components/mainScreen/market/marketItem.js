@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState, useRef } from 'react';
-import { View, Text, StyleSheet,FlatList, TouchableOpacity, Dimensions} from 'react-native';
+import { View, Text, StyleSheet,FlatList, TouchableOpacity } from 'react-native';
 import request from '../../../modules/client-communication/request';
 import { Localization } from '../../../modules/localization';
 import CustomHeader from "../../customComponents/customHeader";
@@ -104,8 +104,8 @@ const DoneLoading = ({navigation, creator, isCreator, req, getState }) => {
     const claim = async (_, req) => {
         try 
         {
-            console.log(creator._id, getState().user._id);
-            await chat.newChat(req._id, creator._id, getState().user._id);
+            let result = await chat.newChat(req._id, creator._id, getState().user._id);
+            console.log(result);
             navigation.reset({
                 index: 0,
                 routes: [{ name: 'Orders' }],
@@ -145,10 +145,10 @@ const DoneLoading = ({navigation, creator, isCreator, req, getState }) => {
                         await claim(navigation, req);
                     }
                 }}
-                stars={5}
                 zIndex={-1}
                 buttonStyle={isCreator ? {backgroundColor: "#ff4d4d"} : undefined}
                 buttonDisabled={!isCreator && req.providerID != null}
+                userObject={{...creator, getProvider: isCreator}}
             />
 
             <CustomMap
@@ -192,11 +192,13 @@ const MarketItem = ({navigation, route}) => {
             let res;
             setReq(res = await request.get(route.params.requestID));
 
-            //Dont need to fetch information about creator if we are it. 
+            //Don't need to fetch information about creator if we are it. 
             //if information is old we should update AppContext instead.
-            if(isCreator) {
+            if(isCreator) 
+            {
                 setCreator(getState().user)
-            } else {
+            } else 
+            {
                 setCreator(await account.getFromID(res.creatorID));
             } 
             setLoading(false);

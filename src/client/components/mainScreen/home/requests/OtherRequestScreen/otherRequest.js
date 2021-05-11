@@ -21,7 +21,7 @@ const OtherRequestScreen = ({navigation}) => {
 
         navigation.navigate("Deliver", data);
     }
-        console.log(navigation);
+
     return (
         <View style={{flex:1}}>
             <CustomHeader

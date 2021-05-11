@@ -14,7 +14,7 @@ let socket;
 
 const Chat = ({chatObject, user, other, isCreator}) => 
 {
-    const [chat, setChat] = useState([]);
+    const [chat, setChat] = useState(null);
     const [msg, setMsg] = useState('');
     const [isFocused, setFocus] = useState(false);
     const ENDPOINT = url;
@@ -124,16 +124,20 @@ const Chat = ({chatObject, user, other, isCreator}) =>
                             ? { me: true,  msg: item.msg, name: myFullName} 
                             : { me: false, msg: item.msg, name: otherFullName}} 
                         />}
-                    keyExtractor={(_, index)=> index}
-                    ListEmptyComponent={
-                        <View style={cs.emptyChatContainer}>
-                            <Text style={[cs.emptyChatMsg, cs.emptyChatMsgAbove]}>
-                                {Localization.getText("emptyChatConversationEmpty")}
-                            </Text>
-                            <Text style={[cs.emptyChatMsg, cs.emptyChatMsgBelow]}>
-                                {Localization.getText("emptyChatMsg")}
-                            </Text>
-                        </View>
+                    keyExtractor={(_, index)=> index.toString()}
+                    ListEmptyComponent={()=>
+                        {return chat ? 
+                            <View style={cs.emptyChatContainer}>
+                                <Text style={[cs.emptyChatMsg, cs.emptyChatMsgAbove]}>
+                                    {Localization.getText("emptyChatConversationEmpty")}
+                                </Text>
+                                <Text style={[cs.emptyChatMsg, cs.emptyChatMsgBelow]}>
+                                    {Localization.getText("emptyChatMsg")}
+                                </Text>
+                            </View>
+                            :
+                            null
+                        }
                     }
                 />
             </View>

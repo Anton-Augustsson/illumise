@@ -256,7 +256,7 @@ const request =
             });
 
             return returnResponse(response);
-        }
+        },
 
         /**
          * Adds a review
@@ -281,22 +281,6 @@ const request =
             });
             return returnResponse(response);
         },
-
-        /**
-         * Gets the rating data from a user
-         * @async
-         * @param {String} userID The user that has the reviews
-         * @returns {?RatingData} The rating data or null
-         */
-        getRating: async function(userID)
-        {
-            let params = '?userID=' + userID;
-            let url = request.serviceUrl + '/requester/getRating' + params;
-            let response = await fetch(url);
-
-            return returnResponse(response);
-        },
-
 
         /**
          * Gets a specific review to a user
