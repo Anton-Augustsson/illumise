@@ -34,7 +34,7 @@ const ReviewItem = ({item, navigation}) => {
     );
 }
 
-const SeeReviews = ({navigation}) => {
+const SeeReviews = ({navigation, route}) => {
     const [loading, setLoading] = useState(true);
     const [isRefreshing, setIsRefreshing] = useState(false);
     const [reviews, setReviews] = useState(null);
@@ -50,7 +50,14 @@ const SeeReviews = ({navigation}) => {
         setLoading(false);
     }
 
-    useEffect(() => {
+    useEffect(() => 
+    {
+        const init = async () => 
+        {
+            
+        }
+
+        init();
         fetch();
     }, []);
 

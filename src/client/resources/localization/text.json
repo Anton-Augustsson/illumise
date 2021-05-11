@@ -109,7 +109,9 @@
         "remove":"remove",
         "noReviewsAvailable":"No review of this person yet!",
         "reviews":"Reviews",
-        "allReviews":"All reviews"
+        "allReviews":"All reviews",
+        "willTakeOrder": "Will take your order",
+        "completeRequest": "Complete Request"
     },
     "se": 
     {
@@ -225,6 +227,8 @@
         "remove":"Ta bort",
         "noReviewsAvailable":"Finns ingen recension om personen än!",
         "reviews":"Recensioner",
-        "allReviews":"Alla recensioner"
+        "allReviews":"Alla recensioner",
+        "willTakeOrder": "vill ta din order",
+        "completeRequest": "Avsluta order" 
     } 
 }

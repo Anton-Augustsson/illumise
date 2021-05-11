@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import CustomButton from "../customComponents/customButton";
 import ReviewStars from './reviewStars';
 
-const AcceptHeader = ({navigation, userName, stars, zIndex = 1, acceptTitle, 
+const AcceptHeader = ({navigation, userObject, zIndex = 1, acceptTitle, 
                        onButtonPress, buttonStyle, buttonDisabled}) => {
 
     const disabled = buttonDisabled !== undefined ? buttonDisabled : false;
@@ -11,11 +11,11 @@ const AcceptHeader = ({navigation, userName, stars, zIndex = 1, acceptTitle,
         <View style={[styles.topContainer, {zIndex:zIndex}]}>
             <TouchableOpacity 
                 onPress={()=>{
-                    navigation.navigate("SeeReviews");
+                    navigation.navigate("SeeReviews", userObject);
                 }}
                 style={styles.providerContainer}
             >
-                <Text>{userName}</Text>
+                <Text>{userObject? `${userObject.firstName} ${userObject.lastName}` : ""}</Text>
                 <ReviewStars stars="5"/>
             </TouchableOpacity>
             <CustomButton

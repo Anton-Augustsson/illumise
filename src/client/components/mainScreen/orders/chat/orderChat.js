@@ -14,19 +14,32 @@ export const OrderChatScreen = ({navigation, route}) =>
     const { getState } = useContext(AppContext);
     const [otherObject, setOther] = useState(route.params.other);
     const [chatObject, setChat] = useState(route.params.chat);
+    const [requestObject, setRequest] = useState(route.params.request);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         
         const init = async () => 
         {
-            if (otherObject === undefined)
+            let tmpChat = chatObject;
+            if (!chatObject)
             {
-                setOther(await account.getFromID(route.params.request.creatorID))
+                tmpChat = await chat.getChat(requestObject._id, requestObject.creatorID, false);
+                setChat(tmpChat);
             }
-            if (chatObject === undefined)
+            if (!otherObject)
             {
-                setChat(await chat.getChat(route.params.request._id, getState().user._id, !route.params.isCreator));
+                if (route.params.isCreator)
+                {
+                    setOther(await account.getFromID(tmpChat.provider._id));
+                }
+                else
+                {
+                    setOther(await account.getFromID(requestObject.creatorID));
+                }
             }
+            console.log(otherObject);
+            setLoading(false);
         }
         init();
     },[]);
@@ -39,23 +52,35 @@ export const OrderChatScreen = ({navigation, route}) =>
             />
             <View style={{flex:1}}>
 
-                {route.params.isCreator ? 
+                {route.params.isCreator ? requestObject.providerID === null ?
                     <AcceptHeader
-                        userName={otherObject != undefined ? `${otherObject.firstName} ${otherObject.lastName}` : ""}
+                        userObject={otherObject}
                         acceptTitle={Localization.getText("acceptProvider")}
-                        stars={5}
                         navigation={navigation}
                         onButtonPress={async () => 
                         {
-                            await request.provider.set(route.params);
+                            let result = await request.provider.set(requestObject._id, otherObject._id);
+                            console.log(result);
+                            setRequest(await request.get(request._id));
                         }}
                     />
                     :
                     <AcceptHeader
-                        userName={otherObject != undefined ? `${otherObject.firstName} ${otherObject.lastName}` : ""}
-                        acceptTitle={Localization.getText("cancelRequest")}
+                        userObject={otherObject}
+                        acceptTitle={Localization.getText("completeRequest")}
+                        navigation={navigation}
+                        onButtonPress={async () => 
+                        {
+                            //let result = await request.completeRequest(requestObject._id);
+                            //console.log(result);
+                            navigation.goBack();
+                            // TODO: Go to add review screen
+                        }}
+                    />
+                    :
+                    <AcceptHeader
+                        userObject={otherObject}
                         buttonStyle={{backgroundColor: "#ff4d4d"}}
-                        stars={5}
                         navigation={navigation}
                         onButtonPress={async () => 
                         {
@@ -64,7 +89,11 @@ export const OrderChatScreen = ({navigation, route}) =>
                         }}
                     />
                 }
-                <Chat name={Localization.getText("me")} senderId={"1"} room={"1"}/>
+                {loading?
+                    <></>
+                    :
+                    <Chat chatObject={chatObject} user={getState().user} other={otherObject} isCreator={route.params.isCreator}/>
+                }
             </View>
         </View>
     );

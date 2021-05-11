@@ -37,7 +37,7 @@ const RequestItem = ({nav, item, isCreator}) => {
         <TouchableOpacity 
             onPress={() => 
             {
-                if (isCreator)
+                if (isCreator && item.providerID === null)
                 {
                     nav.nav.navigate("OrderApproval", item);
                 }
