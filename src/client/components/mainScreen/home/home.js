@@ -7,7 +7,6 @@ import LegitimationScreen from './requests/postRequestScreen/legitimation';
 import ShoppingRequestScreen from "./requests/shoppingRequestScreen/shoppingRequest";
 import {colors} from "../../mainStyles/colors";
 import hs from "./homeStyle";
-import ReceiptScreen from "./requests/receipt/receipt";
 import RequestIcon from "../../customComponents/requestIcon"
 import DeliverScreen from './requests/deliver/deliver';
 import { Localization } from '../../../modules/localization';
@@ -103,49 +102,64 @@ const HomeScreen = () => {
     return (
         <Stack.Navigator 
             screenOptions={{
-                headerShown:false,
                 cardStyle:{backgroundColor:colors.DEFAULT_BACKGROUND}
             }}
             initialRouteName="FirstScreen"
         >
             <Stack.Screen 
+                options={{
+                    header:()=>null
+                }}
                 name="FirstScreen" 
                 children={(navigation)=><FirstScreen nav={navigation}/>}
             />
 
             <Stack.Screen 
+                options={{
+                    title:Localization.getText("food")
+                }}
                 name="FoodRequest" 
                 component={FoodRequestScreen}
             />
 
             <Stack.Screen 
+                options={{
+                    title:Localization.getText("shop")
+                }}
                 name="ShoppingRequest" 
                 component={ShoppingRequestScreen}
             />
 
             <Stack.Screen 
+                options={{
+                    title:Localization.getText("Other")
+                }}
                 name="OtherRequest" 
                 component={OtherRequestScreen}
             />
 
             <Stack.Screen 
+                options={{
+                    title:Localization.getText("postAndPackage")
+                }}
                 name="Legitimation" 
                 component={LegitimationScreen}
             />
 
-            <Stack.Screen 
-                name="Deliver" 
-                component={DeliverScreen}
-            />
-
             <Stack.Screen
+                options={{
+                    title:Localization.getText("postAndPackage")
+                }}
                 name="PostRequest"
                 component={PostRequestScreen}
             />
 
             <Stack.Screen 
-                name="Receipt" 
-                component={ReceiptScreen}
+                options={{
+                    title:Localization.getText("deliveryInfo")
+                }}
+                name="Deliver" 
+                component={DeliverScreen}
             />
         </Stack.Navigator>
     );

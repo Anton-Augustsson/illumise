@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react';
 import { Text, View, TextInput, StyleSheet} from 'react-native';
-import CustomHeader from '../../../../customComponents/customHeader';
 import CustomButton from '../../../../customComponents/customButton';
 import ms from "../../../../mainStyles/ms";
 import rs from "../requestStyle";
@@ -94,10 +93,6 @@ const DeliverScreen = ({navigation, route}) => {
             {checkingOut ? 
             <Loading info={Localization.getText("creatingRequest...")}/> :
             <>
-                <CustomHeader
-                    title={Localization.getText("deliveryInfo")}
-                    nav={navigation}
-                />
                 <View style={rs.content}>
                     <Text style={ms.h3}>{route.params.type === "other" 
                         ? Localization.getText("place") : Localization.getText("enterDelivAddress")}

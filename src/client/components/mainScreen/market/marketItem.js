@@ -1,8 +1,7 @@
 import React, { useEffect, useContext, useState, useRef } from 'react';
-import { View, Text, StyleSheet,FlatList, TouchableOpacity, ScrollView} from 'react-native';
+import { View, Text, StyleSheet,FlatList, TouchableOpacity} from 'react-native';
 import request from '../../../modules/client-communication/request';
 import { Localization } from '../../../modules/localization';
-import CustomHeader from "../../customComponents/customHeader";
 import Loading from '../../customComponents/loading';
 import ms from '../../mainStyles/ms';
 import CustomMap from '../../customComponents/customMap';
@@ -126,11 +125,6 @@ const DoneLoading = ({navigation, creator, isCreator, req, getState }) => {
                 renderContent={<BottomSheetContent req={req}/>}
             />
 
-            <CustomHeader 
-                title={""}
-                nav={navigation}
-            />
-            
             <AcceptHeader
                 userObject={{...creator, getProvider: true}}
                 navigation={navigation}

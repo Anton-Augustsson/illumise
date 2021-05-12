@@ -3,7 +3,6 @@ import { Text, View, Image, Button, FlatList, StyleSheet,TouchableOpacity, Setti
 import { createStackNavigator } from '@react-navigation/stack';
 import {colors} from "../../mainStyles/colors";
 import ms from "../../mainStyles/ms";
-import CustomHeader from "../../customComponents/customHeader";
 import SettingsScreen from "./settings/settings";
 import ProfileScreen from "./profile/profile";
 import FaqScreen from "./faq/faq";
@@ -46,20 +45,11 @@ const BurgarItem = (item, navigation) =>
 const FirstScreen = ({navigation}) => 
 {
     return (
-        <View style={{flex:1}}>
-            <CustomHeader 
-                title={Localization.getText("other")}
-                nav={navigation}
-                goBack ={false}
-            />
-            
-            <FlatList
-                data={BURGAR}
-                renderItem={({item})=>BurgarItem(item, navigation)}
-                keyExtractor={(item)=>item.id}
-            />
-
-        </View>
+        <FlatList
+            data={BURGAR}
+            renderItem={({item})=>BurgarItem(item, navigation)}
+            keyExtractor={(item)=>item.id}
+        />
     );
 }
 
@@ -70,22 +60,30 @@ const BurgarScreen = () =>
     return (
         <Stack.Navigator 
             screenOptions={{
-                headerShown:false,
                 cardStyle:{backgroundColor:colors.DEFAULT_BACKGROUND},
                 initialRouteName:"FirstScreen"
             }}
         >
             <Stack.Screen 
+                options={{
+                    title:Localization.getText("other")
+                }}
                 name="FirstScreen" 
                 component={FirstScreen}
             />
 
             <Stack.Screen 
+                options={{
+                    title:Localization.getText("options")
+                }}
                 name="Settings" 
                 component={SettingsScreen}
             />
 
             <Stack.Screen 
+                options={{
+                    title:Localization.getText("profile")
+                }}
                 name="Profile" 
                 component={ProfileScreen}
             />

@@ -1,7 +1,6 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, Image} from 'react-native';
-import { Entypo, AntDesign, Feather } from '@expo/vector-icons';
-import ms from '../mainStyles/ms';
+import {View} from 'react-native';
+import { Entypo, Feather } from '@expo/vector-icons';
 import {Localization} from "../../modules/localization"
 import SamaritButton from './samaritButton';
 

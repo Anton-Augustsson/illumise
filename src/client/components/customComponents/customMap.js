@@ -1,8 +1,7 @@
 import React, {Component} from "react";
 import MapView, {Marker} from "react-native-maps";
 import * as Location from "expo-location";
-import { Alert, Button, TouchableOpacity, View, StyleSheet } from "react-native";
-import CustomButton from "./customButton";
+import { Alert, StyleSheet } from "react-native";
 
 /**
  * @typedef Region

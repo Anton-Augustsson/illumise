@@ -1,8 +1,5 @@
 import React, { useState, useEffect, useContext} from 'react';
-import { Text, View, ScrollView, FlatList, StyleSheet,TouchableOpacity} from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
-import CustomHeader from "../../customComponents/customHeader";
+import { Text, View, FlatList, StyleSheet,TouchableOpacity} from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import ms from "../../mainStyles/ms";
 import { colors } from '../../mainStyles/colors';
@@ -117,12 +114,6 @@ const FirstScreen = (nav) => {
 
      return (
         <View style={{flex:1}}> 
-            <CustomHeader 
-                title={Localization.getText("market")} 
-                nav={nav}
-                goBack={false}
-            />
-            
             <FlatList
                 data={REQUESTS}
                 renderItem={({item})=><RequestItem pointStart={pointStart} nav={nav} item={item}/>}
@@ -137,7 +128,6 @@ const FirstScreen = (nav) => {
                     </View>
                 }
             />
-
         </View>
     );
 }
@@ -148,22 +138,30 @@ const MarketScreen = ({navigation}) => {
     return (
        <Stack.Navigator 
             screenOptions={{
-                headerShown:false,
                 cardStyle:{backgroundColor:colors.DEFAULT_BACKGROUND}
             }}
             initialRouteName="FirstScreen"
         >
             <Stack.Screen 
+                options={{
+                    title:Localization.getText("market")
+                }}
                 name="FirstScreen" 
                 children={()=><FirstScreen nav={navigation}/>}
             />
 
             <Stack.Screen 
+                options={{
+                    title:""
+                }}
                 name="MarketItem" 
                 component={MarketItem}
             />
 
             <Stack.Screen 
+                options={{
+                    title:Localization.getText("reviews")
+                }}
                 name="SeeReviews" 
                 component={SeeReviews}
             />

@@ -111,7 +111,9 @@
         "reviews":"Reviews",
         "allReviews":"All reviews",
         "willTakeOrder": "Will take your order",
-        "completeRequest": "Complete Request"
+        "completeRequest": "Complete Request",
+        "shop":"Shop grociers",
+        "chat":"Chat"
     },
     "se": 
     {
@@ -229,6 +231,8 @@
         "reviews":"Recensioner",
         "allReviews":"Alla recensioner",
         "willTakeOrder": "vill ta din order",
-        "completeRequest": "Avsluta order" 
+        "completeRequest": "Avsluta order",
+        "shop":"Handla",
+        "chat":"Chat"
     } 
 }

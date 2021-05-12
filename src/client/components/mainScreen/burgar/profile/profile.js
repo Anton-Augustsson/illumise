@@ -3,14 +3,9 @@ import CustomButton from '../../../customComponents/customButton';
 import React, { useContext, useState, useEffect} from 'react';
 import { View, StyleSheet, Image, Text, ScrollView } from 'react-native';
 import { Localization } from '../../../../modules/localization';
-import CustomHeader from '../../../customComponents/customHeader';
 import ms from '../../../mainStyles/ms';
 import FloatingInput from '../../../customComponents/Inputs/floatingInput';
 import account from '../../../../modules/client-communication/account';
-import storage from '../../../../modules/localStorage/localStorage';
-import colors from '../../../../components/mainStyles/colors'
-import { UserInterfaceIdiom } from 'expo-constants';
-
 
 const ProfilePicture = ({user}) => 
 {
@@ -80,16 +75,7 @@ const ProfileScreen = ({navigation}) =>
 
 
     return (
-        <>
-        <CustomHeader
-                title={Localization.getText("profile")}
-                nav={navigation}
-            />
-        
         <ScrollView style={{flex:1}}>
-            
-            
-
             {user == null ? <Text>{Localization.getText("loading")}</Text> 
             : 
             <>
@@ -145,7 +131,6 @@ const ProfileScreen = ({navigation}) =>
                 />
             </View>
         </ScrollView>
-        </>
     );
 }
 

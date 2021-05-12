@@ -6,7 +6,6 @@ import { FontAwesome } from '@expo/vector-icons';
 import { useState } from 'react';
 import FloatingInput from '../../../customComponents/Inputs/floatingInput';
 import SamaritButton from '../../../customComponents/samaritButton';
-import review from '../../../../modules/client-communication/review';
 
 const ReviewScreen = ({data, nav, setComplete}) => 
 {

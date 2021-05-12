@@ -1,12 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { Text, View, TextInput, StyleSheet, Switch} from 'react-native';
-import CustomHeader from '../../../../customComponents/customHeader';
-import CustomButton from '../../../../customComponents/customButton';
 import ms from "../../../../mainStyles/ms";
 import rs from "../requestStyle";
-import MapView from 'react-native-maps';
-import * as Location from 'expo-location';
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import {Localization} from '../../../../../modules/localization'
 import GooglePlaces from '../../../../customComponents/Inputs/googlePlaces';
 import IconButton from '../../../../customComponents/iconButton';
@@ -27,12 +22,7 @@ const LegitimationScreen = ({navigation, route}) => {
 
     //;//{Localization.getText("legitimationPrompt")}
     return (
-        
         <View style={{flex:1}}>
-            <CustomHeader
-                    title={Localization.getText("postAndPackage")}
-                    nav={navigation}
-                />
             <View style={rs.content}>
                 <View style={{
                     flexDirection:'row',

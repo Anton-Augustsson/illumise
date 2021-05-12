@@ -1,6 +1,5 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState } from 'react';
 import { Text, View } from 'react-native';
-import CustomHeader from '../../../../customComponents/customHeader';
 import ms from "../../../../mainStyles/ms";
 import rs from "../requestStyle";
 import {Localization} from '../../../../../modules/localization';
@@ -24,10 +23,6 @@ const OtherRequestScreen = ({navigation}) => {
 
     return (
         <View style={{flex:1}}>
-            <CustomHeader
-                    title={Localization.getText("Other")}
-                    nav={navigation}
-            />
             <View style={rs.content}>
                 <Text style={ms.h3}>{Localization.getText("doYourOwnRequest")}</Text>
                 <FloatingInput 

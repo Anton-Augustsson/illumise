@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
 import {View, Text, TouchableOpacity, FlatList, StyleSheet} from "react-native";
-import CustomHeader from "./customHeader";
 import ms from "../mainStyles/ms";
 import { Localization } from "../../modules/localization";
 import ReviewStars from "./reviewStars";
-import account from "../../modules/client-communication/account";
 import Loading from "./loading";
 import review from "../../modules/client-communication/review";
 
@@ -57,11 +55,6 @@ const SeeReviews = ({navigation, route}) =>
     return (
         <View style={{flex:1}}>
             {loading ? <Loading/> :
-            <>
-                <CustomHeader
-                    title={Localization.getText("reviews")}
-                    nav={navigation}
-                />
                 <View style={styles.container}>
                     <TouchableOpacity 
                         onPress={()=> {
@@ -89,7 +82,6 @@ const SeeReviews = ({navigation, route}) =>
                         }
                     />
                 </View>
-            </>
             }
         </View>
     );

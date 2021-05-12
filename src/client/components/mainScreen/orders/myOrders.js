@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext} from 'react';
 import { Text, View,  FlatList, StyleSheet, TouchableOpacity } from 'react-native';
-import CustomHeader from "../../customComponents/customHeader";
 import { createStackNavigator } from '@react-navigation/stack';
 import ms from "../../mainStyles/ms";
 import { colors } from '../../mainStyles/colors';
@@ -157,12 +156,6 @@ const FirstScreen = ({nav}) => {
 
     return (
         <View style={{flex:1}}> 
-            <CustomHeader 
-                title={Localization.getText("myRequests")}
-                nav={nav}
-                goBack={false}
-            />
-
             {provider.providing.length == 0 ? requestContent : 
                 <ExpandButton
                     expand={true}
@@ -188,32 +181,46 @@ const MyOrders = ({navigation}) => {
     return (
        <Stack.Navigator 
             screenOptions={{
-                headerShown:false,
                 cardStyle:{backgroundColor:colors.DEFAULT_BACKGROUND}
             }}
             initialRouteName="FirstScreen"
         >
             <Stack.Screen 
+                options={{
+                    title:Localization.getText("myRequests")
+                }}
                 name="FirstScreen" 
                 children={()=><FirstScreen nav={navigation}/>}
             />
 
             <Stack.Screen 
+                options={{
+                    title:Localization.getText("myRequests")
+                }}
                 name="OrderApproval" 
                 component={OrderApprovalScreen}
             />
 
             <Stack.Screen 
+                options={{
+                    title:Localization.getText("chat")
+                }}
                 name="OrderChat" 
                 component={OrderChatScreen}
             />
 
             <Stack.Screen 
+                options={{
+                    title:Localization.getText("reviews")
+                }}
                 name="SeeReviews" 
                 component={SeeReviews}
             />
 
             <Stack.Screen 
+                options={{
+                    title:""
+                }}
                 name="MarketItem" 
                 component={MarketItem}
             />

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, StyleSheet, View, Animated, Easing} from 'react-native';
+import {Text, StyleSheet, View} from 'react-native';
 import { Localization } from '../../modules/localization';
   
 const Loading = ({info}) => {

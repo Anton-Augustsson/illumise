@@ -1,6 +1,5 @@
 import React, {useEffect} from 'react';
 import { Text, View, FlatList, StyleSheet,TouchableOpacity} from 'react-native';
-import CustomHeader from '../../../customComponents/customHeader';
 import ms from "../../../mainStyles/ms";
 import SamaritButton from '../../../customComponents/samaritButton';
 import { Localization } from '../../../../modules/localization';
@@ -49,12 +48,6 @@ const OrderApprovalScreen = ({navigation, route}) => {
 
     return (
         <View style={{flex:1}}>
-            <CustomHeader
-                title={route.params.header}
-                nav={navigation}
-            />
-
-            <View style={{flex:1}}>
             <FlatList
                 data={chats.length > 0 ? chats : undefined}
                 renderItem={({item})=><ChatRoomItem nav={navigation} item={item} request={route.params}/>}
@@ -67,7 +60,6 @@ const OrderApprovalScreen = ({navigation, route}) => {
                     </View>
                 }
             />
-            </View>
 
             <View style={ms.moveOnContainer}>
                <SamaritButton

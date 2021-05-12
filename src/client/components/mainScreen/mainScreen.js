@@ -6,7 +6,6 @@ import MyOrders from './orders/myOrders';
 import NotificationScreen from './notification/notification';
 import BurgarScreen from './burgar/burgar';
 import MarketScreen from './market/market';
-import OrderScreen from './orders/orders';
 
 
 const Tab = createBottomTabNavigator();

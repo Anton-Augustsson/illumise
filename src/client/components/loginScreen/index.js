@@ -1,4 +1,4 @@
-import React, {useEffect, useContext} from 'react';
+import React, {useEffect, useContext, useState} from 'react';
 import { Text, View, Image } from 'react-native';
 import styles from "./styles"
 import ms from '../mainStyles/ms';
@@ -6,11 +6,8 @@ import GoogleButton from "../customComponents/googleButton";
 import FacebookButton from "../customComponents/facebookButton";
 import * as Google from 'expo-auth-session/providers/google';
 import * as Facebook from 'expo-auth-session/providers/facebook';
-import CustomButton from '../customComponents/customButton';
 import { Localization } from '../../modules/localization';
 import account from "../../modules/client-communication/account";
-import storage from "../../modules/localStorage/localStorage"
-import { useState } from 'react/cjs/react.development';
 import Loading from '../customComponents/loading';
 import {AppContext} from "../AppContext";
 

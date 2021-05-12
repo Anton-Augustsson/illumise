@@ -3,7 +3,6 @@ import { View, StyleSheet, Alert } from 'react-native';
 import { Localization } from '../../../../modules/localization';
 import { AppContext } from '../../../AppContext';
 import Chat from '../../../customComponents/chat';
-import CustomHeader from '../../../customComponents/customHeader';
 import request from '../../../../modules/client-communication/request';
 import AcceptHeader from '../../../customComponents/acceptHeader';
 import account from '../../../../modules/client-communication/account';
@@ -86,82 +85,75 @@ export const OrderChatScreen = ({navigation, route}) =>
                     }
                 />
             }
-            <CustomHeader 
-                title = "Chat"
-                nav={navigation}
-            />
-            <View style={{flex:1}}>
-                
 
-                {route.params.isCreator ? requestObject.providerID === null ?
-                    <AcceptHeader
-                        userObject={{...otherObject, getProvider: route.params.isCreator}}
-                        acceptTitle={Localization.getText("acceptProvider")}
-                        navigation={navigation}
-                        onButtonPress={async () => 
+            {route.params.isCreator ? requestObject.providerID === null ?
+                <AcceptHeader
+                    userObject={{...otherObject, getProvider: route.params.isCreator}}
+                    acceptTitle={Localization.getText("acceptProvider")}
+                    navigation={navigation}
+                    onButtonPress={async () => 
+                    {
+                        let result = await request.provider.set(requestObject._id, otherObject._id);
+                        console.log("Set Provider", result);
+                        setRequest(await request.get(request._id));
+                    }}
+                />
+                :
+                <AcceptHeader
+                    userObject={{...otherObject, getProvider: route.params.isCreator}}
+                    acceptTitle={Localization.getText("completeRequest")}
+                    navigation={navigation}
+                    onButtonPress={async () => 
+                    {
+                        //let result = await request.completeRequest(requestObject._id);
+                        //console.log(result);
+                        socket.emit('sendComplete', {senderId: getState().user._id, chatID: chatObject._id}, () => 
                         {
-                            let result = await request.provider.set(requestObject._id, otherObject._id);
-                            console.log("Set Provider", result);
-                            setRequest(await request.get(request._id));
-                        }}
-                    />
-                    :
-                    <AcceptHeader
-                        userObject={{...otherObject, getProvider: route.params.isCreator}}
-                        acceptTitle={Localization.getText("completeRequest")}
-                        navigation={navigation}
-                        onButtonPress={async () => 
+                            setPopup(true);
+                            setComplete(true);
+                        });
+                    }}
+                />
+                :
+                <AcceptHeader
+                    userObject={{...otherObject, getProvider: route.params.isCreator}}
+                    acceptTitle={Localization.getText("cancelRequest")}
+                    buttonStyle={{backgroundColor: "#ff4d4d"}}
+                    navigation={navigation}
+                    onButtonPress={async () => 
+                    {
+                        if (requestObject.providerID)
                         {
-                            //let result = await request.completeRequest(requestObject._id);
-                            //console.log(result);
-                            socket.emit('sendComplete', {senderId: getState().user._id, chatID: chatObject._id}, () => 
-                            {
-                                setPopup(true);
-                                setComplete(true);
-                            });
-                        }}
-                    />
-                    :
-                    <AcceptHeader
-                        userObject={{...otherObject, getProvider: route.params.isCreator}}
-                        acceptTitle={Localization.getText("cancelRequest")}
-                        buttonStyle={{backgroundColor: "#ff4d4d"}}
-                        navigation={navigation}
-                        onButtonPress={async () => 
-                        {
-                            if (requestObject.providerID)
-                            {
-                                let result = await request.provider.set(requestObject._id, null);
-                                if (result)
-                                {
-                                    await chat.removeChat(chatObject._id);
-                                    navigation.goBack();
-                                }
-                                else
-                                {
-                                    Alert.alert("Error", "Something went wrong");
-                                }
-                            }
-                            else
+                            let result = await request.provider.set(requestObject._id, null);
+                            if (result)
                             {
                                 await chat.removeChat(chatObject._id);
                                 navigation.goBack();
                             }
-                        }}
-                    />
-                }
-                {loading?
-                    <></>
-                    :
-                    <Chat 
-                        chatObject={chatObject} 
-                        user={getState().user} 
-                        other={otherObject} 
-                        isCreator={route.params.isCreator}
-                        complete={complete}
-                    />
-                }
-            </View>
+                            else
+                            {
+                                Alert.alert("Error", "Something went wrong");
+                            }
+                        }
+                        else
+                        {
+                            await chat.removeChat(chatObject._id);
+                            navigation.goBack();
+                        }
+                    }}
+                />
+            }
+            {loading?
+                <></>
+                :
+                <Chat 
+                    chatObject={chatObject} 
+                    user={getState().user} 
+                    other={otherObject} 
+                    isCreator={route.params.isCreator}
+                    complete={complete}
+                />
+            }
         </View>
     );
 }
