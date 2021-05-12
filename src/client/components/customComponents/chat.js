@@ -233,7 +233,7 @@ const cs = StyleSheet.create({
         borderStyle:"solid",
         borderRadius:20,
         backgroundColor:"white",
-        maxHeight:100,
+        maxHeight:80,
     },
     sendContainer: {
         flexDirection:"row",

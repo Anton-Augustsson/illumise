@@ -9,9 +9,9 @@ import AcceptHeader from '../../../customComponents/acceptHeader';
 import account from '../../../../modules/client-communication/account';
 import chat from '../../../../modules/client-communication/chat';
 import ReviewScreen from "../review/reviewScreen";
-import Popup from '../../../customComponents/popUp';
 import io, { Socket } from "socket.io-client";
 import communication from '../../../../modules/client-communication/communication';
+import Popup from '../../../customComponents/popup';
 
 const url = communication.url;
 /** @type {Socket} */
@@ -64,20 +64,26 @@ export const OrderChatScreen = ({navigation, route}) =>
         init();
     },[]);
 
+
     return (
         <View style={{flex:1}}>
             {loading? 
                 <></> 
                 :
                 <Popup
-                    content={<ReviewScreen data={{fromID: getState().user._id, 
-                                                  toID: otherObject._id, 
-                                                  requestID: requestObject._id, 
-                                                  toProvider: route.params.isCreator}}
-                                           nav={navigation}
-                                           setComplete={setComplete}/>}
-                    state={popup}
-                    setState={setPopup}
+                    visible={popup}
+                    setVisible={setPopup}
+                    onClose={()=>navigation.goBack()}
+                    content={
+                        <ReviewScreen 
+                            data={{fromID: getState().user._id, 
+                                    toID: otherObject._id, 
+                                    requestID: requestObject._id, 
+                                    toProvider: route.params.isCreator}}
+                            nav={navigation}
+                            setComplete={setComplete}
+                        />
+                    }
                 />
             }
             <CustomHeader 

@@ -7,7 +7,6 @@ import LoginScreen from './components/loginScreen';
 import MainScreen from './components/mainScreen/mainScreen';
 import Constants from 'expo-constants';
 import {colors} from "./components/mainStyles/colors";
-import ReviewScreen from './components/mainScreen/orders/review/reviewScreen';
 import storage from "./modules/localStorage/localStorage";
 import {AppContext} from "./components/AppContext";
 import SplashScreen from "./components/customComponents/splashScreen";
@@ -131,11 +130,6 @@ const App = () =>
                                     component={MainScreen}
                                 />
                             }
-
-                            <Stack.Screen
-                                name="Review"
-                                component={ReviewScreen}
-                                />
                             
                         </Stack.Navigator>
                     </NavigationContainer>
