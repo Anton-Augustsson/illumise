@@ -8,6 +8,8 @@ import request from '../../../../modules/client-communication/request';
 import AcceptHeader from '../../../customComponents/acceptHeader';
 import account from '../../../../modules/client-communication/account';
 import chat from '../../../../modules/client-communication/chat';
+import ReviewScreen from "../review/reviewScreen";
+import Popup from '../../../customComponents/popUp';
 
 export const OrderChatScreen = ({navigation, route}) => 
 {
@@ -43,13 +45,21 @@ export const OrderChatScreen = ({navigation, route}) =>
         init();
     },[]);
 
+    const [popup, setPopup] = useState(false);
+
     return (
         <View style={{flex:1}}>
+            <Popup
+                content={<ReviewScreen/>}
+                state={popup}
+                setState={setPopup}
+            />
             <CustomHeader 
                 title = "Chat"
                 nav={navigation}
             />
             <View style={{flex:1}}>
+                
 
                 {route.params.isCreator ? requestObject.providerID === null ?
                     <AcceptHeader
@@ -72,8 +82,8 @@ export const OrderChatScreen = ({navigation, route}) =>
                         {
                             //let result = await request.completeRequest(requestObject._id);
                             //console.log(result);
-                            navigation.goBack();
-                            // TODO: Go to add review screen
+                            setPopup(!popup)
+                            //Alert.alert("Review!");
                         }}
                     />
                     :
@@ -108,7 +118,12 @@ export const OrderChatScreen = ({navigation, route}) =>
                 {loading?
                     <></>
                     :
-                    <Chat chatObject={chatObject} user={getState().user} other={otherObject} isCreator={route.params.isCreator}/>
+                    <Chat 
+                        chatObject={chatObject} 
+                        user={getState().user} 
+                        other={otherObject} 
+                        isCreator={route.params.isCreator}
+                    />
                 }
             </View>
         </View>

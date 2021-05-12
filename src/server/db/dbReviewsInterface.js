@@ -286,7 +286,7 @@ class DBReviewsInterface
                 { $replaceRoot: { newRoot: `$${collection}.ratings` }}
             ]).toArray();
 
-            return result.length == 0 ? null : result;
+            return result;
         }
         catch (error)
         {

@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState, useRef } from 'react';
-import { View, Text, StyleSheet,FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet,FlatList, TouchableOpacity, ScrollView} from 'react-native';
 import request from '../../../modules/client-communication/request';
 import { Localization } from '../../../modules/localization';
 import CustomHeader from "../../customComponents/customHeader";
@@ -68,11 +68,11 @@ const Header = ({req}) =>
 const BottomSheetContent = ({req}) => (
     <>
         {req.header === "shopping" || req.header === "food" ?
-            <FlatList 
-                data={req.body.shoppingList}
-                renderItem={({item})=><ShoppingItem item={item}/>}
-                ListHeaderComponent={()=><Header req={req}/>}
-            />
+                <FlatList 
+                    data={req.body.shoppingList}
+                    renderItem={({item})=><ShoppingItem item={item}/>}
+                    ListHeaderComponent={()=><Header req={req}/>}
+                />
             :
             <FlatList 
                 style={mis.content}

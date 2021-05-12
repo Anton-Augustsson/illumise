@@ -15,17 +15,7 @@ import { UserInterfaceIdiom } from 'expo-constants';
 const ProfilePicture = ({user}) => 
 {
     //TODO: Ej anpassat för facebook. Facebooks länk är knas
-    console.log(user.picture);
-    if(user.password[0] === 'f'){
-        return (
-            <View style={bs.profileContainer}>
-                <Image
-                    style={bs.profileImg}
-                    source={{uri: user.picture.url}}
-                />
-            </View>
-        );
-    }
+   
     return (
         <View style={bs.profileContainer}>
             <Image

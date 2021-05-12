@@ -8,8 +8,8 @@ const AcceptHeader = ({navigation, userObject, zIndex = 1, acceptTitle,
                        onButtonPress, buttonStyle, buttonDisabled}) => {
     
     const [rating, setRating] = useState({averageRating: 0, numRatings: 0});
-    useEffect(() => {
-        console.log("userObject", userObject);
+    useEffect(() => 
+    {
         const init = async () => 
         {
             let ratings = await review.getRating(userObject._id, userObject.getProvider);
@@ -28,10 +28,13 @@ const AcceptHeader = ({navigation, userObject, zIndex = 1, acceptTitle,
                 }}
                 style={styles.providerContainer}
             >
-                <Image
-                    style={styles.profileImg}
-                    source={{uri: userObject ? userObject.picture : ""}}
-                />
+                {userObject.picture ?
+                    <Image
+                        style={styles.profileImg}
+                        source={{uri: userObject.picture}}
+                    />
+                    :null
+                }
                     <View style={styles.nameRatingContainer}>
                         <Text>{userObject.firstName? `${userObject.firstName} ${userObject.lastName}` : ""}</Text>
                         <ReviewStars stars={rating.averageRating}/>
@@ -61,7 +64,7 @@ const AcceptHeader = ({navigation, userObject, zIndex = 1, acceptTitle,
             },
             shadowOpacity:0.8,
             shadowRadius: 2,
-            elevation:7,
+            borderBottomWidth: 1,
             flexDirection:"row",
             alignItems:"center",
             padding:10,
@@ -86,7 +89,8 @@ const AcceptHeader = ({navigation, userObject, zIndex = 1, acceptTitle,
         profileImg: {
             width:35,
             height:35,
-            marginRight: 7
+            marginRight: 7,
+            borderRadius:5
         },
         nameRatingContainer: {
             justifyContent:"space-between",

@@ -80,14 +80,6 @@ const rs = StyleSheet.create({
         borderColor:"grey",
         padding:5,
     },
-    multiLinetextInput: {
-        minHeight:100,
-        maxHeight:250,
-        textAlignVertical:"top",
-        paddingTop:10,
-        paddingBottom:10,
-    },
-    
 });
 
 export default rs;

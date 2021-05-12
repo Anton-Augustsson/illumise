@@ -13,13 +13,32 @@ const router = express.Router();
 const Joi = require('joi');
 const { idSize } = require("./validate");
 
-/**
- * Gets the rating data from a user
- * @async
- * @param {String} userID The user that has the reviews
- * @param {ReviewType} type The type of review data to get
- * @returns {?RatingData} The rating data or null
- */
+router.post('review/addReview', async (req, res) =>
+{
+    const schema = Joi.object({
+        userIDTo: Joi.string().min(idSize).max(idSize),
+        userIDFrom: Joi.string().min(idSize).max(idSize),
+        requestID: Joi.string().min(idSize).max(idSize),
+        message: Joi.string(),
+        value: Joi.number(),
+        toProvider: Joi.boolean()
+    });
+
+    let body = req.body;
+    let data = body.data;
+
+    if(valid(body, schema, res) && validData(data, res))
+    {
+        let reviewType = body.toProvider == "true" 
+                   ? ReviewType.Provider 
+                   : ReviewType.Requester;
+
+        let response = await db.reviews.add(body.userIDTo, body.userIDFrom, body.requestID, body.message, body.value, reviewType);
+        if(response != null) return sendSuccess(res, response);
+        else return sendFailure(res);
+    }
+});
+
 router.get('/review/getRating', async (req, res) =>
 {
     const params = {
@@ -27,11 +46,32 @@ router.get('/review/getRating', async (req, res) =>
         getProvider: req.param('getProvider')
     };
 
-    let reviewType = getProvider? ReviewType.Provider : ReviewType.Requester;
+    let reviewType = getProvider == "true" 
+                   ? ReviewType.Provider 
+                   : ReviewType.Requester;
 
     if(validParams(params, res))
     {
         let response = await db.reviews.getRating(params.userID, reviewType);
+        if(response != null) return sendSuccess(res, response);
+        else return sendFailure(res);
+    }
+});
+
+router.get('/review/getAllToUser', async (req, res) =>
+{
+    const params = {
+        userID: req.param('userID'),
+        getProvider: req.param('getProvider')
+    };
+
+    let reviewType = getProvider == "true" 
+                   ? ReviewType.Provider 
+                   : ReviewType.Requester;
+
+    if(validParams(params, res))
+    {
+        let response = await db.reviews.getAllToUser(params.userID, reviewType);
         if(response != null) return sendSuccess(res, response);
         else return sendFailure(res);
     }

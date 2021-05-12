@@ -40,7 +40,7 @@ const verifyUser = async (signIn, token, type, setLoggingIn) =>
                     "lastName":body.last_name,
                     "email":body.email,
                     "token":"f"+body.id,
-                    "picture": body.picture
+                    "picture": body.picture.url
                 };    
         }
         console.log(body);

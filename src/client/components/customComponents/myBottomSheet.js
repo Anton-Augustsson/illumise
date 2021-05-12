@@ -1,10 +1,12 @@
 import React, {useState, forwardRef} from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import BottomSheet from "reanimated-bottom-sheet";
-import {colors} from "../mainStyles/colors";
+import Overlay from "./overlay";
 
 const MyBottomSheet = forwardRef(({renderContent, snapPoints, 
     overlay = true, initialSnap = 1, ...props}, ref) => {
+
+    const [overlayState, setOverlayState] = useState(false);
 
     const renderContentFunc = () => (
         <View style={{ overflow:"hidden",paddingTop:5}}>
@@ -16,8 +18,6 @@ const MyBottomSheet = forwardRef(({renderContent, snapPoints,
             </View>
         </View>
     );
-
-    const [overlayState, setOverlayState] = useState(false);
 
     return (
     <>
@@ -33,16 +33,11 @@ const MyBottomSheet = forwardRef(({renderContent, snapPoints,
         />
 
         {!overlay ? null :
-            <View style={[styles.overlayOuter,{zIndex:overlayState ? 10 : -100}]}>
-                <TouchableOpacity
-                    activeOpacity={0.7}
-                    style={[styles.overlayInner, {display: overlayState ? "flex" : "none"}]}
-                    onPress={()=>{
-                    setOverlayState(false);
-                    ref.current.snapTo(1);
-                    }}
-                />
-            </View>
+            <Overlay
+                onPress={()=>ref.current.snapTo(1)}
+                state={overlayState}
+                setState={setOverlayState}
+            />
         }
 
     </>
@@ -77,18 +72,5 @@ const styles = StyleSheet.create({
         width:50,
         height:6,
         borderRadius:3,
-    },
-    overlayOuter: {
-        position:"absolute",
-        height:"100%",
-        width:"100%",
-        top:0,
-        right:0,
-        left:0,
-        bottom:0,
-    },
-    overlayInner: {
-        flex:1,
-        backgroundColor:colors.OVERLAY,
-    },
+    }
 });

@@ -140,7 +140,7 @@ const ms = StyleSheet.create({
     emptyMsgAbove: {
         fontWeight:"bold",
         fontSize:16,
-    },
+    }
 });
 
 // EXPORTS 

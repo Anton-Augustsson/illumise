@@ -86,11 +86,10 @@ router.put('/provider/set', async (req, res) =>
 router.get('/get', async (req, res) =>
 {
     const params = { requestID: req.param('requestID')};
-    console.log(params);
+    
     if(validParams(params, res))
     {
         let response = await db.requests.get(params.requestID);
-        console.log(response);
         if(response != null) return sendSuccess(res, response);
         else return sendFailure(res);
     }

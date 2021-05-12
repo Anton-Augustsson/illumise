@@ -37,8 +37,8 @@ const OtherRequestScreen = ({navigation}) => {
                 />
                 <FloatingInput 
                     onChangeText={text=>setInfo(text)}
-                    multiline 
-                    style={rs.multiLinetextInput} 
+                    multiline={true}
+                    maxHeight={250}
                     placeholder={Localization.getText("text")}
                     value={info}
                 />

@@ -14,7 +14,6 @@ import { OrderChatScreen } from './chat/orderChat';
 import chat from '../../../modules/client-communication/chat';
 import { AppContext } from '../../AppContext';
 import SeeReviews from '../../customComponents/seeReviews';
-import { useFocusEffect } from '@react-navigation/core';
 
 const RequestItem = ({nav, item, isCreator}) => {
 
@@ -69,11 +68,6 @@ const FirstScreen = ({nav}) => {
         isRefreshing: false
     });
 
-    const refresh = async () => 
-    {
-        await Promise.all(refreshRequest(),refreshProvider());
-    }
-
     const refreshRequest = async () => {
 
         setState({...state, isRefreshing:true});
@@ -93,7 +87,8 @@ const FirstScreen = ({nav}) => {
         
     }
 
-    const refreshProvider = async () => {
+    const refreshProvider = async () => 
+    {
         setProvider({...provider, isRefreshing: true});
         try 
         {
@@ -118,12 +113,12 @@ const FirstScreen = ({nav}) => {
 
     useEffect(() => 
     {
-        const listen = nav.addListener("focus", () => 
+        const listen = nav.addListener("focus", async () => 
         {
-            refresh()
+            await Promise.all(refreshRequest(), refreshProvider());
         });
         return listen;
-    }, []);
+    }, [nav]);
 
     const requestContent = 
         <FlatList
@@ -222,7 +217,7 @@ const MyOrders = ({navigation}) => {
                 name="MarketItem" 
                 component={MarketItem}
             />
-           
+
         </Stack.Navigator> 
     );
 }
