@@ -24,7 +24,7 @@ const Chat = ({chatObject, user, other, isCreator}) =>
     useEffect(() => 
     {
         socket = io(ENDPOINT);
-        socket.emit('join', {senderId: user._id, name: myFullName, chatID: chatObject._id});
+        socket.emit('join', {senderId: user._id, chatID: chatObject._id});
 
         return () => {
             socket.disconnect();

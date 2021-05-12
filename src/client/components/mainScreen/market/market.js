@@ -13,58 +13,7 @@ import request from '../../../modules/client-communication/request';
 import RequestIcon from "../../customComponents/requestIcon";
 import { AppContext } from '../../AppContext';
 import {getDistance} from "geolib";
-/*
-    { latitude: 51.5103, longitude: 7.49347 },
-    
-    { latitude: "51° 31' N", longitude: "7° 28' E" }
-*/
-const FilterView = () => {
-    const filterItems = [
-        {
-            "id":"0",
-            "text":Localization.getText("price")
-        },{
-            "id":"1",
-            "text":Localization.getText("latest")
-        },{
-            "id":"2",
-            "text":Localization.getText("closest")
-        },
-    ]
-
-    const [expand, setExpand] = useState(false);
-
-    return (
-        <View style={mms.filterOuterContainer}>
-            <ScrollView horizontal={expand ? false : true}>
-                <View style={mms.filterContainer}>
-                    {filterItems.map(item => (
-                        <TouchableOpacity
-                            key={item.id}
-                            
-                        >
-                            <LinearGradient style={mms.filterItemContainer} colors={['grey', 'black']}>
-                                <Text style={mms.filterItemText}>{item.text}</Text>
-                            </LinearGradient>
-                        </TouchableOpacity>
-                    ))}
-                </View>
-            </ScrollView>
-            <TouchableOpacity
-                style={mms.filterExpandContainer}
-                onPress={()=>setExpand(!expand)}
-            >
-                <MaterialIcons 
-                    name={expand ? "keyboard-arrow-down": "keyboard-arrow-up"} 
-                    size={30} 
-                    color="black" 
-                />
-            </TouchableOpacity>
-        </View>
-    );
-}
-
-
+import SeeReviews from '../../customComponents/seeReviews';
 
 const RequestItem = ({nav, item, pointStart}) => {
     var text = ''
@@ -148,7 +97,8 @@ const FirstScreen = (nav) => {
         }
         finally
         {
-            return result.filter(result => result != null 
+            return result.filter(result => result
+                              && !result.isFulfilled
                               && result.creatorID !== getState().user._id
                               && result.providerID == null
                               && result.body.stops != undefined);
@@ -211,6 +161,11 @@ const MarketScreen = ({navigation}) => {
             <Stack.Screen 
                 name="MarketItem" 
                 component={MarketItem}
+            />
+
+            <Stack.Screen 
+                name="SeeReviews" 
+                component={SeeReviews}
             />
            
         </Stack.Navigator> 

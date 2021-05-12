@@ -60,9 +60,9 @@ io.on('connection', function(socket)
 {
     console.log("New connection");
 
-    socket.on('join', ({ senderId, name , chatID }) => 
+    socket.on('join', ({ senderId , chatID }) => 
     {
-        console.log('join', senderId, name, chatID);
+        console.log('join', senderId, chatID);
         socket.join(chatID);
     });
 
@@ -71,6 +71,13 @@ io.on('connection', function(socket)
         console.log('sendMsg', chatID, msg, time, isProvider );
         io.to(chatID).emit('msg', { chatID: chatID, msg: msg, time: time, isProvider: isProvider });
         db.chat.addMessage(chatID, msg, isProvider);
+        callback();
+    });
+
+    socket.on('sendComplete', ({ senderId , chatID }, callback) => 
+    {
+        console.log('sendComplete', senderId, chatID );
+        io.to(chatID).emit('complete', { senderId: senderId });
         callback();
     });
 

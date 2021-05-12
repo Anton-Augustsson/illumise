@@ -33,7 +33,8 @@ const ReviewItem = ({item}) =>
     );
 }
 
-const SeeReviews = ({navigation, route}) => {
+const SeeReviews = ({navigation, route}) => 
+{
     const [loading, setLoading] = useState(true);
     const [isRefreshing, setIsRefreshing] = useState(false);
     const [reviews, setReviews] = useState([]);

@@ -28,8 +28,7 @@ const ChatRoomItem = ({nav, item, request}) => {
             onPress={() => nav.navigate("OrderChat", { request: request, chat: item, other: other, isCreator: true})}
         >
             <Text style={oas.chatRoomTitle}>
-                {other != null ? `${other.firstName} ${other.lastName} ${Localization.getText("willTakeOrder")}`
-                               : ""}
+                {other? `${other.firstName} ${other.lastName} ${Localization.getText("willTakeOrder")}`: ""}
             </Text>
         </TouchableOpacity>
     );

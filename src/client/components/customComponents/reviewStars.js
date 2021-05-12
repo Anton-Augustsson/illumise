@@ -1,6 +1,7 @@
 import React from "react";
-import {View, Text, StyleSheet} from "react-native";
+import { View, Text } from "react-native";
 import { FontAwesome } from '@expo/vector-icons';
+import ms from "../mainStyles/ms";
 
 const ReviewStars = ({stars, style, ...props}) =>
 {
@@ -11,29 +12,20 @@ const ReviewStars = ({stars, style, ...props}) =>
     return (
         <View style={{flexDirection:"row", alignItems:"center"}}>
             {
-            [...new Array(maxStars)].map((_, index) => (
-                <FontAwesome 
-                    key={index} 
-                    name={index < roundOff ?  "star" : "star-o"}
-                    size={size} 
-                    style={[styles.star, style]}
-                    {...props}
-                />
-            ))}
-            <Text style={styles.rating}>{stars}</Text>
+                [...new Array(maxStars)].map((_, index) => (
+                    <FontAwesome
+                        key={index.toString()} 
+                        name={index < roundOff ?  "star" : "star-o"}
+                        size={size} 
+                        style={[ms.star, style]}
+                        {...props}
+                    />
+                ))
+            }
+            <Text style={ms.rating}>{stars}</Text>
         </View>
     );
 }
 
-const styles = StyleSheet.create({
-    star: {
-        color:"orange", 
-        marginRight:3
-    },
-    rating: {
-        fontSize:11, 
-        marginLeft:2
-    }
-})
 
 export default ReviewStars;

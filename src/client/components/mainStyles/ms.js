@@ -140,10 +140,16 @@ const ms = StyleSheet.create({
     emptyMsgAbove: {
         fontWeight:"bold",
         fontSize:16,
+    },
+    star: {
+        color:"orange", 
+        marginRight:3
+    },
+    rating: {
+        fontSize:11, 
+        marginLeft:2
     }
 });
-
-// EXPORTS 
 
 export default ms;
 

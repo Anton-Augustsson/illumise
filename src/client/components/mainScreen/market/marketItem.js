@@ -121,18 +121,19 @@ const DoneLoading = ({navigation, creator, isCreator, req, getState }) => {
         <>
             <MyBottomSheet
                 ref={sheetRef}
-                snapPoints={["70%", "20%", 40]}
+                snapPoints={["70%", "40%", "20%", 40]}
                 overlay={false}
                 renderContent={<BottomSheetContent req={req}/>}
             />
 
             <CustomHeader 
-                title={creator && Localization.getText("yourOrderIsComplete")}
+                title={""}
                 nav={navigation}
             />
             
             <AcceptHeader
-                userName={`${creator.firstName} ${creator.lastName}`}
+                userObject={{...creator, getProvider: true}}
+                navigation={navigation}
                 acceptTitle={isCreator ? Localization.getText("remove") : 
                                          Localization.getText("claim")}
                 onButtonPress={async () => {
@@ -145,10 +146,9 @@ const DoneLoading = ({navigation, creator, isCreator, req, getState }) => {
                         await claim(navigation, req);
                     }
                 }}
-                zIndex={-1}
                 buttonStyle={isCreator ? {backgroundColor: "#ff4d4d"} : undefined}
                 buttonDisabled={!isCreator && req.providerID != null}
-                userObject={{...creator, getProvider: isCreator}}
+                zIndex={-1}
             />
 
             <CustomMap

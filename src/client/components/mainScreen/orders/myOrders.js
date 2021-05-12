@@ -76,7 +76,7 @@ const FirstScreen = ({nav}) => {
         {
             const requests = await request.requester.getUserRequest(getState().user._id);
             setState({
-                requests: requests,
+                requests: requests.filter(item => item && !item.isFulfilled),
                 isRefreshing: false,
             });
         } 
@@ -101,7 +101,7 @@ const FirstScreen = ({nav}) => {
             }));
 
             setProvider({
-                providing: providing.filter(item => item !== null),
+                providing: providing.filter(item => item && !item.isFulfilled),
                 isRefreshing: false,
             });
         } 
