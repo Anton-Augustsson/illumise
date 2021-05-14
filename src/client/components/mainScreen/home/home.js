@@ -5,15 +5,13 @@ import FoodRequestScreen from './requests/foodRequestScreen/foodRequest';
 import PostRequestScreen from './requests/postRequestScreen/postRequestScreen';
 import LegitimationScreen from './requests/postRequestScreen/legitimation';
 import ShoppingRequestScreen from "./requests/shoppingRequestScreen/shoppingRequest";
-import {colors} from "../../mainStyles/colors";
 import hs from "./homeStyle";
 import RequestIcon from "../../customComponents/requestIcon"
 import DeliverScreen from './requests/deliver/deliver';
 import { Localization } from '../../../modules/localization';
 import OtherRequestScreen from './requests/OtherRequestScreen/otherRequest';
 import { AppContext } from '../../AppContext';
-
-
+import {screenOptions} from "../navigationOptions";
 
 const DATA = [
     {
@@ -95,15 +93,12 @@ const FirstScreen = ({nav}) => {
     );
 }
 
-
 const Stack = createStackNavigator();
 
 const HomeScreen = () => {
     return (
         <Stack.Navigator 
-            screenOptions={{
-                cardStyle:{backgroundColor:colors.DEFAULT_BACKGROUND}
-            }}
+            screenOptions={screenOptions}
             initialRouteName="FirstScreen"
         >
             <Stack.Screen 

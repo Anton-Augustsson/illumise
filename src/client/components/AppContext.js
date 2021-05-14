@@ -1,3 +1,3 @@
-import React, { createContext, useReducer} from 'react';
+import { createContext} from 'react';
 
 export const AppContext = createContext();

@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext} from 'react';
 import { Text, View,  FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import ms from "../../mainStyles/ms";
-import { colors } from '../../mainStyles/colors';
 import MarketItem from '../market/marketItem';
 import {Localization} from '../../../modules/localization'
 import request from '../../../modules/client-communication/request';
@@ -13,6 +12,7 @@ import { OrderChatScreen } from './chat/orderChat';
 import chat from '../../../modules/client-communication/chat';
 import { AppContext } from '../../AppContext';
 import SeeReviews from '../../customComponents/seeReviews';
+import { screenOptions } from '../navigationOptions';
 
 const RequestItem = ({nav, item, isCreator}) => {
 
@@ -180,9 +180,7 @@ const Stack = createStackNavigator();
 const MyOrders = ({navigation}) => {
     return (
        <Stack.Navigator 
-            screenOptions={{
-                cardStyle:{backgroundColor:colors.DEFAULT_BACKGROUND}
-            }}
+            screenOptions={screenOptions}
             initialRouteName="FirstScreen"
         >
             <Stack.Screen 

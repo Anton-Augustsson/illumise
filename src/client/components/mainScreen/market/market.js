@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext} from 'react';
 import { Text, View, FlatList, StyleSheet,TouchableOpacity} from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import ms from "../../mainStyles/ms";
-import { colors } from '../../mainStyles/colors';
 import MarketItem from './marketItem';
 import {Localization} from '../../../modules/localization'
 import * as Location from 'expo-location';
@@ -11,6 +10,7 @@ import RequestIcon from "../../customComponents/requestIcon";
 import { AppContext } from '../../AppContext';
 import {getDistance} from "geolib";
 import SeeReviews from '../../customComponents/seeReviews';
+import { screenOptions } from '../navigationOptions';
 
 const RequestItem = ({nav, item, pointStart}) => {
     var text = ''
@@ -137,9 +137,7 @@ const Stack = createStackNavigator();
 const MarketScreen = ({navigation}) => {
     return (
        <Stack.Navigator 
-            screenOptions={{
-                cardStyle:{backgroundColor:colors.DEFAULT_BACKGROUND}
-            }}
+            screenOptions={screenOptions}
             initialRouteName="FirstScreen"
         >
             <Stack.Screen 

@@ -1,13 +1,13 @@
 import React from 'react';
-import { Text, View, Image, Button, FlatList, StyleSheet,TouchableOpacity, Settings} from 'react-native';
+import { Text, FlatList, StyleSheet,TouchableOpacity } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
-import {colors} from "../../mainStyles/colors";
 import ms from "../../mainStyles/ms";
 import SettingsScreen from "./settings/settings";
 import ProfileScreen from "./profile/profile";
 import FaqScreen from "./faq/faq";
 import BurgarIcons from "../../customComponents/burgarIcons";
 import { Localization } from '../../../modules/localization';
+import { screenOptions } from '../navigationOptions';
 
 
 const BURGAR = [
@@ -59,10 +59,7 @@ const BurgarScreen = () =>
 {
     return (
         <Stack.Navigator 
-            screenOptions={{
-                cardStyle:{backgroundColor:colors.DEFAULT_BACKGROUND},
-                initialRouteName:"FirstScreen"
-            }}
+            screenOptions={screenOptions}
         >
             <Stack.Screen 
                 options={{
