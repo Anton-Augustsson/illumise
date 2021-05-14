@@ -170,7 +170,7 @@ class DBReviewsInterface
             let collection = type == ReviewType.Requester ? "requesterCollection" : "providerCollection";
 
             let existing = await this.#collection.aggregate([
-                { $match:   { userID: userID,
+                { $match:   { userID: ObjectID(userID),
                               [`${collection}.ratings.requestID`]: ObjectID(requestID) }},
                 { $project: { rating:        `$${collection}.ratings.${ObjectID(requestID)}`,
                               averageRating: `$${collection}.averageRating`,
@@ -220,13 +220,10 @@ class DBReviewsInterface
         {
             let collection = type == ReviewType.Requester ? "requesterCollection" : "providerCollection";
             let result = await this.#collection.aggregate([
-                { $match: { userID: userID }},
-                { $unwind: `$${collection}.ratings` },
-                { $project: { averageRating: `$${collection}.averageRating`,
-                              numRatings:    `$${collection}.numRatings`,
-                              _id: 0 }}
+                { $match: { userID: ObjectID(userID) }},
+                { $replaceRoot: { newRoot: `$${collection}`}},
+                { $project: { ratings: 0}}
             ]).toArray();
-
             return result.length == 0 ? null : result[0];
         }
         catch (error)
@@ -250,8 +247,8 @@ class DBReviewsInterface
         {
             let collection = type == ReviewType.Requester ? "requesterCollection" : "providerCollection";
             let result = await this.#collection.aggregate([
-                { $match: { userID: userID,
-                            [`${collection}.ratings.requestID`]: requestID}},
+                { $match: { userID: ObjectID(userID),
+                            [`${collection}.ratings.requestID`]: ObjectID(requestID)}},
                 { $addFields: { [`${collection}.ratings.targetID`]: "$userID"}},
                 { $unwind: `$${collection}.ratings` },
                 { $replaceRoot: { newRoot: `$${collection}.ratings` }}
@@ -280,7 +277,7 @@ class DBReviewsInterface
         {
             let collection = type == ReviewType.Requester ? "requesterCollection" : "providerCollection";
             let result = await this.#collection.aggregate([
-                { $match: { userID: userID }},
+                { $match: { userID: ObjectID(userID) }},
                 { $addFields: { [`${collection}.ratings.targetID`]: "$userID"}},
                 { $unwind: `$${collection}.ratings` },
                 { $replaceRoot: { newRoot: `$${collection}.ratings` }}
@@ -308,7 +305,7 @@ class DBReviewsInterface
         {
             let collection = type == ReviewType.Requester ? "requesterCollection" : "providerCollection";
             let result = await this.#collection.aggregate([
-                { $match: { [`${collection}.ratings.creatorID`]: userID}},
+                { $match: { [`${collection}.ratings.creatorID`]: ObjectID(userID)}},
                 { $addFields: { [`${collection}.ratings.targetID`]: "$userID"}},
                 { $unwind: `$${collection}.ratings` },
                 { $replaceRoot: { newRoot: `$${collection}.ratings` }}
@@ -339,7 +336,7 @@ class DBReviewsInterface
             let filter = 
             { 
                 userID: ObjectID(userID),
-                [`${collection}.ratings.requestID`]: requestID
+                [`${collection}.ratings.requestID`]: ObjectID(requestID)
             };
             let result = await this.#collection.deleteOne(filter);
             return result.result.ok == 1 && result.result.n == 1;

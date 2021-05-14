@@ -15,7 +15,7 @@ const ReviewItem = ({item}) =>
     {
         const init = async () => 
         {
-            console.warn(item);
+            console.log(item);
         }
         init().then(() => setLoading(false));
     }, []);
@@ -43,7 +43,7 @@ const SeeReviews = ({navigation, route}) =>
     {
         setIsRefreshing(true);
         let result = await review.getAllToUser(user._id, user.getProvider);
-        if (result !== null) setReviews(result);
+        if (result) setReviews(result);
         setIsRefreshing(false);
     }
 

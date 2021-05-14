@@ -8,7 +8,7 @@ const Popup = ({content, visible, onClose ,setVisible}) =>  {
         <Modal visible={visible} transparent={true}>
             <View style={styles.frame}>
                 <View style={styles.buttonHeader}>
-                        <TouchableOpacity
+                    <TouchableOpacity
                         style={styles.button}
                         onPress={()=>{
                             setVisible(false);

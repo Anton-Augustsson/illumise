@@ -6,6 +6,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import { useState } from 'react';
 import FloatingInput from '../../../customComponents/Inputs/floatingInput';
 import SamaritButton from '../../../customComponents/samaritButton';
+import review from '../../../../modules/client-communication/review';
 
 const ReviewScreen = ({data, nav, setComplete}) => 
 {
@@ -15,8 +16,8 @@ const ReviewScreen = ({data, nav, setComplete}) =>
 
     const sendReview = async () =>
     {
-        //let result = await review.add(data.fromID, data.toID, data.requestID, text, stars, data.fromID, data.toProvider);
-        //console.log("sendReview", result);
+        let result = await review.add(data.toID, data.fromID, data.requestID, text, stars, data.toProvider);
+        console.log("sendReviewResult", result);
         setComplete(true);
         nav.goBack();
     }

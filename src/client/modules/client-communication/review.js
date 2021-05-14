@@ -64,51 +64,23 @@ const review =
      * @param {String} message The message on the review
      * @param {Number} value The rated score 0 - 5
      * @param {Boolean} toProvider The type of review 
-     * @returns {Promise<Boolean>} If the review was added
+     * @returns {Promise<?Boolean>} If the review was added
      */
     add: async function(userIDTo, userIDFrom, requestID, message, value, toProvider)
     {
-        let newReq = {userIDTo: userIDTo, userIDFrom: userIDFrom, 
-                      requestID: requestID, message: message, 
-                      value: value, toProvider: toProvider};
-        let url = request.serviceUrl + '/addReview';
+        let data = {userIDTo: userIDTo, userIDFrom: userIDFrom, 
+                    requestID: requestID, message: message, 
+                    value: value, toProvider: toProvider};
+        let url = review.serviceUrl + '/addReview';
         let response = await fetch(url, {
-            method: 'POST',
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'
             },
-            body: JSON.stringify(newReq)
+            body: JSON.stringify(data)
         });
-
         return returnResponse(response);
     }
-    /**
-     * router.post('review/newReview', async (req, res) =>
-        {
-            const schema = Joi.object({
-                userIDTo: Joi.string().min(idSize).max(idSize),
-                userIDFrom: Joi.string().min(idSize).max(idSize),
-                requestID: Joi.string().min(idSize).max(idSize),
-                message: Joi.string(),
-                value: Joi.number(),
-                toProvider: Joi.boolean()
-            });
-
-            let body = req.body;
-            let data = body.data;
-
-            if(valid(body, schema, res) && validData(data, res))
-            {
-                let reviewType = body.toProvider == "true" 
-                        ? ReviewType.Provider 
-                        : ReviewType.Requester;
-
-                let response = await db.reviews.add(body.userIDTo, body.userIDFrom, body.requestID, body.message, body.value, reviewType);
-                if(response != null) return sendSuccess(res, response);
-                else return sendFailure(res);
-            }
-        });
-     */
 }
 
 export default review;

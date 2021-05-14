@@ -28,8 +28,8 @@ router.put('/sendMessage', async (req, res) => // post?
 
     if(valid(b, schema, res))
     {
-        let response = await db.chat.addMessage(b.chatID, b.msg, b.isProvider);
-        if(response != false) return sendSuccess(res, response);
+        let result = await db.chat.addMessage(b.chatID, b.msg, b.isProvider);
+        if (result) return sendSuccess(res, result);
         else return sendFailure(res);
     }
 });

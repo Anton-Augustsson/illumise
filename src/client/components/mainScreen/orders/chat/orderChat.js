@@ -40,11 +40,10 @@ export const OrderChatScreen = ({navigation, route}) =>
 
     useEffect(() =>
     {
-        socket.on('complete', data =>
+        socket.on('complete', _ =>
         {
             if (!complete)
             {
-                console.warn(data);
                 setComplete(true);
                 setPopup(true);
             }
@@ -57,33 +56,28 @@ export const OrderChatScreen = ({navigation, route}) =>
             setOther(await account.getFromID(route.params.isCreator
                                             ? tmpChat.provider._id
                                             : tmpChat.requester._id));
-            setLoading(false);
         }
-        init();
+        init().then(() => setLoading(false));
     },[]);
 
 
-    return (
+    return loading? <></> : (
         <View style={{flex:1}}>
-            {loading? 
-                <></> 
-                :
-                <Popup
-                    visible={popup}
-                    setVisible={setPopup}
-                    onClose={()=>navigation.goBack()}
-                    content={
-                        <ReviewScreen 
-                            data={{fromID: getState().user._id, 
-                                    toID: otherObject._id, 
-                                    requestID: requestObject._id, 
-                                    toProvider: route.params.isCreator}}
-                            nav={navigation}
-                            setComplete={setComplete}
-                        />
-                    }
-                />
-            }
+            <Popup
+                visible={popup}
+                setVisible={setPopup}
+                onClose={()=>navigation.goBack()}
+                content={
+                    <ReviewScreen 
+                        data={{ fromID: getState().user._id, 
+                                toID: otherObject._id, 
+                                requestID: requestObject._id, 
+                                toProvider: route.params.isCreator }}
+                        nav={navigation}
+                        setComplete={setComplete}
+                    />
+                }
+            />
 
             {route.params.isCreator ? requestObject.providerID === null ?
                 <AcceptHeader
@@ -106,8 +100,8 @@ export const OrderChatScreen = ({navigation, route}) =>
                     navigation={navigation}
                     onButtonPress={async () => 
                     {
-                        //let result = await request.completeRequest(requestObject._id);
-                        //console.log(result);
+                        let result = await request.completeRequest(requestObject._id);
+                        console.log("completeRequestResult", result);
                         socket.emit('sendComplete', {senderId: getState().user._id, chatID: chatObject._id}, () => 
                         {
                             setPopup(true);
@@ -148,17 +142,13 @@ export const OrderChatScreen = ({navigation, route}) =>
                     requestID={requestObject._id}
                 />
             }
-            {loading?
-                <></>
-                :
-                <Chat 
-                    chatObject={chatObject} 
-                    user={getState().user} 
-                    other={otherObject} 
-                    isCreator={route.params.isCreator}
-                    complete={complete}
-                />
-            }
+            <Chat 
+                chatObject={chatObject} 
+                user={getState().user} 
+                other={otherObject} 
+                isCreator={route.params.isCreator}
+                complete={complete}
+            />
         </View>
     );
 }

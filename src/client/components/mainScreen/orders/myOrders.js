@@ -91,7 +91,7 @@ const FirstScreen = ({nav}) => {
         setProvider({...provider, isRefreshing: true});
         try 
         {
-            let providing = await chat.getChatsFrom(getState().user._id, true);
+            const providing = await chat.getChatsFrom(getState().user._id, true);
             providing = await Promise.all(providing.map(async (item) => 
             {
                 let req = await request.get(item.requestID);

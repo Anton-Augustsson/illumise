@@ -13,59 +13,55 @@ const router = express.Router();
 const Joi = require('joi');
 const { idSize } = require("./validate");
 
-router.post('review/addReview', async (req, res) =>
+router.put('/addReview', async (req, res) =>
 {
     const schema = Joi.object({
         userIDTo: Joi.string().min(idSize).max(idSize),
         userIDFrom: Joi.string().min(idSize).max(idSize),
         requestID: Joi.string().min(idSize).max(idSize),
-        message: Joi.string(),
-        value: Joi.number(),
-        toProvider: Joi.boolean()
+        message: Joi.any(),
+        value: Joi.any(),
+        toProvider: Joi.any()
     });
 
-    let body = req.body;
-    let data = body.data;
-
-    if(valid(body, schema, res) && validData(data, res))
+    let b = req.body;
+    if(valid(b, schema, res))
     {
-        let reviewType = body.toProvider == "true" 
-                   ? ReviewType.Provider 
-                   : ReviewType.Requester;
+        let reviewType = b.toProvider
+                       ? ReviewType.Provider
+                       : ReviewType.Requester;
 
-        let response = await db.reviews.add(body.userIDTo, body.userIDFrom, body.requestID, body.message, body.value, reviewType);
-        if(response != null) return sendSuccess(res, response);
-        else return sendFailure(res);
+        let result = await db.reviews.add(b.userIDTo, b.userIDFrom, b.requestID, b.message, b.value, reviewType);
+        return result? sendSuccess(res, result) : sendFailure(res);
     }
 });
 
-router.get('/review/getRating', async (req, res) =>
+router.get('/getRating', async (req, res) =>
 {
     const params = {
         userID: req.param('userID'),
         getProvider: req.param('getProvider')
     };
-
-    let reviewType = getProvider == "true" 
-                   ? ReviewType.Provider 
-                   : ReviewType.Requester;
 
     if(validParams(params, res))
     {
-        let response = await db.reviews.getRating(params.userID, reviewType);
-        if(response != null) return sendSuccess(res, response);
-        else return sendFailure(res);
+        let reviewType = params.getProvider == "true" 
+                       ? ReviewType.Provider 
+                       : ReviewType.Requester;
+
+        let result = await db.reviews.getRating(params.userID, reviewType);
+        return result? sendSuccess(res, result) : sendFailure(res);
     }
 });
 
-router.get('/review/getAllToUser', async (req, res) =>
+router.get('/getAllToUser', async (req, res) =>
 {
     const params = {
         userID: req.param('userID'),
         getProvider: req.param('getProvider')
     };
 
-    let reviewType = getProvider == "true" 
+    let reviewType = params.getProvider == "true" 
                    ? ReviewType.Provider 
                    : ReviewType.Requester;
 

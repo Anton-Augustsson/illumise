@@ -177,24 +177,15 @@ const MarketItem = ({navigation, route}) => {
     const [creator, setCreator] = useState(null);
     const [req, setReq] = useState(null);
 
-    const isCreator = route.params.isCreator !== undefined && route.params.isCreator;
+    const isCreator = route.params.isCreator === true;
 
     useEffect(() => {
 
         const retrieveRequest = async () =>
         {
-            let res;
-            setReq(res = await request.get(route.params.requestID));
-
-            //Don't need to fetch information about creator if we are it. 
-            //if information is old we should update AppContext instead.
-            if(isCreator) 
-            {
-                setCreator(getState().user)
-            } else 
-            {
-                setCreator(await account.getFromID(res.creatorID));
-            } 
+            let res = await request.get(route.params.requestID);
+            setReq(res);
+            setCreator(isCreator? getState().user :await account.getFromID(res.creatorID));
             setLoading(false);
         }
         retrieveRequest();

@@ -202,13 +202,14 @@ class DBRequestsInterface
     {
         try
         {
+            console.log("setCompleted", requestID);
             let filter = { _id: ObjectID(requestID) };
             let update = 
             {
                 $set: 
                 {
                     dateCompleted: Date.now(),
-                    isFulFilled: true
+                    isFulfilled: true
                 }
             };
             let result = await this.#collection.updateOne(filter, update);

@@ -22,7 +22,7 @@ const ReviewStars = ({stars, style, ...props}) =>
                     />
                 ))
             }
-            <Text style={ms.rating}>{stars}</Text>
+            <Text style={ms.rating}>{(Math.round(stars + Number.EPSILON) * 100)/100}</Text>
         </View>
     );
 }
