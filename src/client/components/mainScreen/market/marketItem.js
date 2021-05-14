@@ -120,13 +120,13 @@ const DoneLoading = ({navigation, creator, isCreator, req, getState }) => {
         <>
             <MyBottomSheet
                 ref={sheetRef}
-                snapPoints={["70%", "40%", "20%", 40]}
+                snapPoints={["70%", "40%", "20%", 30]}
                 overlay={false}
                 renderContent={<BottomSheetContent req={req}/>}
             />
 
             <AcceptHeader
-                userObject={{...creator, getProvider: true}}
+                userObject={{...creator, isCreator: true}}
                 navigation={navigation}
                 acceptTitle={isCreator ? Localization.getText("remove") : 
                                          Localization.getText("claim")}

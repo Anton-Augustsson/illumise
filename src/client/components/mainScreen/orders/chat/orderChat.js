@@ -30,7 +30,6 @@ export const OrderChatScreen = ({navigation, route}) =>
     useEffect(() => 
     {
         socket = io(ENDPOINT);
-        console.warn(chatObject);
         if (chatObject) socket.emit('join', { senderId: getState().user._id, chatID: chatObject._id });
 
         return () => 
@@ -88,7 +87,7 @@ export const OrderChatScreen = ({navigation, route}) =>
 
             {route.params.isCreator ? requestObject.providerID === null ?
                 <AcceptHeader
-                    userObject={{...otherObject, getProvider: route.params.isCreator}}
+                    userObject={{...otherObject, isCreator: route.params.isCreator}}
                     acceptTitle={Localization.getText("acceptProvider")}
                     navigation={navigation}
                     onButtonPress={async () => 
@@ -97,10 +96,12 @@ export const OrderChatScreen = ({navigation, route}) =>
                         console.log("Set Provider", result);
                         setRequest(await request.get(request._id));
                     }}
+                    centerButtonEnabled={true}
+                    requestID={requestObject._id}
                 />
                 :
                 <AcceptHeader
-                    userObject={{...otherObject, getProvider: route.params.isCreator}}
+                    userObject={{...otherObject, isCreator: route.params.isCreator}}
                     acceptTitle={Localization.getText("completeRequest")}
                     navigation={navigation}
                     onButtonPress={async () => 
@@ -113,10 +114,12 @@ export const OrderChatScreen = ({navigation, route}) =>
                             setComplete(true);
                         });
                     }}
+                    centerButtonEnabled={true}
+                    requestID={requestObject._id}
                 />
                 :
                 <AcceptHeader
-                    userObject={{...otherObject, getProvider: route.params.isCreator}}
+                    userObject={{...otherObject, isCreator: route.params.isCreator}}
                     acceptTitle={Localization.getText("cancelRequest")}
                     buttonStyle={{backgroundColor: "#ff4d4d"}}
                     navigation={navigation}
@@ -141,6 +144,8 @@ export const OrderChatScreen = ({navigation, route}) =>
                             navigation.goBack();
                         }
                     }}
+                    centerButtonEnabled={true}
+                    requestID={requestObject._id}
                 />
             }
             {loading?

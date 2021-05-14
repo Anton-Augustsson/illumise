@@ -1,7 +1,10 @@
 import React, {Component} from "react";
 import MapView, {Marker} from "react-native-maps";
 import * as Location from "expo-location";
-import { Alert, StyleSheet } from "react-native";
+import { Alert, StyleSheet, TouchableHighlight, View } from "react-native";
+import CustomButton from "./customButton";
+import { AntDesign } from '@expo/vector-icons'; 
+
 
 /**
  * @typedef Region
@@ -62,7 +65,7 @@ export default class CustomMap extends Component
                 latitude: 0,
                 longitude: 0,
                 latitudeDelta: 0.1,
-                longitudeDelta: 0.1
+                longitudeDelta: 0.1,
             },
             markers: [],
             onMount:  props.onMount  ? props.onMount  
@@ -77,10 +80,10 @@ export default class CustomMap extends Component
         try
         {
             let region = await this.getLocalRegion();
-            this.setState({
-            region: region,
-            markers: await this.state.onMount(region)
-            });
+            setTimeout(async ()=>this.setState({
+                region: region,
+                markers: await this.state.onMount(region)
+            }), 200);
         }
         catch(error)
         {
@@ -119,12 +122,12 @@ export default class CustomMap extends Component
             if (response.granted)
             {
                 let position = await Location.getCurrentPositionAsync();
-                return region = {
+                return {
                     latitude:  position.coords.latitude,
                     longitude: position.coords.longitude,
                     latitudeDelta: 0.009,
                     longitudeDelta: 0.004
-                }
+                };
             }
         }
         catch(error)
@@ -138,16 +141,14 @@ export default class CustomMap extends Component
     render() 
     {
         return(
-            <>
+            <View style={{flex:1}}>
                 <MapView
                     style = {this.props.style}
                     region = {this.state.region}
                     showsUserLocation={true}
-                    showsMyLocationButton={true}
                     showsPointsOfInterest={true}
                     onRegionChangeComplete={this.onRegionChangeComplete.bind(this)}
                 >
-
                     {this.state.markers.map((marker, index) => (
                         <Marker
                             key={index}
@@ -158,14 +159,32 @@ export default class CustomMap extends Component
                         />
                     ))}
                 </MapView>
-            </>
+                <TouchableHighlight 
+                    style={styles.centerButton}
+                    underlayColor="#f2f2f2"
+                    onPress={async () => 
+                    {
+                        let region = await this.getLocalRegion();
+                        this.setState({region: region});
+                    }}
+                >
+                    <AntDesign name="enviromento" size={24} color="black"/>
+                </TouchableHighlight>
+            </View>
         );
     }
-
-            
-            
 }
 
 const styles = StyleSheet.create({
-
+    centerButton: {
+        padding:5, 
+        zIndex:10, 
+        backgroundColor:"rgba(255,255,255,0.7)",
+        position:"absolute",
+        alignSelf:"flex-end",
+        top:7,
+        right:7,
+        borderRadius: 20,
+        borderWidth: 1
+    }
 });

@@ -5,21 +5,21 @@ import { AntDesign } from '@expo/vector-icons';
 const Popup = ({content, visible, onClose ,setVisible}) =>  {
     
     return (
-        <Modal
-            visible={visible}
-        >
-            <View style={styles.buttonHeader}>
-                    <TouchableOpacity
-                    style={styles.button}
-                    onPress={()=>{
-                        setVisible(false);
-                        onClose ? onClose() : null;
-                    }}
-                >
-                    <AntDesign name="close" size={25} color="black"/>
-                </TouchableOpacity>
+        <Modal visible={visible} transparent={true}>
+            <View style={styles.frame}>
+                <View style={styles.buttonHeader}>
+                        <TouchableOpacity
+                        style={styles.button}
+                        onPress={()=>{
+                            setVisible(false);
+                            onClose ? onClose() : null;
+                        }}
+                    >
+                        <AntDesign name="close" size={25} color="black"/>
+                    </TouchableOpacity>
+                </View>
+                {content}
             </View>
-            {content}
         </Modal>
     );
 }
@@ -32,6 +32,11 @@ const styles = StyleSheet.create({
         flexDirection:"row",
         alignSelf:"flex-end",
         zIndex:11,
+    },
+    frame: {
+        flexDirection: "column",
+        backgroundColor:"white", 
+        flex: 1
     },
     button: {
         right:15,
