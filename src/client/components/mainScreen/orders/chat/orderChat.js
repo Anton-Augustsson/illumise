@@ -52,12 +52,22 @@ export const OrderChatScreen = ({navigation, route}) =>
         const init = async () => 
         {
             let tmpChat = await chat.getChat(requestObject._id, requestObject.creatorID, false);
-            setChat(tmpChat);
-            setOther(await account.getFromID(route.params.isCreator
-                                            ? tmpChat.provider._id
-                                            : tmpChat.requester._id));
+            if (tmpChat)
+            {
+                setChat(tmpChat);
+                setOther(await account.getFromID(route.params.isCreator
+                                                ? tmpChat.provider._id
+                                                : tmpChat.requester._id));
+                return false;
+            }
+            else
+            {
+                Alert.alert("Error When loading request", "Chat does not exist");
+                navigation.goBack();
+                return true;
+            }
         }
-        init().then(() => setLoading(false));
+        init().then(result => setLoading(result));
     },[]);
 
 
@@ -86,8 +96,9 @@ export const OrderChatScreen = ({navigation, route}) =>
                     navigation={navigation}
                     onButtonPress={async () => 
                     {
+                        console.warn("requestObject", requestObject)
                         let result = await request.provider.set(requestObject._id, otherObject._id);
-                        console.log("Set Provider", result);
+                        console.warn("Set Provider", result);
                         setRequest(await request.get(request._id));
                     }}
                     centerButtonEnabled={true}

@@ -12,7 +12,7 @@ import {getDistance} from "geolib";
 import SeeReviews from '../../customComponents/seeReviews';
 import { screenOptions } from '../navigationOptions';
 
-const RequestItem = ({nav, item, pointStart}) => {
+const RequestItem = ({nav, item, pointStart, isLast}) => {
     var text = ''
     switch (item.body.type) {
         case 'food':
@@ -80,8 +80,7 @@ const FirstScreen = (nav) => {
                 let geo = await Location.getCurrentPositionAsync();
                 let pointStart = coordsToGeoJSON([geo.coords.longitude, geo.coords.latitude]);
                 setPointStart(pointStart);
-
-                result = await request.provider.getNearRequests(pointStart, 1000000, 10);
+                result = await request.provider.getNearRequests(pointStart, 1000000);
             }
             else
             {
@@ -116,7 +115,12 @@ const FirstScreen = (nav) => {
         <View style={{flex:1}}> 
             <FlatList
                 data={REQUESTS}
-                renderItem={({item})=><RequestItem pointStart={pointStart} nav={nav} item={item}/>}
+                renderItem={({item, index})=>
+                    <RequestItem 
+                        pointStart={pointStart} 
+                        nav={nav} 
+                        item={item} 
+                    />}
                 keyExtractor={(item)=>item._id}
                 onRefresh={refresh}
                 refreshing={isRefreshing}

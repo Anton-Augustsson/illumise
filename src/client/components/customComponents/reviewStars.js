@@ -3,11 +3,10 @@ import { View, Text } from "react-native";
 import { FontAwesome } from '@expo/vector-icons';
 import ms from "../mainStyles/ms";
 
-const ReviewStars = ({stars, style, ...props}) =>
+const ReviewStars = ({stars, style, size=11, ...props}) =>
 {
     const roundOff = Math.round(parseInt(stars));
     const maxStars = 5;
-    const size = 11;
 
     return (
         <View style={{flexDirection:"row", alignItems:"center"}}>
@@ -22,7 +21,7 @@ const ReviewStars = ({stars, style, ...props}) =>
                     />
                 ))
             }
-            <Text style={ms.rating}>{(Math.round(stars + Number.EPSILON) * 100)/100}</Text>
+            <Text style={{marginLeft: size/4, fontSize:size}}>{(Math.round(stars + Number.EPSILON) * 100)/100}</Text>
         </View>
     );
 }

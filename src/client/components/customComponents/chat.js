@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import { Text, View, FlatList, StyleSheet,
          TouchableOpacity, TextInput, Keyboard } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -7,6 +7,7 @@ import { Localization } from '../../modules/localization';
 import {magicValues} from "../mainStyles/magicValues";
 import communication from '../../modules/client-communication/communication';
 import io, { Socket } from "socket.io-client";
+import { min } from 'react-native-reanimated';
 
 const url = communication.url;
 /** @type {Socket} */
@@ -96,6 +97,7 @@ const Chat = ({chatObject, user, other, isCreator}) =>
         setKeyboard(true);
         setKeyboardHeight(event.endCoordinates.height - magicValues.MENU_HEIGHT);
     }
+
     const keyboardHide = () => 
     {
         setKeyboard(false);
@@ -113,17 +115,24 @@ const Chat = ({chatObject, user, other, isCreator}) =>
             Keyboard.removeListener("keyboardDidHide", keyboardHide);
         };
     }, []);
-    
+
+    const flatList = useRef(null);
+    const showText = (index) => chat.length == index + 1 || chat[index].isProvider != chat[index + 1].isProvider;
+
     return (
         <>
             <View style = {cs.upperContainer}> 
                 <FlatList
+                    ref={flatList}
                     data={chat}
-                    renderItem={({item})=>
+                    onContentSizeChange={() => {
+                        flatList.current.scrollToEnd();
+                    }}
+                    renderItem={({item, index})=>
                         <Msg item={item.isProvider != isCreator
-                            ? { me: true,  msg: item.msg, name: myFullName} 
-                            : { me: false, msg: item.msg, name: otherFullName}} 
-                        />}
+                            ? { me: true,  msg: item.msg, name: myFullName, time: item.time, showText: showText(index)}
+                            : { me: false, msg: item.msg, name: otherFullName, time: item.time, showText: showText(index)} 
+                        }/>}
                     keyExtractor={(_, index)=> index.toString()}
                     ListEmptyComponent={()=>
                         {return chat ? 
@@ -149,7 +158,7 @@ const Chat = ({chatObject, user, other, isCreator}) =>
                     placeholder={Localization.getText("writeMsg")}
                     onChangeText={msg => {setMsg(msg);}}
                     defaultValue={msg}
-                    multiline
+                    multiline={true}
                 />
                 <TouchableOpacity 
                     style = {cs.sendContainer} 
@@ -166,7 +175,8 @@ const Chat = ({chatObject, user, other, isCreator}) =>
 const Msg = ({item}) => {
     return (
         <View 
-            style={[cs.msgOuterContainer, item.me
+            style={[item.showText ? cs.msgOuterContainerText : 
+                cs.msgOuterContainer, item.me
             ? cs.youOuterMsgContainer 
             : cs.themOuterMsgContainer]}
         >
@@ -179,7 +189,10 @@ const Msg = ({item}) => {
 
                 <Text style={cs.msg}>{item.msg}</Text>
             </View>
-            <Text style={cs.sender}>{item.name}</Text>
+            {item.showText //TODO: Time?
+                ? <Text style={cs.sender}>{`${item.name}`}</Text>
+                : null
+            }
         </View>
     );
 }
@@ -190,10 +203,16 @@ const cs = StyleSheet.create({
         backgroundColor:"white",
     },
     msgOuterContainer: {
-        paddingTop: 7,
+        paddingTop: 1,
+        paddingBottom:1,
+        paddingRight:10,
+        paddingLeft:10,
+    },
+    msgOuterContainerText: {
+        paddingTop: 1,
         paddingBottom:7,
-        paddingRight:14,
-        paddingLeft:14,
+        paddingRight:10,
+        paddingLeft:10,
     },
     msgContainer: {
         maxWidth:"80%",
@@ -204,7 +223,7 @@ const cs = StyleSheet.create({
         alignItems:"flex-end",
     },
     themOuterMsgContainer: {
-
+        alignItems: "flex-start",
     },
     youMsgContainer: {
         backgroundColor:colors.YOU_MSG_COLOR,

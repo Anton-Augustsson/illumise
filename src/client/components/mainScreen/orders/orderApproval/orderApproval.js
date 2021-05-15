@@ -36,14 +36,17 @@ const ChatRoomItem = ({nav, item, request}) => {
 const OrderApprovalScreen = ({navigation, route}) => {
 
     const [chats, setChats] = useState([]);
+    const [refreshing, setRefreshing] = useState(false);
+
+    const refresh = async () => {
+        setRefreshing(true);
+        let result = await chat.getChats(route.params._id);
+        if (result) setChats(result);
+        setRefreshing(false);
+    }
 
     useEffect(() => {
-
-        const init = async () => {
-            let result = await chat.getChats(route.params._id);
-            if (result !== null) setChats(result);
-        }
-        init();
+        refresh();
     },[]);
 
     return (
@@ -51,6 +54,8 @@ const OrderApprovalScreen = ({navigation, route}) => {
             <FlatList
                 data={chats.length > 0 ? chats : undefined}
                 renderItem={({item})=><ChatRoomItem nav={navigation} item={item} request={route.params}/>}
+                onRefresh={refresh}
+                refreshing={refreshing}
                 keyExtractor={(item)=>item._id}
                 ListEmptyComponent={()=>
                     <View style={ms.emptyContainer}>

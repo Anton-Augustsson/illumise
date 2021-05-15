@@ -144,10 +144,6 @@ const ms = StyleSheet.create({
     star: {
         color:"orange", 
         marginRight:3
-    },
-    rating: {
-        fontSize:11, 
-        marginLeft:2
     }
 });
 

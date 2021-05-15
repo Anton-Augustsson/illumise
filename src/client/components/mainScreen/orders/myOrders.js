@@ -73,7 +73,7 @@ const FirstScreen = ({nav}) => {
 
         try 
         {
-            const requests = await request.requester.getUserRequest(getState().user._id);
+            let requests = await request.requester.getUserRequest(getState().user._id);
             setState({
                 requests: requests.filter(item => item && !item.isFulfilled),
                 isRefreshing: false,
@@ -91,11 +91,11 @@ const FirstScreen = ({nav}) => {
         setProvider({...provider, isRefreshing: true});
         try 
         {
-            const providing = await chat.getChatsFrom(getState().user._id, true);
+            let providing = await chat.getChatsFrom(getState().user._id, true);
             providing = await Promise.all(providing.map(async (item) => 
             {
                 let req = await request.get(item.requestID);
-                if (req === null) await chat.removeChat(item._id);
+                if (!req) await chat.removeChat(item._id);
                 return req;
             }));
 
