@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import { Text, View, FlatList, StyleSheet,TouchableOpacity} from 'react-native';
+import { Text, View, FlatList, StyleSheet,TouchableOpacity, Image} from 'react-native';
 import ms from "../../../mainStyles/ms";
 import SamaritButton from '../../../customComponents/samaritButton';
 import { Localization } from '../../../../modules/localization';
@@ -26,8 +26,15 @@ const ChatRoomItem = ({nav, item, request}) => {
             style={oas.chatRoomContainer}
             onPress={() => nav.navigate("OrderChat", { request: request, chat: item, other: other, isCreator: true})}
         >
+            {other?
+                <Image
+                    style={oas.profileImg}
+                    source={{uri: other.picture}}
+                />
+                :null
+            }
             <Text style={oas.chatRoomTitle}>
-                {other? `${other.firstName} ${other.lastName} ${Localization.getText("willTakeOrder")}`: ""}
+                {other? ` ${other.firstName} ${other.lastName} ${Localization.getText("willTakeOrder")}`: ""}
             </Text>
         </TouchableOpacity>
     );
@@ -102,6 +109,11 @@ const oas = StyleSheet.create({
     },
     chatRoomTitle: {
         fontSize:15,
+    },
+    profileImg: {
+        width:20,
+        height:20,
+        borderRadius:5
     }
 });
 

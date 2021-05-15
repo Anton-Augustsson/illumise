@@ -30,7 +30,7 @@ export const OrderChatScreen = ({navigation, route}) =>
     useEffect(() => 
     {
         socket = io(ENDPOINT);
-        if (chatObject) socket.emit('join', { senderId: getState().user._id, chatID: chatObject._id });
+        socket.emit('join', { senderId: getState().user._id, chatID: requestObject._id });
 
         return () => 
         {
@@ -40,8 +40,9 @@ export const OrderChatScreen = ({navigation, route}) =>
 
     useEffect(() =>
     {
-        socket.on('complete', _ =>
+        socket.on('complete', data =>
         {
+            console.warn("complete", data);
             if (!complete)
             {
                 setComplete(true);
@@ -96,10 +97,11 @@ export const OrderChatScreen = ({navigation, route}) =>
                     navigation={navigation}
                     onButtonPress={async () => 
                     {
-                        console.warn("requestObject", requestObject)
+                        console.warn("requestObject", requestObject);
+                        console.warn("otherObject", otherObject);
                         let result = await request.provider.set(requestObject._id, otherObject._id);
                         console.warn("Set Provider", result);
-                        setRequest(await request.get(request._id));
+                        setRequest(await request.get(requestObject._id));
                     }}
                     centerButtonEnabled={true}
                     requestID={requestObject._id}
@@ -111,8 +113,8 @@ export const OrderChatScreen = ({navigation, route}) =>
                     navigation={navigation}
                     onButtonPress={async () => 
                     {
-                        let result = await request.completeRequest(requestObject._id);
-                        console.log("completeRequestResult", result);
+                        //let result = await request.completeRequest(requestObject._id);
+                        //console.log("completeRequestResult", result);
                         socket.emit('sendComplete', {senderId: getState().user._id, chatID: chatObject._id}, () => 
                         {
                             setPopup(true);
@@ -158,7 +160,6 @@ export const OrderChatScreen = ({navigation, route}) =>
                 user={getState().user} 
                 other={otherObject} 
                 isCreator={route.params.isCreator}
-                complete={complete}
             />
         </View>
     );
