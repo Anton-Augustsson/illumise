@@ -113,7 +113,10 @@
         "willTakeOrder": "Will take your order",
         "completeRequest": "Complete Request",
         "shop":"Shop grociers",
-        "chat":"Chat"
+        "chat":"Chat",
+        "networkErrorTitle":"Server",
+        "networkError":"Could not connect to the server, try again in 10 seconds",
+        "loginFailed":"Login failed trying again in "
     },
     "se": 
     {
@@ -233,6 +236,9 @@
         "willTakeOrder": "vill ta din order",
         "completeRequest": "Avsluta order",
         "shop":"Handla",
-        "chat":"Chat"
+        "chat":"Chat",
+        "networkErrorTitle":"Server",
+        "networkError":"Kunde inte ansluta till servern, försök igen om 10 sekunder.",
+        "loginFailed":"Inloggningen misslyckades försöker igen om "
     } 
 }

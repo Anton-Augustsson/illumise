@@ -1,5 +1,5 @@
 import React, {useEffect, useContext, useState} from 'react';
-import { Text, View, Image } from 'react-native';
+import { Text, View, Image, Alert } from 'react-native';
 import styles from "./styles"
 import ms from '../mainStyles/ms';
 import GoogleButton from "../customComponents/googleButton";
@@ -11,7 +11,9 @@ import account from "../../modules/client-communication/account";
 import Loading from '../customComponents/loading';
 import {AppContext} from "../AppContext";
 
-const verifyUser = async (signIn, token, type, setLoggingIn) =>
+let timeOut;
+
+const verifyUser = async (signIn, token, type, setLoggingIn, setLoadingMsg) =>
 {
     setLoggingIn(true);
     try {
@@ -49,15 +51,17 @@ const verifyUser = async (signIn, token, type, setLoggingIn) =>
     } 
     catch(err) 
     {
-        setLoggingIn(false);
+        console.log(err);
+        setLoadingMsg(Localization.getText("loginFailed") + "10");
+        timeOut = setTimeout(()=>verifyUser(signIn, token, type, setLoggingIn, setLoadingMsg), 10000);
     }
 }
 
-const LoginScreen = (navigation) => 
+const LoginScreen = ({navigation}) => 
 {
     const { signIn } = useContext(AppContext);
     const [loggingIn, setLoggingIn] = useState(false);
-
+    const [loadingMsg, setLoadingMsg] = useState(Localization.getText("loggingIn"));
 
     const [request, response, promptAsync] = Google.useAuthRequest({
         expoClientId:    '798387138999-f1872j6fqbi2dlcl6mg0rvuscface4ed.apps.googleusercontent.com',
@@ -70,7 +74,7 @@ const LoginScreen = (navigation) =>
     useEffect(() => {
         if (response?.type === 'success') 
         {
-            verifyUser(signIn, response.authentication.accessToken, 'google', setLoggingIn); 
+            verifyUser(signIn, response.authentication.accessToken, 'google', setLoggingIn, setLoadingMsg); 
         }
     }, [response])
 
@@ -81,13 +85,21 @@ const LoginScreen = (navigation) =>
     useEffect(() => {
         if (responseFB?.type === 'success') 
         {
-            verifyUser(signIn, responseFB.authentication.accessToken, 'facebook', setLoggingIn);
+            verifyUser(signIn, responseFB.authentication.accessToken, 'facebook', setLoggingIn, setLoadingMsg);
         }
     }, [responseFB]);
 
     return (
         <View style={styles.loginContainer}>
-            {loggingIn ? <Loading info={Localization.getText("loggingIn")}/> :
+            {loggingIn ? 
+            <Loading 
+                title={loadingMsg}
+                onPress={()=>{
+                    clearTimeout(timeOut);
+                    setLoggingIn(false);
+                }}
+            /> 
+            :
             <>
                 <View style={ms.logoContainerLogin}>
                     <Image

@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import React, {useEffect, useReducer} from 'react';
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Alert } from "react-native";
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from './components/loginScreen';
@@ -11,6 +11,7 @@ import storage from "./modules/localStorage/localStorage";
 import {AppContext} from "./components/AppContext";
 import SplashScreen from "./components/customComponents/splashScreen";
 import account from './modules/client-communication/account';
+import { Localization } from './modules/localization';
 
 const Stack = createStackNavigator();
 
@@ -65,7 +66,8 @@ const App = () =>
             } 
             catch(error) 
             {
-                console.log(error);
+                Alert.alert(Localization.getText("networkErrorTitle"), Localization.getText("networkError"));
+                dispatch({type: "signOut"});
             }
         }
         init();

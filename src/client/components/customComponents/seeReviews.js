@@ -20,7 +20,6 @@ const ReviewItem = ({navigation, item, getProvider}) =>
         {
             setUser(await account.getFromID(item.creatorID));
             setRating(await review.getRating(item.creatorID, getProvider));
-
         }
         init().then(() => setLoading(false));
     }, []);
@@ -30,6 +29,8 @@ const ReviewItem = ({navigation, item, getProvider}) =>
             <UserInfo
                 user={{...user, getProvider: getProvider}}
                 rating={rating}
+                onPress={()=>console.log("hej")}
+                disabled={true}
                 navigation={navigation}
             />
 
@@ -54,7 +55,8 @@ const SeeReviews = ({navigation, route}) =>
         setIsRefreshing(true);
         let result = await review.getAllToUser(user._id, user.getProvider);
         if (result) setReviews(result);
-        setRating(await review.getRating(user._id, user.getProvider));
+        result = await review.getRating(user._id, user.getProvider);
+        if (result) setRating(result);
         setIsRefreshing(false);
     }
 
@@ -75,7 +77,8 @@ const SeeReviews = ({navigation, route}) =>
                             getProvider={!user.getProvider}
                         />
                     }
-                    keyExtractor={(item)=>item._id}
+                    //TODO fix unic id for every review
+                    keyExtractor={(item)=>item.creatorID}
                     onRefresh={refresh}
                     refreshing={isRefreshing}
                     ListHeaderComponent={()=>

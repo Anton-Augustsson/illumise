@@ -1,26 +1,12 @@
 import { AppContext } from '../../../AppContext';
 import CustomButton from '../../../customComponents/customButton';
-import React, { useContext, useState, useEffect} from 'react';
+import React, { useContext, useState, useEffect, useRef} from 'react';
 import { View, StyleSheet, Image, Text, ScrollView } from 'react-native';
 import { Localization } from '../../../../modules/localization';
 import ms from '../../../mainStyles/ms';
 import FloatingInput from '../../../customComponents/Inputs/floatingInput';
 import account from '../../../../modules/client-communication/account';
-
-const ProfilePicture = ({user}) => 
-{
-    //TODO: Ej anpassat för facebook. Facebooks länk är knas
-   
-    return (
-        <View style={bs.profileContainer}>
-            <Image
-                style={bs.profileImg}
-                source={{uri: user.picture}}
-            />
-        </View>
-    ); 
-    
-}
+import UserProfile from '../../../customComponents/userProfile';
 
 const updateProfile = async (firstName, lastName, getState, refresh, setState) =>{    
     let credentials = {
@@ -47,15 +33,15 @@ const updateProfile = async (firstName, lastName, getState, refresh, setState) =
 const ProfileScreen = ({navigation}) => 
 {
     const { getState, signOut, setState} = useContext(AppContext); 
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
-    const [user, setUser] = useState();
+    const [firstName, setFirstName] = useState(getState().user.firstName);
+    const [lastName, setLastName] = useState(getState().user.lastName);
     const [hasUpdated, setUpdated] = useState(0);
     const [disabled, setDisabled] = useState(true);
+    const [rating, setRating] = useState({averageRating: 0, numRatings: 0});
 
     const refresh = () =>{
-        setFirstName("");
-        setLastName("");
+        setFirstName(getState().user.firstName);
+        setLastName(getState().user.lastName);
         setUpdated(hasUpdated+1);
     }
 
@@ -63,7 +49,8 @@ const ProfileScreen = ({navigation}) =>
         const init = async () => {
             try 
             {
-                setUser(getState().user);
+                let result = await review.getRating(getState().user._id, false);
+                if (result) setRating(result);
             } 
             catch(error) 
             {
@@ -73,19 +60,21 @@ const ProfileScreen = ({navigation}) =>
         init();
     },[hasUpdated]);
 
-
     return (
-        <ScrollView style={{flex:1}}>
-            {user == null ? <Text>{Localization.getText("loading")}</Text> 
+        <ScrollView style={bs.container}>
+            {getState().user == null ? <Text>{Localization.getText("loading")}</Text> 
             : 
             <>
-                <ProfilePicture user={user}/>
-                <Text style ={bs.profileName}>{user.firstName + " " + user.lastName}</Text>
-                <Text style={bs.profileMail}>{user.email}</Text>
+                <UserProfile
+                    isUser={true}
+                    user={getState().user}
+                    rating={rating}
+                    onPress={()=>navigation.navigate("SeeReviews", getState().user)}
+                />
             </>
             }
             
-            <Text style={[ms.h2, {marginTop:40, marginLeft: 20}]}>{Localization.getText("update")}</Text>
+            <Text style={[ms.h2, {marginTop:20, marginLeft: 20}]}>{Localization.getText("update")}</Text>
             <View style={bs.input}>
                 <FloatingInput 
                     placeholder={Localization.getText("foreName")}
@@ -136,6 +125,10 @@ const ProfileScreen = ({navigation}) =>
 
 
 const bs = StyleSheet.create({
+    container: {
+        flex:1,
+        paddingTop:10
+    },
     time:{
         position:"absolute",
         right:0,
@@ -160,11 +153,6 @@ const bs = StyleSheet.create({
         alignSelf:"center",
         fontWeight:"bold",
         fontSize:22,
-    },
-    profileMail: {
-        alignSelf:"center",
-        marginTop:10,
-        fontSize:15,
     },
     profileUpdate: {
         alignSelf:"center",

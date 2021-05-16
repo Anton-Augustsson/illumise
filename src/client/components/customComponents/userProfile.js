@@ -1,12 +1,16 @@
 import React from "react";
-import {TouchableOpacity, Image, View, Text, StyleSheet} from "react-native";
+import {TouchableHighlight, Image, Text, View, StyleSheet} from "react-native";
 import ReviewStars from "./reviewStars";
 
-const UserProfile = ({user, rating}) => {
+const UserProfile = ({user, isUser = false,rating, onPress, disabled = false}) => {
     return (
-        <View 
+        <TouchableHighlight
             style={styles.userContainer}
+            onPress={onPress}
+            disabled={disabled}
+            underlayColor="#e8e8e8"
         >
+            <>
             {user.picture ?
                 <Image
                     style={styles.profileImg}
@@ -16,24 +20,35 @@ const UserProfile = ({user, rating}) => {
             }
             <Text style={styles.name}>{user.firstName? `${user.firstName} ${user.lastName}` : ""}</Text>
             <ReviewStars size={20} stars={rating.averageRating}/>
-        </View>
+            {isUser && <Text style={styles.email}>{user.email}</Text>}
+            {isUser && <Text>{new Date(user.dateCreated).toDateString()}</Text>}
+            </>
+        </TouchableHighlight>
     )
 }
 
 export default UserProfile;
 
+
 const styles = StyleSheet.create({
     userContainer: {
         justifyContent:"center",
         alignItems:"center",
-        width:"100%"
+        alignSelf:"center",
+        padding:10,
+        borderRadius:20,
     },
     name: {
-
+        marginTop:5,
+        marginBottom:4,
+        fontSize:20,
     },
     profileImg: {
-        width:100,
-        height:100,
-        borderRadius: 15
+        height:150,
+        width: 150,
+        borderRadius: 20
     },
+    email: {
+        marginTop:3,
+    }
 });

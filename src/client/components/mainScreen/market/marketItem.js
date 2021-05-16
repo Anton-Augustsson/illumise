@@ -42,9 +42,11 @@ const Header = ({req}) =>
 {
     return (
         <View style={mis.padding}>
-            {req.header === "other" &&
-                <Text style={ms.h2}>{req.body.title}</Text>
-            }
+            <View style={mis.topContainer}>
+                <Text style={mis.title}>{req.body.type === "other" ? req.body.title : " "}</Text>
+                <Text style={mis.price}>{req.cost + " kr"}</Text>
+            </View>
+            
         
             <Text style={ms.h4}>{Localization.getText("destinations")}</Text>
             {
@@ -206,7 +208,19 @@ const MarketItem = ({navigation, route}) => {
 }
 
 const mis = StyleSheet.create({
-    shoppingItemContainer: {
+    topContainer: {
+        flexDirection:"row",
+        flexWrap:"wrap",
+        justifyContent:"space-between",
+        alignItems:"center"
+    },
+    title: {
+        fontSize:25,
+        fontWeight:"bold",
+    },
+    price: {
+        fontSize:20,
+        fontWeight:"bold",
     },
     map:{
         flex: 1,

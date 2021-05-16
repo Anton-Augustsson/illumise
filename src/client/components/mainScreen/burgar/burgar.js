@@ -8,6 +8,7 @@ import FaqScreen from "./faq/faq";
 import BurgarIcons from "../../customComponents/burgarIcons";
 import { Localization } from '../../../modules/localization';
 import { screenOptions } from '../navigationOptions';
+import SeeReviews from '../../customComponents/seeReviews';
 
 
 const BURGAR = [
@@ -88,6 +89,14 @@ const BurgarScreen = () =>
             <Stack.Screen 
                 name="Faq" 
                 component={FaqScreen}
+            />
+
+            <Stack.Screen 
+                options={{
+                    title:Localization.getText("reviews")
+                }}
+                name="SeeReviews" 
+                component={SeeReviews}
             />
             
         </Stack.Navigator>

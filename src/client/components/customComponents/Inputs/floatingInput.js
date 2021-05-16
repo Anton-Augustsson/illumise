@@ -1,13 +1,13 @@
-import React, {forwardRef, useImperativeHandle, useState, useRef} from 'react';
+import React, {forwardRef, useImperativeHandle, useState, useRef, useEffect} from 'react';
 import {Animated, Easing, View, TextInput, StyleSheet} from 'react-native';
 import {colors} from "../../mainStyles/colors"
   
 const FloatingInput = forwardRef(({placeholder, onChangeText, 
-                    onFocus, onBlur, style, multiline = false, maxHeight = 100, ...props}, ref) => {
+                    onFocus, onBlur, style, multiline = false, value, maxHeight = 100, ...props}, ref) => {
     const [isFocused, setFocus] = useState(false);
-    const [hasText, setHasText] = useState(false); 
+    const [hasText, setHasText] = useState(value); 
 
-    const topValue = useRef(new Animated.Value(0)).current;
+    const topValue = useRef(new Animated.Value(value ? 1 : 0)).current;
 
     const top = topValue.interpolate({
         inputRange: [0, 1],
@@ -79,6 +79,7 @@ const FloatingInput = forwardRef(({placeholder, onChangeText,
             </Animated.Text>
             <TextInput
                 {...props}
+                value={value}
                 multiline={multiline}
                 style={[styles.input, multiline ? styles.multiLine : styles.oneLine, style]}
                 onFocus={()=>{
@@ -92,7 +93,7 @@ const FloatingInput = forwardRef(({placeholder, onChangeText,
                     onFocus != null ? onBlur : null;
                 }}
                 onChangeText={(text)=>{
-                    setHasText(text === "" ? false : true);
+                    setHasText(text !== "");
                     onChangeText != null ? onChangeText(text) : null;
                 }}
             />
