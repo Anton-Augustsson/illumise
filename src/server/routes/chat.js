@@ -1,22 +1,16 @@
-
 const db = require("../server");
 const validate = require("./validate");
-const valid = validate.valid;
+const express = require('express');
+const Joi = require('joi');
+
+const router      = express.Router();
+const valid       = validate.valid;
 const validParams = validate.validParams;
 const sendFailure = validate.sendFailure;
 const sendSuccess = validate.sendSuccess;
 const idSize      = validate.idSize;
 
-const express = require('express');
-const router = express.Router();
-const Joi = require('joi');
-
-/**
- * sends a message to a person
- * @param {string} userID - The id of the user that sends a message
- * @param {string} chatID - The id of the chat witch is between the provider and requester
- */
-router.put('/sendMessage', async (req, res) => // post?
+router.put('/sendMessage', async (req, res) =>
 {
     const schema = Joi.object({
         chatID: Joi.string().min(idSize).max(idSize),
@@ -34,11 +28,6 @@ router.put('/sendMessage', async (req, res) => // post?
     }
 });
 
-/**
- * get all messages from a specific chat
- * @param {string} userID - The id of the user that sends a message
- * @param {string} chatID - The id of the chat witch is between the provider and requester
- */
 router.get('/getChatsFrom', async (req, res) =>
 {
     const params = {
@@ -55,11 +44,6 @@ router.get('/getChatsFrom', async (req, res) =>
     }
 });
 
-/**
- * get all messages from a specific chat
- * @param {string} userID - The id of the user that sends a message
- * @param {string} chatID - The id of the chat witch is between the provider and requester
- */
 router.get('/getChat', async (req, res) =>
 {
     const params = {
@@ -103,20 +87,6 @@ router.get('/getChatFromID', async (req, res) =>
     }
 });
 
-/**
- * Adds a new chat if no equivalent chat exists
- * @async
- * @param {String} requestID The id of the related request
- * @param {String} requesterID The id of the requester
- * @param {String} providerID The id of the provider
- * @returns {Promise<?String>} The id of the chat or null
- */
-
-/**
- * setup a new chat for a new service provider
- * @param {string} requestID - The id of the request that is the chat should be created for
- * @param {[string]} usersID - The an array of two users
- */
 router.put('/newChat', async (req, res) => // POST?
 {
     const schema = Joi.object({
@@ -133,10 +103,6 @@ router.put('/newChat', async (req, res) => // POST?
     }
 });
 
-/**
- * remove chat if no longer interested in chat
- * @param {string} chatID - The id of the chat witch is between the provider and requester
- */
 router.delete('/removeChat', async (req, res) =>
 {
   const schema = Joi.object({
@@ -152,6 +118,5 @@ router.delete('/removeChat', async (req, res) =>
     else return sendFailure(res);
   }
 });
-
 
 module.exports = router;

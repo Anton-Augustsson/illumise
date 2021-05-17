@@ -6,16 +6,11 @@ const validParams = validate.validParams;
 const validCredentials = validate.validCredentials;
 const sendFailure = validate.sendFailure;
 const sendSuccess = validate.sendSuccess;
-
 const express = require('express');
 const router = express.Router();
 const Joi = require('joi');
 
 
-/**
- * create new account
- * @param {json} credentials - A object of the users credentials.
- */
 router.put('/createAccount', async (req, res) =>
 {
     const schema = Joi.object({
@@ -32,10 +27,6 @@ router.put('/createAccount', async (req, res) =>
     }
 });
 
-/**
- * remove specified account
- * @param {string} userID - The user id of the account that should be deleted
- */
 router.delete('/removeAccount', async (req, res) =>
 {
     const schema = Joi.object({
@@ -50,11 +41,6 @@ router.delete('/removeAccount', async (req, res) =>
     }
 });
 
-/**
- * enter key word and the value to be changed. Enter multiple keys and-values will be verified if they are correct keys. Or send an object that a class defines with values.
- * @param {string} userID - The user id of the account that should be changed
- * @param {json} credentials - A object of the users credentials.
- */
 router.post('/changeCredentials', async (req, res) =>
 {
     const schema = Joi.object({
@@ -72,13 +58,6 @@ router.post('/changeCredentials', async (req, res) =>
     }
 });
 
-/**
- * Gets the id of the user with the given email if the password matches
- * @async
- * @param {String} email The email of the user
- * @param {String} password The password of the user
- * @returns {?User} The id of the user
- */
 router.get('/get', async (req, res) =>
 {
     const params = {
@@ -94,12 +73,6 @@ router.get('/get', async (req, res) =>
     }
 });
 
-/**
- * Gets the user with the given id
- * @async
- * @param {String} userID The email of the user
- * @returns {?User} The id of the user
- */
 router.get('/getFromID', async (req, res) =>
 {
     const params = { userID: req.param('userID') };

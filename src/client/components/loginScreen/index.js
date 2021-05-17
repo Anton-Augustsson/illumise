@@ -42,8 +42,6 @@ const verifyUser = async (signIn, token, type, setLoggingIn, setLoadingMsg) =>
                     "picture": body.picture.url
                 };    
         }
-        console.log(body);
-        
 
         await account.createAccount(credentials);
         const data = await account.get(credentials.email, credentials.token);

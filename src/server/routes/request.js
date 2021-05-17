@@ -18,16 +18,16 @@ const { idSize } = require("./validate");
  */
 router.put('/completeRequest', async (req, res) =>
 {
-  const schema = Joi.object({
-    requestID: Joi.string().min(idSize).max(idSize),
-  });
+    const schema = Joi.object({
+        requestID: Joi.string().min(idSize).max(idSize),
+    });
 
-  if(valid(req.body, schema, res))
-  {
-    let response = await db.requests.setCompleted(req.body.requestID);
-    if(response != false) return sendSuccess(res, response);
-    else return sendFailure(res);
-  }
+    if(valid(req.body, schema, res))
+    {
+        let response = await db.requests.setCompleted(req.body.requestID);
+        if(response != false) return sendSuccess(res, response);
+        else return sendFailure(res);
+    }
 });
 
 /**
@@ -61,20 +61,20 @@ router.get('/provider/getNearRequests', async (req, res) =>
  */
 router.put('/provider/set', async (req, res) =>
 {
-  const schema = Joi.object ({
-    requestID: Joi.string().min(idSize).max(idSize),
-    providerID: Joi.string().min(idSize).max(idSize),
-  });
+    const schema = Joi.object ({
+        requestID: Joi.string().min(idSize).max(idSize),
+        providerID: Joi.string().min(idSize).max(idSize),
+    });
 
-  let body = req.body;
+    let body = req.body;
 
-  if(valid(body, schema, res))
-  {
-    // TODO change from setProvider to something else that simply shows the interest of providing
-    let response = await db.requests.setProvider(body.requestID, body.providerID);
-    if(response != false) return sendSuccess(res, response);
-    else return sendFailure(res);
-  }
+    if(valid(body, schema, res))
+    {
+        // TODO change from setProvider to something else that simply shows the interest of providing
+        let response = await db.requests.setProvider(body.requestID, body.providerID);
+        if(response != false) return sendSuccess(res, response);
+        else return sendFailure(res);
+    }
 });
 
 /**

@@ -62,7 +62,8 @@ function coordsToGeoJSON(coordinates)
     return { "type": "Point", "coordinates": coordinates };
 }
 
-const FirstScreen = (nav) => {
+const FirstScreen = (nav) => 
+{
     const {getState} = useContext(AppContext)
     const [REQUESTS, setRequests] = useState([]);
     const [isRefreshing, setIsRefreshing] = useState(false);
@@ -80,7 +81,8 @@ const FirstScreen = (nav) => {
                 let geo = await Location.getCurrentPositionAsync();
                 let pointStart = coordsToGeoJSON([geo.coords.longitude, geo.coords.latitude]);
                 setPointStart(pointStart);
-                result = await request.provider.getNearRequests(pointStart, 1000000);
+                let requests = await request.provider.getNearRequests(pointStart, 1000000);
+                result = requests? requests : [];
             }
             else
             {
@@ -115,7 +117,7 @@ const FirstScreen = (nav) => {
         <View style={{flex:1}}> 
             <FlatList
                 data={REQUESTS}
-                renderItem={({item, index})=>
+                renderItem={({item})=>
                     <RequestItem 
                         pointStart={pointStart} 
                         nav={nav} 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext} from 'react';
-import { Text, View, Image, FlatList, SectionList, StyleSheet, TouchableOpacity } from 'react-native';
+import { Text, View, Image, FlatList, SectionList, StyleSheet, TouchableOpacity, TouchableHighlight } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import ms from "../../mainStyles/ms";
 import MarketItem from '../market/marketItem';
@@ -13,6 +13,7 @@ import { AppContext } from '../../AppContext';
 import SeeReviews from '../../customComponents/seeReviews';
 import { screenOptions } from '../navigationOptions';
 import account from '../../../modules/client-communication/account';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const RequestItem = ({nav, item, isCreator}) => {
 
@@ -40,7 +41,6 @@ const RequestItem = ({nav, item, isCreator}) => {
         {
             try 
             {
-                console.log(item)
                 setUser(await account.getFromID(isCreator ? item.providerID : item.creatorID));
             } 
             catch(error) 
@@ -49,7 +49,7 @@ const RequestItem = ({nav, item, isCreator}) => {
             }
         }
         init();
-    }, []);
+    }, [user]);
 
     const orderApproval = 
         <TouchableOpacity 
@@ -71,13 +71,18 @@ const RequestItem = ({nav, item, isCreator}) => {
                 <Text style={oas.time}>{new Date(item.dateCreated).toDateString()}</Text>
             </View>
             <View style={oas.userContainer}>
-                <Text style={oas.userTitle}>{isCreator ? Localization.getText("provider") : Localization.getText("deliveringTo")}</Text>
-                <Text>{ user ? user.firstName + " " + user.lastName : ""}</Text>
                 {user ?
-                    <Image
-                        style={oas.userImg}
-                        source={{uri: user.picture}}
-                    />
+                    <>
+                        <Text style={oas.userTitle}>
+                            {isCreator ? Localization.getText("provider") : Localization.getText("deliveringTo")}
+                        </Text>                    
+                        <Text>{user.firstName + " " + user.lastName}</Text>
+
+                        <Image
+                            style={oas.userImg}
+                            source={{uri: user.picture}}
+                        />
+                    </>
                     :
                     null
                 }
@@ -96,14 +101,18 @@ const FirstScreen = ({nav}) => {
     const [state, setState] = useState({
         data:[
             {
-                "title":Localization.getText("orders"),
-                "isCreator":true,
-                "data":[]
+                title: Localization.getText("orders"),
+                isCreator: true,
+                show: true,
+                data: [],
+                index: 0
             },
             {
-                "title":Localization.getText("services"),
-                "isCreator":false,
-                "data":[]
+                title: Localization.getText("services"),
+                isCreator :false,
+                show: true,
+                data: [],
+                index: 1
             }
         ],
         isRefreshing: false
@@ -123,18 +132,15 @@ const FirstScreen = ({nav}) => {
                 if (!req) await chat.removeChat(item._id);
                 return req;
             }));
-            console.log(providing);
             setState({
                 data:[
                     {
-                        "title":Localization.getText("orders"),
-                        "isCreator":true,
-                        "data":requests.filter(item => item && !item.isFulfilled)
+                        ...state.data[0],
+                        data: requests.filter(item => item && !item.isFulfilled)
                     },
                     {
-                        "title":Localization.getText("services"),
-                        "isCreator":false,
-                        "data":providing.filter(item => item && !item.isFulfilled),
+                        ...state.data[1],
+                        data: providing.filter(item => item && !item.isFulfilled)
                     }
                 ],
                 isRefreshing: false,
@@ -160,19 +166,57 @@ const FirstScreen = ({nav}) => {
         <View style={{flex:1}}> 
             <SectionList
                 sections={state.data}
-                renderItem={({item, section})=>
+                renderItem={({item, section}) => (
+                    section.show?
                     <RequestItem 
                         nav={nav} 
                         item={item} 
                         isCreator={section.isCreator}
                     />
-                }
+                    : null
+                )}
                 keyExtractor={(item)=>item._id}
                 renderSectionHeader={({section}) => (
-                    state.data.length > 0 ? 
-                    <View style={oas.titleButton}>
-                        <Text style={oas.titleButtonText}>{section.title}</Text>
-                    </View>
+                    state.data[1].data.length > 0 && state.data[0].data.length ? 
+                    <TouchableHighlight 
+                        onPress={()=> setState(
+                            {
+                                ...state,
+                                data: section.index == 0 ?
+                                [
+                                    {
+                                        ...state.data[0],
+                                        show: !section.show
+                                    },
+                                    {
+                                        ...state.data[1]
+                                    }
+                                ]
+                                :
+                                [
+                                    {
+                                        ...state.data[0]
+                                    },
+                                    {
+                                        ...state.data[1],
+                                        show: !section.show
+                                    }
+                                ]
+                            })
+                        }
+                        style={[oas.titleButton, {marginBottom: state.data[section.index].show ? 0 : 4}]}
+                        underlayColor="#cccccc"
+                    >
+                        <>
+                            <Text style={oas.titleButtonText}>{section.title}</Text>
+                            <MaterialIcons 
+                                name={state.data[section.index].show ? 
+                                    "keyboard-arrow-down": "keyboard-arrow-up"} 
+                                size={24} 
+                                color={"black"}
+                            />
+                        </>
+                    </TouchableHighlight>
                     :null
                 )}
                 onRefresh={refresh}
@@ -300,7 +344,6 @@ const oas = StyleSheet.create({
         flexDirection:"row",
         alignItems:"center",
         justifyContent:"space-between",
-        marginBottom: 0,
     },
     titleButtonText:{
         fontSize:20,

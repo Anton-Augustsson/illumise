@@ -9,9 +9,12 @@ const storage =
      * @param {String} value - The value to store
      */
     storeDataString: async (key,value) => {
-        try {
+        try 
+        {
             await AsyncStorage.setItem(key, value)
-        } catch (e) {
+        } 
+        catch (e) 
+        {
             // saving error
             console.log(e);
         }
@@ -24,10 +27,13 @@ const storage =
      * @param {json} value - The object to store
      */
     storeDataObject: async (key, value) => {
-        try {
+        try 
+        {
             const jsonValue = JSON.stringify(value)
             await AsyncStorage.setItem(key, jsonValue)
-        } catch (e) {
+        } 
+        catch (e) 
+        {
             // saving error
             console.log(e);
         }
@@ -43,9 +49,10 @@ const storage =
         try {
             const value = await AsyncStorage.getItem(key)
             return value;
-        } catch(e) {
+        } 
+        catch(e) 
+        {
             // error reading value
-            console.log("GET FUCKING DATA STRING");
             console.log(e);
         }
     },
@@ -56,10 +63,13 @@ const storage =
      * @returns {Promise<?json>} The data that is stored 
      */
     getDataObject: async (key) => {
-        try {
+        try 
+        {
             const jsonValue = await AsyncStorage.getItem(key)
             return jsonValue != null ? JSON.parse(jsonValue) : null;
-        } catch(e) {
+        } 
+        catch(e) 
+        {
             // error reading value
             console.log(e);
         }
@@ -70,9 +80,12 @@ const storage =
      * @param {String} key - The key to remove the data 
      */
     removeValue: async (key) => {
-        try {
+        try 
+        {
             await AsyncStorage.removeItem(key)
-        } catch(e) {
+        } 
+        catch(e) 
+        {
             // remove error
             console.log(e);
         }

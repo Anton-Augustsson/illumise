@@ -40,7 +40,6 @@ export const OrderChatScreen = ({navigation, route}) =>
     {
         socket.on('complete', data =>
         {
-            console.warn("complete", data);
             if (!complete)
             {
                 setComplete(true);
@@ -56,7 +55,6 @@ export const OrderChatScreen = ({navigation, route}) =>
             {
                 if (requestObject.providerID)
                 {
-                    console.warn(requestObject.providerID);
                     tmpChat = await chat.getChat(requestObject._id, requestObject.providerID, true);
                 }
                 else
