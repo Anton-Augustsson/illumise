@@ -6,7 +6,7 @@ const UserInfo = ({user, rating, navigation, hasRating=true}) => {
     return (
         <TouchableOpacity 
             onPress={()=>{
-                navigation.navigate("SeeReviews", user);
+                navigation.push("SeeReviews", user);
             }}
             style={styles.userContainer}
         >

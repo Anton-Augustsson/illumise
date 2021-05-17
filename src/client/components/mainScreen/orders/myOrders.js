@@ -99,27 +99,11 @@ const FirstScreen = ({nav}) => {
     const {getState} = useContext(AppContext);
     
     const [state, setState] = useState({
-        data:[
-            {
-                title: Localization.getText("orders"),
-                isCreator: true,
-                show: true,
-                data: [],
-                index: 0
-            },
-            {
-                title: Localization.getText("services"),
-                isCreator :false,
-                show: true,
-                data: [],
-                index: 1
-            }
-        ],
+        data:[],
         isRefreshing: false
     });
 
     const refresh = async () => {
-
         setState({...state, isRefreshing:true});
 
         try 
@@ -132,25 +116,38 @@ const FirstScreen = ({nav}) => {
                 if (!req) await chat.removeChat(item._id);
                 return req;
             }));
-            setState({
-                data:[
-                    {
-                        ...state.data[0],
-                        data: requests.filter(item => item && !item.isFulfilled)
-                    },
-                    {
-                        ...state.data[1],
-                        data: providing.filter(item => item && !item.isFulfilled)
-                    }
-                ],
-                isRefreshing: false,
-            });
+
+            requests = requests.filter(item => item && !item.isFulfilled);
+            providing = providing.filter(item => item && !item.isFulfilled);
+
+            if(requests.length > 0 || providing.length > 0) {
+                setState({
+                    data:[
+                        {
+                            title: Localization.getText("orders"),
+                            isCreator: true,
+                            show: true,
+                            data: requests,
+                            index: 0
+                        },
+                        {
+                            title: Localization.getText("services"),
+                            isCreator :false,
+                            show: true,
+                            data: providing,
+                            index: 1
+                        }
+                    ],
+                    isRefreshing: false,
+                });
+            } else {
+                setState({data: [], isRefreshing:false});
+            }
         } 
         catch (error) 
         {
             console.log(error);
         }
-        
     }
 
     useEffect(() => 
@@ -225,7 +222,10 @@ const FirstScreen = ({nav}) => {
                 ListEmptyComponent={()=>
                     <View style={ms.emptyContainer}>
                         <Text style={[ms.emptyMsg, ms.emptyMsgAbove]}>
-                            {Localization.getText("youHaveNoServices")}
+                            {Localization.getText("youHaveNoOrders")}
+                        </Text>
+                        <Text style={ms.emptyMsg}>
+                            {Localization.getText("youHaveNoOrders2")}
                         </Text>
                     </View>
                 }

@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import { Text, View, TextInput, StyleSheet} from 'react-native';
+import React, {useState} from 'react';
+import { Text, View } from 'react-native';
 import CustomButton from '../../../../customComponents/customButton';
 import ms from "../../../../mainStyles/ms";
 import rs from "../requestStyle";
@@ -8,7 +8,6 @@ import GooglePlaces from '../../../../customComponents/Inputs/googlePlaces';
 import request from '../../../../../modules/client-communication/request';
 import storage from '../../../../../modules/localStorage/localStorage';
 import FloatingInput from '../../../../customComponents/Inputs/floatingInput';
-import * as Location from 'expo-location';
 import {CommonActions} from "@react-navigation/native";
 import Loading from "../../../../customComponents/loading";
 

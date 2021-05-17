@@ -11,6 +11,7 @@ import ReviewScreen from "../review/reviewScreen";
 import io, { Socket } from "socket.io-client";
 import communication from '../../../../modules/client-communication/communication';
 import Popup from '../../../customComponents/popup';
+import {CommonActions} from "@react-navigation/native";
 
 const url = communication.url;
 /** @type {Socket} */
@@ -113,8 +114,23 @@ export const OrderChatScreen = ({navigation, route}) =>
                     navigation={navigation}
                     onButtonPress={async () => 
                     {
-                        let result = await request.provider.set(requestObject._id, otherObject._id);
-                        setRequest(await request.get(requestObject._id));
+                        try 
+                        {
+                            let result = await request.provider.set(requestObject._id, otherObject._id);
+                            setRequest(await request.get(requestObject._id));
+                            navigation.dispatch(state => {
+                                const routes = state.routes.filter(route => route.name !== "OrderApproval");
+                                return CommonActions.reset({
+                                    ...state,
+                                    routes,
+                                    index: routes.length - 1,
+                                });
+                            })
+                        }
+                        catch(error) 
+                        {
+                            console.log(error)
+                        }
                     }}
                     centerButtonEnabled={true}
                     requestID={requestObject._id}

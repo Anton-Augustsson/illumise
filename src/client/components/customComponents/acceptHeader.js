@@ -23,8 +23,7 @@ const AcceptHeader = ({navigation, userObject, requestID, zIndex = 1, acceptTitl
     const disabled = buttonDisabled ? buttonDisabled : false;
     return(
         <>
-        <View style={[styles.topContainer, {zIndex:zIndex},
-                    centerButtonEnabled ? {marginBottom:15} : null]}>
+        <View style={[styles.topContainer, {zIndex:zIndex}]}>
             
             <UserInfo
                 user={{...userObject, getProvider: !userObject.isCreator}}

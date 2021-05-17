@@ -132,7 +132,9 @@ const ms = StyleSheet.create({
     },
     emptyContainer: {
         justifyContent:"center",
-        padding:30,
+        paddingTop:30,
+        paddingLeft:20,
+        paddingRight:20,
     },
     emptyMsg: {
         textAlign:"center",

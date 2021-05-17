@@ -116,6 +116,7 @@ const Chat = ({chatObject, user, other, isCreator, socket}) =>
                             : { me: false, msg: item.msg, name: otherFullName, time: item.time, showText: showText(index)} 
                         }/>}
                     keyExtractor={(_, index)=> index.toString()}
+                    ListHeaderComponent={()=><View style={cs.headerComponent}></View>}
                     ListEmptyComponent={()=>
                         {return chat ? 
                             <View style={cs.emptyChatContainer}>
@@ -180,6 +181,9 @@ const Msg = ({item}) => {
 }
 
 const cs = StyleSheet.create({
+    headerComponent: {
+        marginTop:15,
+    },
     upperContainer: {
         flex:1,
         backgroundColor:"white",
