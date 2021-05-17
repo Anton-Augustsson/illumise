@@ -11,7 +11,7 @@ const FloatingInput = forwardRef(({placeholder, onChangeText,
 
     const top = topValue.interpolate({
         inputRange: [0, 1],
-        outputRange: ["45%", "0%"],
+        outputRange: [18.5, 0],
     });
 
     const animation = (initialValue, toValue) => {

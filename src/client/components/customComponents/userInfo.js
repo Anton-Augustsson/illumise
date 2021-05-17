@@ -2,7 +2,7 @@ import React from "react";
 import {TouchableOpacity, Image, View, Text, StyleSheet} from "react-native";
 import ReviewStars from "./reviewStars";
 
-const UserInfo = ({user, rating, navigation}) => {
+const UserInfo = ({user, rating, navigation, hasRating=true}) => {
     return (
         <TouchableOpacity 
             onPress={()=>{
@@ -17,9 +17,11 @@ const UserInfo = ({user, rating, navigation}) => {
                 />
                 :null
             }
-            <View style={styles.nameRatingContainer}>
+            <View style={{justifyContent:hasRating ? "space-between" : "center"}}>
                 <Text>{user.firstName? `${user.firstName} ${user.lastName}` : ""}</Text>
-                <ReviewStars stars={rating.averageRating}/>
+                {hasRating ?
+                    <ReviewStars stars={rating.averageRating}/>
+                : null}
             </View>
         </TouchableOpacity>
     )
@@ -30,9 +32,6 @@ export default UserInfo;
 const styles = StyleSheet.create({
     userContainer: {
         flexDirection:"row",
-    },
-    nameRatingContainer: {
-        justifyContent:"space-between",
     },
     profileImg: {
         width:35,

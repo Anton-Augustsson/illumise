@@ -7,10 +7,10 @@ import review from "../../modules/client-communication/review";
 import account from "../../modules/client-communication/account";
 import UserInfo from "./userInfo";
 import UserProfile from "./userProfile";
+import ReviewStars from "./reviewStars";
 
 const ReviewItem = ({navigation, item, getProvider}) => 
 {
-    const [loading, setLoading] = useState(true);
     const [user, setUser] = useState({});
     const [rating, setRating] = useState({averageRating: 0, numRatings: 0});
 
@@ -18,20 +18,25 @@ const ReviewItem = ({navigation, item, getProvider}) =>
     {
         const init = async () => 
         {
-            setUser(await account.getFromID(item.creatorID));
-            setRating(await review.getRating(item.creatorID, getProvider));
+            let result = await account.getFromID(item.creatorID);
+            if(result) setUser(result);
+            result = await review.getRating(item.creatorID, getProvider);
+            if(result) setRating(result);
         }
-        init().then(() => setLoading(false));
+        init();
     }, []);
 
     return (
         <View style={[styles.padding,styles.reviewContainer]}>
             <UserInfo
                 user={{...user, getProvider: getProvider}}
-                rating={rating}
-                onPress={()=>console.log("hej")}
-                disabled={true}
+                hasRating={false}
                 navigation={navigation}
+            />
+            <View style={{marginTop:6}}></View>
+            <ReviewStars
+                stars={item.value}
+                hasAverage={false}
             />
 
             <Text style={styles.textContent}>
@@ -63,7 +68,7 @@ const SeeReviews = ({navigation, route}) =>
     useEffect(() => 
     {
         refresh().then(() => setLoading(false));
-    }, []);
+    }, [user]);
 
     return (
         <View style={styles.container}>

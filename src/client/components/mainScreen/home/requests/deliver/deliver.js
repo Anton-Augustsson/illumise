@@ -27,19 +27,6 @@ const DeliverScreen = ({navigation, route}) => {
         return { "type": "Point", "coordinates": coordinates };
     }
 
-    const getLocation = async () => {
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
-          setErrorMsg('Denied access to location');
-          return;
-        }
-        const response = await Location.getCurrentPositionAsync({}).then(loc => {
-            return [loc.coords.longitude, loc.coords.latitude]
-        });
-
-        return response;
-    }
-
     const checkout = async () =>{
         if(location === "") return;
         if(price === 0) return;
@@ -101,7 +88,7 @@ const DeliverScreen = ({navigation, route}) => {
                         placeholder={Localization.getText("deliveryAddress")}
                         fetchDetails = {true}
                         onPress={(data, details = null) => {
-                            setLocation({address: data.description, location: details.geometry.location});
+                            setLocation({adress: data.description, location: details.geometry.location});
                         }}
                     />
                     <Text style={ms.h3}>{Localization.getText("enterPrice")}</Text>

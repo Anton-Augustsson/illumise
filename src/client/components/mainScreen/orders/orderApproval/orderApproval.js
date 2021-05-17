@@ -7,7 +7,7 @@ import { useState } from 'react';
 import chat from '../../../../modules/client-communication/chat';
 import account from '../../../../modules/client-communication/account';
 
-const ChatRoomItem = ({nav, item, request}) => {
+const ChatRoomItem = ({nav, item, request, index}) => {
 
     const [other, setOther] = useState(null);
 
@@ -23,7 +23,7 @@ const ChatRoomItem = ({nav, item, request}) => {
 
     return (
         <TouchableOpacity 
-            style={oas.chatRoomContainer}
+            style={[oas.chatRoomContainer, index === 0 ? {marginTop:15} : null]}
             onPress={() => nav.navigate("OrderChat", { request: request, chat: item, other: other, isCreator: true})}
         >
             {other?
@@ -60,7 +60,14 @@ const OrderApprovalScreen = ({navigation, route}) => {
         <View style={{flex:1}}>
             <FlatList
                 data={chats.length > 0 ? chats : undefined}
-                renderItem={({item})=><ChatRoomItem nav={navigation} item={item} request={route.params}/>}
+                renderItem={({item, index})=>
+                    <ChatRoomItem 
+                        nav={navigation} 
+                        item={item} 
+                        index={index} 
+                        request={route.params}
+                    />
+                }
                 onRefresh={refresh}
                 refreshing={refreshing}
                 keyExtractor={(item)=>item._id}
@@ -72,7 +79,6 @@ const OrderApprovalScreen = ({navigation, route}) => {
                     </View>
                 }
             />
-
             <View style={ms.moveOnContainer}>
                <SamaritButton
                     title={Localization.getText("showOrder")}
@@ -89,31 +95,31 @@ const oas = StyleSheet.create({
         backgroundColor: "white",
         shadowColor:"#cccccc",
         shadowOffset: {
-            width:2,
-            height:4,
+            width: 0,
+            height: 2,
         },
-        shadowOpacity:0.8,
-        shadowRadius: 2,
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
         elevation:5,
         marginLeft:10,
         marginRight:10,
-        marginTop:10,
-        marginBottom:10,
+        marginBottom:15,
         flexDirection:"row",
         alignItems:"center",
-        paddingTop:20,
-        paddingBottom:20,
-        paddingLeft:25,
-        paddingRight:25,
-        borderRadius: 50,
+        paddingTop:10,
+        paddingBottom:10,
+        paddingLeft:10,
+        paddingRight:10,
+        borderRadius: 15,
     },
     chatRoomTitle: {
         fontSize:15,
     },
     profileImg: {
-        width:20,
-        height:20,
-        borderRadius:5
+        width:35,
+        height:35,
+        borderRadius:7,
+        marginRight:5
     }
 });
 

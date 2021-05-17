@@ -46,10 +46,10 @@ const LegitimationScreen = ({navigation, route}) => {
                         placeholder={Localization.getText("deliveryAddress")}
                         fetchDetails={true}
                         onPress={(data, details = null) => {
-                        // 'details' is provided when fetchDetails = true
-                        setLocation({adress: data.description, location: details.geometry.location});
+                            // 'details' is provided when fetchDetails = true
+                            setLocation({adress: data.description, location: details.geometry.location});
                         }}
-                        />
+                    />
                 </View>
             </View>
             <View style={ms.moveOnContainer}>
@@ -58,13 +58,5 @@ const LegitimationScreen = ({navigation, route}) => {
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    map: {
-      width: "100%",
-      height: "70%",
-      marginBottom: 20,
-    },
-  });
 
 export default LegitimationScreen;
