@@ -1,3 +1,6 @@
+/**
+ * This file contains REST API: account functions which handles sending/fetching data to/from the database
+ */
 
 const db = require("../server");
 const validate = require("./validate");
@@ -10,6 +13,14 @@ const express = require('express');
 const router = express.Router();
 const Joi = require('joi');
 
+/**
+ * @typedef credentials
+ * @property {String} firstName
+ * @property {String} lastName
+ * @property {String} email
+ * @property {String} phone
+ * @property {String} password
+ */
 
 router.put('/createAccount', async (req, res) =>
 {

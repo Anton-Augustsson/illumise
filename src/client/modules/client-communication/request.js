@@ -1,9 +1,15 @@
+/**
+ * This file contains the client communication: request functions which handles all external interaction
+ * with the rest api
+ */
+
 require('isomorphic-fetch');
 import communication from './communication';
 const url = communication.url;
 const returnResponse = communication.returnResponse;
 
 /**
+<<<<<<< HEAD
  * @typedef Request
  * @property {number} dateCreated
  * @property {number} dateCompleted
@@ -17,6 +23,31 @@ const returnResponse = communication.returnResponse;
  */
 
 /**
+=======
+ * @typedef GeoLocation
+ * @property {String} type
+ * @property {[Coordinate]} coordinates 
+ */
+
+/**
+ * @typedef Coordinate
+ * @property {[longitude:Number, latitude:Number]} coordinates longitude, latitude 
+ */
+
+/**
+ * The type of a review
+ * @enum {number}
+ * @property Provider
+ * @property Requester
+ */
+ const ReviewType = 
+ {
+     Provider : 0,
+     Requester: 1
+ };
+
+/**
+>>>>>>> main
  * Interface for communicating wih the server
  */
 const request =
@@ -24,8 +55,10 @@ const request =
     serviceUrl: url + '/request',
 
     /**
-     * set payment to done and remove chat (will still be accessible in x time)
-     * @param {string} requestID - The request id of the request to be changed status to done
+     * set request as complete, payment is set to done and chat is removed (will still be accessible in x time)
+     * @async
+     * @param {string} requestID - The request id of the request to be changed status to complete
+     * @returns {Promise<?Boolean>} If the operation was successful
      */
     completeRequest: async function(requestID)
     {   
@@ -76,9 +109,11 @@ const request =
         },
 
         /**
-         * select an available request
-         * @param {string} requestID - The id of the request to be selected
-         * @param {string} providerID - The id of the provider with select a request to performed
+         * select provider for an avaiable request
+         * @async
+         * @param {string} requestID - The id of the request to be modified
+         * @param {string} providerID - The id of the provider
+         * @returns {Promise<?Boolean>} If the operation was successful
          */
         set: async function(requestID, providerID)
         {   
@@ -95,9 +130,11 @@ const request =
         },
 
         /**
-         * Get requests that the provider has set
-         * @param {string} providerID - The id of the providers set requests 
-         * @param {int} num - The number of how many requests to return starting from most resent
+         * Gets requests that the user is set as a provider for
+         * @async
+         * @param {String} providerID - The id of the provider
+         * @param {Number} num - The number of requests to get, if not set all will be returned
+         * @returns {Promise<?[Request]>} The requests BSON objects in a list or null
          */
         getUserProviding: async function(providerID, num = undefined)
         {
@@ -181,13 +218,18 @@ const request =
 
     },
 
+    /**
+     * Functions used by requester
+     */
     requester:
     {
         /**
          * Create a new request
-         * @param {string} requestID - The user id for the user who want to create the request
+         * @async
+         * @param {string} requestID - The user id of the user that wants to create a request
          * @param {string} type - The type of the request
-         * @param {json} data - A object of the request. Needs to match the structure of database request
+         * @param {json} data - TODO
+         * @returns {Promise<?String>} The id of the created request or null
          */
         newRequest: async function(requestID, type, data)
         {   
@@ -205,10 +247,11 @@ const request =
         },
 
         /**
-         * Get the users request
-         * @param {string} userID - The user id of the users requests
-         * @param {int} num - The number of how many requests to return starting from most resent
-         * @returns {Promise<[Request]>}
+         * Gets requests created by a user
+         * @async
+         * @param {String} userID - The id of the user
+         * @param {Number} num - The number of requests to get, if not set all will be returned
+         * @returns {Promise<?[Request]>} The requests BSON objects in a list or null
          */
         getUserRequest: async function(userID, num = undefined) // num is the number of my requests starting from most recent //async  await
         {
@@ -220,8 +263,10 @@ const request =
         },
 
         /**
-         * remove a request that the user has created
-         * @param {string} requestID - The requester id of the users requests to be deleted
+         * Removes a request
+         * @async
+         * @param {String} requestID - The id of the request
+         * @returns {Promise<?Boolean>} If the operation was successful
          */
         removeRequest: async function(requestID)
         {
@@ -235,13 +280,15 @@ const request =
                 body: JSON.stringify(toRemove)
             });
 
-            return returnResponse(response);
+            return returnResponse(response);       
         },
+
 
         /**
          * accept the provider 
-         * @param {string} requestID - The id of the request that accepts the provider
-         * @param {string} providerID - The id of the providers witch has set the request 
+         * @param {String} requestID - The id of the request that accepts the provider
+         * @param {String} providerID - The id of the providers witch has set the request
+         * @returns {Promise<Boolean>}
          */
         acceptProvider: async function(requestID, providerID) 
         {
@@ -258,6 +305,7 @@ const request =
             return returnResponse(response);
         },
 
+        
         /**
          * Adds a review
          * @async

@@ -1,3 +1,8 @@
+/**
+ * This file contains the client communication: chat functions which handles all external interaction
+ * with the rest api
+ */
+
 require('isomorphic-fetch');
 import communication from './communication';
 const url = communication.url;
@@ -32,9 +37,12 @@ const chat =
     chatUrl: url + '/chat',
 
     /**
-     * sends a message to a person 
+     * sends message to chat
+     * @async
      * @param {string} userID - The id of the user that sends a message
-     * @param {string} chatID - The id of the chat witch is between the provider and requester
+     * @param {string} chatID - The id of the chat the user wants to send a message to
+     * @param {string} msg - The message the current user wants to send
+     * @returns {Promise<?Boolean>} If the message was added successfully to chat
      */
     sendMessage: async function(chatID, msg, isProvider)
     {
@@ -140,8 +148,10 @@ const chat =
     },
 
     /**
-     * remove chat if no longer interested in chat
-     * @param {string} chatID - The id of the chat witch is between the provider and requester
+     * removes chat
+     * @async
+     * @param {string} chatID - The id of the chat to be removed
+     * @returns {Promise<?Boolean>} If the operation was successful
      */
     removeChat: async function(chatID) 
     {

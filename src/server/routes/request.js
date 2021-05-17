@@ -1,3 +1,7 @@
+/**
+ * This file contains REST API: request functions which handles sending/fetching data to/from the database
+ */
+
 const db = require("../server");
 const validate = require("./validate");
 const valid = validate.valid;
@@ -13,8 +17,28 @@ const Joi = require('joi');
 const { idSize } = require("./validate");
 
 /**
- * set payment to done and remove chat (will still be accessible in x time)
- * @param {string} requestID - The request id of the request to be changed status to done
+ * @typedef GeoLocation
+ * @property {String} type
+ * @property {[Coordinate]} coordinates 
+ */
+
+/**
+ * @typedef Coordinate
+ * @property {[longitude:Number, latitude:Number]} coordinates longitude, latitude 
+ */
+
+/**
+ * The type of a review
+ * @enum {number}
+ * @property Provider
+ * @property Requester
+ */
+
+/**
+ * set request as complete, payment is set to done and chat is removed (will still be accessible in x time)
+ * @async
+ * @param {string} requestID -  (req.body) The request id of the request to be changed status to complete
+ * @returns {Promise<Boolean>} If the operation was successful
  */
 router.put('/completeRequest', async (req, res) =>
 {
@@ -32,10 +56,12 @@ router.put('/completeRequest', async (req, res) =>
 
 /**
  * get available request in x radius from location.
- * @param {string} geoLocation - The current location of the provider
- * @param {int} maxDistance - The max distance from the given location
- * @param {int} maxRequests - The number of request that the provider wants to se
- */
+* @async
+* @param {GeoLocation} geoLocation - (req.param) The location to search around
+* @param {Number} maxDistance - (req.param) The maximum distance in meters to search from geoLocation
+* @param {Number} maxRequests - (req.param) The number of nearby requests to retrieve
+* @returns {Promise<?[Request]>} The requests BSON objects in a list or null
+*/
 router.get('/provider/getNearRequests', async (req, res) =>
 {
     const params = {
@@ -55,9 +81,11 @@ router.get('/provider/getNearRequests', async (req, res) =>
 });
 
 /**
- * select an available request
- * @param {string} requestID - The id of the request to be selected
- * @param {string} providerID - The id of the provider with select a request to performed
+ * select provider for an avaiable request
+ * @async
+ * @param {string} requestID - (req.body) The id of the request to be modified
+ * @param {string} providerID - (req.body) The id of the provider
+ * @returns {Promise<Boolean>} If the operation was successful
  */
 router.put('/provider/set', async (req, res) =>
 {
@@ -96,9 +124,11 @@ router.get('/get', async (req, res) =>
 });
 
 /**
- * Get requests that the provider has set
- * @param {string} providerID - The id of the providers set requests
- * @param {int} num - The number of how many requests to return starting from most reascent
+ * Gets requests that the user is set as a provider for
+ * @async
+ * @param {String} providerID - (req.param) The id of the provider
+ * @param {Number} num - (req.param) The number of requests to get, if not set all will be returned
+ * @returns {Promise<?[Request]>} The requests BSON objects in a list or null
  */
 router.get('/provider/getUserProviding', async (req, res) =>
 {
@@ -117,8 +147,11 @@ router.get('/provider/getUserProviding', async (req, res) =>
 
 /**
  * Create a new request
- * @param {string} requestID - The user id for the user who want to create the request
- * @param {json} data - A object of the request. Needs to match the structure of database request
+ * @async
+ * @param {string} requestID - (req.body) The user id of the user that wants to create a request
+ * @param {string} type - (req.body) The type of the request
+ * @param {json} data - (req.body) TODO
+ * @returns {Promise<?String>} The id of the created request or null
  */
 router.post('/requester/newRequest', async (req, res) =>
 {
@@ -140,9 +173,11 @@ router.post('/requester/newRequest', async (req, res) =>
 });
 
 /**
- * Get the users request
- * @param {string} requestID - The user id of the users requests
- * @param {int} num - The number of how many requests to return starting from most reascent
+ * Gets requests created by a user
+ * @async
+ * @param {String} userID (req.param) The id of the user
+ * @param {Number} num (req.param) The number of requests to get, if not set all will be returned
+ * @returns {Promise<?[Request]>} The requests BSON objects in a list or null
  */
 router.get('/requester/getUserRequest', async (req, res) =>
 {
@@ -160,8 +195,10 @@ router.get('/requester/getUserRequest', async (req, res) =>
 });
 
 /**
- * remove a request that the user has created
- * @param {string} requestID - The requester id of the users requests to be deleted
+ * Removes a request
+ * @async
+ * @param {String} requestID - (req.body) The id of the request
+ * @returns {Promise<Boolean>} If the operation was successful
  */
 router.delete('/requester/removeRequest', async (req, res) =>
 {
@@ -180,15 +217,25 @@ router.delete('/requester/removeRequest', async (req, res) =>
 /**
  * Adds a review
  * @async
+<<<<<<< HEAD
  * @param {String} userIDTo The id of the user the review is for
  * @param {String} userIDFrom The id of the user writing the review
  * @param {String} requestID The id of the request the review is related to
  * @param {String} message The message on the review
  * @param {number} value The rated score 0 - 5
+=======
+ * @param {String} requestID - (req.body) The id of the request the review is related to
+ * @param {String} userIDTo - (req.body) The id of the user the review is for
+ * @param {String} userIDFrom - (req.body) The id of the user writing the review
+ * @param {String} message - (req.body) The message on the review
+ * @param {number} value - (req.body) The rated score 0 - 5
+ * @param {ReviewType} type - (req.body) The type of review 
+>>>>>>> main
  * @returns {Promise<Boolean>} If the review was added
  */
 router.put('/requester/reviewProvider', async (req, res) =>
 {
+<<<<<<< HEAD
     const schema = Joi.object({
         requestID: Joi.string().min(idSize).max(idSize),
         user1ID: Joi.string().min(idSize).max(idSize),
@@ -340,6 +387,34 @@ router.get('/provider/getAllToUser', async (req, res) =>
  * accept the provider
  * @param {string} requestID - The id of the request to be selected
  * @param {string} providerID - The id of the provider with select a request to performed
+=======
+  const schema = Joi.object({
+    requestID: Joi.string().min(idSize).max(idSize),
+    userIDTo: Joi.string().min(idSize).max(idSize),
+    userIDFrom: Joi.string().min(idSize).max(idSize),
+    message: Joi.string(),
+    value: Joi.number().min(0).max(5),
+    type: Joi.string()
+  });
+
+  let b = req.body;
+  let reviewType = ReviewType.Requester; //TODO CHANGE
+
+  if(valid(b, schema, res))
+  {
+    let response = await db.reviews.add(b.userIDTo, b.userIDFrom, b.requestID, b.message, b.value, reviewType);
+    if(response != false) return sendSuccess(res);
+    else return sendFailure(res);
+  }
+});
+
+/**
+ * Accept the provider of a request
+ * @async
+ * @param {String} requestID - The id of the request to modify
+ * @param {String} providerID - The id of the provider
+ * @returns {Promise<Boolean>} If the operation was successful
+>>>>>>> main
  */
 router.put('/requester/acceptProvider', async (req, res) =>
 {

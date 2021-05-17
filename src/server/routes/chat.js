@@ -1,3 +1,7 @@
+/**
+ * This file contains REST API: chat functions which handles sending/fetching data to/from the database
+ */
+
 const db = require("../server");
 const validate = require("./validate");
 const express = require('express');

@@ -1,3 +1,8 @@
+/**
+ * This file contains the client communication: account functions which handles all external interaction
+ * with the rest api
+ */
+
 require('isomorphic-fetch');
 import communication from './communication';
 const url = communication.url;
@@ -22,8 +27,10 @@ const account =
     accountUrl: url + '/account',
 
     /**
-     * create new account
-     * @param {json} credentials - A object of the users credentials.
+     * create new user account
+     * @async
+     * @param {credentials} - An object of the users credentials.
+     * @returns {Promise<ObjectID|null>} The id of the created account or null 
      */
     createAccount: async function(credentials)
     {
@@ -41,8 +48,10 @@ const account =
     },
 
     /**
-     * remove specified account
+     * remove specified user account
+     * @async
      * @param {string} userID - The user id of the account that should be deleted
+     * @returns {Promise<?Boolean>} If the operation was successful
      */
     removeAccount: async function(userID)
     {
@@ -61,8 +70,10 @@ const account =
 
     /**
      * enter key word and the value to be changed. Enter multiple keys and-values will be verified if they are correct keys. Or send an object that a class defines with values.
+     * @async
      * @param {string} userID - The user id of the account that should be changed
-     * @param {json} credentials - A object of the users credentials.
+     * @param {credentials} credentials - An object of the users credentials.
+     * @returns {Promise<?Boolean>} If the operation was successful
      */
     changeCredentials: async function(userID, credentials)
     {
@@ -82,8 +93,8 @@ const account =
     /**
      * Gets the id of the user with the given email if the password matches
      * @async
-     * @param {String} email The email of the user
-     * @param {String} password The password of the user
+     * @param {String} email - The email of the user
+     * @param {String} password - The password of the user
      * @returns {?User} The id of the user
      */
     get: async function(email, password)

@@ -64,7 +64,7 @@ const BurgarScreen = () =>
         >
             <Stack.Screen 
                 options={{
-                    title:Localization.getText("other")
+                    title: Localization.getText("other")
                 }}
                 name="FirstScreen" 
                 component={FirstScreen}
@@ -72,7 +72,7 @@ const BurgarScreen = () =>
 
             <Stack.Screen 
                 options={{
-                    title:Localization.getText("options")
+                    title: Localization.getText("options")
                 }}
                 name="Settings" 
                 component={SettingsScreen}
@@ -80,20 +80,23 @@ const BurgarScreen = () =>
 
             <Stack.Screen 
                 options={{
-                    title:Localization.getText("profile")
+                    title: Localization.getText("profile")
                 }}
                 name="Profile" 
                 component={ProfileScreen}
             />
 
             <Stack.Screen 
+                options={{
+                    title: Localization.getText("faq")
+                }}
                 name="Faq" 
                 component={FaqScreen}
             />
 
             <Stack.Screen 
                 options={{
-                    title:Localization.getText("reviews")
+                    title: Localization.getText("reviews")
                 }}
                 name="SeeReviews" 
                 component={SeeReviews}
@@ -102,10 +105,6 @@ const BurgarScreen = () =>
         </Stack.Navigator>
     );
 }
-
-
-
-
 
 const bs = StyleSheet.create({
     time:{
