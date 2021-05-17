@@ -168,10 +168,12 @@ const FirstScreen = ({nav}) => {
                     />
                 }
                 keyExtractor={(item)=>item._id}
-                renderSectionHeader={({section: {title}}) => (
+                renderSectionHeader={({section}) => (
+                    state.data.length > 0 ? 
                     <View style={oas.titleButton}>
-                        <Text style={oas.titleButtonText}>{title}</Text>
+                        <Text style={oas.titleButtonText}>{section.title}</Text>
                     </View>
+                    :null
                 )}
                 onRefresh={refresh}
                 refreshing={state.isRefreshing}
