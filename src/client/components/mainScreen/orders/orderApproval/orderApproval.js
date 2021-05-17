@@ -15,7 +15,6 @@ const ChatRoomItem = ({nav, item, request, index}) => {
     {
         const init = async () => 
         {
-            console.warn("id", item._id);
             let provider = await account.getFromID(item.provider._id);
             setOther(provider);
         }

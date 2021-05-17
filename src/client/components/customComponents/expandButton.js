@@ -3,7 +3,7 @@ import {View, TouchableOpacity, Text, StyleSheet} from "react-native";
 import { MaterialIcons } from '@expo/vector-icons';
 
 const ExpandButton = ({expand, style, onPress, styleTitle, 
-    styleContent, iconSize, iconColor, ...props}) => {
+    styleContent, title, iconSize, iconColor, ...props}) => {
     const [exp, setExpand] = useState(expand !== null 
                                 ? expand : false);
     const styles = StyleSheet.create({
@@ -46,7 +46,7 @@ const ExpandButton = ({expand, style, onPress, styleTitle,
                     onPress !== null ? onPress : null;
                 }}
             >   
-                <Text style={[styleTitle, styles.title]}>{props.title}</Text>
+                <Text style={[styleTitle, styles.title]}>{title}</Text>
                 <MaterialIcons 
                     name={exp ? "keyboard-arrow-down": "keyboard-arrow-up"} 
                     size={iconSize === null ? iconSize : 24} 

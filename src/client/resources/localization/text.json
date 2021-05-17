@@ -117,7 +117,9 @@
         "networkErrorTitle":"Server",
         "networkError":"Could not connect to the server, try again in 10 seconds",
         "loginFailed":"Login failed trying again in ",
-        "search":"Search..."
+        "search":"Search...",
+        "provider":"Provider: ",
+        "deliveringTo":"Delivering to: "
     },
     "se": 
     {
@@ -203,8 +205,8 @@
         "review": "Återkoppling",
         "howWasExperience": "Hur var din upplevelse?",
         "descExperience": "Beskriv din upplevelse",
-        "letsgo": "Ta order",
-        "removeOrder": "Ta bort order",
+        "letsgo": "Ta beställning",
+        "removeOrder": "Ta bort beställning",
         "yourOrderIsComplete":"Din beställning är färdig",
         "loading...":"Laddar...",
         "myRequests": "Mina beställningar",
@@ -218,7 +220,7 @@
         "market": "Marknad",
         "marketEmptyMsg": "Marknaden är för tillfället tom!",
         "showOrder": "Visa beställning",
-        "acceptProvider": "Acceptera leveratör",
+        "acceptProvider": "Acceptera leverantör",
         "me": "Jag",
         "update": "Uppdatera info",
         "foreName": "Förnamn",
@@ -234,13 +236,15 @@
         "noReviewsAvailable":"Finns ingen recension om personen än!",
         "reviews":"Recensioner",
         "allReviews":"Alla recensioner",
-        "willTakeOrder": "vill ta din order",
-        "completeRequest": "Avsluta order",
+        "willTakeOrder": "vill ta din beställning",
+        "completeRequest": "Avsluta beställning",
         "shop":"Handla",
         "chat":"Chat",
         "networkErrorTitle":"Server",
         "networkError":"Kunde inte ansluta till servern, försök igen om 10 sekunder.",
         "loginFailed":"Inloggningen misslyckades försöker igen om ",
-        "search":"Sök..."
+        "search":"Sök...",
+        "provider":"Leverantör:",
+        "deliveringTo":"Leverar till:"
     } 
 }

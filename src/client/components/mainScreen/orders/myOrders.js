@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext} from 'react';
-import { Text, View,  FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { Text, View, Image, FlatList, SectionList, StyleSheet, TouchableOpacity } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import ms from "../../mainStyles/ms";
 import MarketItem from '../market/marketItem';
@@ -13,6 +13,7 @@ import chat from '../../../modules/client-communication/chat';
 import { AppContext } from '../../AppContext';
 import SeeReviews from '../../customComponents/seeReviews';
 import { screenOptions } from '../navigationOptions';
+import account from '../../../modules/client-communication/account';
 
 const RequestItem = ({nav, item, isCreator}) => {
 
@@ -32,24 +33,60 @@ const RequestItem = ({nav, item, isCreator}) => {
             break;
     }
 
-    return(
-        <TouchableOpacity 
-            onPress={() => 
+    const [user, setUser] = useState(null);
+
+    useEffect(() => 
+    {
+        const init = async () => 
+        {
+            try 
             {
-                if (isCreator && item.providerID === null)
-                {
-                    nav.navigate("OrderApproval", item);
-                }
-                else
-                {
-                    nav.navigate("OrderChat", { request: item, isCreator: isCreator });
-                }
-            }}
+                console.log(item)
+                setUser(await account.getFromID(isCreator ? item.providerID : item.creatorID));
+            } 
+            catch(error) 
+            {
+                console.log(error);
+            }
+        }
+        init();
+    }, []);
+
+    const orderApproval = 
+        <TouchableOpacity 
+            onPress={() => nav.navigate("OrderApproval", item)}
             style={ms.itemContainer}>
             <RequestIcon type={item.body != undefined ? item.body.type : ""} size={30} color="black"/>
             <Text numberOfLines={2} style={ms.msg}>{text}</Text>
             <Text style={oas.time}>{new Date(item.dateCreated).toDateString()}</Text>
         </TouchableOpacity>
+
+    const orderChat =
+        <TouchableOpacity 
+            onPress={() => nav.navigate("OrderChat", { request: item, isCreator: isCreator })}
+            style={[oas.takenOuterContainer, isCreator ? {backgroundColor:"#f7f7f7"} : null]}
+        >
+            <View style={oas.takenContainer}>
+                <RequestIcon type={item.body != undefined ? item.body.type : ""} size={30} color="black"/>
+                <Text numberOfLines={2} style={ms.msg}>{text}</Text>
+                <Text style={oas.time}>{new Date(item.dateCreated).toDateString()}</Text>
+            </View>
+            <View style={oas.userContainer}>
+                <Text style={oas.userTitle}>{isCreator ? Localization.getText("provider") : Localization.getText("deliveringTo")}</Text>
+                <Text>{ user ? user.firstName + " " + user.lastName : ""}</Text>
+                {user ?
+                    <Image
+                        style={oas.userImg}
+                        source={{uri: user.picture}}
+                    />
+                    :
+                    null
+                }
+            </View>
+        </TouchableOpacity>
+ 
+    return(
+        item.providerID === null && isCreator ? orderApproval : orderChat 
     );
 }
 
@@ -58,24 +95,49 @@ const FirstScreen = ({nav}) => {
     const {getState} = useContext(AppContext);
     
     const [state, setState] = useState({
-        requests: [],
+        data:[
+            {
+                "title":Localization.getText("orders"),
+                "isCreator":true,
+                "data":[]
+            },
+            {
+                "title":Localization.getText("services"),
+                "isCreator":false,
+                "data":[]
+            }
+        ],
         isRefreshing: false
     });
 
-    const [provider, setProvider] = useState({
-        providing: [],
-        isRefreshing: false
-    });
-
-    const refreshRequest = async () => {
+    const refresh = async () => {
 
         setState({...state, isRefreshing:true});
 
         try 
         {
             let requests = await request.requester.getUserRequest(getState().user._id);
+            let providing = await chat.getChatsFrom(getState().user._id, true);
+            providing = await Promise.all(providing.map(async (item) => 
+            {
+                let req = await request.get(item.requestID);
+                if (!req) await chat.removeChat(item._id);
+                return req;
+            }));
+            console.log(providing);
             setState({
-                requests: requests.filter(item => item && !item.isFulfilled),
+                data:[
+                    {
+                        "title":Localization.getText("orders"),
+                        "isCreator":true,
+                        "data":requests.filter(item => item && !item.isFulfilled)
+                    },
+                    {
+                        "title":Localization.getText("services"),
+                        "isCreator":false,
+                        "data":providing.filter(item => item && !item.isFulfilled),
+                    }
+                ],
                 isRefreshing: false,
             });
         } 
@@ -86,45 +148,22 @@ const FirstScreen = ({nav}) => {
         
     }
 
-    const refreshProvider = async () => 
-    {
-        setProvider({...provider, isRefreshing: true});
-        try 
-        {
-            let providing = await chat.getChatsFrom(getState().user._id, true);
-            providing = await Promise.all(providing.map(async (item) => 
-            {
-                let req = await request.get(item.requestID);
-                if (!req) await chat.removeChat(item._id);
-                return req;
-            }));
-
-            setProvider({
-                providing: providing.filter(item => item && !item.isFulfilled),
-                isRefreshing: false,
-            });
-        } 
-        catch (error) 
-        {
-            console.log(error);
-        }
-    }
-
     useEffect(() => 
     {
         const listen = nav.addListener("focus", async () => 
         {
-            await Promise.all(refreshRequest(), refreshProvider());
+            refresh();
         });
         return listen;
     }, [nav]);
 
+    /*
     const requestContent = 
         <FlatList
             data={state.requests}
             renderItem={({item})=><RequestItem nav={nav} item={item} isCreator={true}/>}
             keyExtractor={(item)=>item._id}
-            onRefresh={refreshRequest}
+            onRefresh={refresh}
             refreshing={state.isRefreshing}
             ListEmptyComponent={()=>
                 <View style={ms.emptyContainer}>
@@ -137,44 +176,54 @@ const FirstScreen = ({nav}) => {
                 </View>
             }
         />
+        */
 
-    const providingContent = 
-        <FlatList
-            data={provider.providing}
-            renderItem={({item})=><RequestItem nav={nav} item={item} isCreator={false}/>}
-            keyExtractor={(item)=>item._id}
-            onRefresh={refreshProvider}
-            refreshing={provider.isRefreshing}
-            ListEmptyComponent={()=>
-                <View style={ms.emptyContainer}>
-                    <Text style={[ms.emptyMsg, ms.emptyMsgAbove]}>
-                        {Localization.getText("youHaveNoServices")}
-                    </Text>
-                </View>
-            }
-        />
 
     return (
         <View style={{flex:1}}> 
-            {provider.providing.length == 0 ? requestContent : 
-                <ExpandButton
-                    expand={true}
-                    title={Localization.getText("orders")}
-                    content={requestContent}
-                />   
-            }
-            
-            {provider.providing.length == 0 ? null : 
-                <ExpandButton
-                    expand={true}
-                    title={Localization.getText("services")}
-                    content={providingContent}
-                />
-            }
+            <SectionList
+                sections={state.data}
+                renderItem={({item, section})=>
+                    <RequestItem 
+                        nav={nav} 
+                        item={item} 
+                        isCreator={section.isCreator}
+                    />
+                }
+                keyExtractor={(item)=>item._id}
+                renderSectionHeader={({section: {title}}) => (
+                    <View style={oas.titleButton}>
+                        <Text style={oas.titleButtonText}>{title}</Text>
+                    </View>
+                )}
+                onRefresh={refresh}
+                refreshing={state.isRefreshing}
+                stickySectionHeadersEnabled
+                ListEmptyComponent={()=>
+                    <View style={ms.emptyContainer}>
+                        <Text style={[ms.emptyMsg, ms.emptyMsgAbove]}>
+                            {Localization.getText("youHaveNoServices")}
+                        </Text>
+                    </View>
+                }
+            />
         </View>
     );
 }
 
+/*
+<ExpandButton
+                    expand={true}
+                    content={requestContent}
+                /> 
+            
+            {provider.providing.length == 0 ? null : 
+                <ExpandButton
+                    expand={true}
+                    content={providingContent}
+                />
+            }
+            */
 const Stack = createStackNavigator();
 
 const MyOrders = ({navigation}) => {
@@ -232,11 +281,65 @@ const oas = StyleSheet.create({
         position:"absolute",
         right:0,
         top:0,
-        marginTop:5,
-        marginRight:5,
+        marginTop:2.5,
+        marginRight:2.5,
         fontWeight:"bold",
         color:"grey",
-    }
+    },
+    title: {
+        marginLeft:11,
+        marginRight:60,
+        lineHeight:20,
+    },
+    takenOuterContainer: {
+        paddingLeft:"5%",
+        borderBottomWidth:0.5,
+        borderBottomColor: "grey",
+        borderStyle:"solid",
+        width:"100%",
+        paddingBottom:10
+    },
+    takenContainer: {
+        height:65,
+        flexDirection:"row",
+        alignItems:"center",
+    },
+    userContainer: {
+        flexDirection:"row",
+        alignItems:"center",
+    },
+    userTitle: {
+        marginRight:5
+    },
+    userImg: {
+        width:24,
+        height:24,
+        borderRadius:5,
+        marginLeft:5
+    },
+    titleButton:{
+        backgroundColor: "white",
+        shadowColor:"#cccccc",
+        shadowOffset: {
+            width:2,
+            height:4,
+        },
+        shadowOpacity:0.8,
+        shadowRadius: 2,
+        elevation:5,
+        paddingLeft:20,
+        paddingRight:15,
+        paddingTop:13,
+        paddingBottom:13,
+        flexDirection:"row",
+        alignItems:"center",
+        justifyContent:"space-between",
+        marginBottom: 0,
+    },
+    titleButtonText:{
+        fontSize:20,
+        fontWeight:"bold",
+    },
 });
 
 
