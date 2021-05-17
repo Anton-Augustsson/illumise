@@ -30,13 +30,11 @@ export const OrderChatScreen = ({navigation, route}) =>
     useEffect(() => 
     {
         socket = io(ENDPOINT);
-        socket.emit('join', { senderId: getState().user._id, chatID: requestObject._id });
-
         return () => 
         {
             socket.disconnect();
         }
-    }, [chatObject, ENDPOINT]);
+    }, [ENDPOINT]);
 
     useEffect(() =>
     {
@@ -52,9 +50,29 @@ export const OrderChatScreen = ({navigation, route}) =>
 
         const init = async () => 
         {
-            let tmpChat = await chat.getChat(requestObject._id, requestObject.creatorID, false);
+            let tmpChat = chatObject;
+            
+            if (route.params.isCreator)
+            {
+                if (requestObject.providerID)
+                {
+                    console.warn(requestObject.providerID);
+                    tmpChat = await chat.getChat(requestObject._id, requestObject.providerID, true);
+                }
+                else
+                {
+                    tmpChat = await chat.getChat(requestObject._id, tmpChat.provider._id, true);
+                }
+            }
+            else
+            {
+                tmpChat = await chat.getChat(requestObject._id, getState().user._id, true);
+            }
+            
+            
             if (tmpChat)
             {
+                socket.emit('join', { senderId: getState().user._id, chatID: tmpChat._id });
                 setChat(tmpChat);
                 setOther(await account.getFromID(route.params.isCreator
                                                 ? tmpChat.provider._id
@@ -97,10 +115,8 @@ export const OrderChatScreen = ({navigation, route}) =>
                     navigation={navigation}
                     onButtonPress={async () => 
                     {
-                        console.warn("requestObject", requestObject);
-                        console.warn("otherObject", otherObject);
                         let result = await request.provider.set(requestObject._id, otherObject._id);
-                        console.warn("Set Provider", result);
+                        console.log("SetProvider", result);
                         setRequest(await request.get(requestObject._id));
                     }}
                     centerButtonEnabled={true}
@@ -113,13 +129,9 @@ export const OrderChatScreen = ({navigation, route}) =>
                     navigation={navigation}
                     onButtonPress={async () => 
                     {
-                        //let result = await request.completeRequest(requestObject._id);
-                        //console.log("completeRequestResult", result);
-                        socket.emit('sendComplete', {senderId: getState().user._id, chatID: chatObject._id}, () => 
-                        {
-                            setPopup(true);
-                            setComplete(true);
-                        });
+                        let result = await request.completeRequest(requestObject._id);
+                        console.log("completeRequestResult", result);
+                        socket.emit('sendComplete', {senderId: getState().user._id, chatID: chatObject._id});
                     }}
                     centerButtonEnabled={true}
                     requestID={requestObject._id}
@@ -160,6 +172,7 @@ export const OrderChatScreen = ({navigation, route}) =>
                 user={getState().user} 
                 other={otherObject} 
                 isCreator={route.params.isCreator}
+                socket={socket}
             />
         </View>
     );

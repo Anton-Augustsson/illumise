@@ -2,7 +2,6 @@ import React, {Component} from "react";
 import MapView, {Marker} from "react-native-maps";
 import * as Location from "expo-location";
 import { Alert, StyleSheet, TouchableHighlight, View } from "react-native";
-import CustomButton from "./customButton";
 import { AntDesign } from '@expo/vector-icons'; 
 
 

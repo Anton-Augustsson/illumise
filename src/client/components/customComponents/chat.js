@@ -5,32 +5,14 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import {colors} from "../mainStyles/colors";
 import { Localization } from '../../modules/localization';
 import {magicValues} from "../mainStyles/magicValues";
-import communication from '../../modules/client-communication/communication';
-import io, { Socket } from "socket.io-client";
-import { min } from 'react-native-reanimated';
 
-const url = communication.url;
-/** @type {Socket} */
-let socket;
-
-const Chat = ({chatObject, user, other, isCreator}) => 
+const Chat = ({chatObject, user, other, isCreator, socket}) => 
 {
     const [chat, setChat] = useState(null);
     const [msg, setMsg] = useState('');
     const [isFocused, setFocus] = useState(false);
-    const ENDPOINT = url;
     const myFullName = `${user.firstName} ${user.lastName}`;
     const otherFullName = `${other.firstName} ${other.lastName}`;
-
-    useEffect(() => 
-    {
-        socket = io(ENDPOINT);
-        socket.emit('join', {senderId: user._id, chatID: chatObject._id});
-
-        return () => {
-            socket.disconnect();
-        }  
-    }, [ENDPOINT]);
 
     useEffect(() => 
     {

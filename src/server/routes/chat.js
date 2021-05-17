@@ -67,7 +67,7 @@ router.get('/getChat', async (req, res) =>
         userID: req.param('userID'),
         isProvider: req.param('isProvider')
     };
-    console.log("params", params);
+
     if(validParams(params, res))
     {
         let response = await db.chat.getChat(params.requestID, params.userID, params.isProvider === "true");

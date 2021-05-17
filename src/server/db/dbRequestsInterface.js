@@ -234,7 +234,7 @@ class DBRequestsInterface
         try
         {
             let filter = { _id: ObjectID(requestID) };
-            let update = { $set: { providerID: ObjectID(providerID) } };
+            let update = { $set: { providerID: providerID? ObjectID(providerID) : null } };
             let result = await this.#collection.updateOne(filter, update);
             return result.result.ok == 1 && result.result.nModified == 1;
         }
