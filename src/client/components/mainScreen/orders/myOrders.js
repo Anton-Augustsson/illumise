@@ -6,7 +6,6 @@ import MarketItem from '../market/marketItem';
 import {Localization} from '../../../modules/localization'
 import request from '../../../modules/client-communication/request';
 import RequestIcon from "../../customComponents/requestIcon";
-import ExpandButton from '../../customComponents/expandButton';
 import OrderApprovalScreen from './orderApproval/orderApproval';
 import { OrderChatScreen } from './chat/orderChat';
 import chat from '../../../modules/client-communication/chat';
@@ -157,28 +156,6 @@ const FirstScreen = ({nav}) => {
         return listen;
     }, [nav]);
 
-    /*
-    const requestContent = 
-        <FlatList
-            data={state.requests}
-            renderItem={({item})=><RequestItem nav={nav} item={item} isCreator={true}/>}
-            keyExtractor={(item)=>item._id}
-            onRefresh={refresh}
-            refreshing={state.isRefreshing}
-            ListEmptyComponent={()=>
-                <View style={ms.emptyContainer}>
-                    <Text style={[ms.emptyMsg, ms.emptyMsgAbove]}>
-                        {Localization.getText("youHaveNoOrders")}
-                    </Text>
-                    <Text style={ms.emptyMsg}>
-                        {Localization.getText("youHaveNoOrders2")}
-                    </Text>
-                </View>
-            }
-        />
-        */
-
-
     return (
         <View style={{flex:1}}> 
             <SectionList
@@ -211,19 +188,6 @@ const FirstScreen = ({nav}) => {
     );
 }
 
-/*
-<ExpandButton
-                    expand={true}
-                    content={requestContent}
-                /> 
-            
-            {provider.providing.length == 0 ? null : 
-                <ExpandButton
-                    expand={true}
-                    content={providingContent}
-                />
-            }
-            */
 const Stack = createStackNavigator();
 
 const MyOrders = ({navigation}) => {
