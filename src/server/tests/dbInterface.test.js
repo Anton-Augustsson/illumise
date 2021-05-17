@@ -13,8 +13,8 @@ describe("Testing dbInterface", () =>
 
     beforeAll(async () =>
     {
-        //await db.connect();
-        //await db.clear();
+        connected = await db.connect();
+        await db.clear();
     });
 
     it("Connect to server", async () => 
@@ -115,8 +115,8 @@ describe("Testing dbInterface", () =>
         let request1ID = await db.requests.add(user1ID, "T5", "this is a test");
         let request2ID = await db.requests.add(user1ID, "T6", "this is a test");
 
-        let result1    = await db.requests.setProvider(request1ID, user2ID);
-        let result2    = await db.requests.setProvider(request2ID, user2ID);
+        let result1 = await db.requests.setProvider(request1ID, user2ID);
+        let result2 = await db.requests.setProvider(request2ID, user2ID);
         expect(result1).toBe(true);
         expect(result2).toBe(true);
 

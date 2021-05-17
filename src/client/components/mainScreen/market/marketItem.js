@@ -51,7 +51,7 @@ const Header = ({req}) =>
             <Text style={ms.h4}>{Localization.getText("destinations")}</Text>
             {
                 req.body.stops.map((place, index) => (
-                    <Text key={index} style={mis.mapText}>{index+1 + ". " + place.adress}</Text>
+                    <Text key={index} style={mis.mapText}>{index + 1 + ". " + place.adress}</Text>
                 ))
             }
                 {req.header === "shopping" || req.header === "food" ? 

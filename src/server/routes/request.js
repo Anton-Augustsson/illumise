@@ -217,25 +217,15 @@ router.delete('/requester/removeRequest', async (req, res) =>
 /**
  * Adds a review
  * @async
-<<<<<<< HEAD
  * @param {String} userIDTo The id of the user the review is for
  * @param {String} userIDFrom The id of the user writing the review
  * @param {String} requestID The id of the request the review is related to
  * @param {String} message The message on the review
  * @param {number} value The rated score 0 - 5
-=======
- * @param {String} requestID - (req.body) The id of the request the review is related to
- * @param {String} userIDTo - (req.body) The id of the user the review is for
- * @param {String} userIDFrom - (req.body) The id of the user writing the review
- * @param {String} message - (req.body) The message on the review
- * @param {number} value - (req.body) The rated score 0 - 5
- * @param {ReviewType} type - (req.body) The type of review 
->>>>>>> main
  * @returns {Promise<Boolean>} If the review was added
  */
 router.put('/requester/reviewProvider', async (req, res) =>
 {
-<<<<<<< HEAD
     const schema = Joi.object({
         requestID: Joi.string().min(idSize).max(idSize),
         user1ID: Joi.string().min(idSize).max(idSize),
@@ -387,34 +377,6 @@ router.get('/provider/getAllToUser', async (req, res) =>
  * accept the provider
  * @param {string} requestID - The id of the request to be selected
  * @param {string} providerID - The id of the provider with select a request to performed
-=======
-  const schema = Joi.object({
-    requestID: Joi.string().min(idSize).max(idSize),
-    userIDTo: Joi.string().min(idSize).max(idSize),
-    userIDFrom: Joi.string().min(idSize).max(idSize),
-    message: Joi.string(),
-    value: Joi.number().min(0).max(5),
-    type: Joi.string()
-  });
-
-  let b = req.body;
-  let reviewType = ReviewType.Requester; //TODO CHANGE
-
-  if(valid(b, schema, res))
-  {
-    let response = await db.reviews.add(b.userIDTo, b.userIDFrom, b.requestID, b.message, b.value, reviewType);
-    if(response != false) return sendSuccess(res);
-    else return sendFailure(res);
-  }
-});
-
-/**
- * Accept the provider of a request
- * @async
- * @param {String} requestID - The id of the request to modify
- * @param {String} providerID - The id of the provider
- * @returns {Promise<Boolean>} If the operation was successful
->>>>>>> main
  */
 router.put('/requester/acceptProvider', async (req, res) =>
 {

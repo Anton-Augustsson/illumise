@@ -82,7 +82,6 @@ const SeeReviews = ({navigation, route}) =>
                             getProvider={!user.getProvider}
                         />
                     }
-                    //TODO fix unic id for every review
                     keyExtractor={(item)=>item.creatorID}
                     onRefresh={refresh}
                     refreshing={isRefreshing}

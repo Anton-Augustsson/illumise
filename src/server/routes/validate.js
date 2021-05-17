@@ -51,9 +51,8 @@ const validate =
         let validLastName = c.lastName != undefined;
         let validEmail = c.email != undefined;
         let validToken = c.token != undefined;
-        let validPicture = c.picture != undefined;
 
-        if(validFirstName && validLastName && validEmail && validToken && validPicture){
+        if(validFirstName && validLastName && validEmail && validToken){
             return true;
         }
 

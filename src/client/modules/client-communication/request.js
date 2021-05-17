@@ -9,7 +9,6 @@ const url = communication.url;
 const returnResponse = communication.returnResponse;
 
 /**
-<<<<<<< HEAD
  * @typedef Request
  * @property {number} dateCreated
  * @property {number} dateCompleted
@@ -23,7 +22,6 @@ const returnResponse = communication.returnResponse;
  */
 
 /**
-=======
  * @typedef GeoLocation
  * @property {String} type
  * @property {[Coordinate]} coordinates 
@@ -35,19 +33,6 @@ const returnResponse = communication.returnResponse;
  */
 
 /**
- * The type of a review
- * @enum {number}
- * @property Provider
- * @property Requester
- */
- const ReviewType = 
- {
-     Provider : 0,
-     Requester: 1
- };
-
-/**
->>>>>>> main
  * Interface for communicating wih the server
  */
 const request =
@@ -109,7 +94,7 @@ const request =
         },
 
         /**
-         * select provider for an avaiable request
+         * select provider for an available request
          * @async
          * @param {string} requestID - The id of the request to be modified
          * @param {string} providerID - The id of the provider

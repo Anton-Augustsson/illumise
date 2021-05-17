@@ -114,7 +114,6 @@ export const OrderChatScreen = ({navigation, route}) =>
                     onButtonPress={async () => 
                     {
                         let result = await request.provider.set(requestObject._id, otherObject._id);
-                        console.log("SetProvider", result);
                         setRequest(await request.get(requestObject._id));
                     }}
                     centerButtonEnabled={true}
@@ -128,7 +127,6 @@ export const OrderChatScreen = ({navigation, route}) =>
                     onButtonPress={async () => 
                     {
                         let result = await request.completeRequest(requestObject._id);
-                        console.log("completeRequestResult", result);
                         socket.emit('sendComplete', {senderId: getState().user._id, chatID: chatObject._id});
                     }}
                     centerButtonEnabled={true}

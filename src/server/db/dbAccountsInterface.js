@@ -54,7 +54,7 @@ class DBAccountsInterface
     {
         try
         {
-            let filter = { email: email, phone: phone };
+            let filter = { email: email };
             let update  = 
             { 
                 $setOnInsert: 
@@ -70,7 +70,8 @@ class DBAccountsInterface
             };
             let options = { upsert: true };
             let result  = await this.#collection.updateOne(filter, update, options);
-            return result.upsertedId !== null ? result.upsertedId._id : null;
+            
+            return result.upsertedId? result.upsertedId._id : null;
         }
         catch (error)
         {

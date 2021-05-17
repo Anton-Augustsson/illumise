@@ -152,7 +152,6 @@ class DBRequestsInterface
         }
         catch (_)
         {
-            //console.error(error);
             return null;
         }
     }
@@ -172,6 +171,7 @@ class DBRequestsInterface
             await this.#collection.createIndex( { geoLocation: "2dsphere"} );
             let filter = 
             {
+                isFulfilled: false,
                 geoLocation: {
                     $near: {
                         $geometry: geoLocation,
