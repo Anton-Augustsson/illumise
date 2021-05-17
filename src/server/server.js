@@ -71,14 +71,14 @@ io.on('connection', function(socket)
         console.log('sendMsg', chatID, msg, time, isProvider );
         io.to(chatID).emit('msg', { chatID: chatID, msg: msg, time: time, isProvider: isProvider });
         db.chat.addMessage(chatID, msg, isProvider);
-        callback();
+        if (callback) callback();
     });
 
     socket.on('sendComplete', ({ senderId , chatID }, callback) => 
     {
         console.log('sendComplete', senderId, chatID );
         io.to(chatID).emit('complete', { senderId: senderId });
-        callback();
+        if (callback) callback();
     });
 
     socket.on('disconnect', () => {

@@ -345,7 +345,7 @@ router.put('/requester/acceptProvider', async (req, res) =>
 {
     const schema = Joi.object ({
         requestID: Joi.string().min(idSize).max(idSize),
-        providerID: Joi.string().min(idSize).max(idSize),
+        providerID: Joi.any(),
     });
 
     let body = req.body;

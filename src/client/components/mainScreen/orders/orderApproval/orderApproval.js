@@ -15,6 +15,7 @@ const ChatRoomItem = ({nav, item, request}) => {
     {
         const init = async () => 
         {
+            console.warn("id", item._id);
             let provider = await account.getFromID(item.provider._id);
             setOther(provider);
         }
@@ -45,7 +46,8 @@ const OrderApprovalScreen = ({navigation, route}) => {
     const [chats, setChats] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
 
-    const refresh = async () => {
+    const refresh = async () => 
+    {
         setRefreshing(true);
         let result = await chat.getChats(route.params._id);
         if (result) setChats(result);
