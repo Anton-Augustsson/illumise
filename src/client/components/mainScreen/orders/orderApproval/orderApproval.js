@@ -22,6 +22,7 @@ const ChatRoomItem = ({nav, item, request, index}) => {
     },[]);
 
     return (
+        other ? 
         <TouchableOpacity 
             style={[oas.chatRoomContainer, index === 0 ? {marginTop:15} : null]}
             onPress={() => nav.navigate("OrderChat", { request: request, chat: item, other: other, isCreator: true})}
@@ -37,6 +38,14 @@ const ChatRoomItem = ({nav, item, request, index}) => {
                 {other? ` ${other.firstName} ${other.lastName} ${Localization.getText("willTakeOrder")}`: ""}
             </Text>
         </TouchableOpacity>
+        : 
+        <View 
+            style={[oas.chatRoomContainer, index === 0 ? {marginTop:15} : null]}
+        >
+            <Text>
+                {Localization.getText("loading...")}
+            </Text>
+        </View>
     );
 }
 

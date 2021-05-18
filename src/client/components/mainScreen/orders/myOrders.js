@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext} from 'react';
-import { Text, View, Image, FlatList, SectionList, StyleSheet, TouchableOpacity, TouchableHighlight } from 'react-native';
+import { Text, View, Image, FlatList, SectionList, StyleSheet, TouchableOpacity, TouchableHighlight, LogBox} from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import ms from "../../mainStyles/ms";
 import MarketItem from '../market/marketItem';
@@ -37,11 +37,12 @@ const RequestItem = ({nav, item, isCreator}) => {
 
     useEffect(() => 
     {
+        let isMounted = true;
         const init = async () => 
         {
             try 
             {
-                setUser(await account.getFromID(isCreator ? item.providerID : item.creatorID));
+                if(isMounted) setUser(await account.getFromID(isCreator ? item.providerID : item.creatorID));
             } 
             catch(error) 
             {
@@ -49,6 +50,7 @@ const RequestItem = ({nav, item, isCreator}) => {
             }
         }
         init();
+        return () => {isMounted=false}
     });
 
     const orderApproval = 
@@ -95,8 +97,7 @@ const RequestItem = ({nav, item, isCreator}) => {
 }
 
 const FirstScreen = ({nav}) => {
-
-    const {getState} = useContext(AppContext);
+     const {getState} = useContext(AppContext);
     
     const [state, setState] = useState({
         data:[],
@@ -104,51 +105,55 @@ const FirstScreen = ({nav}) => {
     });
 
     const refresh = async () => {
-        setState({...state, isRefreshing:true});
+        let isMounted = true;
+        if(isMounted) setState({...state, isRefreshing:true});
 
-        try 
-        {
-            let requests = await request.requester.getUserRequest(getState().user._id);
-            let providing = await chat.getChatsFrom(getState().user._id, true);
-
-            providing = await Promise.all(providing.map(async (item) => 
+        if(isMounted) {
+            try 
             {
-                let req = await request.get(item.requestID);
-                if (!req) await chat.removeChat(item._id);
-                return req;
-            }));
+                let requests = await request.requester.getUserRequest(getState().user._id);
+                let providing = await chat.getChatsFrom(getState().user._id, true);
 
-            requests = requests.filter(item => item && !item.isFulfilled);
-            providing = providing.filter(item => item && !item.isFulfilled);
+                providing = await Promise.all(providing.map(async (item) => 
+                {
+                    let req = await request.get(item.requestID);
+                    if (!req) await chat.removeChat(item._id);
+                    return req;
+                }));
 
-            if(requests.length > 0 || providing.length > 0) {
-                setState({
-                    data:[
-                        {
-                            title: Localization.getText("orders"),
-                            isCreator: true,
-                            show: true,
-                            data: requests,
-                            index: 0
-                        },
-                        {
-                            title: Localization.getText("services"),
-                            isCreator :false,
-                            show: true,
-                            data: providing,
-                            index: 1
-                        }
-                    ],
-                    isRefreshing: false,
-                });
-            } else {
-                setState({data: [], isRefreshing:false});
+                requests = requests.filter(item => item && !item.isFulfilled);
+                providing = providing.filter(item => item && !item.isFulfilled);
+
+                if(requests.length > 0 || providing.length > 0) {
+                    setState({
+                        data:[
+                            {
+                                title: Localization.getText("orders"),
+                                isCreator: true,
+                                show: true,
+                                data: requests,
+                                index: 0
+                            },
+                            {
+                                title: Localization.getText("services"),
+                                isCreator :false,
+                                show: true,
+                                data: providing,
+                                index: 1
+                            }
+                        ],
+                        isRefreshing: false,
+                    });
+                } else {
+                    setState({data: [], isRefreshing:false});
+                }
+            } 
+            catch (error) 
+            {
+                console.log(error);
             }
-        } 
-        catch (error) 
-        {
-            console.log(error);
         }
+        return () => {isMounted=false}
     }
 
     useEffect(() => 
