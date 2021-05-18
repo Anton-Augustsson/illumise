@@ -20,7 +20,7 @@ const ReviewItem = ({navigation, item, getProvider}) =>
         {
             let result = await account.getFromID(item.creatorID);
             if(result) setUser(result);
-            result = await review.getRating(item.creatorID, getProvider);
+            result = await review.getRating(item.creatorID, true);
             if(result) setRating(result);
         }
         init();
@@ -58,9 +58,9 @@ const SeeReviews = ({navigation, route}) =>
     const refresh = async () => 
     {
         setIsRefreshing(true);
-        let result = await review.getAllToUser(user._id, user.getProvider);
+        let result = await review.getAllToUser(user._id, true);
         if (result) setReviews(result);
-        result = await review.getRating(user._id, user.getProvider);
+        result = await review.getRating(user._id, true);
         if (result) setRating(result);
         setIsRefreshing(false);
     }
@@ -82,7 +82,7 @@ const SeeReviews = ({navigation, route}) =>
                             getProvider={!user.getProvider}
                         />
                     }
-                    keyExtractor={(item)=>item.creatorID}
+                    keyExtractor={(_, index)=>index.toString()}
                     onRefresh={refresh}
                     refreshing={isRefreshing}
                     ListHeaderComponent={()=>

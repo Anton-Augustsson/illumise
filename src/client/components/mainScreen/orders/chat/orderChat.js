@@ -1,5 +1,5 @@
 import React, {useState, useContext, useEffect} from 'react';
-import { View, StyleSheet, Alert } from 'react-native';
+import { StyleSheet, Alert, KeyboardAvoidingView } from 'react-native';
 import { Localization } from '../../../../modules/localization';
 import { AppContext } from '../../../AppContext';
 import Chat from '../../../customComponents/chat';
@@ -12,6 +12,7 @@ import io, { Socket } from "socket.io-client";
 import communication from '../../../../modules/client-communication/communication';
 import Popup from '../../../customComponents/popup';
 import {CommonActions} from "@react-navigation/native";
+import Constants from 'expo-constants';
 
 const url = communication.url;
 /** @type {Socket} */
@@ -88,9 +89,12 @@ export const OrderChatScreen = ({navigation, route}) =>
         init().then(result => setLoading(result));
     },[]);
 
-
     return loading? <></> : (
-        <View style={{flex:1}}>
+        <KeyboardAvoidingView 
+            behavior="padding" 
+            keyboardVerticalOffset={50+Constants.statusBarHeight} 
+            style={{flex:1}}
+        >
             <Popup
                 visible={popup}
                 setVisible={setPopup}
@@ -186,10 +190,6 @@ export const OrderChatScreen = ({navigation, route}) =>
                 isCreator={route.params.isCreator}
                 socket={socket}
             />
-        </View>
+        </KeyboardAvoidingView>
     );
 }
-
-const ocs = StyleSheet.create({
-    
-});

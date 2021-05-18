@@ -7,6 +7,7 @@ import ms from '../../../mainStyles/ms';
 import FloatingInput from '../../../customComponents/Inputs/floatingInput';
 import account from '../../../../modules/client-communication/account';
 import UserProfile from '../../../customComponents/userProfile';
+import review from '../../../../modules/client-communication/review';
 
 const updateProfile = async (firstName, lastName, getState, refresh, setState) =>{    
     let credentials = {
@@ -49,8 +50,7 @@ const ProfileScreen = ({navigation}) =>
         const init = async () => {
             try 
             {
-                let result = await review.getRating(getState().user._id, false);
-                if (result) setRating(result);
+                
             } 
             catch(error) 
             {
@@ -59,6 +59,18 @@ const ProfileScreen = ({navigation}) =>
         }
         init();
     },[hasUpdated]);
+
+    useEffect(()=> {
+        const init = async () => {
+            try {
+                let result = await review.getRating(getState().user._id, true);
+                if (result) setRating(result);
+            } catch(error) {
+                console.log(error)
+            }
+        }
+        init();
+    }, []);
 
     return (
         <ScrollView style={bs.container}>
@@ -69,7 +81,7 @@ const ProfileScreen = ({navigation}) =>
                     isUser={true}
                     user={getState().user}
                     rating={rating}
-                    onPress={()=>navigation.navigate("SeeReviews", getState().user)}
+                    onPress={()=>navigation.navigate("SeeReviews", {...getState().user, getProvider: true})}
                 />
             </>
             }

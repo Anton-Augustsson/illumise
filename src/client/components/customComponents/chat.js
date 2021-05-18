@@ -1,10 +1,9 @@
 import React, {useState, useEffect, useRef} from 'react';
 import { Text, View, FlatList, StyleSheet,
-         TouchableOpacity, TextInput, Keyboard } from 'react-native';
+         TouchableOpacity, TextInput, Keyboard, KeyboardAvoidingView } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import {colors} from "../mainStyles/colors";
 import { Localization } from '../../modules/localization';
-import {magicValues} from "../mainStyles/magicValues";
 
 const Chat = ({chatObject, user, other, isCreator, socket}) => 
 {
@@ -70,33 +69,6 @@ const Chat = ({chatObject, user, other, isCreator, socket}) =>
         });
     }
 
-    /** Keyboard constants ***/
-    const [keyboard, setKeyboard] = useState(false);
-    const [keyboardHeight, setKeyboardHeight] = useState(0);
-
-    const keyboardShow = (event) =>  
-    {
-        setKeyboard(true);
-        setKeyboardHeight(event.endCoordinates.height - magicValues.MENU_HEIGHT);
-    }
-
-    const keyboardHide = () => 
-    {
-        setKeyboard(false);
-        setKeyboardHeight(0);
-    }
-
-    useEffect(() => 
-    {
-        Keyboard.addListener("keyboardDidShow", keyboardShow);
-        Keyboard.addListener("keyboardDidHide", keyboardHide);
-
-        // cleanup function
-        return () => {
-            Keyboard.removeListener("keyboardDidShow", keyboardShow);
-            Keyboard.removeListener("keyboardDidHide", keyboardHide);
-        };
-    }, []);
 
     const flatList = useRef(null);
     const showText = (index) => chat.length == index + 1 || chat[index].isProvider != chat[index + 1].isProvider;
@@ -133,7 +105,7 @@ const Chat = ({chatObject, user, other, isCreator, socket}) =>
                     }
                 />
             </View>
-            <View style={[cs.bottomContainer, {marginBottom: keyboardHeight}]}>
+            <View style={[cs.bottomContainer]}>
                 <TextInput
                     style={[cs.msgInput, {borderColor: !isFocused ? colors.INPUT_BORDER : colors.INPUT_FOCUS}]}
                     onFocus={()=>setFocus(true)}

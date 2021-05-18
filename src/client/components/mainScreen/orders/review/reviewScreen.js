@@ -16,7 +16,7 @@ const ReviewScreen = ({data, nav, setComplete}) =>
 
     const sendReview = async () =>
     {
-        let result = await review.add(data.toID, data.fromID, data.requestID, text, stars, data.toProvider);
+        let result = await review.add(data.toID, data.fromID, data.requestID, text, stars, true);
         console.log("sendReviewResult", result);
         setComplete(true);
         nav.goBack();

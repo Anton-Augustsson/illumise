@@ -14,7 +14,7 @@ const AcceptHeader = ({navigation, userObject, requestID, zIndex = 1, acceptTitl
     {
         const init = async () => 
         {
-            let ratings = await review.getRating(userObject._id, !userObject.isCreator);
+            let ratings = await review.getRating(userObject._id, true);
             if (ratings) setRating(ratings);
         }
         init();
