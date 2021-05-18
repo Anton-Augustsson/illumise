@@ -1,103 +1,224 @@
-import React, { useState, useEffect, useCallback} from 'react';
-import { Text, View, ScrollView, FlatList, StyleSheet,TouchableOpacity} from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
-import CustomHeader from "../../customComponents/customHeader";
+import React, { useState, useEffect, useContext} from 'react';
+import { Text, View, Image, FlatList, SectionList, StyleSheet, TouchableOpacity, TouchableHighlight } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import ms from "../../mainStyles/ms";
-import { colors } from '../../mainStyles/colors';
 import MarketItem from '../market/marketItem';
 import {Localization} from '../../../modules/localization'
 import request from '../../../modules/client-communication/request';
-import storage from '../../../modules/localStorage/localStorage';
+import RequestIcon from "../../customComponents/requestIcon";
+import OrderApprovalScreen from './orderApproval/orderApproval';
+import { OrderChatScreen } from './chat/orderChat';
+import chat from '../../../modules/client-communication/chat';
+import { AppContext } from '../../AppContext';
+import SeeReviews from '../../customComponents/seeReviews';
+import { screenOptions } from '../navigationOptions';
+import account from '../../../modules/client-communication/account';
+import { MaterialIcons } from '@expo/vector-icons';
 
+const RequestItem = ({nav, item, isCreator}) => {
 
-const RequestItem = ({nav, item}) => {
-    var text = ''
+    let text = "";
     switch (item.body.type) {
         case 'food':
-            text = Localization.getText("foodPrompt")
+            text = Localization.getText("foodPrompt");
             break;
         case 'shopping':
-            text = Localization.getText("shoppingPrompt")
+            text = Localization.getText("shoppingPrompt");
             break;
         case 'post':
-            text = Localization.getText("postPrompt")
+            text = Localization.getText("postPrompt");
             break;
         case 'other':
-            text = Localization.getText("otherPrompt")
+            text = Localization.getText("otherPrompt");
             break;
-
     }
 
-    const km = "1000";
+    const [user, setUser] = useState(null);
 
-    return(
+    useEffect(() => 
+    {
+        const init = async () => 
+        {
+            try 
+            {
+                setUser(await account.getFromID(isCreator ? item.providerID : item.creatorID));
+            } 
+            catch(error) 
+            {
+                console.log(error);
+            }
+        }
+        init();
+    }, [user]);
+
+    const orderApproval = 
         <TouchableOpacity 
-            onPress={()=>nav.nav.navigate("MarketItem", item)}
-            style={mms.itemContainer}
+            onPress={() => nav.navigate("OrderApproval", item)}
+            style={ms.itemContainer}>
+            <RequestIcon type={item.body != undefined ? item.body.type : ""} size={30} color="black"/>
+            <Text numberOfLines={2} style={ms.msg}>{text}</Text>
+            <Text style={oas.time}>{new Date(item.dateCreated).toDateString()}</Text>
+        </TouchableOpacity>
+
+    const orderChat =
+        <TouchableOpacity 
+            onPress={() => nav.navigate("OrderChat", { request: item, isCreator: isCreator })}
+            style={[oas.takenOuterContainer, isCreator ? {backgroundColor:"#f7f7f7"} : null]}
         >
-            <Text>{text}</Text>
-            <View style={mms.rightRequestContainer}>
-                <View style={mms.priceContainer}>
-                    <Text style={mms.price} numberOfLines={1}>{item.cost}</Text>
-                    <Text style={mms.priceCurrency}>kr</Text>
-                </View>
-                <Text style={mms.distance}>{km} km</Text>
+            <View style={oas.takenContainer}>
+                <RequestIcon type={item.body != undefined ? item.body.type : ""} size={30} color="black"/>
+                <Text numberOfLines={2} style={ms.msg}>{text}</Text>
+                <Text style={oas.time}>{new Date(item.dateCreated).toDateString()}</Text>
+            </View>
+            <View style={oas.userContainer}>
+                {user ?
+                    <>
+                        <Text style={oas.userTitle}>
+                            {isCreator ? Localization.getText("provider") : Localization.getText("deliveringTo")}
+                        </Text>                    
+                        <Text>{user.firstName + " " + user.lastName}</Text>
+
+                        <Image
+                            style={oas.userImg}
+                            source={{uri: user.picture}}
+                        />
+                    </>
+                    :
+                    null
+                }
             </View>
         </TouchableOpacity>
+ 
+    return(
+        item.providerID === null && isCreator ? orderApproval : orderChat 
     );
 }
 
-const FirstScreen = (nav) => {
-    const [isRequester, setIsRequester] = useState(true);
-    const [REQUESTS, setRequests] = useState(null);
-    const [isRefreshing, setIsRefresing] = useState(false);
+const FirstScreen = ({nav}) => {
 
-    const getRequests = async () => {
-        
-        if(isRequester){
-            const id = await storage.getDataString("userID");
-            const res = await request.requester.getUserRequest(id, 100);
-            setIsRefresing(false);
-            return res;
-        }else{
-            const id = await storage.getDataString("userID"); 
-            const res = await request.provider.getUserProviding(id, 100);
-            setIsRefresing(false);
-            return res; 
-        }
-        
-        
-    }
+    const {getState} = useContext(AppContext);
+    
+    const [state, setState] = useState({
+        data:[],
+        isRefreshing: false
+    });
 
-    const refresh = () => {
-        setIsRefresing(true);
-        getRequests().then(data => {
-            if(data != null){ 
-                setRequests(data.filter(obj => obj != null));
+    const refresh = async () => {
+        setState({...state, isRefreshing:true});
+
+        try 
+        {
+            let requests = await request.requester.getUserRequest(getState().user._id);
+            let providing = await chat.getChatsFrom(getState().user._id, true);
+            providing = await Promise.all(providing.map(async (item) => 
+            {
+                let req = await request.get(item.requestID);
+                if (!req) await chat.removeChat(item._id);
+                return req;
+            }));
+
+            requests = requests.filter(item => item && !item.isFulfilled);
+            providing = providing.filter(item => item && !item.isFulfilled);
+
+            if(requests.length > 0 || providing.length > 0) {
+                setState({
+                    data:[
+                        {
+                            title: Localization.getText("orders"),
+                            isCreator: true,
+                            show: true,
+                            data: requests,
+                            index: 0
+                        },
+                        {
+                            title: Localization.getText("services"),
+                            isCreator :false,
+                            show: true,
+                            data: providing,
+                            index: 1
+                        }
+                    ],
+                    isRefreshing: false,
+                });
+            } else {
+                setState({data: [], isRefreshing:false});
             }
-        }); 
+        } 
+        catch (error) 
+        {
+            console.log(error);
+        }
     }
 
-    useEffect(() => {
-        refresh();
-    }, []);
+    useEffect(() => 
+    {
+        const listen = nav.addListener("focus", async () => 
+        {
+            refresh();
+        });
+        return listen;
+    }, [nav]);
 
-     return (
+    return (
         <View style={{flex:1}}> 
-            <CustomHeader 
-                title={Localization.getText("myRequests")}
-                nav={nav}
-                goBack={false}
-            />
-
-            <FlatList
-                data={REQUESTS}
-                renderItem={({item})=><RequestItem nav={nav} item={item}/>}
+            <SectionList
+                sections={state.data}
+                renderItem={({item, section}) => (
+                    section.show?
+                    <RequestItem 
+                        nav={nav} 
+                        item={item} 
+                        isCreator={section.isCreator}
+                    />
+                    : null
+                )}
                 keyExtractor={(item)=>item._id}
-                onRefresh={()=>refresh()}
-                refreshing={isRefreshing}
+                renderSectionHeader={({section}) => (
+                    state.data[1].data.length > 0 && state.data[0].data.length ? 
+                    <TouchableHighlight 
+                        onPress={()=> setState(
+                            {
+                                ...state,
+                                data: section.index == 0 ?
+                                [
+                                    {
+                                        ...state.data[0],
+                                        show: !section.show
+                                    },
+                                    {
+                                        ...state.data[1]
+                                    }
+                                ]
+                                :
+                                [
+                                    {
+                                        ...state.data[0]
+                                    },
+                                    {
+                                        ...state.data[1],
+                                        show: !section.show
+                                    }
+                                ]
+                            })
+                        }
+                        style={[oas.titleButton, {marginBottom: state.data[section.index].show ? 0 : 4}]}
+                        underlayColor="#cccccc"
+                    >
+                        <>
+                            <Text style={oas.titleButtonText}>{section.title}</Text>
+                            <MaterialIcons 
+                                name={state.data[section.index].show ? 
+                                    "keyboard-arrow-down": "keyboard-arrow-up"} 
+                                size={24} 
+                                color={"black"}
+                            />
+                        </>
+                    </TouchableHighlight>
+                    :null
+                )}
+                onRefresh={refresh}
+                refreshing={state.isRefreshing}
+                stickySectionHeadersEnabled
                 ListEmptyComponent={()=>
                     <View style={ms.emptyContainer}>
                         <Text style={[ms.emptyMsg, ms.emptyMsgAbove]}>
@@ -109,7 +230,6 @@ const FirstScreen = (nav) => {
                     </View>
                 }
             />
-
         </View>
     );
 }
@@ -119,82 +239,117 @@ const Stack = createStackNavigator();
 const MyOrders = ({navigation}) => {
     return (
        <Stack.Navigator 
-            screenOptions={{
-                headerShown:false,
-                cardStyle:{backgroundColor:colors.DEFAULT_BACKGROUND}
-            }}
+            screenOptions={screenOptions}
             initialRouteName="FirstScreen"
         >
             <Stack.Screen 
+                options={{
+                    title:Localization.getText("myRequests")
+                }}
                 name="FirstScreen" 
                 children={()=><FirstScreen nav={navigation}/>}
             />
 
             <Stack.Screen 
+                options={{
+                    title:Localization.getText("myRequests")
+                }}
+                name="OrderApproval" 
+                component={OrderApprovalScreen}
+            />
+
+            <Stack.Screen 
+                options={{
+                    title:Localization.getText("chat")
+                }}
+                name="OrderChat" 
+                component={OrderChatScreen}
+            />
+
+            <Stack.Screen 
+                options={{
+                    title:Localization.getText("reviews")
+                }}
+                name="SeeReviews" 
+                component={SeeReviews}
+            />
+
+            <Stack.Screen 
+                options={{
+                    title:""
+                }}
                 name="MarketItem" 
                 component={MarketItem}
             />
-           
+
         </Stack.Navigator> 
     );
 }
 
-const mms = StyleSheet.create({
-    filterOuterContainer: {
-        flexDirection:"row",
-    },
-    filterContainer: {
-        flex:1,
-        flexWrap:"wrap",
-        flexDirection:"row",
-        paddingBottom:7,
-        paddingRight:7,
-    },
-    filterItemContainer: {
-        borderRadius:10,
-        minWidth:45,
-        alignSelf:"flex-start",
-        alignItems:"center",
-        padding:7,
-        marginLeft:7,
-        marginTop:7,
-    },
-    filterItemText: {
+const oas = StyleSheet.create({
+    time: {
+        position:"absolute",
+        right:0,
+        top:0,
+        marginTop:2.5,
+        marginRight:2.5,
+        fontWeight:"bold",
         color:"grey",
     },
-    filterExpandContainer: {
-        width:50,
-        alignItems:"center",
-        justifyContent:"center",
+    title: {
+        marginLeft:11,
+        marginRight:60,
+        lineHeight:20,
     },
-    itemContainer: {
-        width:"100%",
-        height:60,
-        backgroundColor:"white",
+    takenOuterContainer: {
+        paddingLeft:"5%",
         borderBottomWidth:0.5,
         borderBottomColor: "grey",
         borderStyle:"solid",
+        width:"100%",
+        paddingBottom:10
+    },
+    takenContainer: {
+        height:65,
         flexDirection:"row",
         alignItems:"center",
-        paddingLeft:"5%",
-        paddingRight:"5%",
     },
-    rightRequestContainer: {
-        position:"absolute",
-        right:5,
-        alignItems:"flex-end",
-        width:65,
-    },
-    priceContainer: {
+    userContainer: {
         flexDirection:"row",
+        alignItems:"center",
     },
-    price: {
-        marginRight:5,
+    userTitle: {
+        marginRight:5
     },
-    priceCurrency: {
+    userImg: {
+        width:24,
+        height:24,
+        borderRadius:5,
+        marginLeft:5
     },
-    distance: {
-    }
+    titleButton:{
+        backgroundColor: "white",
+        shadowColor:"#cccccc",
+        shadowOffset: {
+            width:2,
+            height:4,
+        },
+        shadowOpacity:0.8,
+        shadowRadius: 2,
+        elevation:5,
+        paddingLeft:20,
+        paddingRight:15,
+        paddingTop:13,
+        paddingBottom:13,
+        flexDirection:"row",
+        alignItems:"center",
+        justifyContent:"space-between",
+    },
+    titleButtonText:{
+        fontSize:20,
+        fontWeight:"bold",
+    },
 });
+
 
 export default MyOrders;

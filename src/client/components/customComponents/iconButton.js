@@ -1,8 +1,8 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, Image} from 'react-native';
-import { Entypo, AntDesign, Feather } from '@expo/vector-icons';
-import ms from '../mainStyles/ms';
+import {View} from 'react-native';
+import { Entypo, Feather } from '@expo/vector-icons';
 import {Localization} from "../../modules/localization"
+import SamaritButton from './samaritButton';
 
 const Icon = (props) => {
     var name;
@@ -20,23 +20,22 @@ const Icon = (props) => {
     const ThisIcon = icon;
     return <ThisIcon name={name} size={props.size} color={props.color}/>
 }
-  
+                
 const IconButton = (props) => {
     return (
-        <TouchableOpacity 
-            style={[ms.button,{flexDirection:"row"}]}
+        <SamaritButton
+            styleTitle={{marginRight:5}}
+            title={props.title == null ? Localization.getText("continue") : props.title}
             onPress={props.onPress}
-        >
-            <Text style={{color:"white", fontWeight:"bold", fontSize:15, marginRight:5}}>
-                {Localization.getText(props.title == null ? "continue" : props.title)}
-            </Text>
-            <View style={{paddingTop:6, paddingBottom:6,paddingRight:20}}>
-                <Icon title={props.title} size={props.size == null ? 22 : props.size} color={props.color == null ? "white" : props.color}/>
-                {props.component == null ? null : 
-                props.component 
-                }
-            </View>
-        </TouchableOpacity>
+            rightContent={
+                <View style={{paddingTop:6, paddingBottom:6,paddingRight:20}}>
+                    <Icon title={props.title} size={props.size == null ? 22 : props.size} color={props.color == null ? "white" : props.color}/>
+                    {props.component == null ? null : 
+                        props.component 
+                    }
+                </View>
+            }
+        />
     );
 }
 

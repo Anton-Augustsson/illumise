@@ -1,8 +1,7 @@
 import React, {useState, useRef} from 'react';
-import { Text, View, TouchableOpacity, ScrollView, Dimensions, TouchableWithoutFeedback, TouchableHighlight} from 'react-native';
+import { Text, View, TouchableOpacity, ScrollView, Dimensions} from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import CustomButton from "../../../../customComponents/customButton";
-import CustomHeader from "../../../../customComponents/customHeader"
 import ms from '../../../../mainStyles/ms';
 import rs from "../requestStyle";
 import FloatingInput from '../../../../customComponents/Inputs/floatingInput';
@@ -130,77 +129,71 @@ const ShoppingRequestScreen = ({navigation}) => {
     }
     return (
         <View style={{flex:1}}>
-            <CustomHeader
-                title="Handla"
-                nav={navigation}
+            <MyBottomSheet
+                ref={sheetRef}
+                snapPoints={["65%", 0, 0]}
+                renderContent={
+                    <Cart 
+                        data={items} 
+                        setData={setItems} 
+                        deleteItem={deleteItem} 
+                        onPress={nextScreen}
+                    />
+                }
             />
-            <View style={{flex:1}}>
-                <MyBottomSheet
-                    ref={sheetRef}
-                    snapPoints={["65%", 0, 0]}
-                    renderContent={
-                        <Cart 
-                            data={items} 
-                            setData={setItems} 
-                            deleteItem={deleteItem} 
-                            onPress={nextScreen}
-                        />
-                    }
-                />
-                <ScrollView contentContainerStyle={{flexGrow:1}}>
-                    <View style={rs.content}>
-                        <View style={{height:screenHeight-200, paddingTop:"10%"}}>
-                            <Text style={ms.h3}>
-                                {Localization.getText("addOwnArticle")}
-                            </Text>
-                            <FloatingInput 
-                                ref={inputText}
-                                value={name}
-                                onChangeText={text=>setName(text)} 
-                                placeholder={Localization.getText("name")}/>
-                            <FloatingInput 
-                                ref={inputOtherInfo}
-                                value={otherInfo}
-                                onChangeText={text=>setOtherInfo(text)} 
-                                placeholder={Localization.getText("otherInfoShopping")}/>
-                            <View style={{marginTop:10,marginBottom:3}}>
-                                <QuantityChooser state={quantity} setState={setQuantity}
-                                text={Localization.getText("quantity")}/>
-                            </View>
-                            <CustomButton
-                                style={[ms.button,{marginTop:10}]}
-                                title="Lägg till vara"
-                                styleText={{fontWeight:"bold"}}
-                                onPress={()=>addItem(name, quantity, otherInfo)}
-                            />
-                            
-                            <View style={rs.scrollDown}>
-                                <Text>{Localization.getText("scrollDown")}</Text>
-                                <AntDesign name="caretdown" size={24} color="black" />
-                            </View>
-                        </View>
+            <ScrollView contentContainerStyle={{flexGrow:1}}>
+                <View style={rs.content}>
+                    <View style={{height:screenHeight-200, paddingTop:"10%"}}>
                         <Text style={ms.h3}>
-                            {Localization.getText("proposalForArticles")}
+                            {Localization.getText("addOwnArticle")}
                         </Text>
-                        <UsualArticles 
-                            category={Localization.getText("basicGoods")} 
-                            data={USUSAL_ARTICLES.basicGoods}
-                            onPress={addItemUsual}
+                        <FloatingInput 
+                            ref={inputText}
+                            value={name}
+                            onChangeText={text=>setName(text)} 
+                            placeholder={Localization.getText("name")}/>
+                        <FloatingInput 
+                            ref={inputOtherInfo}
+                            value={otherInfo}
+                            onChangeText={text=>setOtherInfo(text)} 
+                            placeholder={Localization.getText("otherInfoShopping")}/>
+                        <View style={{marginTop:10,marginBottom:3}}>
+                            <QuantityChooser state={quantity} setState={setQuantity}
+                            text={Localization.getText("quantity")}/>
+                        </View>
+                        <CustomButton
+                            style={[ms.button,{marginTop:10}]}
+                            title="Lägg till vara"
+                            styleText={{fontWeight:"bold"}}
+                            onPress={()=>addItem(name, quantity, otherInfo)}
                         />
-                        <UsualArticles 
-                            category={Localization.getText("fruits")} 
-                            data={USUSAL_ARTICLES.fruits}
-                            onPress={addItemUsual}
-                        />
+                        
+                        <View style={rs.scrollDown}>
+                            <Text>{Localization.getText("scrollDown")}</Text>
+                            <AntDesign name="caretdown" size={24} color="black" />
+                        </View>
                     </View>
-                </ScrollView>
-                <View style={ms.moveOnContainer}>
-                    <CartButton 
-                        ref={cartButton}
-                        counter={items.length}
-                        onPress={()=>sheetRef.current.snapTo(0)}
+                    <Text style={ms.h3}>
+                        {Localization.getText("proposalForArticles")}
+                    </Text>
+                    <UsualArticles 
+                        category={Localization.getText("basicGoods")} 
+                        data={USUSAL_ARTICLES.basicGoods}
+                        onPress={addItemUsual}
+                    />
+                    <UsualArticles 
+                        category={Localization.getText("fruits")} 
+                        data={USUSAL_ARTICLES.fruits}
+                        onPress={addItemUsual}
                     />
                 </View>
+            </ScrollView>
+            <View style={ms.moveOnContainer}>
+                <CartButton 
+                    ref={cartButton}
+                    counter={items.length}
+                    onPress={()=>sheetRef.current.snapTo(0)}
+                />
             </View>
         </View>
     );

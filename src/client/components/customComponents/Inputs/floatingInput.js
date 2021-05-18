@@ -1,16 +1,17 @@
-import React, {forwardRef, useImperativeHandle, useState, useRef} from 'react';
+import React, {forwardRef, useImperativeHandle, useState, useRef, useEffect} from 'react';
 import {Animated, Easing, View, TextInput, StyleSheet} from 'react-native';
 import {colors} from "../../mainStyles/colors"
   
-const FloatingInput = forwardRef(({placeholder, onChangeText, onFocus, onBlur, style, ...props}, ref) => {
+const FloatingInput = forwardRef(({placeholder, onChangeText, 
+                    onFocus, onBlur, style, multiline = false, value, maxHeight = 100, ...props}, ref) => {
     const [isFocused, setFocus] = useState(false);
-    const [hasText, setHasText] = useState(false); 
+    const [hasText, setHasText] = useState(value); 
 
-    const topValue = useRef(new Animated.Value(0)).current;
+    const topValue = useRef(new Animated.Value(value ? 1 : 0)).current;
 
     const top = topValue.interpolate({
         inputRange: [0, 1],
-        outputRange: ["45%", "0%"],
+        outputRange: [18.5, 0],
     });
 
     const animation = (initialValue, toValue) => {
@@ -48,18 +49,29 @@ const FloatingInput = forwardRef(({placeholder, onChangeText, onFocus, onBlur, s
             paddingRight:!hasText && !isFocused ? 0 : 3,
             paddingLeft:!hasText && !isFocused ? 0 : 3,
         },
-        textInput: {
-            paddingLeft:20,
-            paddingRight:20,
-            paddingTop:5,
-            paddingBottom:5,
+        input: {
             borderWidth:2,
             borderStyle:"solid",
             borderColor: !isFocused ? colors.INPUT_BORDER : colors.INPUT_FOCUS,
             borderRadius:20,
+        },
+        oneLine: {
+            paddingLeft:20,
+            paddingRight:20,
+            paddingTop:5,
+            paddingBottom:5,
+        },
+        multiLine: {
+            minHeight:100,
+            maxHeight:maxHeight,
+            paddingTop:10,
+            paddingBottom:10,
+            paddingLeft:20,
+            paddingRight:20,
+            textAlignVertical:"top"
         }
     });
-
+    
     return (
         <View style={styles.container}>
             <Animated.Text style={[styles.placeholder,{top: top}]}>
@@ -67,7 +79,9 @@ const FloatingInput = forwardRef(({placeholder, onChangeText, onFocus, onBlur, s
             </Animated.Text>
             <TextInput
                 {...props}
-                style={[styles.textInput,style]}
+                value={value}
+                multiline={multiline}
+                style={[styles.input, multiline ? styles.multiLine : styles.oneLine, style]}
                 onFocus={()=>{
                     setFocus(true); 
                     !hasText ? animation(0, 1) : null;
@@ -79,7 +93,7 @@ const FloatingInput = forwardRef(({placeholder, onChangeText, onFocus, onBlur, s
                     onFocus != null ? onBlur : null;
                 }}
                 onChangeText={(text)=>{
-                    setHasText(text === "" ? false : true);
+                    setHasText(text !== "");
                     onChangeText != null ? onChangeText(text) : null;
                 }}
             />

@@ -3,17 +3,9 @@
  */
 
 import 'react-native';
-import React from 'react';
-import App from '../App';
-
 import request from '../modules/client-communication/request';
 import chat from '../modules/client-communication/chat';
 import account from '../modules/client-communication/account';
-
-// Note: test renderer must be required after react-native.
-import renderer from 'react-test-renderer';
-import io from "socket.io-client";
-let socket;
 
 describe("Testing client communication", () =>
 {
@@ -253,7 +245,7 @@ describe("Testing client communication", () =>
         let userID = await createDummyUser();
         let userID2 = await createDummyUser2();
         let requestID = await createDummyRequest(userID);
-        let chatID = await chat.newChat(requestID, [userID, userID2]);
+        let chatID = await chat.newChat(requestID, userID, userID2);
         expect(chatID).not.toBeNull();
         let responseR = await chat.removeChat(chatID);
         expect(responseR).not.toBeNull();
@@ -280,9 +272,9 @@ describe("Testing client communication", () =>
         let userID = await createDummyUser();
         let userID2 = await createDummyUser2();
         let requestID = await createDummyRequest(userID);
-        let chatID = await chat.newChat(requestID, [userID, userID2]);
+        let chatID = await chat.newChat(requestID, userID, userID2);
         expect(chatID).not.toBeNull();
-        let response = await chat.sendMessage(chatID, userID, "hello im here");
+        let response = await chat.sendMessage(chatID, "hello im here", true);
         expect(response).not.toBeNull();
         let responseR = await chat.removeChat(chatID);
         expect(responseR).not.toBeNull();
@@ -293,15 +285,7 @@ describe("Testing client communication", () =>
         expect(responseRA1).not.toBeNull();
         let responseRA2 = await account.removeAccount(userID2);
         expect(responseRA2).not.toBeNull();
-
-        // Socket test
-        /*
-        const ENDPOINT = 'http://localhost:3000/';
-        socket = io(ENDPOINT);
-        console.log(socket);
-        */
-
-        // invalid request
+        
         let responseError = await chat.sendMessage('antonabcdefg', 'chat123');
         expect(responseError).toBeNull();
     });
@@ -311,11 +295,11 @@ describe("Testing client communication", () =>
         let userID = await createDummyUser();
         let userID2 = await createDummyUser2();
         let requestID = await createDummyRequest(userID);
-        let chatID = await chat.newChat(requestID, [userID, userID2]);
+        let chatID = await chat.newChat(requestID, userID, userID2);
         expect(chatID).not.toBeNull();
-        let responseS = await chat.sendMessage(chatID, userID, "hello im here");
+        let responseS = await chat.sendMessage(chatID, "hello im here", true);
         expect(responseR).not.toBeNull();
-        let response = await chat.getAllMessages(chatID);
+        let response = await chat.getChatFromID(chatID);
         expect(response).not.toBeNull();
         let responseR = await chat.removeChat(chatID);
         expect(responseS).not.toBeNull();
@@ -328,7 +312,7 @@ describe("Testing client communication", () =>
         expect(responseRA2).not.toBeNull();
 
         // invalid request
-        let responseError = await chat.getAllMessages('userid is notvalid', 'not a chat id');
+        let responseError = await chat.getChat('userid is notvalid', 'not a chat id');
         expect(responseError).toBeNull();
     });
 
@@ -344,30 +328,23 @@ describe("Testing client communication", () =>
 let num = 1;
 
 async function createDummyUser(){
-    let credentials = {"firstName":"F", "lastName":"D", "email":"A" + num + "@mail.test", "token":"L" };
+    let credentials = {"firstName":"F", "lastName":"D", "email":"TestA" + num + "@mail.test", "token":"L" };
     num += 1;
-    let userID      = await account.createAccount(credentials)
+    let userID      = await account.createAccount(credentials);
     expect(userID).not.toBeNull();
     return userID;
 }
 
 async function createDummyUser2(){
-    let credentials = {"firstName":"SDA", "lastName":"BLDID", "email":"A" + num + "@mail.test", "token":"SIODJSAL" };
+    let credentials = {"firstName":"SDA", "lastName":"BLDID", "email":"TestB" + num + "@mail.test", "token":"Token" };
     num += 1;
-    let userID      = await account.createAccount(credentials)
+    let userID      = await account.createAccount(credentials);
     expect(userID).not.toBeNull();
     return userID;
 }
 
-async function createDummyRequestAndUser(){
-    let userID = await createDummyUser();
-    let requestID = await request.requester.newRequest(userID, "T1", { "header": "thing", "body": "things", "cost": "allot" });
-    expect(requestID).not.toBeNull();
-    return requestID;
-}
-
 async function createDummyRequest(userID){
-    let requestID = await request.requester.newRequest(userID, "T1", { "header": "thing", "body": "things", "cost": "allot" });
+    let requestID = await request.requester.newRequest(userID, "T1", { "header": "thing", "body": "things", "cost": 100});
     expect(requestID).not.toBeNull();
     return requestID;
 }

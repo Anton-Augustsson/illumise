@@ -4,25 +4,23 @@ import { Ionicons } from '@expo/vector-icons';
 import {colors} from "../mainStyles/colors";
 import { Localization } from "../../modules/localization";
 
-const CustomHeader = (props) => {
-    var goBack =  
-        <TouchableOpacity 
-            style={styles.goBackContainer}
-            onPress={() => props.nav.goBack()}
-        >
-            <Ionicons name="chevron-back-sharp" size={22} color="white"/>
-            <Text style={styles.backTitle}>{Localization.getText("goBack")}</Text>
-        </TouchableOpacity>
-    
+const CustomHeader = ({scene, previous, navigation}) => {
+    const { options } = scene.descriptor;
 
-    if(props.goBack == false) {
-        goBack = <></>;
-    }
+    const title = options.title !== undefined ? options.title : "";
 
     return (
         <View style={styles.header}>
-            {goBack}
-            <Text style={styles.headerTitle}>{props.title}</Text>
+            {previous ? 
+                <TouchableOpacity 
+                    style={styles.goBackContainer}
+                    onPress={navigation.goBack}
+                >
+                    <Ionicons name="chevron-back-sharp" size={22} color="white"/>
+                    <Text style={styles.backTitle}>{Localization.getText("goBack")}</Text>
+                </TouchableOpacity>
+            : undefined}
+            <Text style={styles.headerTitle}>{title}</Text>
         </View>
     );
 }

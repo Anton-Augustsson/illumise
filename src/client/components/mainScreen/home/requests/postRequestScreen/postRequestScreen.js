@@ -1,12 +1,8 @@
-import React, {useState, useEffect} from 'react';
-import { Text, View, TextInput, StyleSheet} from 'react-native';
-import CustomHeader from '../../../../customComponents/customHeader';
-import CustomButton from '../../../../customComponents/customButton';
+import React, {useState} from 'react';
+import { Text, View, StyleSheet} from 'react-native';
 import GooglePlaces from '../../../../customComponents/Inputs/googlePlaces';
 import ms from "../../../../mainStyles/ms";
 import rs from "../requestStyle";
-import MapView from 'react-native-maps';
-import * as Location from 'expo-location';
 import {Localization} from '../../../../../modules/localization'
 import IconButton from '../../../../customComponents/iconButton';
 import FloatingInput from '../../../../customComponents/Inputs/floatingInput';
@@ -16,7 +12,6 @@ const PostRequestScreen = ({navigation}) => {
     const [location, setLocation] = useState("");
     const [refCode, setRefCode] = useState("");
     const [otherInfo, setOtherInfo] = useState("");
-
 
     const nextScreen = () =>{
         var result = {
@@ -29,12 +24,9 @@ const PostRequestScreen = ({navigation}) => {
         setOtherInfo("");
         navigation.navigate("Legitimation", result);
     }
+
     return (
         <View style={{flex:1}}>
-            <CustomHeader
-                    title={Localization.getText("postAndPackage")}
-                    nav={navigation}
-            />
             <View style={rs.content}>
                 <Text style={ms.h3}>{Localization.getText("enterPostOffice")}</Text>
                 <GooglePlaces
@@ -50,6 +42,7 @@ const PostRequestScreen = ({navigation}) => {
                     <FloatingInput 
                         placeholder={Localization.getText("refCode")}
                         onChangeText={(text)=>setRefCode(text)}
+                        keyboardType="number-pad"
                     />
     
                     <Text style={ms.h3}>{Localization.getText("otherInfo")}</Text>

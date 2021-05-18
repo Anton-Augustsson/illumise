@@ -1,22 +1,17 @@
-import React, {useContext, useState, useEffect} from 'react';
+import React, {useContext } from 'react';
 import { Text, View, FlatList, TouchableOpacity } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import FoodRequestScreen from './requests/foodRequestScreen/foodRequest';
 import PostRequestScreen from './requests/postRequestScreen/postRequestScreen';
 import LegitimationScreen from './requests/postRequestScreen/legitimation';
 import ShoppingRequestScreen from "./requests/shoppingRequestScreen/shoppingRequest";
-import {colors} from "../../mainStyles/colors"
-import ms from "../../mainStyles/ms"
-import hs from "./homeStyle"
-import ReceiptScreen from "./requests/receipt/receipt";
+import hs from "./homeStyle";
 import RequestIcon from "../../customComponents/requestIcon"
 import DeliverScreen from './requests/deliver/deliver';
 import { Localization } from '../../../modules/localization';
 import OtherRequestScreen from './requests/OtherRequestScreen/otherRequest';
-import storage from '../../../modules/localStorage/localStorage';
-import MarketItem from '../market/marketItem';
-
-
+import { AppContext } from '../../AppContext';
+import {screenOptions} from "../navigationOptions";
 
 const DATA = [
     {
@@ -83,10 +78,12 @@ const renderItem = ({item}, nav) =>
 
 const FirstScreen = ({nav}) => {
 
+    const { getState } = useContext(AppContext);
+
     return (
         <View style={{flex:1}}>
             
-            <Text style={hs.welcome}>{Localization.getText("welcome") + " Jonas Teglund"}</Text>
+            <Text style={hs.welcome}>{`${Localization.getText("welcome")} ${getState().user.firstName} ${getState().user.lastName}`}</Text>
             <FlatList
                 data={DATA}
                 renderItem={(item) => renderItem(item, nav)}
@@ -96,56 +93,68 @@ const FirstScreen = ({nav}) => {
     );
 }
 
-
 const Stack = createStackNavigator();
 
 const HomeScreen = () => {
     return (
         <Stack.Navigator 
-            screenOptions={{
-                headerShown:false,
-                cardStyle:{backgroundColor:colors.DEFAULT_BACKGROUND}
-            }}
+            screenOptions={screenOptions}
             initialRouteName="FirstScreen"
         >
             <Stack.Screen 
+                options={{
+                    header:()=>null
+                }}
                 name="FirstScreen" 
                 children={(navigation)=><FirstScreen nav={navigation}/>}
             />
 
             <Stack.Screen 
+                options={{
+                    title:Localization.getText("food")
+                }}
                 name="FoodRequest" 
                 component={FoodRequestScreen}
             />
 
             <Stack.Screen 
+                options={{
+                    title:Localization.getText("shop")
+                }}
                 name="ShoppingRequest" 
                 component={ShoppingRequestScreen}
             />
 
             <Stack.Screen 
+                options={{
+                    title:Localization.getText("Other")
+                }}
                 name="OtherRequest" 
                 component={OtherRequestScreen}
             />
 
             <Stack.Screen 
+                options={{
+                    title:Localization.getText("postAndPackage")
+                }}
                 name="Legitimation" 
                 component={LegitimationScreen}
             />
 
-            <Stack.Screen 
-                name="Deliver" 
-                component={DeliverScreen}
-            />
-
             <Stack.Screen
+                options={{
+                    title:Localization.getText("postAndPackage")
+                }}
                 name="PostRequest"
                 component={PostRequestScreen}
             />
 
             <Stack.Screen 
-                name="Receipt" 
-                component={ReceiptScreen}
+                options={{
+                    title:Localization.getText("deliveryInfo")
+                }}
+                name="Deliver" 
+                component={DeliverScreen}
             />
         </Stack.Navigator>
     );

@@ -1,13 +1,23 @@
 import React from 'react';
-import {Text, StyleSheet, View, Animated, Easing} from 'react-native';
+import {Text, StyleSheet, View} from 'react-native';
 import { Localization } from '../../modules/localization';
+import SamaritButton from './samaritButton';
   
-const Loading = ({info}) => {
-
+const Loading = ({title, info, onPress}) => {
     return (
-        <View style={styles.container}>
-            <Text style={styles.text}>{info === null ? Localization.getText("loading...") : info}</Text>
-        </View>
+        <>
+            <View style={styles.container}>
+                <Text style={styles.title}>{title ? title : Localization.getText("loading...") }</Text>
+                <Text style={styles.info}>{info ? info : null}</Text>
+                
+            </View>
+            {onPress ?
+                <SamaritButton
+                    title={Localization.getText("goBack")}
+                    onPress={onPress}
+                />
+            : null}
+        </>
     );
 }
 
@@ -17,8 +27,10 @@ const styles = StyleSheet.create({
         justifyContent:"center",
         alignItems:"center",
     },
-    text:{
+    title:{
         fontSize:20,
+    },
+    info: {
     }
 });
 

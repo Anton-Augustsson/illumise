@@ -9,7 +9,6 @@ const validParams = validate.validParams;
 const validCredentials = validate.validCredentials;
 const sendFailure = validate.sendFailure;
 const sendSuccess = validate.sendSuccess;
-
 const express = require('express');
 const router = express.Router();
 const Joi = require('joi');
@@ -23,92 +22,77 @@ const Joi = require('joi');
  * @property {String} password
  */
 
-/**
- * create new user account
- * @async
- * @param {credentials} credentials - (req.body) An object of the users credentials.
- * @returns {Promise<ObjectID|null>} The id of the created account or null 
- */
 router.put('/createAccount', async (req, res) =>
 {
-  const schema = Joi.object({
-    credentials: Joi.any()
-  });
+    const schema = Joi.object({
+        credentials: Joi.any()
+    });
 
-  let c = req.body.credentials;
-
-  if(valid(req.body, schema, res) && validCredentials(c, res))
-  {
-    let response = await db.accounts.add(c.firstName, c.lastName, c.email, "119", c.token);
-    if(response != null) return sendSuccess(res, response);
-    else return sendFailure(res);
-  }
+    let c = req.body.credentials;
+    if(valid(req.body, schema, res) && validCredentials(c, res))
+    {
+        let response = await db.accounts.add(c.firstName, c.lastName, c.email, "119", c.token, c.picture);
+        if(response != null) return sendSuccess(res, response);
+        else return sendFailure(res);
+    }
 });
 
-/**
- * remove specified user account
- * @async
- * @param {string} userID - (req.body) The user id of the account that should be deleted
- * @returns {Promise<Boolean>} If the operation was successful
- */
 router.delete('/removeAccount', async (req, res) =>
 {
-  const schema = Joi.object({
-    userID: Joi.string().min(24).max(24)
-  });
+    const schema = Joi.object({
+        userID: Joi.string().min(24).max(24)
+    });
 
-  if(valid(req.body, schema, res))
-  {
-    let response = await db.accounts.remove(req.body.userID);
-    if(response != false) return sendSuccess(res);
-    else return sendFailure(res);
-  }
+    if(valid(req.body, schema, res))
+    {
+        let response = await db.accounts.remove(req.body.userID);
+        if(response != false) return sendSuccess(res);
+        else return sendFailure(res);
+    }
 });
 
-/**
- * enter key word and the value to be changed. Enter multiple keys and-values will be verified if they are correct keys. Or send an object that a class defines with values.
- * @async
- * @param {string} userID - The user id of the account that should be changed
- * @param {credentials} credentials - (req.body) An object of the users credentials.
- * @returns {Promise<Boolean>} If the operation was successful
- */
 router.post('/changeCredentials', async (req, res) =>
 {
-  const schema = Joi.object({
-    userID: Joi.string().min(24).max(24),
-    credentials: Joi.any()
-  });
+    const schema = Joi.object({
+        userID: Joi.string().min(24).max(24),
+        credentials: Joi.any()
+    });
 
-  let c = req.body.credentials;
+    let c = req.body.credentials;
 
-  if(valid(req.body, schema, res), validCredentials(c, res))
-  {
-    let response = await db.accounts.update(req.body.userID, c.firstName, c.lastName, c.email, "119", c.token);
-    if(response != false) return sendSuccess(res);
-    else return sendFailure(res);
-  }
+    if(valid(req.body, schema, res), validCredentials(c, res))
+    {
+        let response = await db.accounts.update(req.body.userID, c.firstName, c.lastName, c.email, "119", c.token, c.picture);
+        if(response != false) return sendSuccess(res);
+        else return sendFailure(res);
+    }
 });
 
-/**
- * Gets the id of the user with the given email if the password matches
- * @async
- * @param {String} email -  (req.param) The email of the user
- * @param {String} password - (req.param) The password of the user
- * @returns {?User} The id of the user
- */
 router.get('/get', async (req, res) =>
 {
-  const params = {
-    email: req.param('email'),
-    password: req.param('password')
-  };
+    const params = {
+        email: req.param('email'),
+        password: req.param('password')
+    };
 
-  if(validParams(params, res))
-  {
-    let response = await db.accounts.get(params.email, params.password);
-    if(response != null) return sendSuccess(res, response);
-    else return sendFailure(res);
-  }
+    if(validParams(params, res))
+    {
+        let response = await db.accounts.get(params.email, params.password);
+        if(response != null) return sendSuccess(res, response);
+        else return sendFailure(res);
+    }
+});
+
+router.get('/getFromID', async (req, res) =>
+{
+    const params = { userID: req.param('userID') };
+
+    if(validParams(params, res))
+    {
+        let response = await db.accounts.getFromID(params.userID);
+        if(response != null) return sendSuccess(res, response);
+        else return sendFailure(res);
+    }
 });
 
 module.exports = router;

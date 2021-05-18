@@ -4,70 +4,88 @@ const storage =
 {
 
     /**
-     * create new account
-     * @param {json} credentials - A object of the users credentials.
-     * @param {json} credentials - A object of the users credentials.
+     * Store a string in local storage
+     * @param {String} key - The key to get the data back
+     * @param {String} value - The value to store
      */
     storeDataString: async (key,value) => {
-        try {
+        try 
+        {
             await AsyncStorage.setItem(key, value)
-        } catch (e) {
+        } 
+        catch (e) 
+        {
             // saving error
             console.log(e);
         }
     },
 
+    
     /**
-     * create new account
-     * @param {json} credentials - A object of the users credentials.
+     * Store a object in local storage
+     * @param {String} key - The key to get the data back
+     * @param {json} value - The object to store
      */
     storeDataObject: async (key, value) => {
-        try {
+        try 
+        {
             const jsonValue = JSON.stringify(value)
             await AsyncStorage.setItem(key, jsonValue)
-        } catch (e) {
+        } 
+        catch (e) 
+        {
             // saving error
             console.log(e);
         }
     },
 
+    
     /**
-     * create new account
-     * @param {json} credentials - A object of the users credentials.
+     * Get string from local storage 
+     * @param {String} key - The key to get the data 
+     * @returns {Promise<?String>} The data that is stored 
      */
     getDataString: async (key) => {
         try {
             const value = await AsyncStorage.getItem(key)
             return value;
-        } catch(e) {
+        } 
+        catch(e) 
+        {
             // error reading value
-            console.log("GET FUCKING DATA STRING");
             console.log(e);
         }
     },
   
     /**
-     * create new account
-     * @param {json} credentials - A object of the users credentials.
+     * Get object from local storage 
+     * @param {String} key - The key to get the data 
+     * @returns {Promise<?json>} The data that is stored 
      */
     getDataObject: async (key) => {
-        try {
+        try 
+        {
             const jsonValue = await AsyncStorage.getItem(key)
             return jsonValue != null ? JSON.parse(jsonValue) : null;
-        } catch(e) {
+        } 
+        catch(e) 
+        {
             // error reading value
             console.log(e);
         }
     },
   
     /**
-     * create new account
-     * @param {json} credentials - A object of the users credentials.
+     * Remove data from local storage 
+     * @param {String} key - The key to remove the data 
      */
     removeValue: async (key) => {
-        try {
+        try 
+        {
             await AsyncStorage.removeItem(key)
-        } catch(e) {
+        } 
+        catch(e) 
+        {
             // remove error
             console.log(e);
         }

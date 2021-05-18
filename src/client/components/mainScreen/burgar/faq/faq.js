@@ -1,8 +1,6 @@
 import React from 'react';
-import { Text, View, FlatList, StyleSheet,TouchableOpacity} from 'react-native';
+import { Text, View, FlatList, StyleSheet } from 'react-native';
 import { Localization } from '../../../../modules/localization';
-import CustomHeader from '../../../customComponents/customHeader';
-import ms from "../../../mainStyles/ms";
 
 
 const QUESTIONS = [
@@ -34,21 +32,22 @@ const QUESTIONS = [
 const FaqScreen = ({navigation}) => {
     return (
         <View style={{flex:1}}>
-            <CustomHeader
-                title={Localization.getText("faq")}
-                nav={navigation}
+            <FlatList style={{padding:10}}
+                data={QUESTIONS}
+                renderItem={({item})=>faqList(item)}
+                keyExtractor={(item)=>item.id}
+                ListHeaderComponent={()=>
+                    <Text style={{fontSize: 20}}>
+                        {Localization.getText("faqText1") + "\n"}
+                    </Text>
+                }
+                ListFooterComponent={()=>
+                <View style={styles.otherInfo}>
+                    <Text>{Localization.getText("faqText2")}</Text>
+                    <Text>{Localization.getText("faqContactInfo")}</Text>
+                </View>
+                }
             />
-            <View style={ms.itemContainer}><Text style={{fontSize: 15}}>{Localization.getText("faqText1") + "\n"}</Text></View>
-
-                <FlatList style={{padding:10}}
-                    data={QUESTIONS}
-                    renderItem={({item})=>faqList(item)}
-                    keyExtractor={(item)=>item.id}
-                />
-            <View style={{borderWidth: 1, padding:10}}>
-                <Text>{Localization.getText("faqText2")}</Text>
-                <Text>{Localization.getText("faqContactInfo")}</Text>
-            </View>
         </View>
     );
 }
@@ -56,12 +55,19 @@ const FaqScreen = ({navigation}) => {
 const faqList = (item) => {
     return (
         <View>
-                <Text style={{fontSize: 25}}>{"\u2022 " + item.question}</Text>
-                <Text style={{fontSize: 18}}>{item.answer + "\n"}</Text>
-                
+            <Text style={{fontSize: 25}}>{"\u2022 " + item.question}</Text>
+            <Text style={{fontSize: 18}}>{item.answer + "\n"}</Text>
         </View>
     );
-
 }
+
+const styles = StyleSheet.create({
+    otherInfo: {
+        borderWidth: 1, 
+        padding:10, 
+        marginBottom:20,
+        borderRadius: 15
+    }
+});
 
 export default FaqScreen;

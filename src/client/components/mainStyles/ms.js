@@ -105,7 +105,7 @@ const ms = StyleSheet.create({
     },
     itemContainer: {
         width:"100%",
-        height:60,
+        height:65,
         backgroundColor:"white",
         borderBottomWidth:0.5,
         borderBottomColor: "grey",
@@ -132,7 +132,9 @@ const ms = StyleSheet.create({
     },
     emptyContainer: {
         justifyContent:"center",
-        padding:30,
+        paddingTop:30,
+        paddingLeft:20,
+        paddingRight:20,
     },
     emptyMsg: {
         textAlign:"center",
@@ -141,9 +143,11 @@ const ms = StyleSheet.create({
         fontWeight:"bold",
         fontSize:16,
     },
+    star: {
+        color:"orange", 
+        marginRight:3
+    }
 });
-
-// EXPORTS 
 
 export default ms;
 

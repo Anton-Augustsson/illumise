@@ -92,6 +92,26 @@ class DBRequestsInterface
     }
 
     /**
+     * Gets the request with the given id
+     * @async
+     * @param {String} requestID The id of the request
+     * @returns {Promise<?Request>} The requests BSON objects in a list or null
+     */
+    async get(requestID)
+    {
+        try
+        {
+            let filter = { _id: ObjectID(requestID) };
+            let result = await this.#collection.findOne(filter);
+            return result;
+        }
+        catch (_)
+        {
+            return null;
+        }
+    }
+
+    /**
      * Gets requests created by a user
      * @async
      * @param {String} userID The id of the user
@@ -132,7 +152,6 @@ class DBRequestsInterface
         }
         catch (_)
         {
-            //console.error(error);
             return null;
         }
     }
@@ -152,6 +171,7 @@ class DBRequestsInterface
             await this.#collection.createIndex( { geoLocation: "2dsphere"} );
             let filter = 
             {
+                isFulfilled: false,
                 geoLocation: {
                     $near: {
                         $geometry: geoLocation,
@@ -186,7 +206,7 @@ class DBRequestsInterface
                 $set: 
                 {
                     dateCompleted: Date.now(),
-                    isFulFilled: true
+                    isFulfilled: true
                 }
             };
             let result = await this.#collection.updateOne(filter, update);
@@ -211,7 +231,7 @@ class DBRequestsInterface
         try
         {
             let filter = { _id: ObjectID(requestID) };
-            let update = { $set: { providerID: ObjectID(providerID) } };
+            let update = { $set: { providerID: providerID? ObjectID(providerID) : null } };
             let result = await this.#collection.updateOne(filter, update);
             return result.result.ok == 1 && result.result.nModified == 1;
         }

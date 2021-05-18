@@ -1,7 +1,6 @@
 import React from 'react';
 import { Text, View, FlatList, StyleSheet,TouchableOpacity} from 'react-native';
 import RequestIcon from "../../customComponents/requestIcon";
-import CustomHeader from "../../customComponents/customHeader";
 import ms from "../../mainStyles/ms";
 import { Localization } from '../../../modules/localization';
 
@@ -38,11 +37,6 @@ const NotificationListItem = (item) => {
 const NotificationScreen = ({navigation}) => {
     return (
         <View style={{flex:1}}>
-            <CustomHeader 
-                title={Localization.getText("notifications")}
-                nav={navigation}
-                goBack={false}
-            />
             <FlatList
                 data={NOTIFICATIONS}
                 renderItem={({item})=>NotificationListItem(item)}

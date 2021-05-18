@@ -9,6 +9,27 @@ const url = communication.url;
 const returnResponse = communication.returnResponse;
 
 /**
+ * @typedef Chat
+ * @property {String} _id
+ * @property {String} requestID
+ * @property {Number} dateCreated
+ * @property {MessageCollection} provider
+ * @property {MessageCollection} requester
+ */
+
+/**
+ * @typedef MessageCollection
+ * @property {String} _id
+ * @property {[ChatMessage]} messages
+ */
+
+/**
+ * @typedef ChatMessage
+ * @property {Number} time
+ * @property {String} text
+ */
+
+/**
  * Managing user chat both for service provider and service requester
  */
 const chat = 
@@ -23,10 +44,10 @@ const chat =
      * @param {string} msg - The message the current user wants to send
      * @returns {Promise<?Boolean>} If the message was added successfully to chat
      */
-    sendMessage: async function(chatID, userID, msg)
+    sendMessage: async function(chatID, msg, isProvider)
     {
         let url = chat.chatUrl + '/sendMessage';
-        let message = {chatID: chatID, userID: userID, msg: msg};
+        let message = {chatID: chatID, msg: msg, isProvider: isProvider};
         let response = await fetch(url, {
             method: 'PUT',
             headers: {
@@ -39,31 +60,82 @@ const chat =
     },
 
     /**
-     * get all messages from a chat
+     * Gets all chat data of the chat with the given id
      * @async
-     * @param {string} chatID - The id of the chat
-     * @returns {Promise<?MessageCollection>} The message collection
+     * @param {String} userID The id of the user
+     * @param {Boolean} isProvider If the user is a provider
+     * @param {Number} num
+     * @returns {Promise<?[Chat]>} The chat
      */
-    getAllMessages: async function(chatID)
+    getChatsFrom: async function(userID, isProvider, num = undefined)
     {
-        let params = '?chatID=' + chatID;
-        let url = chat.chatUrl + '/getAllMessages' + params;
+        let params = `?userID=${userID}&isProvider=${isProvider}&num=${num}`;
+        let url = chat.chatUrl + '/getChatsFrom' + params;
         let response = await fetch(url);
 
         return returnResponse(response);
     },
 
     /**
-     * setup a new chat between users
+     * Gets all chat data of the chat with the given id
      * @async
-     * @param {string} requestID - The id of the request that is the chat should be created for
-     * @param {[string]} usersID - The an array of two users
+     * @param {String} requestID The id of the request
+     * @param {String} userID The id of the user
+     * @param {Boolean} isProvider If the user is a provider
+     * @returns {Promise<?Chat>} The chat
+     */
+    getChat: async function(requestID, userID, isProvider)
+    {
+        let params = `?requestID=${requestID}&userID=${userID}&isProvider=${isProvider}`;
+        let url = chat.chatUrl + '/getChat' + params;
+        let response = await fetch(url);
+        
+        return returnResponse(response);
+    },
+
+    /**
+     * Gets all chat data of the chat with the given id
+     * @async
+     * @param {String} requestID The id of the request
+     * @param {Number} num The number of chats
+     * @returns {Promise<?Chat>} The chat
+     */
+    getChats: async function(requestID, num = undefined)
+    {
+        let params = `?requestID=${requestID}&num=${num}`;
+        let url = chat.chatUrl + '/getChats' + params;
+        let response = await fetch(url);
+
+        return returnResponse(response);
+    },
+
+    /**
+     * Gets all chat data of the chat with the given id
+     * @async
+     * @param {String} chatID The id of the request
+     * @returns {Promise<?Chat>} The chat
+     */
+    getChatFromID: async function(chatID)
+    {
+        let params = `?requestID=${chatID}`;
+        let url = chat.chatUrl + '/getChatFromID' + params;
+        let response = await fetch(url);
+
+        return returnResponse(response);
+    },
+
+    /**
+     * Adds a new chat if no equivalent chat exists
+     * @async
+     * @param {String} requestID The id of the related request
+     * @param {String} requesterID The id of the requester
+     * @param {String} providerID The id of the provider
      * @returns {Promise<?String>} The id of the chat or null
      */
-    newChat: async function(requestID, usersID)
+    newChat: async function(requestID, requesterID, providerID)
     {
         let url = chat.chatUrl + '/newChat';
-        let toCreate = {requestID: requestID, usersID: usersID};
+        let toCreate = {requestID: requestID, requesterID: requesterID, providerID: providerID};
         let response = await fetch(url, {
             method: 'PUT',
             headers: {

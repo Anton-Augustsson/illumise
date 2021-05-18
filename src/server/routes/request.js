@@ -2,7 +2,6 @@
  * This file contains REST API: request functions which handles sending/fetching data to/from the database
  */
 
-/** @type {DBInterface} */
 const db = require("../server");
 const validate = require("./validate");
 const valid = validate.valid;
@@ -16,7 +15,6 @@ const express = require('express');
 const router = express.Router();
 const Joi = require('joi');
 const { idSize } = require("./validate");
-const { DBInterface } = require("../db/dbInterface");
 
 /**
  * @typedef GeoLocation
@@ -44,16 +42,16 @@ const { DBInterface } = require("../db/dbInterface");
  */
 router.put('/completeRequest', async (req, res) =>
 {
-  const schema = Joi.object({
-    requestID: Joi.string().min(idSize).max(idSize),
-  });
+    const schema = Joi.object({
+        requestID: Joi.string().min(idSize).max(idSize),
+    });
 
-  if(valid(req.body, schema, res))
-  {
-    let response = await db.requests.setCompleted(req.body.requestID);
-    if(response != false) return sendSuccess(res, response);
-    else return sendFailure(res);
-  }
+    if(valid(req.body, schema, res))
+    {
+        let response = await db.requests.setCompleted(req.body.requestID);
+        if(response != false) return sendSuccess(res, response);
+        else return sendFailure(res);
+    }
 });
 
 /**
@@ -91,20 +89,38 @@ router.get('/provider/getNearRequests', async (req, res) =>
  */
 router.put('/provider/set', async (req, res) =>
 {
-  const schema = Joi.object ({
-    requestID: Joi.string().min(idSize).max(idSize),
-    providerID: Joi.string().min(idSize).max(idSize),
-  });
+    const schema = Joi.object ({
+        requestID: Joi.string().min(idSize).max(idSize),
+        providerID: Joi.string().min(idSize).max(idSize),
+    });
 
-  let body = req.body;
+    let body = req.body;
 
-  if(valid(body, schema, res))
-  {
-    // TODO change from setProvider to something else that simply shows the interest of providing
-    let response = await db.requests.setProvider(body.requestID, body.providerID);
-    if(response != false) return sendSuccess(res, response);
-    else return sendFailure(res);
-  }
+    if(valid(body, schema, res))
+    {
+        // TODO change from setProvider to something else that simply shows the interest of providing
+        let response = await db.requests.setProvider(body.requestID, body.providerID);
+        if(response != false) return sendSuccess(res, response);
+        else return sendFailure(res);
+    }
+});
+
+/**
+ * Gets the request with the given id
+ * @async
+ * @param {String} requestID The id of the request
+ * @returns {Promise<?Request>} The requests BSON objects in a list or null
+ */
+router.get('/get', async (req, res) =>
+{
+    const params = { requestID: req.param('requestID')};
+    
+    if(validParams(params, res))
+    {
+        let response = await db.requests.get(params.requestID);
+        if(response != null) return sendSuccess(res, response);
+        else return sendFailure(res);
+    }
 });
 
 /**
@@ -116,17 +132,17 @@ router.put('/provider/set', async (req, res) =>
  */
 router.get('/provider/getUserProviding', async (req, res) =>
 {
-  const params = {
-    providerID: req.param('providerID'),
-    num: req.param('num')
-  };
+    const params = {
+        providerID: req.param('providerID'),
+        num: req.param('num')
+    };
 
-  if(validParams(params, res))
-  {
-    let response = await db.requests.getUserProviding(params.providerID, parseInt(params.num));
-    if(response != null) return sendSuccess(res, response);
-    else return sendFailure(res);
-  }
+    if(validParams(params, res))
+    {
+        let response = await db.requests.getUserProviding(params.providerID, params.num === "undefined" ? undefined : parseInt(params.num));
+        if(response != null) return sendSuccess(res, response);
+        else return sendFailure(res);
+    }
 });
 
 /**
@@ -139,21 +155,21 @@ router.get('/provider/getUserProviding', async (req, res) =>
  */
 router.post('/requester/newRequest', async (req, res) =>
 {
-  const schema = Joi.object({
-    requestID: Joi.string().min(idSize).max(idSize),
-    type: Joi.string(),
-    data: Joi.any()
-  });
+    const schema = Joi.object({
+        requestID: Joi.string().min(idSize).max(idSize),
+        type: Joi.string(),
+        data: Joi.any()
+    });
 
-  let body = req.body;
-  let data = body.data;
+    let body = req.body;
+    let data = body.data;
 
-  if(valid(body, schema, res) && validData(data, res))
-  {
-    let response = await db.requests.add(body.requestID, body.type, data.body, data.geoLocation, data.cost);
-    if(response != null) return sendSuccess(res, response);
-    else return sendFailure(res);
-  }
+    if(valid(body, schema, res) && validData(data, res))
+    {
+        let response = await db.requests.add(body.requestID, body.type, data.body, data.geoLocation, data.cost);
+        if(response != null) return sendSuccess(res, response);
+        else return sendFailure(res);
+    }
 });
 
 /**
@@ -165,17 +181,17 @@ router.post('/requester/newRequest', async (req, res) =>
  */
 router.get('/requester/getUserRequest', async (req, res) =>
 {
-  const params = {
-    userID: req.param('userID'),
-    num: req.param('num')
-  };
+    const params = {
+        userID: req.param('userID'),
+        num: req.param('num')
+    };
 
-  if(validParams(params, res))
-  {
-    let response = await db.requests.getUserRequests(params.userID, parseInt(params.num));
-    if(response != null) return sendSuccess(res, response);
-    else return sendFailure(res);
-  }
+    if(validParams(params, res))
+    {
+        let response = await db.requests.getUserRequests(params.userID, params.num === "undefined" ? undefined : parseInt(params.num));
+        if(response != null) return sendSuccess(res, response);
+        else return sendFailure(res);
+    }
 });
 
 /**
@@ -186,74 +202,198 @@ router.get('/requester/getUserRequest', async (req, res) =>
  */
 router.delete('/requester/removeRequest', async (req, res) =>
 {
-  const schema = Joi.object({
-    requestID: Joi.string().min(idSize).max(idSize),
-  });
+    const schema = Joi.object({
+        requestID: Joi.string().min(idSize).max(idSize),
+    });
 
-  if(valid(req.body, schema, res))
-  {
-    let response = await db.requests.remove(req.body.requestID);
-    if(response != false) return sendSuccess(res);
-    else return sendFailure(res);
-  }
+    if(valid(req.body, schema, res))
+    {
+        let response = await db.requests.remove(req.body.requestID);
+        if(response != false) return sendSuccess(res);
+        else return sendFailure(res);
+    }
 });
 
 /**
  * Adds a review
  * @async
- * @param {String} requestID - (req.body) The id of the request the review is related to
- * @param {String} userIDTo - (req.body) The id of the user the review is for
- * @param {String} userIDFrom - (req.body) The id of the user writing the review
- * @param {String} message - (req.body) The message on the review
- * @param {number} value - (req.body) The rated score 0 - 5
- * @param {ReviewType} type - (req.body) The type of review 
+ * @param {String} userIDTo The id of the user the review is for
+ * @param {String} userIDFrom The id of the user writing the review
+ * @param {String} requestID The id of the request the review is related to
+ * @param {String} message The message on the review
+ * @param {number} value The rated score 0 - 5
  * @returns {Promise<Boolean>} If the review was added
  */
 router.put('/requester/reviewProvider', async (req, res) =>
 {
-  const schema = Joi.object({
-    requestID: Joi.string().min(idSize).max(idSize),
-    userIDTo: Joi.string().min(idSize).max(idSize),
-    userIDFrom: Joi.string().min(idSize).max(idSize),
-    message: Joi.string(),
-    value: Joi.number().min(0).max(5),
-    type: Joi.string()
-  });
+    const schema = Joi.object({
+        requestID: Joi.string().min(idSize).max(idSize),
+        user1ID: Joi.string().min(idSize).max(idSize),
+        user2ID: Joi.string().min(idSize).max(idSize),
+        message: Joi.string(),
+        rating: Joi.number().min(0).max(5),
+    });
 
-  let b = req.body;
-  let reviewType = ReviewType.Requester; //TODO CHANGE
+    let b = req.body;
+    let reviewType = ReviewType.Requester;
 
-  if(valid(b, schema, res))
-  {
-    let response = await db.reviews.add(b.userIDTo, b.userIDFrom, b.requestID, b.message, b.value, reviewType);
-    if(response != false) return sendSuccess(res);
-    else return sendFailure(res);
-  }
+    if(valid(b, schema, res))
+    {
+        let response = await db.reviews.add(b.user1ID, b.user2ID, b.requestID, b.message, b.rating, reviewType);
+        if(response != false) return sendSuccess(res);
+        else return sendFailure(res);
+    }
 });
 
 /**
- * Accept the provider of a request
+ * Adds a review
  * @async
- * @param {String} requestID - The id of the request to modify
- * @param {String} providerID - The id of the provider
- * @returns {Promise<Boolean>} If the operation was successful
+ * @param {String} userIDTo The id of the user the review is for
+ * @param {String} userIDFrom The id of the user writing the review
+ * @param {String} requestID The id of the request the review is related to
+ * @param {String} message The message on the review
+ * @param {number} value The rated score 0 - 5
+ * @returns {Promise<Boolean>} If the review was added
+ */
+router.put('/provider/reviewProvider', async (req, res) =>
+{
+    const schema = Joi.object({
+        requestID: Joi.string().min(idSize).max(idSize),
+        user1ID: Joi.string().min(idSize).max(idSize),
+        user2ID: Joi.string().min(idSize).max(idSize),
+        message: Joi.string(),
+        rating: Joi.number().min(0).max(5),
+    });
+
+    let b = req.body;
+    let reviewType = ReviewType.Provider;
+
+    if(valid(b, schema, res))
+    {
+        let response = await db.reviews.add(b.user1ID, b.user2ID, b.requestID, b.message, b.rating, reviewType);
+        if(response != false) return sendSuccess(res);
+        else return sendFailure(res);
+    }
+});
+
+/**
+ * Gets a specific review to a user
+ * @async
+ * @param {String} userID The id of the user that has the review
+ * @param {String} requestID The id of the request related to the review
+ * @param {ReviewType} type The type of review
+ * @returns {Promise<?Review>} The review or null
+ */
+router.get('/provider/getSpecificToUser', async (req, res) =>
+{
+    const params = {
+        userID: req.param('userID'),
+        requestID: req.param('requestID'),
+    };
+
+    let reviewType = ReviewType.Provider;
+
+    if(validParams(params, res))
+    {
+        let response = await db.reviews.getSpecificToUser(params.userID, params.requestID, reviewType);
+        if(response != null) return sendSuccess(res, response);
+        else return sendFailure(res);
+    }
+});
+
+/**
+ * Gets a specific review to a user
+ * @async
+ * @param {String} userID The id of the user that has the review
+ * @param {String} requestID The id of the request related to the review
+ * @param {ReviewType} type The type of review
+ * @returns {Promise<?Review>} The review or null
+ */
+router.get('/requester/getSpecificToUser', async (req, res) =>
+{
+    const params = {
+        userID: req.param('userID'),
+        requestID: req.param('requestID'),
+    };
+
+    let reviewType = ReviewType.Requester;
+
+    if(validParams(params, res))
+    {
+        let response = await db.reviews.getSpecificToUser(params.userID, params.requestID, reviewType);
+        if(response != null) return sendSuccess(res, response);
+        else return sendFailure(res);
+    }
+});
+
+/**
+ * Gets all reviews to a user
+ * @async
+ * @param {String} userID The id of the user that has the review
+ * @param {ReviewType} type The type of review
+ * @returns {Promise<?[Review]>} An array of all reviews or null
+ */
+router.get('/requester/getAllToUser', async (req, res) =>
+{
+    const params = {
+        userID: req.param('userID'),
+    };
+
+    let reviewType = ReviewType.Requester;
+
+    if(validParams(params, res))
+    {
+        let response = await db.reviews.getAllToUser(params.userID, params.requestID, reviewType);
+        if(response != null) return sendSuccess(res, response);
+        else return sendFailure(res);
+    }
+});
+
+/**
+ * Gets all reviews to a user
+ * @async
+ * @param {String} userID The id of the user that has the review
+ * @param {ReviewType} type The type of review
+ * @returns {Promise<?[Review]>} An array of all reviews or null
+ */
+router.get('/provider/getAllToUser', async (req, res) =>
+{
+    const params = {
+        userID: req.param('userID'),
+    };
+
+    let reviewType = ReviewType.Provider;
+
+    if(validParams(params, res))
+    {
+        let response = await db.reviews.getAllToUser(params.userID, params.requestID, reviewType);
+        if(response != null) return sendSuccess(res, response);
+        else return sendFailure(res);
+    }
+});
+
+
+/**
+ * accept the provider
+ * @param {string} requestID - The id of the request to be selected
+ * @param {string} providerID - The id of the provider with select a request to performed
  */
 router.put('/requester/acceptProvider', async (req, res) =>
 {
-  const schema = Joi.object ({
-    requestID: Joi.string().min(idSize).max(idSize),
-    providerID: Joi.string().min(idSize).max(idSize),
-  });
+    const schema = Joi.object ({
+        requestID: Joi.string().min(idSize).max(idSize),
+        providerID: Joi.any(),
+    });
 
-  let body = req.body;
+    let body = req.body;
 
-  if(valid(body, schema, res))
-  {
-    // TODO change from setProvider to something else that simply shows the interest of providing
-    let response = await db.requests.setProvider(body.requestID, body.providerID);
-    if(response != false) return sendSuccess(res, response);
-    else return sendFailure(res);
-  }
+    if(valid(body, schema, res))
+    {
+        // TODO change from setProvider to something else that simply shows the interest of providing
+        let response = await db.requests.setProvider(body.requestID, body.providerID);
+        if(response != false) return sendSuccess(res, response);
+        else return sendFailure(res);
+    }
 });
 
 module.exports = router;

@@ -16,9 +16,10 @@ const io = socketio(server, {
 
 /**
  * Initialize server interface
+ * @type {DBInterface}
  */
 let db;
-let connected;
+let connected = false;
 
 async function initDB()
 {
@@ -48,27 +49,36 @@ app.use('/chat', chat);
 const account = require('./routes/account');
 app.use('/account', account);
 
+const review = require('./routes/review');
+app.use('/review', review);
+
 /**
  * Initialize WebSocket
  * https://www.tutorialspoint.com/socket.io/socket.io_hello_world.htm
  */
-io.on('connection', function(socket) {
+io.on('connection', function(socket) 
+{
     console.log("New connection");
 
-    socket.on('join', ({ senderId, name , room }, callback) => {
-        console.log(senderId + " " + name + " joined room " + room);
-
-        socket.join(room); // sends all new messages to this socket
-
-        //callback();
+    socket.on('join', ({ senderId , chatID }) => 
+    {
+        console.log('join', senderId, chatID);
+        socket.join(chatID);
     });
 
-    socket.on('sendMsg', ({ senderId, name, room, msg }, callback) => {
-        const user = "user";
-        console.log(senderId, name, room, msg);
-        io.to(room).emit('msg', { user: senderId, name: name, text: msg});
-        // save new msg
-        callback();
+    socket.on('sendMsg', ({ chatID, msg, time, isProvider }, callback) => 
+    {
+        console.log('sendMsg', chatID, msg, time, isProvider );
+        io.to(chatID).emit('msg', { chatID: chatID, msg: msg, time: time, isProvider: isProvider });
+        db.chat.addMessage(chatID, msg, isProvider);
+        if (callback) callback();
+    });
+
+    socket.on('sendComplete', ({ senderId , chatID }, callback) => 
+    {
+        console.log('sendComplete', senderId, chatID );
+        io.to(chatID).emit('complete', { senderId: senderId });
+        if (callback) callback();
     });
 
     socket.on('disconnect', () => {

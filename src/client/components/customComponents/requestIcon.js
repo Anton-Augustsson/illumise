@@ -14,7 +14,7 @@ const RequestIcon = (props) => {
             name = "box"
             icon = FontAwesome5
             break;
-        case "mail": 
+        case "post": 
             name = "local-post-office"; 
             icon = MaterialIcons;
             break;
@@ -31,7 +31,7 @@ const RequestIcon = (props) => {
             icon = MaterialIcons;
             break;
         default:
-            name = "unkownfile1";
+            name = "unknowfile1";
             icon = AntDesign;
             break;
     }

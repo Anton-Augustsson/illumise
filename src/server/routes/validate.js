@@ -1,6 +1,4 @@
 const express = require('express');
-const router = express.Router();
-const Joi = require('joi');
 
 const validate =
 {
@@ -58,7 +56,7 @@ const validate =
             return true;
         }
 
-        res.status(404).send("invalid credentials, should be: firtsName, lastName, email, token ");
+        res.status(404).send("invalid credentials, should be: firtsName, lastName, email, token, picture ");
         return false;
     },
 

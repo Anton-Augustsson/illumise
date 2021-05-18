@@ -1,16 +1,17 @@
 import 'react-native-gesture-handler';
 import React, {useEffect, useReducer} from 'react';
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Alert } from "react-native";
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from './components/loginScreen';
 import MainScreen from './components/mainScreen/mainScreen';
 import Constants from 'expo-constants';
 import {colors} from "./components/mainStyles/colors";
-import ReviewScreen from './components/mainScreen/orders/review/reviewScreen';
 import storage from "./modules/localStorage/localStorage";
 import {AppContext} from "./components/AppContext";
 import SplashScreen from "./components/customComponents/splashScreen";
+import account from './modules/client-communication/account';
+import { Localization } from './modules/localization';
 
 const Stack = createStackNavigator();
 
@@ -19,66 +20,90 @@ const App = () =>
     const [state, dispatch] = useReducer(
         (prevState, action) => {
         switch (action.type) {
-                case "restoreID":
+                case "restoreUser":
                 return {
                     ...prevState,
-                    userID: action.id,
                     loading: false,
+                    signOut: false,
+                    user: action.user,
                 };
                 case "signIn":
                 return {
                     ...prevState,
+                    loading: false,
                     signOut: false,
-                    userID: action.id,
+                    user: action.user,
                 };
                 case "signOut":
                 return {
                     ...prevState,
+                    loading: false,
                     signOut: true,
-                    userID: null,
                 };
             }
         },
         {
             loading: true,
-            signOut: false,
-            userID: null,
+            signOut: true,
+            user: null,
         }
     );
 
     useEffect(() => {
-        const checkIfUserExists = async () => {
-            try {
-                const userID = await storage.getDataString("userID"); 
-                dispatch({type:"restoreID", id: userID});
-            } catch(err) {
-                console.log(err);
+        const init = async () => {
+            try 
+            {
+                const userID = await storage.getDataString("userID");
+                const user = await account.getFromID(userID);
+                if (user !== null)
+                {
+                    dispatch({type: "restoreUser", user: user});
+                }
+                else
+                {
+                    dispatch({type: "signOut"});
+                }
+            } 
+            catch(error) 
+            {
+                Alert.alert(Localization.getText("networkErrorTitle"), Localization.getText("networkError"));
+                dispatch({type: "signOut"});
             }
         }
-        checkIfUserExists();
+        init();
     },[]);
 
 
-    const appContext = React.useMemo(
-        () => ({
-            signIn: async (id) => {
-                try {
-                    await storage.storeDataString("userID", id);
-                    dispatch({ type: "signIn", id: id});
-                } catch (err) {
-                    console.log(err);
-                }
-            },
-            signOut: async () => {
-                try {
-                    await storage.removeValue("userID");
-                    dispatch({ type: "signOut" });
-                } catch (err) {
-                    console.log(err)
-                }
-            },
-        }),[]
-    );
+    const appContext = 
+    {
+        signIn: async (id) => 
+        {
+            try 
+            {
+                await storage.storeDataString("userID", id);
+                const user = await account.getFromID(id);
+                dispatch({type: "signIn", user: user });
+            } 
+            catch (error) 
+            {
+                console.error(error);
+            }
+        },
+        signOut: async () => 
+        {
+            try 
+            {
+                await storage.removeValue("userID");
+                dispatch({ type: "signOut" });
+            } 
+            catch (error) 
+            {
+                console.error(error)
+            }
+        },
+        getState: () => state,
+        setState: (user) => dispatch({type:"restoreUser", user: user})
+    }
 
     return(
 
@@ -96,21 +121,17 @@ const App = () =>
                             }}
                         >
                             
-                            {state.userID === null ?
+                            {state.signOut ?
                                 <Stack.Screen 
                                     name = "Login" 
-                                    component={LoginScreen}                            />
+                                    component={LoginScreen}                            
+                                />
                                 :
                                 <Stack.Screen 
                                     name="Main" 
                                     component={MainScreen}
                                 />
                             }
-
-                            <Stack.Screen
-                                name="Review"
-                                component={ReviewScreen}
-                                />
                             
                         </Stack.Navigator>
                     </NavigationContainer>

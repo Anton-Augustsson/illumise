@@ -1,17 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useContext, useState, useRef } from 'react';
 import { View, Text, StyleSheet,FlatList, TouchableOpacity} from 'react-native';
 import request from '../../../modules/client-communication/request';
 import { Localization } from '../../../modules/localization';
-import storage from '../../../modules/localStorage/localStorage';
-import CustomButton from '../../customComponents/customButton';
-import CustomHeader from "../../customComponents/customHeader";
 import Loading from '../../customComponents/loading';
 import ms from '../../mainStyles/ms';
 import CustomMap from '../../customComponents/customMap';
 import cs from "../../mainStyles/cartStyle";
+import MyBottomSheet from '../../customComponents/myBottomSheet';
+import { AppContext } from '../../AppContext';
+import AcceptHeader from '../../customComponents/acceptHeader';
+import account from '../../../modules/client-communication/account';
+import chat from '../../../modules/client-communication/chat';
 
-const ShoppingItem = ({item}) => {
+const ShoppingItem = ({item}) => 
+{
     const [expand, setExpand] = useState(item.info !== "");
+
     return (
         <TouchableOpacity onPress={()=>setExpand(!expand)} style={cs.listItemContainer}>
             <View style={[cs.listItemView, cs.margin]}>
@@ -34,32 +38,118 @@ const ShoppingItem = ({item}) => {
     );
 }
 
-/*
-Din mamma - 69kr
----------
-| KARTA |
----------
-1
-2
-3
-Plats: swaggatan 13
------
-Lista med saker
-*/
-
-const Header = ({req}) => {
+const Header = ({req}) => 
+{
     return (
-        <>
-            <View style={mis.padding}>
-                {
-                    req.header === "other" &&
-                    <Text style={ms.h2}>{req.body.title}</Text>
-                }
+        <View style={mis.padding}>
+            <View style={mis.topContainer}>
+                <Text style={mis.title}>{req.body.type === "other" ? req.body.title : " "}</Text>
+                <Text style={mis.price}>{req.cost + " kr"}</Text>
             </View>
             
+        
+            <Text style={ms.h4}>{Localization.getText("destinations")}</Text>
+            {
+                req.body.stops.map((place, index) => (
+                    <Text key={index} style={mis.mapText}>{index + 1 + ". " + place.adress}</Text>
+                ))
+            }
+                {req.header === "shopping" || req.header === "food" ? 
+                <Text style={ms.h3}>{Localization.getText("shoppingList")}</Text>
+                :
+                <>
+                    <Text style={ms.h3}>{Localization.getText("otherInfo")}</Text>
+                    <Text style={mis.otherInfo}>{req.body.info}</Text>
+                </>
+            }
+        </View>
+    );
+}
+
+const BottomSheetContent = ({req}) => (
+    <>
+        {req.header === "shopping" || req.header === "food" ?
+                <FlatList 
+                    data={req.body.shoppingList}
+                    renderItem={({item})=><ShoppingItem item={item}/>}
+                    ListHeaderComponent={()=><Header req={req}/>}
+                />
+            :
+            <FlatList 
+                style={mis.content}
+                ListHeaderComponent={()=><Header req={req}/>}
+            />
+        }
+    </>
+)
+
+const DoneLoading = ({navigation, creator, isCreator, req, getState }) => {
+
+    const sheetRef = useRef();
+
+    const remove = async (navigation, req) => {
+        try 
+        {
+            await request.requester.removeRequest(req._id);
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'Orders' }],
+            });
+        } 
+        catch(error) 
+        {
+            console.log(error);
+        }
+    }
+
+    const claim = async (_, req) => {
+        try 
+        {
+            let result = await chat.newChat(req._id, creator._id, getState().user._id);
+            console.log(result);
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'Orders' }],
+            });
+        } 
+        catch(error) 
+        {
+            console.log(error);
+        }
+    }
+    
+    return (
+        <>
+            <MyBottomSheet
+                ref={sheetRef}
+                snapPoints={["70%", "40%", "20%", 30]}
+                overlay={false}
+                renderContent={<BottomSheetContent req={req}/>}
+            />
+
+            <AcceptHeader
+                userObject={{...creator, isCreator: true}}
+                navigation={navigation}
+                acceptTitle={isCreator ? Localization.getText("remove") : 
+                                         Localization.getText("claim")}
+                onButtonPress={async () => {
+                    if (isCreator)
+                    {
+                        await remove(navigation, req);
+                    }
+                    else
+                    {
+                        await claim(navigation, req);
+                    }
+                }}
+                buttonStyle={isCreator ? {backgroundColor: "#ff4d4d"} : undefined}
+                buttonDisabled={!isCreator && req.providerID != null}
+                zIndex={-1}
+            />
+
             <CustomMap
                 style={mis.map}
-                onMount={(region) => 
+                onMount={() => 
                 {
                     /** @type {[*]} */
                     let stops = req.body.stops;
@@ -72,119 +162,32 @@ const Header = ({req}) => {
                         return {
                             latitude:    stop.location.lat,
                             longitude:   stop.location.lng,
-                            title:       "Stopp " + (parseInt(index)+1),
-                            description: stop.location.adress,
+                            title:       "Stop " + (parseInt(index)+1),
+                            description: stop.location.address,
                             key:         (parseInt(index)+1)
                         };
                     });
                 }}
             />
-            <View style={mis.padding}>
-           
-                <Text style={ms.h4}>{Localization.getText("destinations")}</Text>
-                {
-                    req.body.stops.map((place, index) => (
-                        <Text key={index} style={mis.mapText}>{index+1 + ". " + place.adress}</Text>
-                    ))
-                }
-                    {req.header === "shopping" || req.header === "food" ? 
-                    <Text style={ms.h3}>{Localization.getText("shoppingList")}</Text>
-                    :
-                    <>
-                        <Text style={ms.h3}>{Localization.getText("otherInfo")}</Text>
-                        <Text style={mis.otherInfo}>{req.body.info}</Text>
-                    </>
-                }
-            </View>
         </>
     );
-}
-
-const DoneLoading = ({navigation,creator,req}) => {
-    const remove = async (navigation, req) => {
-        try {
-            await request.requester.removeRequest(req._id);
-            navigation.reset({
-                index: 0,
-                routes: [{ name: 'Orders' }],
-            });;
-        } catch(err) {
-            console.log(err);
-        }
-    }
-
-    const claim = async (navigation, req) => {
-        try {
-            const id = await storage.getDataString("userID");
-            await request.provider.set(req._id, id);
-        } catch(err) {
-            console.log(err);
-        }
-        
-    }
-
-    return (
-        <>
-
-            <CustomHeader 
-                title={creator && Localization.getText("yourOrderIsComplete")}
-                nav={navigation}
-            />
-            {req.header === "shopping" || req.header === "food" ?
-                <FlatList 
-                    style={mis.content}
-                    data={req.body.shoppingList}
-                    renderItem={({item})=><ShoppingItem item={item}/>}
-                    ListHeaderComponent={()=><Header req={req}/>}
-                />
-                :
-                <FlatList 
-                    style={mis.content}
-                    ListHeaderComponent={()=><Header req={req}/>}
-                />
-            }
-
-            <View style={ms.moveOnContainer}>
-                {creator ?  
-                    <CustomButton
-                        style={ms.cancelButton}
-                        styleText={{fontWeight:"bold", fontSize:15}}
-                        title={Localization.getText("removeOrder")}
-                        onPress={()=>remove(navigation, req)}
-                    /> :
-                    <CustomButton
-                        style={ms.button}
-                        styleText={{fontWeight:"bold", fontSize:15}}
-                        title={Localization.getText("letsgo")}
-                        onPress={()=>console.log(req.creatorID)}
-                    />
-                }
-            </View>
-        </>
-    );
-}
-
-const timeout = (ms) => {
-    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 const MarketItem = ({navigation, route}) => {
+    const { getState } = useContext(AppContext);
     const [loading, setLoading] = useState(true);
+    const [creator, setCreator] = useState(null);
     const [req, setReq] = useState(null);
-    const [creator] = useState(route.params.requestId !== null);
+
+    const isCreator = route.params.isCreator === true;
 
     useEffect(() => {
-        const retrieveRequest = async () => {
-            if(route.params.requestId === undefined) {
-                setReq(route.params);
-                setLoading(false);
-                return;
-            } 
-            await timeout(1000);
-            const userID = await storage.getDataString("userID");
-            var req2 = await request.requester.getUserRequest(userID, 1000);
-            req2 = req2.filter(obj=>obj);
-            setReq(req2[req2.length-1]);
+
+        const retrieveRequest = async () =>
+        {
+            let res = await request.get(route.params.requestID);
+            setReq(res);
+            setCreator(isCreator? getState().user :await account.getFromID(res.creatorID));
             setLoading(false);
         }
         retrieveRequest();
@@ -192,22 +195,36 @@ const MarketItem = ({navigation, route}) => {
 
     return (
         <View style={{flex:1}}> 
-            
-            {loading ? <Loading/> : <DoneLoading navigation={navigation} creator={creator} req={req}/>}
+            {loading ? <Loading/> : 
+            <DoneLoading 
+                navigation={navigation} 
+                creator={creator}
+                isCreator={isCreator}
+                req={req} 
+                getState={getState}
+            />}
         </View>
     );
 }
 
 const mis = StyleSheet.create({
-    content: {
-        flex:1,
-  paddingBottom:20,
+    topContainer: {
+        flexDirection:"row",
+        flexWrap:"wrap",
+        justifyContent:"space-between",
+        alignItems:"center"
     },
-    shoppingItemContainer: {
+    title: {
+        fontSize:25,
+        fontWeight:"bold",
+    },
+    price: {
+        fontSize:20,
+        fontWeight:"bold",
     },
     map:{
-        height:250,
-        width:"100%",
+        flex: 1,
+        zIndex: -10
     },
     padding: {
         paddingRight:20,

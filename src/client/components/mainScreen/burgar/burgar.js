@@ -1,14 +1,14 @@
 import React from 'react';
-import { Text, View, Image, Button, FlatList, StyleSheet,TouchableOpacity, Settings} from 'react-native';
+import { Text, FlatList, StyleSheet,TouchableOpacity } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
-import {colors} from "../../mainStyles/colors";
 import ms from "../../mainStyles/ms";
-import CustomHeader from "../../customComponents/customHeader";
 import SettingsScreen from "./settings/settings";
 import ProfileScreen from "./profile/profile";
 import FaqScreen from "./faq/faq";
 import BurgarIcons from "../../customComponents/burgarIcons";
 import { Localization } from '../../../modules/localization';
+import { screenOptions } from '../navigationOptions';
+import SeeReviews from '../../customComponents/seeReviews';
 
 
 const BURGAR = [
@@ -41,36 +41,16 @@ const BurgarItem = (item, navigation) =>
     );
 }
 
-const ProfilePicture = (props) => 
-{
-    return (
-        <View style={bs.profileContainer}>
-            <Image
-                style={bs.profileImg}
-                source={require("../../../assets/steffe.jpg")}
-            />
-            <Text style={bs.profileName}>{props.name}</Text>
-        </View>
-    );
-}
+
 
 const FirstScreen = ({navigation}) => 
 {
     return (
-        <View style={{flex:1}}>
-            <CustomHeader 
-                title={Localization.getText("other")}
-                nav={navigation}
-                goBack ={false}
-            />
-            
-            <FlatList
-                data={BURGAR}
-                renderItem={({item})=>BurgarItem(item, navigation)}
-                keyExtractor={(item)=>item.id}
-            />
-
-        </View>
+        <FlatList
+            data={BURGAR}
+            renderItem={({item})=>BurgarItem(item, navigation)}
+            keyExtractor={(item)=>item.id}
+        />
     );
 }
 
@@ -80,39 +60,51 @@ const BurgarScreen = () =>
 {
     return (
         <Stack.Navigator 
-            screenOptions={{
-                headerShown:false,
-                cardStyle:{backgroundColor:colors.DEFAULT_BACKGROUND},
-                initialRouteName:"FirstScreen"
-            }}
+            screenOptions={screenOptions}
         >
             <Stack.Screen 
+                options={{
+                    title: Localization.getText("other")
+                }}
                 name="FirstScreen" 
                 component={FirstScreen}
             />
 
             <Stack.Screen 
+                options={{
+                    title: Localization.getText("options")
+                }}
                 name="Settings" 
                 component={SettingsScreen}
             />
 
             <Stack.Screen 
+                options={{
+                    title: Localization.getText("profile")
+                }}
                 name="Profile" 
                 component={ProfileScreen}
             />
 
             <Stack.Screen 
+                options={{
+                    title: Localization.getText("faq")
+                }}
                 name="Faq" 
                 component={FaqScreen}
+            />
+
+            <Stack.Screen 
+                options={{
+                    title: Localization.getText("reviews")
+                }}
+                name="SeeReviews" 
+                component={SeeReviews}
             />
             
         </Stack.Navigator>
     );
 }
-
-
-
-
 
 const bs = StyleSheet.create({
     time:{

@@ -9,12 +9,14 @@ const url = communication.url;
 const returnResponse = communication.returnResponse;
 
 /**
- * @typedef credentials
+ * @typedef User
+ * @property {String} _id
  * @property {String} firstName
  * @property {String} lastName
  * @property {String} email
- * @property {String} phone
  * @property {String} password
+ * @property {String} phone
+ * @property {number} dateCreated
  */
 
 /**
@@ -99,6 +101,21 @@ const account =
     {
         let params = '?email=' + email + '&password=' + password;
         let url = account.accountUrl + '/get' + params;
+        let response = await fetch(url);
+
+        return returnResponse(response);
+    },
+
+    /**
+     * Gets the user with the given id
+     * @async
+     * @param {String} userID The email of the user
+     * @returns {Promise<?User>} The id of the user
+     */
+    getFromID: async function(userID)
+    {
+        let params = '?userID=' + userID;
+        let url = account.accountUrl + '/getFromID' + params;
         let response = await fetch(url);
 
         return returnResponse(response);

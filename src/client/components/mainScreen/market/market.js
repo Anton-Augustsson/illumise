@@ -1,128 +1,18 @@
-import React, { useState, useEffect, useCallback} from 'react';
-import { Text, View, ScrollView, FlatList, StyleSheet,TouchableOpacity} from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
-import CustomHeader from "../../customComponents/customHeader";
+import React, { useState, useEffect, useContext} from 'react';
+import { Text, View, FlatList, StyleSheet,TouchableOpacity} from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import ms from "../../mainStyles/ms";
-import { colors } from '../../mainStyles/colors';
 import MarketItem from './marketItem';
 import {Localization} from '../../../modules/localization'
 import * as Location from 'expo-location';
 import request from '../../../modules/client-communication/request';
-import { getDistance } from 'geolib'
-import CustomMap from '../../customComponents/customMap';
-/*
-const REQUESTS = [
-    {
-        "id":"1",
-        "shoppingList": [
-        {
-            "id": "0",
-            "name": "Första",
-            "otherInfo": "wef",
-            "quantity": 1,
-        },
-        {
-            "id": "1",
-            "name": "Andra",
-            "otherInfo": "NISSE",
-            "quantity": 1000000,
-        },
-        ],
-        "stops":  [
-            "Wefixit Svenska AB, Fålhagsleden, Uppsala, Sweden",
-            "Wefix Trädgård AB, Sandövägen, Vallda, Sweden",
-        ],
-        "price":"2000000000",
-        "time": "13:00",
-        "type": "food",
-    },
-    {
-        "id":"2",
-        "shoppingList": [
-        {
-            "id": "0",
-            "name": "Banan",
-            "otherInfo": "E väldigt fin banan från helvetet",
-            "quantity": 1,
-        },
-        ],
-        "stops":  [
-            "SHAKMAK AB, Moskva, Russia",
-            "Wefix Trädgård AB, Sandövägen, Vallda, Sweden",
-        ],
-        "time": "13:00",
-        "price":"10",
-        "type": "shopping"
-    },
-    {
-        "id":"3",
-        "postObject": 
-        {
-            "refCode": "DINMAMMA",
-            "otherInfo": "E väldigt fin banan från helvetet",
-        },
-        "stops":  [
-            "SHAKMAK AB, Moskva, Russia",
-            "Wefix Trädgård AB, Sandövägen, Vallda, Sweden",
-        ],
-        "time": "13:00",
-        "price":"0.20",
-        "type": "post"
-    }
-]
-*/
+import RequestIcon from "../../customComponents/requestIcon";
+import { AppContext } from '../../AppContext';
+import {getDistance} from "geolib";
+import SeeReviews from '../../customComponents/seeReviews';
+import { screenOptions } from '../navigationOptions';
 
-const FilterView = () => {
-    const filterItems = [
-        {
-            "id":"0",
-            "text":Localization.getText("price")
-        },{
-            "id":"1",
-            "text":Localization.getText("latest")
-        },{
-            "id":"2",
-            "text":Localization.getText("closest")
-        },
-    ]
-
-    const [expand, setExpand] = useState(false);
-
-    return (
-        <View style={mms.filterOuterContainer}>
-            <ScrollView horizontal={expand ? false : true}>
-                <View style={mms.filterContainer}>
-                    {filterItems.map(item => (
-                        <TouchableOpacity
-                            key={item.id}
-                            
-                        >
-                            <LinearGradient style={mms.filterItemContainer} colors={['grey', 'black']}>
-                                <Text style={mms.filterItemText}>{item.text}</Text>
-                            </LinearGradient>
-                        </TouchableOpacity>
-                    ))}
-                </View>
-            </ScrollView>
-            <TouchableOpacity
-                style={mms.filterExpandContainer}
-                onPress={()=>setExpand(!expand)}
-            >
-                <MaterialIcons 
-                    name={expand ? "keyboard-arrow-down": "keyboard-arrow-up"} 
-                    size={30} 
-                    color="black" 
-                />
-            </TouchableOpacity>
-        </View>
-    );
-}
-
-
-
-const RequestItem = ({nav, item}) => {
+const RequestItem = ({nav, item, pointStart, isLast}) => {
     var text = ''
     switch (item.body.type) {
         case 'food':
@@ -140,20 +30,24 @@ const RequestItem = ({nav, item}) => {
 
     }
 
-    const km = "1000";
+    const start = {latitude: pointStart.coordinates[1], longitude: pointStart.coordinates[0]};
+    const stop = {latitude: item.body.stops[0].location.lat, longitude: item.body.stops[0].location.lng};
+    const dist = getDistance(start, stop);
+    const distKM = Math.round(dist/1000);
 
     return(
         <TouchableOpacity 
-            onPress={()=>nav.nav.navigate("MarketItem", item)}
+            onPress={()=>nav.nav.navigate("MarketItem", {requestID:item._id})}
             style={mms.itemContainer}
         >
-            <Text>{text}</Text>
+            <RequestIcon type={item.body.type} size={30} color="black"/>
+            <Text style={mms.itemText}>{text}</Text>
             <View style={mms.rightRequestContainer}>
                 <View style={mms.priceContainer}>
                     <Text style={mms.price} numberOfLines={1}>{item.cost}</Text>
                     <Text style={mms.priceCurrency}>kr</Text>
                 </View>
-                <Text style={mms.distance}>{km} km</Text>
+                <Text style={mms.distance}>{distKM} km</Text>
             </View>
         </TouchableOpacity>
     );
@@ -163,58 +57,74 @@ const RequestItem = ({nav, item}) => {
  * @param {[Number]} coordinates [longitude, latitude] coordinates of a point
  * @returns {{*}} representation of a point with coordinates
  */
- function coordsToGeoJSON(coordinates)
- {
-     return { "type": "Point", "coordinates": coordinates };
- }
+function coordsToGeoJSON(coordinates)
+{
+    return { "type": "Point", "coordinates": coordinates };
+}
 
-const FirstScreen = (nav) => {
-    const [location, setLocation] = useState(null);
-    const [errorMsg, setErrorMsg] = useState(null);
-    const [REQUESTS, setRequests] = useState(null);
-    const [isRefreshing, setIsRefresing] = useState(false);
+const FirstScreen = (nav) => 
+{
+    const {getState} = useContext(AppContext)
+    const [REQUESTS, setRequests] = useState([]);
+    const [isRefreshing, setIsRefreshing] = useState(false);
+    const [pointStart, setPointStart] = useState([]);
 
-    const getLocation = async () => {
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
-        setErrorMsg('Denied acces to location');
-        return;
+    const getNearRequests = async () => 
+    {
+        /** @type {[Request]} */
+        let result = [];
+        try 
+        {
+            let response = await Location.requestForegroundPermissionsAsync();
+            if (response.granted) 
+            {
+                let geo = await Location.getCurrentPositionAsync();
+                let pointStart = coordsToGeoJSON([geo.coords.longitude, geo.coords.latitude]);
+                setPointStart(pointStart);
+                let requests = await request.provider.getNearRequests(pointStart, 1000000);
+                result = requests? requests : [];
+            }
+            else
+            {
+                setErrorMsg('Denied access to location');
+            }
+        } 
+        catch (error) 
+        {
+            console.warn(error);
         }
-        let geo = await Location.getCurrentPositionAsync({});
-        setLocation(geo);
-
-        let pointStart = coordsToGeoJSON([geo.coords.longitude, geo.coords.latitude]);
-
-
-        const res = await request.provider.getNearRequests(pointStart, 1000000, 10);
-        setIsRefresing(false);
-        return res;
+        finally
+        {
+            return result.filter(result => result
+                              && !result.isFulfilled
+                              && result.creatorID !== getState().user._id
+                              && result.providerID == null
+                              && result.body.stops != undefined);
+        }
     }
 
     const refresh = () => {
-        setIsRefresing(true);
-        getLocation().then(data => {
-            setRequests(data.filter(obj => obj != null));
-        }); 
+        setIsRefreshing(true);
+        getNearRequests().then(data => {
+            setRequests(data);
+            setIsRefreshing(false);
+        });
     }
 
-    useEffect(() => {
-        refresh();
-    }, []);
+    useEffect(refresh, []);
 
      return (
         <View style={{flex:1}}> 
-            <CustomHeader 
-                title={Localization.getText("market")} 
-                nav={nav}
-                goBack={false}
-            />
-            
             <FlatList
                 data={REQUESTS}
-                renderItem={({item})=><RequestItem nav={nav} item={item}/>}
+                renderItem={({item})=>
+                    <RequestItem 
+                        pointStart={pointStart} 
+                        nav={nav} 
+                        item={item} 
+                    />}
                 keyExtractor={(item)=>item._id}
-                onRefresh={()=>refresh()}
+                onRefresh={refresh}
                 refreshing={isRefreshing}
                 ListEmptyComponent={()=>
                     <View style={ms.emptyContainer}>
@@ -224,7 +134,6 @@ const FirstScreen = (nav) => {
                     </View>
                 }
             />
-
         </View>
     );
 }
@@ -234,20 +143,31 @@ const Stack = createStackNavigator();
 const MarketScreen = ({navigation}) => {
     return (
        <Stack.Navigator 
-            screenOptions={{
-                headerShown:false,
-                cardStyle:{backgroundColor:colors.DEFAULT_BACKGROUND}
-            }}
+            screenOptions={screenOptions}
             initialRouteName="FirstScreen"
         >
             <Stack.Screen 
+                options={{
+                    title:Localization.getText("market")
+                }}
                 name="FirstScreen" 
                 children={()=><FirstScreen nav={navigation}/>}
             />
 
             <Stack.Screen 
+                options={{
+                    title:""
+                }}
                 name="MarketItem" 
                 component={MarketItem}
+            />
+
+            <Stack.Screen 
+                options={{
+                    title:Localization.getText("reviews")
+                }}
+                name="SeeReviews" 
+                component={SeeReviews}
             />
            
         </Stack.Navigator> 
@@ -293,6 +213,9 @@ const mms = StyleSheet.create({
         alignItems:"center",
         paddingLeft:"5%",
         paddingRight:"5%",
+    },
+    itemText: {
+        marginLeft:15,
     },
     rightRequestContainer: {
         position:"absolute",

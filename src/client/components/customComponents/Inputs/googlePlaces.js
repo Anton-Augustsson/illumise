@@ -1,19 +1,20 @@
 import React, {useState} from 'react';
 import {colors} from "../../mainStyles/colors"
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import { Localization } from '../../../modules/localization';
   
 const GooglePlaces = ({placeholder, ...props}) => {
-    const [searching, setSearching] = useState(false);
     return (
         <GooglePlacesAutocomplete
             {...props}
+            placeholder={Localization.getText("search")}
             styles={{
                 container: {
 
                 },
                 textInput: {
-                    paddingLeft:10,
-                    paddingRight:10,
+                    paddingLeft:20,
+                    paddingRight:20,
                     paddingTop:5,
                     paddingBottom:5,
                     borderWidth:2,
@@ -22,7 +23,6 @@ const GooglePlaces = ({placeholder, ...props}) => {
                     borderRadius:10,
                     marginTop:5,
                     marginBottom:5,
-                    elevation:5,
                     backgroundColor:"white",
                 },
                 row:{

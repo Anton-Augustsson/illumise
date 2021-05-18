@@ -1,6 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import { Text, View, TextInput, StyleSheet} from 'react-native';
-import CustomHeader from '../../../../customComponents/customHeader';
+import React, {useState} from 'react';
+import { Text, View } from 'react-native';
 import CustomButton from '../../../../customComponents/customButton';
 import ms from "../../../../mainStyles/ms";
 import rs from "../requestStyle";
@@ -9,12 +8,10 @@ import GooglePlaces from '../../../../customComponents/Inputs/googlePlaces';
 import request from '../../../../../modules/client-communication/request';
 import storage from '../../../../../modules/localStorage/localStorage';
 import FloatingInput from '../../../../customComponents/Inputs/floatingInput';
-import * as Location from 'expo-location';
 import {CommonActions} from "@react-navigation/native";
 import Loading from "../../../../customComponents/loading";
 
 const DeliverScreen = ({navigation, route}) => {
-    //console.log(JSON.stringify(route));
     const [location, setLocation] = useState("");
     const [price, setPrice] = useState(0);
     const [checkingOut, setCheckingOut] = useState(false);
@@ -29,39 +26,25 @@ const DeliverScreen = ({navigation, route}) => {
         return { "type": "Point", "coordinates": coordinates };
     }
 
-    const getLocation = async () => {
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
-          setErrorMsg('Denied acces to location');
-          return;
-        }
-        const response = await Location.getCurrentPositionAsync({}).then(loc => {
-            return [loc.coords.longitude, loc.coords.latitude]
-        });
-
-        return response;
-    }
-
     const checkout = async () =>{
         if(location === "") return;
         if(price === 0) return;
         setCheckingOut(true);
-        //TODO: kolla att obligatoriska fält är ifyllda
+
+        //TODO: check if fields are valid
         var result = Object.assign({}, route.params)
         result.stops.push(location);
         try {
-            const geo = await getLocation()
-
-            const coords = coordsToGeoJSON(geo);
+            const coords = coordsToGeoJSON([result.stops[0].location.lng, result.stops[0].location.lat]);
             const data = {
                 header: result.type,
                 body: result,
                 cost: price,
                 geoLocation: coords,
             }
-
-            const userID = await storage.getDataString("userID");
-            const requestId = await request.requester.newRequest(userID, result.type, data);
+            
+            const userID    = await storage.getDataString("userID");
+            const requestID = await request.requester.newRequest(userID, result.type, data);
             navigation.dispatch(
                 CommonActions.reset({
                     routes: [
@@ -72,7 +55,7 @@ const DeliverScreen = ({navigation, route}) => {
                                     {name:"FirstScreen"},
                                     {
                                         name:"MarketItem",
-                                        params:{requestId:requestId},
+                                        params:{requestID: requestID, isCreator: true},
                                     },
                                 ]
                             }, 
@@ -96,27 +79,23 @@ const DeliverScreen = ({navigation, route}) => {
             {checkingOut ? 
             <Loading info={Localization.getText("creatingRequest...")}/> :
             <>
-                <CustomHeader
-                    title={Localization.getText("deliveryInfo")}
-                    nav={navigation}
-                />
                 <View style={rs.content}>
-                        <Text style={ms.h3}>{route.params.type === "other" 
-                            ? Localization.getText("place") : Localization.getText("enterDelivAddress")}
-                        </Text>
-                        <GooglePlaces
-                            placeholder={Localization.getText("deliveryAddress")}
-                            fetchDetails = {true}
-                            onPress={(data, details = null) => {
-                            // 'details' is provided when fetchDetails = true
+                    <Text style={ms.h3}>{route.params.type === "other" 
+                        ? Localization.getText("place") : Localization.getText("enterDelivAddress")}
+                    </Text>
+                    <GooglePlaces
+                        placeholder={Localization.getText("deliveryAddress")}
+                        fetchDetails = {true}
+                        onPress={(data, details = null) => {
                             setLocation({adress: data.description, location: details.geometry.location});
-                            }}
-                        />
-                        <Text style={ms.h3}>{Localization.getText("enterPrice")}</Text>
-                        <FloatingInput 
-                            placeholder={Localization.getText("price")}
-                            onChangeText={(text)=>setPrice(parseInt(text))}
-                        />
+                        }}
+                    />
+                    <Text style={ms.h3}>{Localization.getText("enterPrice")}</Text>
+                    <FloatingInput 
+                        placeholder={Localization.getText("price")}
+                        onChangeText={(text)=>setPrice(parseInt(text))}
+                        keyboardType="number-pad"
+                    />
                 </View>
                 <View style={ms.moveOnContainer}>
                     <CustomButton

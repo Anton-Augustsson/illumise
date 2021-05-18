@@ -6,13 +6,18 @@ import MyOrders from './orders/myOrders';
 import NotificationScreen from './notification/notification';
 import BurgarScreen from './burgar/burgar';
 import MarketScreen from './market/market';
-import OrderScreen from './orders/orders';
 
 
 const Tab = createBottomTabNavigator();
 
 const MainScreen = (navigation) => {
-    //https://reactnavigation.org/docs/bottom-tab-navigator
+    /*
+        <Tab.Screen
+            name="Notification" 
+            component={NotificationScreen}
+        />
+    */
+
     return (
         <Tab.Navigator initialRouteName="Home"
                        tabBar={props=><Menu {...props}/>}>
@@ -28,13 +33,8 @@ const MainScreen = (navigation) => {
             />
 
             <Tab.Screen 
-            name="Market" 
-            component={MarketScreen}
-            />
-
-            <Tab.Screen 
-            name="Notification" 
-            component={NotificationScreen}
+                name="Market" 
+                component={MarketScreen}
             />
 
             <Tab.Screen 
