@@ -118,6 +118,7 @@ const FirstScreen = ({nav}) => {
                 return req;
             }));
 
+
             requests = requests.filter(item => item && !item.isFulfilled);
             providing = providing.filter(item => item && !item.isFulfilled);
 

@@ -54,7 +54,7 @@ const Header = ({req}) =>
                     <Text key={index} style={mis.mapText}>{index + 1 + ". " + place.adress}</Text>
                 ))
             }
-                {req.header === "shopping" || req.header === "food" ? 
+                {req.body.type === "shopping" || req.body.type === "food" ? 
                 <Text style={ms.h3}>{Localization.getText("shoppingList")}</Text>
                 :
                 <>
@@ -68,7 +68,7 @@ const Header = ({req}) =>
 
 const BottomSheetContent = ({req}) => (
     <>
-        {req.header === "shopping" || req.header === "food" ?
+        {req.body.type === "shopping" || req.body.type === "food" ?
                 <FlatList 
                     data={req.body.shoppingList}
                     renderItem={({item})=><ShoppingItem item={item}/>}

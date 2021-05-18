@@ -81,7 +81,7 @@ export const OrderChatScreen = ({navigation, route}) =>
             }
             else
             {
-                Alert.alert("Error When loading request", "Chat does not exist");
+                Alert.alert(Localization.getText("chatProviderCancelErrorTitle"), Localization.getText("chatProviderCancelError"));
                 navigation.goBack();
                 return true;
             }
@@ -160,10 +160,16 @@ export const OrderChatScreen = ({navigation, route}) =>
                     navigation={navigation}
                     onButtonPress={async () => 
                     {
-                        if (requestObject.providerID)
+                        //Need to get the latest state of the request 
+                        //if someone accepted you as provider
+                        let result = await request.get(requestObject._id);
+                        //Other people cant cancel your service
+                        if (result.providerID === getState().user._id)
                         {
-                            let result = await request.provider.set(requestObject._id, null);
-                            if (result)
+                            console.log(result._id);
+                            console.log(getState().user._id);
+                            let banan = await request.provider.set(result._id, null);
+                            if (banan)
                             {
                                 await chat.removeChat(chatObject._id);
                                 navigation.goBack();

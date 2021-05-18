@@ -131,7 +131,9 @@
         "loginFailed":"Login failed trying again in ",
         "search":"Search...",
         "provider":"Provider: ",
-        "deliveringTo":"Delivering to: "
+        "deliveringTo":"Delivering to: ",
+        "chatProviderCancelErrorTitle":"Error when loading chat",
+        "chatProviderCancelError":"Seems like the provider canceled the request."
     },
     "se": 
     {
@@ -267,6 +269,8 @@
         "loginFailed":"Inloggningen misslyckades försöker igen om ",
         "search":"Sök...",
         "provider":"Leverantör:",
-        "deliveringTo":"Leverar till:"
+        "deliveringTo":"Leverar till:",
+        "chatProviderCancelErrorTitle":"Kunde inte ladda chatten",
+        "chatProviderCancelError":"Verkar som att leverantören har avbrutit din beställning."
     } 
 }

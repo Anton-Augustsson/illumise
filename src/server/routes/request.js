@@ -96,6 +96,7 @@ router.put('/provider/set', async (req, res) =>
 
     let body = req.body;
 
+    //TODO when providerID is null it does not pass the valid function
     if(valid(body, schema, res))
     {
         // TODO change from setProvider to something else that simply shows the interest of providing
