@@ -13,6 +13,7 @@ import communication from '../../../../modules/client-communication/communicatio
 import Popup from '../../../customComponents/popup';
 import {CommonActions} from "@react-navigation/native";
 import Constants from 'expo-constants';
+import Loading from '../../../customComponents/loading';
 
 const url = communication.url;
 /** @type {Socket} */
@@ -40,12 +41,15 @@ export const OrderChatScreen = ({navigation, route}) =>
 
     useEffect(() =>
     {
+        let isMounted = true;
         socket.on('complete', data =>
         {
             if (!complete)
             {
-                setComplete(true);
-                setPopup(true);
+                if(isMounted) {
+                    setComplete(true);
+                    setPopup(true);
+                }
             }
         });
 
@@ -73,10 +77,12 @@ export const OrderChatScreen = ({navigation, route}) =>
             if (tmpChat)
             {
                 socket.emit('join', { senderId: getState().user._id, chatID: tmpChat._id });
-                setChat(tmpChat);
-                setOther(await account.getFromID(route.params.isCreator
+                if(isMounted) {
+                    setChat(tmpChat);
+                    setOther(await account.getFromID(route.params.isCreator
                                                 ? tmpChat.provider._id
                                                 : tmpChat.requester._id));
+                }
                 return false;
             }
             else
@@ -87,9 +93,11 @@ export const OrderChatScreen = ({navigation, route}) =>
             }
         }
         init().then(result => setLoading(result));
+
+        return () => {isMounted = false};
     },[]);
 
-    return loading? <></> : (
+    return loading? <Loading/> : (
         <KeyboardAvoidingView 
             behavior="padding" 
             keyboardVerticalOffset={50+Constants.statusBarHeight} 

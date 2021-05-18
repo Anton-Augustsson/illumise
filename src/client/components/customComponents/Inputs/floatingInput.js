@@ -1,5 +1,5 @@
 import React, {forwardRef, useImperativeHandle, useState, useRef, useEffect} from 'react';
-import {Animated, Easing, View, TextInput, StyleSheet} from 'react-native';
+import {Animated, Easing, View, TextInput, StyleSheet, Platform} from 'react-native';
 import {colors} from "../../mainStyles/colors"
   
 const FloatingInput = forwardRef(({placeholder, onChangeText, 
@@ -11,7 +11,7 @@ const FloatingInput = forwardRef(({placeholder, onChangeText,
 
     const top = topValue.interpolate({
         inputRange: [0, 1],
-        outputRange: [18.5, 0],
+        outputRange: [Platform.OS === "ios" ? 15 : 18.5, 0],
     });
 
     const animation = (initialValue, toValue) => {
